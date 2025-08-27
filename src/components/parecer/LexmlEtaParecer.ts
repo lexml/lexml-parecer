@@ -1,7 +1,5 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-// import lightStyles from '@shoelace-style/shoelace/dist/themes/light.styles.js';
-// import defaultTheme from '@awesome.me/webawesome/dist/styles/themes/default.css?inline';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {

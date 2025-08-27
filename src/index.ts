@@ -1,22 +1,8 @@
-// import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
-// import '@shoelace-style/shoelace/dist/components/tab/tab.js';
-// import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
-// import '@shoelace-style/shoelace/dist/components/input/input.js';
-// import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
-// import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
-// import '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
-// import '@shoelace-style/shoelace/dist/components/radio/radio.js';
-// import '@shoelace-style/shoelace/dist/components/select/select.js';
-// import '@shoelace-style/shoelace/dist/components/button/button.js';
-// import '@shoelace-style/shoelace/dist/components/details/details.js';
-// import '@shoelace-style/shoelace/dist/components/option/option.js';
-
 import '@awesome.me/webawesome/dist/components/tab-group/tab-group.js';
 import '@awesome.me/webawesome/dist/components/tab/tab.js';
 import '@awesome.me/webawesome/dist/components/tab-panel/tab-panel.js';
 import '@awesome.me/webawesome/dist/components/input/input.js';
 import '@awesome.me/webawesome/dist/components/radio-group/radio-group.js';
-// import '@awesome.me/webawesome/dist/components/radio-button/radio-button.js';
 import '@awesome.me/webawesome/dist/components/textarea/textarea.js';
 import '@awesome.me/webawesome/dist/components/radio/radio.js';
 import '@awesome.me/webawesome/dist/components/select/select.js';
@@ -30,3 +16,15 @@ export { LexmlParecerRelatorio } from './components/relatorio/LexmlParecerRelato
 export { LexmlParecerAnalise } from './components/analise/LexmlParecerAnalise.js';
 export { LexmlParecerVoto } from './components/voto/LexmlParecerVoto.js';
 export { EditorTextoTeste } from './components/editorTextoTeste/EditorTextoTeste.js';
+
+function appendStyles(url: string) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = url;
+  document.head.appendChild(link);
+}
+
+appendStyles(
+  'https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/webawesome.css',
+);
+// appendStyles('https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/shoelace.css');
