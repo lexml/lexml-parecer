@@ -11,12 +11,10 @@
   "scripts": {
     "analyze": "cem analyze --litelement",
     "start": "rimraf dist && tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
-
     "build": "rimraf dist && rollup -c",
     "build:watch": "rollup -c --watch",
     "build:tsc": "tsc && npm run analyze -- --exclude dist",
     "prepublish": "npm run build && npm run analyze -- --exclude dist",
-
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "prepare": "husky",
@@ -26,7 +24,7 @@
   "dependencies": {
     "@shoelace-style/shoelace": "^2.20.1",
     "lit": "^3.1.4",
-    "quill": "^2.0.3"
+    "quill": "^1.3.7"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.3",
