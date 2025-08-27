@@ -96,7 +96,7 @@ export class LexmlParecerMateria extends LitElement {
         <div class="title">Dados da Matéria</div>
 
         <div class="grid">
-          <sl-input
+          <wa-input
             id="anoInput"
             class="block"
             type="number"
@@ -105,53 +105,53 @@ export class LexmlParecerMateria extends LitElement {
             min="1900"
             max="2100"
             .value=${String(this.materia.ano)}
-          ></sl-input>
+          ></wa-input>
 
-          <sl-input
+          <wa-input
             id="materiaInput"
             class="block"
             type="text"
             label="Matéria"
             placeholder="Digite a matéria"
             .value=${this.materia.materia}
-          ></sl-input>
+          ></wa-input>
 
-          <sl-radio-group
+          <wa-radio-group
             id="destinoRadio"
             class="span-2 block"
             label="Destino"
             .value=${this.materia.destino}
           >
             ${getAllDestinosValues().map(
-              opt => html`<sl-radio value=${opt.value}>${opt.label}</sl-radio>`,
+              opt => html`<wa-radio value=${opt.value}>${opt.label}</wa-radio>`,
             )}
-          </sl-radio-group>
+          </wa-radio-group>
 
-          <sl-input
+          <wa-input
             id="comissaoValue"
             class="block"
             type="text"
             label="Comissão (value)"
             placeholder="Ex.: CDR"
             .value=${this.materia.comissao?.value ?? ''}
-          ></sl-input>
+          ></wa-input>
 
-          <sl-input
+          <wa-input
             id="comissaoDesc"
             class="block"
             type="text"
             label="Comissão (descrição)"
             placeholder="Ex.: CDR - COMISSÃO DE DESENVOLVIMENTO REGIONAL E TURISMO"
             .value=${this.materia.comissao?.description ?? ''}
-          ></sl-input>
+          ></wa-input>
 
-          <sl-textarea
+          <wa-textarea
             id="ementaInput"
             class="span-2 block"
             label="Ementa"
             placeholder="Digite a ementa"
             .value=${this.materia.ementa}
-          ></sl-textarea>
+          ></wa-textarea>
         </div>
       </div>
     `;
