@@ -1,6 +1,6 @@
 import { getAnoAtual } from '../util/date-util.js';
-import { Destino } from './Destino.js';
-import { Option } from './Option.js';
+import { Destino } from './destino.modelo.js';
+import { Option } from './option.modelo.js';
 
 export class Materia {
   ano: number = getAnoAtual();

@@ -1,8 +1,8 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { ItemVoto } from '../../models/ItemVoto.js';
-import { Voto } from '../../models/Voto.js';
-import { Documento } from '../../models/Documento.js';
+import { ItemVoto } from '../../models/item-voto.modelo.js';
+import { Voto } from '../../models/voto.modelo.js';
+import { Documento } from '../../models/documento.modelo.js';
 
 @customElement('lexml-parecer-voto')
 export class LexmlParecerVoto extends LitElement {

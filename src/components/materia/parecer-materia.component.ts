@@ -1,8 +1,8 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import { Comissao } from '@ui-commons';
-import { Materia } from '../../models/Materia.js';
-import { Option } from '../../models/Option.js';
+import { Materia } from '../../models/materia.modelo.js';
+import { Option } from '../../models/option.modelo.js';
 
 type WithValueEl = HTMLElement & { value: string };
 

@@ -10,9 +10,9 @@ import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/details/details.js';
 import '@awesome.me/webawesome/dist/components/option/option.js';
 
-export { LexmlEtaParecer } from './components/parecer/LexmlEtaParecer.js';
-export { LexmlParecerMateria } from './components/materia/LexmlParecerMateria.js';
-export { LexmlParecerRelatorio } from './components/relatorio/LexmlParecerRelatorio.js';
-export { LexmlParecerAnalise } from './components/analise/LexmlParecerAnalise.js';
-export { LexmlParecerVoto } from './components/voto/LexmlParecerVoto.js';
-export { EditorTextoTeste } from './components/editorTextoTeste/EditorTextoTeste.js';
+export { LexmlEtaParecer } from './components/parecer/lexml-eta-parecer.component.js';
+export { LexmlParecerMateria } from './components/materia/parecer-materia.component.js';
+export { LexmlParecerRelatorio } from './components/relatorio/parecer-relatorio.component.js';
+export { LexmlParecerAnalise } from './components/analise/parecer-analise.component.js';
+export { LexmlParecerVoto } from './components/voto/parecer-voto.component.js';
+export { EditorTextoTeste } from './components/editorTextoTeste/editor-texto-teste.component.js';
