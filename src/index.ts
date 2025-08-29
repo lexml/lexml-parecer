@@ -16,15 +16,3 @@ export { LexmlParecerRelatorio } from './components/relatorio/LexmlParecerRelato
 export { LexmlParecerAnalise } from './components/analise/LexmlParecerAnalise.js';
 export { LexmlParecerVoto } from './components/voto/LexmlParecerVoto.js';
 export { EditorTextoTeste } from './components/editorTextoTeste/EditorTextoTeste.js';
-
-function appendStyles(url: string) {
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = url;
-  document.head.appendChild(link);
-}
-
-appendStyles(
-  'https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/webawesome.css',
-);
-// appendStyles('https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/shoelace.css');

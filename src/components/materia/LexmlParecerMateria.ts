@@ -1,7 +1,7 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
+import { Comissao } from '@ui-commons';
 import { Materia } from '../../models/Materia.js';
-import { Destino, getAllDestinosValues } from '../../models/Destino.js';
 import { Option } from '../../models/Option.js';
 
 type WithValueEl = HTMLElement & { value: string };
@@ -22,10 +22,83 @@ export class LexmlParecerMateria extends LitElement {
 
   @query('#ementaInput') ementaInput!: WithValueEl;
 
+  private comissoesTeste: Comissao[] = [
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CCDD',
+      nome: 'Comissão de Comunicação e Direito Digital',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CSP',
+      nome: 'Comissão de Segurança Pública',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CDD',
+      nome: 'Comissão de Defesa da Democracia',
+    },
+    { siglaCasaLegislativa: 'SF', sigla: 'CEsp', nome: 'Comissão de Esporte' },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CTFC',
+      nome: 'Comissão de Transparência, Governança, Fiscalização e Controle e Defesa do Consumidor',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CRA',
+      nome: 'Comissão de Agricultura e Reforma Agrária',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CDR',
+      nome: 'Comissão de Desenvolvimento Regional e Turismo',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CCT',
+      nome: 'Comissão de Ciência, Tecnologia, Inovação e Informática',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CMA',
+      nome: 'Comissão de Meio Ambiente',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CI',
+      nome: 'Comissão de Serviços de Infraestrutura',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CRE',
+      nome: 'Comissão de Relações Exteriores e Defesa Nacional',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CE',
+      nome: 'Comissão de Educação e Cultura',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CAS',
+      nome: 'Comissão de Assuntos Sociais',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CCJ',
+      nome: 'Comissão de Constituição, Justiça e Cidadania',
+    },
+    {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CAE',
+      nome: 'Comissão de Assuntos Econômicos',
+    },
+  ];
+
   public getMateria(): Materia {
     this.materia.ano = Number(this.anoInput.value) || this.materia.ano;
     this.materia.materia = this.materiaInput.value ?? '';
-    this.materia.destino = this.destinoRadio.value as Destino;
 
     const cValue = this.comissaoValueInput.value?.trim();
     const cDesc = this.comissaoDescInput.value?.trim();
@@ -115,36 +188,9 @@ export class LexmlParecerMateria extends LitElement {
             placeholder="Digite a matéria"
             .value=${this.materia.materia}
           ></wa-input>
-
-          <wa-radio-group
-            id="destinoRadio"
-            class="span-2 block"
-            label="Destino"
-            .value=${this.materia.destino}
-          >
-            ${getAllDestinosValues().map(
-              opt => html`<wa-radio value=${opt.value}>${opt.label}</wa-radio>`,
-            )}
-          </wa-radio-group>
-
-          <wa-input
-            id="comissaoValue"
-            class="block"
-            type="text"
-            label="Comissão (value)"
-            placeholder="Ex.: CDR"
-            .value=${this.materia.comissao?.value ?? ''}
-          ></wa-input>
-
-          <wa-input
-            id="comissaoDesc"
-            class="block"
-            type="text"
-            label="Comissão (descrição)"
-            placeholder="Ex.: CDR - COMISSÃO DE DESENVOLVIMENTO REGIONAL E TURISMO"
-            .value=${this.materia.comissao?.description ?? ''}
-          ></wa-input>
-
+          <div>
+            <lexml-destino .comissoes=${this.comissoesTeste}></lexml-destino>
+          </div>
           <wa-textarea
             id="ementaInput"
             class="span-2 block"
