@@ -38,14 +38,14 @@ declare class Comissao {
  *
  * ```html
  * <!-- Exemplo de integração com Redux -->
- * <lexml-destino
+ * <lexml-ui-destino
  *   .addAlert=${a => rootStore.dispatch(adicionarAlerta(a))}
  *   .removeAlert=${id => rootStore.dispatch(removerAlerta(id))}
  *   criticalType=${TipoMensagem.CRITICAL}
  *   .comissoes=${listaDeComissoes}
  *   .proposicao=${proposicao}
  *   .colegiadoApreciador=${colegiado}
- * ></lexml-destino>
+ * ></lexml-ui-destino>
  * ```
  *
  * Caso não injete as funções `addAlert` e `removeAlert`, o componente emitirá
@@ -100,4 +100,25 @@ declare global {
   }
 }
 
-export { Comissao, DestinoComponent, LexmlUiCommons };
+declare class Data extends LitElement {
+  inputData: HTMLInputElement;
+  private group;
+  optionNaoInformarData: any;
+  data: string;
+  firstUpdated(): void;
+  private selecionarRadioData;
+  updated(): void;
+  render(): TemplateResult;
+  private resetDate;
+  private setDate;
+  private timerOnChange;
+  private agendarEmissaoEventoOnChange;
+  private emitirEventoOnChange;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-data': Data;
+  }
+}
+
+export { Comissao, Data, DestinoComponent, LexmlUiCommons };

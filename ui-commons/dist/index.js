@@ -117,7 +117,9 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
       <wa-input label="Texto" placeholder="Digite um texto"></wa-input>
       <br />
       <h2>Teste DestinoComponent</h2>
-      <lexml-destino .comissoes=${this.comissoesTeste}></lexml-destino>
+      <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
+      <h2>Teste DataComponent</h2>
+      <lexml-ui-data></lexml-ui-data>
     `;
     }
 };
@@ -196,7 +198,9 @@ let AutocompleteAsync = class AutocompleteAsync extends LitElement {
         .lexml-autocomplete-input {
           width: 100%;
         }
-
+        wa-input {
+          font-size: 14px;
+        }
         @media (max-width: 576px) {
           .lexml-autocomplete-label {
             width: calc(100% - 2px);
@@ -775,6 +779,9 @@ let DestinoComponent = class DestinoComponent extends LitElement {
           background-color: #f8d7da;
           border-color: #f5c6cb;
         }
+        wa-radio {
+          font-size: 14px;
+        }
       </style>
       <fieldset class="lexml-destino">
         <legend>Destino</legend>
@@ -969,7 +976,7 @@ __decorate([
     property({ type: Object, state: true })
 ], DestinoComponent.prototype, "colegiadoApreciador", null);
 DestinoComponent = __decorate([
-    customElement('lexml-destino')
+    customElement('lexml-ui-destino')
 ], DestinoComponent);
 
 class Comissao {
@@ -980,5 +987,188 @@ class Comissao {
     }
 }
 
-export { Comissao, DestinoComponent, LexmlUiCommons };
+let Data = class Data extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.data = new Date().toISOString().slice(0, 10);
+        this.timerOnChange = 0;
+    }
+    firstUpdated() {
+        setTimeout(() => {
+            const internalLabel = this.inputData.shadowRoot?.querySelector('label');
+            if (internalLabel) {
+                internalLabel.addEventListener('click', () => {
+                    this.selecionarRadioData();
+                });
+            }
+            else {
+                console.error('FALHA: A label interna do wa-input.');
+            }
+        }, 100);
+    }
+    selecionarRadioData() {
+        const radio = this.shadowRoot?.querySelector('#radio-data-option');
+        if (radio && !radio.checked) {
+            radio.checked = true;
+            this.setDate();
+        }
+    }
+    updated() {
+        this.inputData.value =
+            this.data ||
+                this.inputData.value ||
+                new Date().toISOString().replace(/T.+$/, '');
+        if (!this.data && !this.optionNaoInformarData.checked) {
+            this.optionNaoInformarData.checked = true;
+        }
+    }
+    render() {
+        return html `
+      <style>
+        :host {
+          font-size: 14px;
+          --wa-font-size-medium: 14px;
+          font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        }
+        fieldset.lexml-data {
+          background-color: var(--wa-color-gray-95);
+          box-shadow: var(--wa-shadow-m);
+          padding: 20px;
+          border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+          border-radius: var(--wa-border-radius-s);
+          max-width: 655px;
+          margin: 0;
+        }
+        legend {
+          background-color: var(--wa-color-gray-90);
+          font-weight: bold;
+          border-radius: 6px;
+          border: 1px solid var(--wa-color-gray-85);
+          padding: 2px 8px;
+          box-shadow: var(--wa-shadow-s);
+          color: #333;
+          margin-left: 8px;
+        }
+
+        wa-radio-group {
+          margin-left: 10px;
+        }
+        wa-radio {
+          font-size: 14px;
+        }
+        wa-input {
+          max-width: 190px;
+        }
+        .label-on-left {
+          display: grid;
+          grid-template-columns: 32px 1fr;
+
+          wa-input {
+            grid-column: 1 / -1;
+            grid-row-end: span 2;
+            display: grid;
+            grid-template-columns: subgrid;
+            gap: 0 var(--wa-space-l);
+            margin-right: 20px;
+            font-size: 14px;
+          }
+          ::part(input) {
+            margin-top: -10px;
+          }
+          ::part(label) {
+            text-align: right;
+          }
+
+          ::part(hint) {
+            grid-column: 2;
+          }
+        }
+        .fiel-click-radio {
+          margin-top: -10px;
+        }
+        .label-on-left wa-input::part(label) {
+          cursor: pointer;
+        }
+        @media (max-width: 480px) {
+        }
+      </style>
+      <fieldset class="lexml-data">
+        <legend>Data</legend>
+        <wa-radio-group
+          id="data-component"
+          orientation="horizontal"
+          size="medium"
+          .value=${this.data ? '2' : '1'}
+        >
+          <wa-radio
+            id="radio-data-option"
+            name="data"
+            value="2"
+            @click=${this.setDate}
+          >
+            <div class="label-on-left">
+              <wa-input
+                id="input-data"
+                label="Data"
+                type="date"
+                ?disabled=${!this.data}
+                @input=${this.setDate}
+              >
+              </wa-input>
+            </div>
+          </wa-radio>
+          <wa-radio name="data" id="no-date" value="1" @click=${this.resetDate}>
+            Não informar
+          </wa-radio>
+        </wa-radio-group>
+      </fieldset>
+    `;
+    }
+    resetDate() {
+        const original = this.data;
+        this.data = '';
+        if (original !== this.data) {
+            this.agendarEmissaoEventoOnChange();
+        }
+    }
+    setDate() {
+        if (this.inputData) {
+            const original = this.data;
+            this.data = this.inputData.value;
+            if (original !== this.data) {
+                this.agendarEmissaoEventoOnChange();
+            }
+        }
+    }
+    agendarEmissaoEventoOnChange() {
+        clearTimeout(this.timerOnChange);
+        this.timerOnChange = window.setTimeout(() => this.emitirEventoOnChange(), 1000);
+    }
+    emitirEventoOnChange() {
+        this.dispatchEvent(new CustomEvent('onchange', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                origemEvento: 'data',
+            },
+        }));
+    }
+};
+__decorate([
+    query('#input-data')
+], Data.prototype, "inputData", void 0);
+__decorate([
+    query('#data-component')
+], Data.prototype, "group", void 0);
+__decorate([
+    query('#no-date')
+], Data.prototype, "optionNaoInformarData", void 0);
+__decorate([
+    property({ type: String })
+], Data.prototype, "data", void 0);
+Data = __decorate([
+    customElement('lexml-ui-data')
+], Data);
+
+export { Comissao, Data, DestinoComponent, LexmlUiCommons };
 //# sourceMappingURL=index.js.map

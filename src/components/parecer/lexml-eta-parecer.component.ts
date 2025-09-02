@@ -23,7 +23,7 @@ export class LexmlEtaParecer extends LitElement {
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
         <wa-tab slot="nav" panel="analise">Análise</wa-tab>
         <wa-tab slot="nav" panel="voto">Voto</wa-tab>
-        <wa-tab slot="nav" panel="DataAutoriaEIpressao"
+        <wa-tab slot="nav" panel="dataAutoriaImpressao"
           >Data, Autoria e Impressão</wa-tab
         >
         <wa-tab slot="nav" panel="avisos">Avisos</wa-tab>
@@ -39,6 +39,9 @@ export class LexmlEtaParecer extends LitElement {
         </wa-tab-panel>
         <wa-tab-panel name="voto" class="overflow-hidden">
           <lexml-parecer-voto></lexml-parecer-voto>
+        </wa-tab-panel>
+        <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
+          <lexml-parecer-data-autria-impressao></lexml-parecer-data-autria-impressao>
         </wa-tab-panel>
       </wa-tab-group>
     `;

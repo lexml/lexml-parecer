@@ -16,3 +16,4 @@ export { LexmlParecerRelatorio } from './components/relatorio/parecer-relatorio.
 export { LexmlParecerAnalise } from './components/analise/parecer-analise.component.js';
 export { LexmlParecerVoto } from './components/voto/parecer-voto.component.js';
 export { EditorTextoTeste } from './components/editorTextoTeste/editor-texto-teste.component.js';
+export { LexmlParecerDataAutoriaImpressao } from './components/dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';

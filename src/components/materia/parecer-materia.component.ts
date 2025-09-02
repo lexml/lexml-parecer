@@ -189,7 +189,9 @@ export class LexmlParecerMateria extends LitElement {
             .value=${this.materia.materia}
           ></wa-input>
           <div>
-            <lexml-destino .comissoes=${this.comissoesTeste}></lexml-destino>
+            <lexml-ui-destino
+              .comissoes=${this.comissoesTeste}
+            ></lexml-ui-destino>
           </div>
           <wa-textarea
             id="ementaInput"
