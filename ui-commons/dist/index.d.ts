@@ -121,4 +121,40 @@ declare global {
   }
 }
 
-export { Comissao, Data, DestinoComponent, LexmlUiCommons };
+declare class OpcoesImpressao {
+  imprimirBrasao: boolean;
+  textoCabecalho: string;
+  reduzirEspacoEntreLinhas: boolean;
+  tamanhoFonte: number;
+}
+
+declare class OpcoesImpressaoComponent extends LitElement {
+  tamanhoFonte: HTMLElement & {
+    value: string;
+  };
+  private _opcoesImpressao;
+  set opcoesImpressao(value: OpcoesImpressao);
+  get opcoesImpressao(): OpcoesImpressao;
+  private timerEmitirEventoOnChange;
+  protected firstUpdated(): void;
+  render(): TemplateResult;
+  private _atualizarTextoCabecalho;
+  private _atualizarImprimirBrasao;
+  private _atualizarTamanhoFonte;
+  private _atualizarReduzirEspacoEntreLinhas;
+  private agendarEmissaoEventoOnChange;
+  private emitirEventoOnChange;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-opcoes-impressao': OpcoesImpressaoComponent;
+  }
+}
+
+export {
+  Comissao,
+  Data,
+  DestinoComponent,
+  LexmlUiCommons,
+  OpcoesImpressaoComponent,
+};

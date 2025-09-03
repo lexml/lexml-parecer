@@ -3,6 +3,8 @@ import { css, LitElement, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import '@awesome.me/webawesome/dist/components/radio/radio.js';
 import '@awesome.me/webawesome/dist/components/radio-group/radio-group.js';
+import '@awesome.me/webawesome/dist/components/select/select.js';
+import '@awesome.me/webawesome/dist/components/option/option.js';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -118,8 +120,12 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
       <br />
       <h2>Teste DestinoComponent</h2>
       <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
+      <br />
       <h2>Teste DataComponent</h2>
       <lexml-ui-data></lexml-ui-data>
+      <br />
+      <h2>Teste OpcoesImpressaoComponent</h2>
+      <lexml-ui-opcoes-impressao></lexml-ui-opcoes-impressao>
     `;
     }
 };
@@ -1170,5 +1176,161 @@ Data = __decorate([
     customElement('lexml-ui-data')
 ], Data);
 
-export { Comissao, Data, DestinoComponent, LexmlUiCommons };
+class OpcoesImpressao {
+    constructor() {
+        this.imprimirBrasao = true;
+        this.textoCabecalho = '';
+        this.reduzirEspacoEntreLinhas = false;
+        this.tamanhoFonte = 14;
+    }
+}
+
+let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.timerEmitirEventoOnChange = 0;
+    }
+    set opcoesImpressao(value) {
+        this._opcoesImpressao = value ? value : new OpcoesImpressao();
+        this.requestUpdate();
+    }
+    get opcoesImpressao() {
+        return this._opcoesImpressao;
+    }
+    firstUpdated() {
+        this.tamanhoFonte.addEventListener('sl-change', (ev) => this._atualizarTamanhoFonte(ev));
+    }
+    render() {
+        return html `
+      <style>
+        fieldset {
+          font-size: 14px;
+          font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5em;
+          background-color: var(--wa-color-gray-95);
+          box-shadow: var(--wa-shadow-m);
+          flex-wrap: wrap;
+          padding: 20px 20px;
+          border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+          border-radius: var(--wa-border-radius-s);
+          max-width: 655px;
+          margin: 1em 0 2em 0;
+        }
+
+        legend {
+          background-color: var(--wa-color-gray-90);
+          font-weight: bold;
+          border-radius: 5px;
+          border: 1px solid var(--wa-color-gray-85);
+          padding: 2px 5px;
+          box-shadow: var(--wa-shadow-s);
+          color: #333;
+        }
+
+        @media (max-width: 480px) {
+        }
+        wa-select {
+          max-width: 400px;
+        }
+        label {
+          line-height: var(--wa-toggle-size);
+          font-size: var(--wa-font-size-s);
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+      </style>
+
+      <fieldset class="lexml-opcoes-impressao">
+        <legend>Opções de impressão</legend>
+        <div>
+          <label class="lbl-imprimir-brasao" for="chk-imprimir-brasao">
+            <input
+              type="checkbox"
+              id="chk-imprimir-brasao"
+              ?checked=${this._opcoesImpressao?.imprimirBrasao}
+              @input=${(ev) => this._atualizarImprimirBrasao(ev)}
+            />
+            Imprimir brasão
+          </label>
+        </div>
+        <wa-input
+          type="text"
+          id="input-cabecalho"
+          name="textoCabecalho"
+          label="Texto do cabeçalho"
+          value=${this._opcoesImpressao?.textoCabecalho}
+          @input=${(ev) => this._atualizarTextoCabecalho(ev)}
+          size="small"
+        ></wa-input>
+        <div>
+          <wa-select
+            id="select-tamanho-fonte"
+            label="Tamanho da letra"
+            size="small"
+            value=${this._opcoesImpressao?.tamanhoFonte}
+          >
+            <wa-option value="14">14</wa-option>
+            <wa-option value="16">16</wa-option>
+            <wa-option value="18">18</wa-option>
+          </wa-select>
+        </div>
+        <div>
+          <label class="lbl-reduzir-espaco" for="chk-reduzir-espaco">
+            <input
+              type="checkbox"
+              id="chk-reduzir-espaco"
+              ?checked=${this._opcoesImpressao?.reduzirEspacoEntreLinhas}
+              @input=${(ev) => this._atualizarReduzirEspacoEntreLinhas(ev)}
+            />
+            Reduzir espaço entre linhas
+          </label>
+        </div>
+      </fieldset>
+    `;
+    }
+    _atualizarTextoCabecalho(ev) {
+        this._opcoesImpressao.textoCabecalho = ev.target.value;
+        this.requestUpdate();
+    }
+    _atualizarImprimirBrasao(ev) {
+        this._opcoesImpressao.imprimirBrasao = ev.target.checked;
+        this.requestUpdate();
+    }
+    _atualizarTamanhoFonte(ev) {
+        const valorFonte = parseInt(ev.currentTarget.value);
+        this._opcoesImpressao.tamanhoFonte = valorFonte;
+        this.requestUpdate();
+    }
+    _atualizarReduzirEspacoEntreLinhas(ev) {
+        this._opcoesImpressao.reduzirEspacoEntreLinhas = ev.target.checked;
+        this.requestUpdate();
+    }
+    agendarEmissaoEventoOnChange(origemEvento) {
+        clearInterval(this.timerEmitirEventoOnChange);
+        this.timerEmitirEventoOnChange = window.setTimeout(() => this.emitirEventoOnChange(origemEvento), 50);
+    }
+    emitirEventoOnChange(origemEvento) {
+        this.dispatchEvent(new CustomEvent('onchange', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                origemEvento,
+            },
+        }));
+    }
+};
+__decorate([
+    query('#select-tamanho-fonte')
+], OpcoesImpressaoComponent.prototype, "tamanhoFonte", void 0);
+__decorate([
+    property({ type: Object, state: true })
+], OpcoesImpressaoComponent.prototype, "opcoesImpressao", null);
+OpcoesImpressaoComponent = __decorate([
+    customElement('lexml-ui-opcoes-impressao')
+], OpcoesImpressaoComponent);
+
+export { Comissao, Data, DestinoComponent, LexmlUiCommons, OpcoesImpressaoComponent };
 //# sourceMappingURL=index.js.map
