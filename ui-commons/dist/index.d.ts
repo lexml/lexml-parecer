@@ -1,9 +1,22 @@
 import * as lit_html from 'lit-html';
 import * as lit from 'lit';
-import { LitElement, TemplateResult } from 'lit';
+import { LitElement, TemplateResult, PropertyValues } from 'lit';
 
 declare class LexmlUiCommons extends LitElement {
   static styles: lit.CSSResult;
+  private _nomesParlamentares;
+  private _nomeSelecionado;
+  private _onAutocomplete;
+  private _onInput;
+  private _tipoIdx;
+  totalAlertas: number;
+  private alertasDemo;
+  private gerarId;
+  private readonly tiposCiclo;
+  private readonly labelTipo;
+  private adicionarAlertaDemo;
+  private removerAlertaDemo;
+  private limparAlertasDemo;
   private comissoesTeste;
   render(): lit_html.TemplateResult<1>;
 }
@@ -58,7 +71,7 @@ type DestinoAlert = {
   podeFechar?: boolean;
 };
 type AddAlertFn = (alerta: DestinoAlert) => void;
-type RemoveAlertFn = (id: string) => void;
+type RemoveAlertFn$1 = (id: string) => void;
 declare class DestinoComponent extends LitElement {
   private _autocomplete;
   private _comissoesAutocomplete;
@@ -70,7 +83,7 @@ declare class DestinoComponent extends LitElement {
   private _proposicao;
   static styles: lit.CSSResult[];
   addAlert?: AddAlertFn;
-  removeAlert?: RemoveAlertFn;
+  removeAlert?: RemoveAlertFn$1;
   criticalType: string;
   set proposicao(value: RefProposicaoEmendada);
   constructor();
@@ -96,7 +109,7 @@ declare class DestinoComponent extends LitElement {
 }
 declare global {
   interface HTMLElementTagNameMap {
-    'lexml-destino': DestinoComponent;
+    'lexml-ui-destino': DestinoComponent;
   }
 }
 
@@ -117,7 +130,7 @@ declare class Data extends LitElement {
 }
 declare global {
   interface HTMLElementTagNameMap {
-    'lexml-data': Data;
+    'lexml-ui-data': Data;
   }
 }
 
@@ -147,14 +160,169 @@ declare class OpcoesImpressaoComponent extends LitElement {
 }
 declare global {
   interface HTMLElementTagNameMap {
-    'lexml-opcoes-impressao': OpcoesImpressaoComponent;
+    'lexml-ui-opcoes-impressao': OpcoesImpressaoComponent;
   }
 }
 
+declare enum TipoMensagem {
+  INFO = 'INFO',
+  WARNING = 'WARNING',
+  ERROR = 'ERROR',
+  CRITICAL = 'CRITICAL',
+  SUCCESS = 'SUCCESS',
+}
+declare enum AutoFix {
+  INFORMAR_NORMA = '\u00C9 necess\u00E1rio informar a norma a ser alterada',
+  OMISSIS_ANTES = '\u00C9 necess\u00E1rio uma linha pontilhada antes deste dispositivo',
+  OMISSIS_SEQUENCIAIS = 'N\u00E3o pode haver mais de uma linha pontilhada sequencialmente',
+  RENUMERAR_DISPOSITIVO = 'Numere o dispositivo',
+}
+interface Mensagem {
+  tipo: TipoMensagem;
+  descricao?: string;
+  descricaoParaPDF?: string;
+  detalhe?: any;
+  fix?: any;
+  nomeEvento?: string;
+}
+interface MensagemErro extends Mensagem {
+  tipo: TipoMensagem.ERROR;
+}
+
+interface Alerta {
+  id: string;
+  tipo: TipoMensagem;
+  mensagem: string;
+  podeFechar: boolean;
+  exibirComandoEmenda?: boolean;
+}
+
+/**
+ * Exemplo de uso do componente <lexml-ui-alertas>:
+ *
+ * Caso o projeto utilize Redux para gerenciar alertas, injete callbacks pelo PAI:
+ *
+ * ```html
+ * <lexml-ui-alertas
+ *   .alertas=${store.getState().elementoReducer.ui?.alertas ?? []}
+ *   .removeAlert=${(id: string) => store.dispatch(removerAlerta(id))}
+ *   .clearAlerts=${() => store.dispatch(limparAlertas())}
+ *   .seletorHost=${'lexml-emenda'}              <!-- opcional -->
+ *   .seletorBadge=${'#contadorAvisos wa-badge'}  <!-- opcional -->
+ *   @alertas:alterados=${(e: CustomEvent<{ total: number; aumentou: boolean }>) => {
+ *     // opcional: usar e.detail.total / e.detail.aumentou
+ *   }}
+ * ></lexml-ui-alertas>
+ * ```
+ *
+ * Caso NÃO injete `removeAlert`/`clearAlerts`, o componente emitirá eventos
+ * (`alert:remove` com { id } e `alert:clear`) que podem ser ouvidos externamente:
+ *
+ * ```html
+ * <lexml-ui-alertas
+ *   .alertas=${meusAlertas}
+ *   @alert:remove=${(e: CustomEvent<{ id: string }>) => store.dispatch(removerAlerta(e.detail.id))}
+ *   @alert:clear=${() => store.dispatch(limparAlertas())}
+ * ></lexml-ui-alertas>
+ * ```
+ */
+type RemoveAlertFn = (id: string) => void;
+type ClearAlertsFn = () => void;
+declare class AlertasComponent extends LitElement {
+  static styles: lit.CSSResult;
+  alertas: Alerta[];
+  removeAlert?: RemoveAlertFn;
+  clearAlerts?: ClearAlertsFn;
+  seletorHost: string;
+  seletorBadge: string;
+  stateChanged(state: any): void;
+  private _lastCount;
+  getAlertIcon(tipoAlerta: TipoMensagem): TemplateResult;
+  limparAlertas(): void;
+  removeAlertaById(id: string): void;
+  updated(changedProperties: PropertyValues): void;
+  render(): TemplateResult;
+}
+
+declare class Autocomplete extends LitElement {
+  items: string[];
+  label: string;
+  opened: boolean;
+  maxSuggestions: number;
+  _suggestions: string[];
+  _bound: any;
+  _inputEl: any;
+  _suggestionEl: any;
+  _highlightedEl: any;
+  _blur: boolean;
+  _mouseEnter: boolean;
+  render(): TemplateResult;
+  /**
+   * Input element getter
+   */
+  get contentElement(): any;
+  private _tempValue?;
+  /**
+   * Value getter from input element.
+   */
+  get value(): any;
+  /**
+   * Value setter to input element.
+   */
+  set value(value: any);
+  firstUpdated(): void;
+  disconnectedCallback(): void;
+  focus(options?: FocusOptions): void;
+  updated(changed: PropertyValues): void;
+  /**
+   * Open suggestions.
+   */
+  open(): void;
+  /**
+   * Close suggestions.
+   */
+  close(): void;
+  /**
+   * Suggest autocomplete items.
+   * @param {Array<String>} suggestions
+   */
+  suggest(suggestions: string[]): void;
+  /**
+   * Autocomplete input with `value`.
+   * @param {String} value
+   */
+  autocomplete(value: string): void;
+  private _selectFromMouse;
+  _highlightPrev(): void;
+  _highlightNext(): void;
+  _handleKeyDown(ev: KeyboardEvent): void;
+  _handleKeyUp(ev: KeyboardEvent): void;
+  _findSuggetions(value?: string, nItemsResult?: number): string[];
+  _filterStartWith(value: string, itemsResult?: number): string[];
+  _filterContains(value: string, itemsResult?: number): string[];
+  _handleFocus(): void;
+  _handleBlur(): void;
+  _handleItemMouseEnter(): void;
+  _handleItemMouseLeave(): void;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-ui-autocomplete': Autocomplete;
+  }
+}
+
+declare const REGEX_ACCENTS: RegExp;
+
 export {
+  AlertasComponent,
+  AutoFix,
+  Autocomplete,
   Comissao,
   Data,
   DestinoComponent,
   LexmlUiCommons,
   OpcoesImpressaoComponent,
+  REGEX_ACCENTS,
+  TipoMensagem,
 };
+export type { Alerta, Mensagem, MensagemErro };

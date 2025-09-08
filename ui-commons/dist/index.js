@@ -1,10 +1,14 @@
 import '@awesome.me/webawesome/dist/components/input/input.js';
 import { css, LitElement, html } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { state, customElement, property, query } from 'lit/decorators.js';
 import '@awesome.me/webawesome/dist/components/radio/radio.js';
 import '@awesome.me/webawesome/dist/components/radio-group/radio-group.js';
 import '@awesome.me/webawesome/dist/components/select/select.js';
 import '@awesome.me/webawesome/dist/components/option/option.js';
+import '@awesome.me/webawesome/dist/components/callout/callout.js';
+import '@awesome.me/webawesome/dist/components/button/button.js';
+import '@awesome.me/webawesome/dist/components/icon/icon.js';
+import '@awesome.me/webawesome/dist/components/badge/badge.js';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -35,9 +39,100 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
+// Tipo string para salvar o nome em vez do índice
+var TipoMensagem;
+(function (TipoMensagem) {
+    TipoMensagem["INFO"] = "INFO";
+    TipoMensagem["WARNING"] = "WARNING";
+    TipoMensagem["ERROR"] = "ERROR";
+    TipoMensagem["CRITICAL"] = "CRITICAL";
+    TipoMensagem["SUCCESS"] = "SUCCESS";
+})(TipoMensagem || (TipoMensagem = {}));
+var AutoFix;
+(function (AutoFix) {
+    AutoFix["INFORMAR_NORMA"] = "\u00C9 necess\u00E1rio informar a norma a ser alterada";
+    AutoFix["OMISSIS_ANTES"] = "\u00C9 necess\u00E1rio uma linha pontilhada antes deste dispositivo";
+    AutoFix["OMISSIS_SEQUENCIAIS"] = "N\u00E3o pode haver mais de uma linha pontilhada sequencialmente";
+    AutoFix["RENUMERAR_DISPOSITIVO"] = "Numere o dispositivo";
+})(AutoFix || (AutoFix = {}));
+
 let LexmlUiCommons = class LexmlUiCommons extends LitElement {
     constructor() {
         super(...arguments);
+        // ******************************************* Itens para o Teste do Autocomplete
+        this._nomesParlamentares = [
+            'Davi Alcolumbre',
+            'Rodrigo Pacheco',
+            'Jaques Wagner',
+            'Randolfe Rodrigues',
+            'Eliziane Gama',
+            'Sérgio Moro',
+            'Eduardo Braga',
+            'Tasso Jereissati',
+            'Omar Aziz',
+            'Simone Tebet',
+        ];
+        this._nomeSelecionado = '';
+        this._onAutocomplete = (e) => {
+            this._nomeSelecionado = e.detail.value; // item escolhido da lista
+        };
+        this._onInput = (e) => {
+            this._nomeSelecionado = e.target.value ?? '';
+        };
+        // ******************************************* Fim dos Itens para o Autocomplete
+        // ******************************************* Itens para o Teste do Alert
+        this._tipoIdx = 0;
+        // Recebe o total via seletorHost (o lexml-ui-alertas seta isso)
+        this.totalAlertas = 0;
+        // Demo local de alertas (substitui Redux neste teste)
+        this.alertasDemo = [
+            {
+                id: 'a1',
+                tipo: TipoMensagem.INFO,
+                mensagem: 'Bem-vindo! Este é um alerta informativo.',
+                podeFechar: true,
+            },
+            {
+                id: 'a2',
+                tipo: TipoMensagem.WARNING,
+                mensagem: 'Atenção: verifique os dados preenchidos.',
+                podeFechar: true,
+            },
+        ];
+        this.tiposCiclo = [
+            TipoMensagem.INFO,
+            TipoMensagem.WARNING,
+            TipoMensagem.ERROR,
+            TipoMensagem.CRITICAL,
+            TipoMensagem.SUCCESS,
+        ];
+        this.labelTipo = {
+            [TipoMensagem.INFO]: 'INFO',
+            [TipoMensagem.WARNING]: 'WARNING',
+            [TipoMensagem.ERROR]: 'ERROR',
+            [TipoMensagem.CRITICAL]: 'CRITICAL',
+            [TipoMensagem.SUCCESS]: 'SUCCESS',
+        };
+        this.adicionarAlertaDemo = () => {
+            const tipo = this.tiposCiclo[this._tipoIdx];
+            this._tipoIdx = (this._tipoIdx + 1) % this.tiposCiclo.length;
+            const agora = new Date().toLocaleTimeString();
+            const novo = {
+                id: this.gerarId(),
+                tipo,
+                mensagem: `[${this.labelTipo[tipo]}] Alerta criado As disparidades são ainda maiores quando se avalia as diferentes regiões do Brasil: no Norte, a média de investimento anual é de R$ 66,52 por habitante e, no Nordeste, de R$ 87,21 — muito abaixo dos R$ 171,49 registrados para o Sudeste. Os dados são do Sistema Nacional de Informações em Saneamento Básico (Sinisa – 2023) Fonte: Agência Senado ${agora}.`,
+                podeFechar: true,
+            };
+            this.alertasDemo = [novo, ...this.alertasDemo];
+        };
+        this.removerAlertaDemo = (id) => {
+            this.alertasDemo = this.alertasDemo.filter(a => a.id !== id);
+        };
+        this.limparAlertasDemo = () => {
+            this.alertasDemo = [];
+        };
+        // ******************************************* Fim dos Itens para o Teste do Alert
+        // ******************************************* Itens para o Teste do Destino
         this.comissoesTeste = [
             {
                 siglaCasaLegislativa: 'SF',
@@ -112,11 +207,24 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
             },
         ];
     }
+    gerarId() {
+        return 'a' + Math.random().toString(36).slice(2, 8);
+    }
+    // ******************************************* Fim dos Itens para o Teste do Destino
     render() {
         return html `
       <h2>Start Projeto LEXML UI COMMONS</h2>
-      <h2>Teste sl-input</h2>
+      <h2>Teste wa-input</h2>
       <wa-input label="Texto" placeholder="Digite um texto"></wa-input>
+      <br />
+      <h2>Teste AutoCompletComponent</h2>
+      <lexml-ui-autocomplete
+        label="Parlamentar"
+        .items=${this._nomesParlamentares}
+        .value=${this._nomeSelecionado}
+        @autocomplete=${this._onAutocomplete}
+        @input=${this._onInput}
+      ></lexml-ui-autocomplete>
       <br />
       <h2>Teste DestinoComponent</h2>
       <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
@@ -126,6 +234,30 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
       <br />
       <h2>Teste OpcoesImpressaoComponent</h2>
       <lexml-ui-opcoes-impressao></lexml-ui-opcoes-impressao>
+      <h2>Teste AlertasComponent</h2>
+      <br />
+      <div class="linha">
+        <h2 style="margin: 0">Teste AlertasComponent</h2>
+        <div id="contadorAvisos">
+          <wa-badge attention="none">${this.totalAlertas}</wa-badge>
+        </div>
+        <button @click=${this.adicionarAlertaDemo}>Adicionar alerta</button>
+        <button @click=${this.limparAlertasDemo}>Limpar alertas</button>
+      </div>
+
+      <div class="caixa">
+        <lexml-ui-alertas
+          .alertas=${this.alertasDemo}
+          .removeAlert=${(id) => this.removerAlertaDemo(id)}
+          .clearAlerts=${() => this.limparAlertasDemo()}
+          .seletorHost=${'lexml-ui-commons'}
+          .seletorBadge=${'#contadorAvisos wa-badge'}
+          @alertas:alterados=${(e) => {
+            this.totalAlertas = e.detail.total;
+        }}
+        ></lexml-ui-alertas>
+      </div>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     `;
     }
 };
@@ -135,7 +267,33 @@ LexmlUiCommons.styles = css `
       padding: 25px;
       color: var(--lexml-ui-commons-text-color, #000);
     }
+    .linha {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .caixa {
+      background: #f2f2f2;
+      padding: 12px;
+      width: 1000px;
+      border-radius: 8px;
+    }
   `;
+__decorate([
+    state()
+], LexmlUiCommons.prototype, "_nomesParlamentares", void 0);
+__decorate([
+    state()
+], LexmlUiCommons.prototype, "_nomeSelecionado", void 0);
+__decorate([
+    state()
+], LexmlUiCommons.prototype, "_tipoIdx", void 0);
+__decorate([
+    state()
+], LexmlUiCommons.prototype, "totalAlertas", void 0);
+__decorate([
+    state()
+], LexmlUiCommons.prototype, "alertasDemo", void 0);
 LexmlUiCommons = __decorate([
     customElement('lexml-ui-commons')
 ], LexmlUiCommons);
@@ -464,7 +622,7 @@ __decorate([
     property({ type: String })
 ], AutocompleteAsync.prototype, "value", null);
 AutocompleteAsync = __decorate([
-    customElement('autocomplete-async')
+    customElement('autocomplete-ui-async')
 ], AutocompleteAsync);
 class Option {
     constructor(value, description) {
@@ -831,7 +989,7 @@ let DestinoComponent = class DestinoComponent extends LitElement {
           </wa-radio-group>
         </div>
         <div style="width:100%;margin-top:10px">
-          <autocomplete-async
+          <autocomplete-ui-async
             id="auto-complete-async"
             label="Comissão"
             .async=${false}
@@ -847,7 +1005,7 @@ let DestinoComponent = class DestinoComponent extends LitElement {
             this.isPlenario ||
             this.tipoColegiadoPlenario ||
             !this.comissoes?.length}
-          ></autocomplete-async>
+          ></autocomplete-ui-async>
           ${this.isErroComissaoSelecionada
             ? html `
                 <div class="mensagem mensagem--danger">
@@ -1236,7 +1394,7 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
         }
         label {
           line-height: var(--wa-toggle-size);
-          font-size: var(--wa-font-size-s);
+          font-size: var(--wa-font-size-xs);
           display: flex;
           align-items: center;
           gap: 5px;
@@ -1332,5 +1490,563 @@ OpcoesImpressaoComponent = __decorate([
     customElement('lexml-ui-opcoes-impressao')
 ], OpcoesImpressaoComponent);
 
-export { Comissao, Data, DestinoComponent, LexmlUiCommons, OpcoesImpressaoComponent };
+const mapTipoMensagem = {
+    [TipoMensagem.INFO]: { icon: 'info-circle', variant: 'brand' },
+    [TipoMensagem.WARNING]: { icon: 'triangle-exclamation', variant: 'warning' },
+    [TipoMensagem.ERROR]: { icon: 'circle-exclamation', variant: 'danger' },
+    [TipoMensagem.CRITICAL]: { icon: 'circle-exclamation', variant: 'danger' },
+    [TipoMensagem.SUCCESS]: { icon: 'check', variant: 'success' },
+};
+let AlertasComponent = class AlertasComponent extends LitElement {
+    constructor() {
+        /*
+        static styles = css`
+          wa-callout {
+            box-shadow: var(--wa-shadow-l);
+            margin: 20px;
+          }
+          .field__alert {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          .alert__close-button {
+            cursor: pointer;
+          }
+          wa-button::part(base) {
+            background-color: transparent;
+          }
+          .icon__close {
+            color: var(--wa-color-neutral-50) !important;
+          }
+          .icon__close:hover {
+            color: var(--wa-color-brand-60) !important;
+          }
+        `;
+        */
+        super(...arguments);
+        this.alertas = [];
+        this.seletorHost = 'lexml-emenda';
+        this.seletorBadge = '#contadorAvisos wa-badge';
+        this._lastCount = 0;
+    }
+    stateChanged(state) {
+        this.alertas = state.elementoReducer.ui?.alertas || [];
+    }
+    getAlertIcon(tipoAlerta) {
+        return html `<wa-icon
+      slot="icon"
+      name="${mapTipoMensagem[tipoAlerta].icon}"
+    ></wa-icon>`;
+    }
+    limparAlertas() {
+        if (this.clearAlerts) {
+            this.clearAlerts();
+        }
+        else {
+            this.dispatchEvent(new CustomEvent('alert:clear', {
+                bubbles: true,
+                composed: true,
+            }));
+        }
+    }
+    removeAlertaById(id) {
+        if (this.removeAlert) {
+            this.removeAlert(id);
+        }
+        else {
+            this.dispatchEvent(new CustomEvent('alert:remove', {
+                bubbles: true,
+                composed: true,
+                detail: { id },
+            }));
+        }
+    }
+    updated(changedProperties) {
+        if (changedProperties.has('alertas')) {
+            this.alertas?.forEach(alerta => {
+                this.shadowRoot
+                    ?.getElementById(alerta.id)
+                    ?.addEventListener('click', (event) => {
+                    event.stopImmediatePropagation();
+                    this.removeAlertaById(event.target.id);
+                });
+            });
+            const host = this.seletorHost
+                ? document.querySelector(this.seletorHost)
+                : null;
+            if (host) {
+                host.totalAlertas = this.alertas.length;
+            }
+            const oldValue = changedProperties.get('alertas')?.length || 0;
+            const newValue = this.alertas.length;
+            if (host && newValue > oldValue) {
+                const badge = this.seletorBadge
+                    ? document.querySelector(this.seletorBadge)
+                    : null;
+                if (badge) {
+                    badge.setAttribute('attention', 'none');
+                    void badge.offsetWidth;
+                    badge.setAttribute('attention', 'pulse');
+                }
+            }
+            this.dispatchEvent(new CustomEvent('alertas:alterados', {
+                bubbles: true,
+                composed: true,
+                detail: { total: newValue, aumentou: newValue > oldValue },
+            }));
+        }
+    }
+    render() {
+        return html `
+      ${this.alertas.map(alerta => html ` ${alerta.podeFechar
+            ? html `
+                <wa-callout
+                  variant="${mapTipoMensagem[alerta.tipo].variant}"
+                  open
+                >
+                  ${this.getAlertIcon(alerta.tipo)}
+                  <div class="field__alert">
+                    ${alerta.mensagem}
+                    <wa-button
+                      appearance="plain"
+                      size="small"
+                      class="alert__close-button"
+                      id="${alerta.id}"
+                      aria-label="fechar"
+                      @click=${() => this.removeAlertaById(alerta.id)}
+                    >
+                      <wa-icon class="icon__close" name="xmark" label="Fechar">
+                      </wa-icon>
+                    </wa-button>
+                  </div>
+                </wa-callout>
+              `
+            : html `<wa-callout
+                variant="${mapTipoMensagem[alerta.tipo].variant}"
+                open
+              >
+                ${this.getAlertIcon(alerta.tipo)}${alerta.mensagem}
+              </wa-callout> `}`)}
+    `;
+    }
+};
+AlertasComponent.styles = css `
+    wa-callout {
+      background: var(--wa-color-neutral-0, #fff);
+      border: 1px solid var(--wa-color-neutral-300, #e2e8f0);
+      border-radius: 0.25rem;
+      box-shadow: var(--wa-shadow-l);
+      padding: 12px 16px;
+      position: relative;
+      --wa-callout-background: transparent;
+      font-size: var(--wa-font-size-xs);
+    }
+
+    wa-callout[variant='brand'] {
+      border-top: 3px solid var(--wa-color-brand-50);
+    }
+    wa-callout[variant='success'] {
+      border-top: 3px solid var(--wa-color-success-50);
+    }
+    wa-callout[variant='warning'] {
+      border-top: 3px solid var(--wa-color-warning-50);
+    }
+    wa-callout[variant='danger'] {
+      border-top: 3px solid var(--wa-color-danger-50);
+    }
+    wa-callout[variant='neutral'] {
+      border-top: 3px solid var(--wa-color-neutral-50);
+    }
+
+    wa-callout[variant='brand'] wa-icon {
+      color: var(--wa-color-brand-50);
+    }
+    wa-callout[variant='success'] wa-icon {
+      color: var(--wa-color-success-50);
+    }
+    wa-callout[variant='warning'] wa-icon {
+      color: var(--wa-color-warning-50);
+    }
+    wa-callout[variant='danger'] wa-icon {
+      color: var(--wa-color-danger-50);
+    }
+    wa-callout[variant='neutral'] wa-icon {
+      color: var(--wa-color-neutral-50);
+    }
+    .field__alert {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    wa-callout {
+      margin: 0;
+    }
+    wa-callout + wa-callout {
+      margin-top: 8px;
+    }
+    .alert__close-button {
+      cursor: pointer;
+    }
+    wa-button::part(base) {
+      background-color: transparent;
+    }
+    .icon__close {
+      color: var(--wa-color-neutral-50) !important;
+    }
+    .icon__close:hover {
+      color: var(--wa-color-brand-60) !important;
+    }
+  `;
+__decorate([
+    property({ type: Array })
+], AlertasComponent.prototype, "alertas", void 0);
+__decorate([
+    property({ attribute: false })
+], AlertasComponent.prototype, "removeAlert", void 0);
+__decorate([
+    property({ attribute: false })
+], AlertasComponent.prototype, "clearAlerts", void 0);
+__decorate([
+    property({ type: String })
+], AlertasComponent.prototype, "seletorHost", void 0);
+__decorate([
+    property({ type: String })
+], AlertasComponent.prototype, "seletorBadge", void 0);
+AlertasComponent = __decorate([
+    customElement('lexml-ui-alertas')
+], AlertasComponent);
+
+const REGEX_ACCENTS = /[\u0300-\u036f]/g;
+
+let Autocomplete = class Autocomplete extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.items = [];
+        this.label = '';
+        this.opened = false;
+        this.maxSuggestions = 10;
+        this._suggestions = [];
+        this._bound = {};
+        this._blur = false;
+        this._mouseEnter = false;
+    }
+    render() {
+        return html `
+      <style>
+        .suggest-container {
+          position: relative;
+        }
+
+        ul {
+          position: absolute;
+          display: block;
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          z-index: 10000;
+          border: 1px solid grey;
+          background: white;
+        }
+        li {
+          padding: 4px;
+          cursor: pointer;
+        }
+        li.active {
+          background: whitesmoke;
+        }
+        [hidden] {
+          display: none;
+        }
+
+        .lexml-autocomplete-input {
+          width: 100%;
+        }
+
+        @media (max-width: 576px) {
+          .lexml-autocomplete-label {
+            width: calc(100% - 2px);
+            display: block;
+          }
+          .lexml-autocomplete-input {
+            width: calc(100% - 2px);
+          }
+        }
+      </style>
+      <slot id="dropdown-input">
+        <wa-input
+          id="defaultInput"
+          class="lexml-autocomplete-input"
+          label=${this.label}
+          type="text"
+          placeholder=""
+          size="small"
+          .value=${this.value || ''}
+        >
+        </wa-input>
+      </slot>
+      <div class="suggest-container">
+        <ul
+          id="suggestions"
+          ?hidden=${!this.opened}
+          @mouseenter=${this._handleItemMouseEnter}
+          @mouseleave=${this._handleItemMouseLeave}
+          @mousedown=${(e) => e.preventDefault()}
+        >
+          ${this._suggestions.map((item) => html `<li @click=${() => this._selectFromMouse(item)}>
+                ${item}
+              </li>`)}
+        </ul>
+      </div>
+    `;
+    }
+    /**
+     * Input element getter
+     */
+    get contentElement() {
+        if (this._inputEl)
+            return this._inputEl; // Cache
+        if (!this.hasUpdated)
+            return undefined; // No shadow root, no element to use
+        const slotElement = this.shadowRoot.getElementById('dropdown-input');
+        const slotInputList = slotElement.assignedElements();
+        this._inputEl = slotInputList.length
+            ? slotInputList[0]
+            : this.shadowRoot.getElementById('defaultInput');
+        return this._inputEl;
+    }
+    /**
+     * Value getter from input element.
+     */
+    get value() {
+        return this.contentElement && this.contentElement.value;
+    }
+    /**
+     * Value setter to input element.
+     */
+    set value(value) {
+        if (!this.contentElement) {
+            this._tempValue = value;
+            return;
+        }
+        this.contentElement.value = value;
+    }
+    firstUpdated() {
+        this._suggestionEl = this.shadowRoot.getElementById('suggestions');
+        this._suggestionEl.style.width = `${this.contentElement.getBoundingClientRect().width}px`;
+        this._bound.onKeyDown = this._handleKeyDown.bind(this);
+        this._bound.onKeyUp = this._handleKeyUp.bind(this);
+        this._bound.onFocus = this._handleFocus.bind(this);
+        this._bound.onBlur = this._handleBlur.bind(this);
+        this.contentElement.addEventListener('keydown', this._bound.onKeyDown);
+        this.contentElement.addEventListener('keyup', this._bound.onKeyUp);
+        this.contentElement.addEventListener('focus', this._bound.onFocus);
+        this.contentElement.addEventListener('blur', this._bound.onBlur);
+        if (this._tempValue !== undefined) {
+            this.contentElement.value = this._tempValue;
+        }
+    }
+    disconnectedCallback() {
+        if (!this.contentElement)
+            return; // no events to remove
+        this.contentElement.removeEventListener('keydown', this._bound.onKeyDown);
+        this.contentElement.removeEventListener('keyup', this._bound.onKeyUp);
+        this.contentElement.removeEventListener('focus', this._bound.onFocus);
+        this.contentElement.removeEventListener('blur', this._bound.onBlur);
+    }
+    focus(options) {
+        if (this.contentElement) {
+            this.contentElement.focus(options);
+        }
+    }
+    updated(changed) {
+        if (changed.has('opened') &&
+            this.opened &&
+            this._suggestionEl.childElementCount) {
+            // Highlight the first when there are suggestions
+            // eslint-disable-next-line prefer-destructuring
+            this._highlightedEl = this._suggestionEl.children[0];
+            this._highlightedEl.classList.add('active');
+        }
+    }
+    /**
+     * Open suggestions.
+     */
+    open() {
+        if (this._suggestionEl.style.width === '0px') {
+            this._suggestionEl.style.width = `${this.contentElement.getBoundingClientRect().width}px`;
+        }
+        if (this._suggestions.length) {
+            this.opened = true;
+        }
+    }
+    /**
+     * Close suggestions.
+     */
+    close() {
+        this.opened = false;
+        this._highlightedEl = null;
+    }
+    /**
+     * Suggest autocomplete items.
+     * @param {Array<String>} suggestions
+     */
+    suggest(suggestions) {
+        this._suggestions = suggestions || [];
+        // eslint-disable-next-line no-unused-expressions
+        this._suggestions.length > 1 ||
+            (this._suggestions.length === 1 &&
+                this._suggestions[0] !== this.contentElement.value)
+            ? this.open()
+            : this.close();
+        this.requestUpdate();
+    }
+    /**
+     * Autocomplete input with `value`.
+     * @param {String} value
+     */
+    autocomplete(value) {
+        this.contentElement.value = value;
+        this.close();
+        this.dispatchEvent(new CustomEvent('autocomplete', {
+            detail: { value },
+            composed: true,
+            bubbles: true,
+        }));
+    }
+    _selectFromMouse(item) {
+        this.autocomplete(item);
+        this.contentElement?.focus?.();
+    }
+    _highlightPrev() {
+        if (!this._highlightedEl || !this._highlightedEl.previousElementSibling)
+            return;
+        this._highlightedEl.classList.remove('active');
+        this._highlightedEl = this._highlightedEl.previousElementSibling;
+        this._highlightedEl.classList.add('active');
+    }
+    _highlightNext() {
+        if (!this._highlightedEl || !this._highlightedEl.nextElementSibling)
+            return;
+        this._highlightedEl.classList.remove('active');
+        this._highlightedEl = this._highlightedEl.nextElementSibling;
+        this._highlightedEl.classList.add('active');
+    }
+    // eslint-disable-next-line class-methods-use-this
+    _handleKeyDown(ev) {
+        // Prevent up and down from behaving as home and end on some browsers
+        if (ev.key === 'ArrowUp' || ev.key === 'ArrowDown') {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+    }
+    _handleKeyUp(ev) {
+        switch (ev.key) {
+            case 'ArrowUp':
+                if (this._highlightedEl?.previousElementSibling) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this._highlightPrev();
+                }
+                break;
+            case 'ArrowDown':
+                if (this._highlightedEl?.nextElementSibling) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this._highlightNext();
+                }
+                break;
+            case 'Enter':
+                // Select
+                // eslint-disable-next-line no-unused-expressions
+                this._highlightedEl && this._highlightedEl.click();
+                break;
+            default:
+                // TODO debounce
+                if (this.items.length) {
+                    const { value } = this.contentElement;
+                    const normalizedValue = value
+                        .normalize('NFD')
+                        .replace(REGEX_ACCENTS, '');
+                    this.suggest(this._findSuggetions(normalizedValue));
+                }
+        }
+    }
+    _findSuggetions(value, nItemsResult = this.maxSuggestions) {
+        if (!value) {
+            return [];
+        }
+        let suggestions = this._filterStartWith(value, nItemsResult);
+        if (suggestions.length < this.maxSuggestions) {
+            suggestions = [
+                ...suggestions,
+                ...this._filterContains(value, this.maxSuggestions - suggestions.length).filter(item => !suggestions.includes(item)),
+            ];
+        }
+        return suggestions;
+    }
+    _filterStartWith(value, itemsResult = this.maxSuggestions) {
+        const regexStartWith = new RegExp('^' + value, 'gi');
+        return ((value &&
+            this.items
+                .filter(item => item
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .match(regexStartWith))
+                .slice(0, itemsResult)) ||
+            []);
+    }
+    _filterContains(value, itemsResult = this.maxSuggestions) {
+        const regexContains = new RegExp(value, 'gi');
+        return ((value &&
+            this.items
+                .filter(item => item
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .match(regexContains))
+                .slice(0, itemsResult)) ||
+            []);
+    }
+    _handleFocus() {
+        this._blur = false;
+        // eslint-disable-next-line no-unused-expressions
+        this._suggestions.length > 1 && this.open();
+    }
+    _handleBlur() {
+        this._blur = true;
+        // eslint-disable-next-line no-unused-expressions
+        // !this._mouseEnter && this.close();
+        setTimeout(() => this.close(), 200);
+        this._suggestions = [];
+    }
+    // Handle mouse change focus to suggestions
+    _handleItemMouseEnter() {
+        this._mouseEnter = true;
+    }
+    _handleItemMouseLeave() {
+        this._mouseEnter = false;
+        // eslint-disable-next-line no-unused-expressions
+        this._blur && setTimeout(() => this.close(), 500); // Give user some slack before closing
+    }
+};
+__decorate([
+    property({ type: Array })
+], Autocomplete.prototype, "items", void 0);
+__decorate([
+    property({ type: String })
+], Autocomplete.prototype, "label", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true })
+], Autocomplete.prototype, "opened", void 0);
+__decorate([
+    property({ type: Number })
+], Autocomplete.prototype, "maxSuggestions", void 0);
+__decorate([
+    property({ type: String })
+], Autocomplete.prototype, "value", null);
+Autocomplete = __decorate([
+    customElement('lexml-ui-autocomplete')
+], Autocomplete);
+
+export { AlertasComponent, AutoFix, Autocomplete, Comissao, Data, DestinoComponent, LexmlUiCommons, OpcoesImpressaoComponent, REGEX_ACCENTS, TipoMensagem };
 //# sourceMappingURL=index.js.map

@@ -18,10 +18,7 @@
     "skipLibCheck": true,
     "baseUrl": ".", 
     "paths": {
-      "@ui-commons": [
-        "./ui-commons/dist/index.d.ts",
-        "./ui-commons/dist/index.js"
-      ]
+      "@ui-commons": ["./ui-commons/dist/index.d.ts"]
     }
   },
   "include": ["**/*.ts", "src/**/*", "src/types/**/*.d.ts"],

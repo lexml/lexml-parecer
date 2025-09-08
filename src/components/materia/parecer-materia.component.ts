@@ -149,16 +149,16 @@ export class LexmlParecerMateria extends LitElement {
       margin-top: 0.25rem;
     }
 
-    sl-input::part(form-control-label),
-    sl-textarea::part(form-control-label),
-    sl-radio-group::part(form-control-label) {
+    wa-input::part(form-control-label),
+    wa-textarea::part(form-control-label),
+    wa-radio-group::part(form-control-label) {
       font-weight: 600;
       color: #374151;
     }
 
-    sl-input,
-    sl-textarea,
-    sl-radio-group {
+    wa-input,
+    wa-textarea,
+    wa-radio-group {
       width: 100%;
     }
   `;
