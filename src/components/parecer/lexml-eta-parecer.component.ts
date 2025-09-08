@@ -19,13 +19,13 @@ export class LexmlEtaParecer extends LitElement {
     return html`
       <h2>${this.header}</h2>
       <wa-tab-group>
-        <wa-tab slot="nav" panel="dataAutoriaImpressao"
-          >Data, Autoria e Impressão</wa-tab
-        >
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
         <wa-tab slot="nav" panel="analise">Análise</wa-tab>
         <wa-tab slot="nav" panel="voto">Voto</wa-tab>
+        <wa-tab slot="nav" panel="dataAutoriaImpressao"
+          >Data, Autoria e Impressão</wa-tab
+        >
         <wa-tab slot="nav" panel="avisos">Avisos</wa-tab>
 
         <wa-tab-panel name="materia" class="overflow-hidden">
