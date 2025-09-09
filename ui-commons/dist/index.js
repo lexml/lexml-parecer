@@ -213,51 +213,53 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
     // ******************************************* Fim dos Itens para o Teste do Destino
     render() {
         return html `
-      <h2>Start Projeto LEXML UI COMMONS</h2>
-      <h2>Teste wa-input</h2>
-      <wa-input label="Texto" placeholder="Digite um texto"></wa-input>
-      <br />
-      <h2>Teste AutoCompletComponent</h2>
-      <lexml-ui-autocomplete
-        label="Parlamentar"
-        .items=${this._nomesParlamentares}
-        .value=${this._nomeSelecionado}
-        @autocomplete=${this._onAutocomplete}
-        @input=${this._onInput}
-      ></lexml-ui-autocomplete>
-      <br />
-      <h2>Teste DestinoComponent</h2>
-      <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
-      <br />
-      <h2>Teste DataComponent</h2>
-      <lexml-ui-data></lexml-ui-data>
-      <br />
-      <h2>Teste OpcoesImpressaoComponent</h2>
-      <lexml-ui-opcoes-impressao></lexml-ui-opcoes-impressao>
-      <h2>Teste AlertasComponent</h2>
-      <br />
-      <div class="linha">
-        <h2 style="margin: 0">Teste AlertasComponent</h2>
-        <div id="contadorAvisos">
-          <wa-badge attention="none">${this.totalAlertas}</wa-badge>
+      <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
+        <h2>Start Projeto LEXML UI COMMONS</h2>
+        <h2>Teste wa-input</h2>
+        <wa-input label="Texto" placeholder="Digite um texto"></wa-input>
+        <br />
+        <h2>Teste AutoCompletComponent</h2>
+        <lexml-ui-autocomplete
+          label="Parlamentar"
+          .items=${this._nomesParlamentares}
+          .value=${this._nomeSelecionado}
+          @autocomplete=${this._onAutocomplete}
+          @input=${this._onInput}
+        ></lexml-ui-autocomplete>
+        <br />
+        <h2>Teste DestinoComponent</h2>
+        <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
+        <br />
+        <h2>Teste DataComponent</h2>
+        <lexml-ui-data></lexml-ui-data>
+        <br />
+        <h2>Teste OpcoesImpressaoComponent</h2>
+        <lexml-ui-opcoes-impressao></lexml-ui-opcoes-impressao>
+        <h2>Teste AlertasComponent</h2>
+        <br />
+        <div class="linha">
+          <h2 style="margin: 0">Teste AlertasComponent</h2>
+          <div id="contadorAvisos">
+            <wa-badge attention="none">${this.totalAlertas}</wa-badge>
+          </div>
+          <button @click=${this.adicionarAlertaDemo}>Adicionar alerta</button>
+          <button @click=${this.limparAlertasDemo}>Limpar alertas</button>
         </div>
-        <button @click=${this.adicionarAlertaDemo}>Adicionar alerta</button>
-        <button @click=${this.limparAlertasDemo}>Limpar alertas</button>
-      </div>
 
-      <div class="caixa">
-        <lexml-ui-alertas
-          .alertas=${this.alertasDemo}
-          .removeAlert=${(id) => this.removerAlertaDemo(id)}
-          .clearAlerts=${() => this.limparAlertasDemo()}
-          .seletorHost=${'lexml-ui-commons'}
-          .seletorBadge=${'#contadorAvisos wa-badge'}
-          @alertas:alterados=${(e) => {
+        <div class="caixa">
+          <lexml-ui-alertas
+            .alertas=${this.alertasDemo}
+            .removeAlert=${(id) => this.removerAlertaDemo(id)}
+            .clearAlerts=${() => this.limparAlertasDemo()}
+            .seletorHost=${'lexml-ui-commons'}
+            .seletorBadge=${'#contadorAvisos wa-badge'}
+            @alertas:alterados=${(e) => {
             this.totalAlertas = e.detail.total;
         }}
-        ></lexml-ui-alertas>
+          ></lexml-ui-alertas>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
-      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     `;
     }
 };
@@ -1491,44 +1493,26 @@ OpcoesImpressaoComponent = __decorate([
 ], OpcoesImpressaoComponent);
 
 const mapTipoMensagem = {
-    [TipoMensagem.INFO]: { icon: 'info-circle', variant: 'brand' },
+    [TipoMensagem.INFO]: { icon: 'circle-info', variant: 'brand' },
     [TipoMensagem.WARNING]: { icon: 'triangle-exclamation', variant: 'warning' },
     [TipoMensagem.ERROR]: { icon: 'circle-exclamation', variant: 'danger' },
     [TipoMensagem.CRITICAL]: { icon: 'circle-exclamation', variant: 'danger' },
-    [TipoMensagem.SUCCESS]: { icon: 'check', variant: 'success' },
+    [TipoMensagem.SUCCESS]: { icon: 'circle-check', variant: 'success' },
 };
 let AlertasComponent = class AlertasComponent extends LitElement {
     constructor() {
-        /*
-        static styles = css`
-          wa-callout {
-            box-shadow: var(--wa-shadow-l);
-            margin: 20px;
-          }
-          .field__alert {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-          .alert__close-button {
-            cursor: pointer;
-          }
-          wa-button::part(base) {
-            background-color: transparent;
-          }
-          .icon__close {
-            color: var(--wa-color-neutral-50) !important;
-          }
-          .icon__close:hover {
-            color: var(--wa-color-brand-60) !important;
-          }
-        `;
-        */
         super(...arguments);
         this.alertas = [];
         this.seletorHost = 'lexml-emenda';
         this.seletorBadge = '#contadorAvisos wa-badge';
         this._lastCount = 0;
+        this.onCloseClick = (e) => {
+            e.stopPropagation();
+            e.stopImmediatePropagation?.();
+            const id = e.currentTarget?.dataset?.id;
+            if (id)
+                this.removeAlertaById(id);
+        };
     }
     stateChanged(state) {
         this.alertas = state.elementoReducer.ui?.alertas || [];
@@ -1603,7 +1587,7 @@ let AlertasComponent = class AlertasComponent extends LitElement {
             ? html `
                 <wa-callout
                   variant="${mapTipoMensagem[alerta.tipo].variant}"
-                  open
+                  appearance="outlined"
                 >
                   ${this.getAlertIcon(alerta.tipo)}
                   <div class="field__alert">
@@ -1612,19 +1596,22 @@ let AlertasComponent = class AlertasComponent extends LitElement {
                       appearance="plain"
                       size="small"
                       class="alert__close-button"
-                      id="${alerta.id}"
+                      data-id="${alerta.id}"
                       aria-label="fechar"
-                      @click=${() => this.removeAlertaById(alerta.id)}
+                      @click=${this.onCloseClick}
                     >
-                      <wa-icon class="icon__close" name="xmark" label="Fechar">
-                      </wa-icon>
+                      <wa-icon
+                        class="icon__close"
+                        name="xmark"
+                        label="Fechar"
+                      ></wa-icon>
                     </wa-button>
                   </div>
                 </wa-callout>
               `
             : html `<wa-callout
                 variant="${mapTipoMensagem[alerta.tipo].variant}"
-                open
+                appearance="outlined"
               >
                 ${this.getAlertIcon(alerta.tipo)}${alerta.mensagem}
               </wa-callout> `}`)}
@@ -1633,69 +1620,19 @@ let AlertasComponent = class AlertasComponent extends LitElement {
 };
 AlertasComponent.styles = css `
     wa-callout {
-      background: var(--wa-color-neutral-0, #fff);
-      border: 1px solid var(--wa-color-neutral-300, #e2e8f0);
-      border-radius: 0.25rem;
       box-shadow: var(--wa-shadow-l);
-      padding: 12px 16px;
-      position: relative;
-      --wa-callout-background: transparent;
-      font-size: var(--wa-font-size-xs);
-    }
-
-    wa-callout[variant='brand'] {
-      border-top: 3px solid var(--wa-color-brand-50);
-    }
-    wa-callout[variant='success'] {
-      border-top: 3px solid var(--wa-color-success-50);
-    }
-    wa-callout[variant='warning'] {
-      border-top: 3px solid var(--wa-color-warning-50);
-    }
-    wa-callout[variant='danger'] {
-      border-top: 3px solid var(--wa-color-danger-50);
-    }
-    wa-callout[variant='neutral'] {
-      border-top: 3px solid var(--wa-color-neutral-50);
-    }
-
-    wa-callout[variant='brand'] wa-icon {
-      color: var(--wa-color-brand-50);
-    }
-    wa-callout[variant='success'] wa-icon {
-      color: var(--wa-color-success-50);
-    }
-    wa-callout[variant='warning'] wa-icon {
-      color: var(--wa-color-warning-50);
-    }
-    wa-callout[variant='danger'] wa-icon {
-      color: var(--wa-color-danger-50);
-    }
-    wa-callout[variant='neutral'] wa-icon {
-      color: var(--wa-color-neutral-50);
+      margin: 20px;
     }
     .field__alert {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    wa-callout {
-      margin: 0;
-    }
-    wa-callout + wa-callout {
-      margin-top: 8px;
-    }
     .alert__close-button {
       cursor: pointer;
     }
     wa-button::part(base) {
       background-color: transparent;
-    }
-    .icon__close {
-      color: var(--wa-color-neutral-50) !important;
-    }
-    .icon__close:hover {
-      color: var(--wa-color-brand-60) !important;
     }
   `;
 __decorate([
@@ -2047,6 +1984,85 @@ __decorate([
 Autocomplete = __decorate([
     customElement('lexml-ui-autocomplete')
 ], Autocomplete);
+
+// ===== Bootstrap global: tema Shoelace dentro de TODOS os <lexml-ui-*> =====
+const SHOELACE_THEME_URL = 'https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/themes/shoelace.css';
+const isLexmlHost = (el) => el.tagName.startsWith('LEXML-UI-') || el.tagName === 'AUTOCOMPLETE-UI-ASYNC';
+function injectThemeStyle(root) {
+    if (!root.querySelector('style[data-wa-shoelace]')) {
+        const style = document.createElement('style');
+        style.setAttribute('data-wa-shoelace', '');
+        style.textContent = `@import url('${SHOELACE_THEME_URL}');`;
+        root.prepend(style); // no topo, melhor precedência
+    }
+}
+function ensureThemeScope(root) {
+    // se já existe wrapper, ok
+    if (root.querySelector('[data-wa-theme-scope]'))
+        return;
+    // pegue tudo que já está no root (menos o <style data-wa-shoelace>)
+    const keep = new Set(root.querySelectorAll('style[data-wa-shoelace]'));
+    const toMove = [];
+    root.childNodes.forEach(n => {
+        if (!keep.has(n))
+            toMove.push(n);
+    });
+    // se ainda não renderizou nada, deixa o observer cuidar depois
+    if (toMove.length === 0)
+        return;
+    // cria o wrapper com as classes do tema (escopo exigido pela folha Shoelace)
+    const scope = document.createElement('div');
+    scope.setAttribute('data-wa-theme-scope', '');
+    scope.classList.add('wa-theme-shoelace', 'wa-palette-shoelace', 'wa-brand-blue');
+    root.appendChild(scope);
+    toMove.forEach(n => scope.appendChild(n));
+}
+function themeShadowRoot(root) {
+    injectThemeStyle(root);
+    ensureThemeScope(root);
+    // observa futuras inserções no root para manter o wrapper correto
+    if (!root.__waThemeObserved) {
+        root.__waThemeObserved = true;
+        const mo = new MutationObserver(() => ensureThemeScope(root));
+        mo.observe(root, { childList: true });
+    }
+}
+function installShoelaceThemeForLexml() {
+    // 1) intercepta attachShadow para pegar roots assim que nascerem
+    const origAttach = Element.prototype.attachShadow;
+    if (!window.__waThemePatched) {
+        Element.prototype.attachShadow = function (init) {
+            const root = origAttach.call(this, init);
+            if (isLexmlHost(this))
+                themeShadowRoot(root);
+            return root;
+        };
+        window.__waThemePatched = true;
+    }
+    // 2) aplica de imediato em hosts já montados
+    document.querySelectorAll('*').forEach(el => {
+        if (isLexmlHost(el)) {
+            const root = el.shadowRoot;
+            if (root)
+                themeShadowRoot(root);
+        }
+    });
+    // 3) observa a árvore por futuros hosts (caso o shadow já exista ao conectar)
+    const docMO = new MutationObserver(records => {
+        for (const r of records) {
+            r.addedNodes.forEach(n => {
+                if (n instanceof HTMLElement && isLexmlHost(n)) {
+                    const root = n.shadowRoot;
+                    if (root)
+                        themeShadowRoot(root);
+                }
+            });
+        }
+    });
+    docMO.observe(document.documentElement, { childList: true, subtree: true });
+}
+// dispara o bootstrap
+installShoelaceThemeForLexml();
 
 export { AlertasComponent, AutoFix, Autocomplete, Comissao, Data, DestinoComponent, LexmlUiCommons, OpcoesImpressaoComponent, REGEX_ACCENTS, TipoMensagem };
 //# sourceMappingURL=index.js.map

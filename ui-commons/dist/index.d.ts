@@ -240,6 +240,7 @@ declare class AlertasComponent extends LitElement {
   getAlertIcon(tipoAlerta: TipoMensagem): TemplateResult;
   limparAlertas(): void;
   removeAlertaById(id: string): void;
+  private onCloseClick;
   updated(changedProperties: PropertyValues): void;
   render(): TemplateResult;
 }

@@ -44,11 +44,17 @@ export class LexmlParecerAvisos extends LitElement {
     },
   ];
 
-  // eslint-disable-next-line class-methods-use-this
   private gerarId(): string {
-    const random = crypto.getRandomValues(new Uint32Array(1))[0];
-    return `a${random.toString(36).slice(0, 6)}`;
+    // pega o MAIOR número já usado no id (ex.: a1, a2, a10) e soma +1
+    const maxNum = this.alertasDemo.reduce((max, a) => {
+      const m = /(\d+)$/.exec(a.id); // pega os dígitos no final
+      const n = m ? parseInt(m[1], 10) : 0;
+      return n > max ? n : max;
+    }, 0);
+    return `a${maxNum + 1}`;
   }
+
+  // 2) ADICIONE um helper para garantir unicidade na lista atual:
 
   private readonly tiposCiclo: TipoMensagem[] = [
     TipoMensagem.INFO,
