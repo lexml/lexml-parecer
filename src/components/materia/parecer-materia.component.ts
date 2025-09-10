@@ -139,6 +139,9 @@ export class LexmlParecerMateria extends LitElement {
       .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+      .grid lexml-ui-destino {
+        grid-column: 1 / -1;
+      }
     }
 
     .span-2 {
@@ -160,6 +163,10 @@ export class LexmlParecerMateria extends LitElement {
     wa-textarea,
     wa-radio-group {
       width: 100%;
+    }
+
+    lexml-ui-destino lexml-destino {
+      max-width: 100vw !important;
     }
   `;
 
@@ -188,11 +195,9 @@ export class LexmlParecerMateria extends LitElement {
             placeholder="Digite a matéria"
             .value=${this.materia.materia}
           ></wa-input>
-          <div>
-            <lexml-ui-destino
-              .comissoes=${this.comissoesTeste}
-            ></lexml-ui-destino>
-          </div>
+          <lexml-ui-destino
+            .comissoes=${this.comissoesTeste}
+          ></lexml-ui-destino>
           <wa-textarea
             id="ementaInput"
             class="span-2 block"

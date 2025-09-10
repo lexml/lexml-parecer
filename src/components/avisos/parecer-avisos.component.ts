@@ -11,14 +11,12 @@ export class LexmlParecerAvisos extends LitElement {
     .linha {
       display: flex;
       align-items: center;
-      width: 1000px;
       background-color: #fafafa;
       border: 6px solid #038d15;
       gap: 8px;
     }
     .caixa {
-      padding: 12px;
-      width: 1000px;
+      padding: 12px 0;
     }
   `;
 
