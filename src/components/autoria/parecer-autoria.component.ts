@@ -67,8 +67,7 @@ export class LexmlParecerAutoriaComponent extends LitElement {
     return this._autoriaParecerOriginal;
   }
 
-  /** Retorna somente quem tem identificacao preenchida */
-  getAutoriaAtualizada(): AutoriaParecer {
+  public getAutoriaAtualizada(): AutoriaParecer {
     const { relator, presidente } = this._autoriaParecer;
     const r = relator?.identificacao ? { ...relator } : undefined;
     const p = presidente?.identificacao ? { ...presidente } : undefined;

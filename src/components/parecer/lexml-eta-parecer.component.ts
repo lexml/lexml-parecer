@@ -1,23 +1,172 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state, query, property } from 'lit/decorators.js';
+import { Comissao, Destino } from '@ui-commons';
+import {
+  AutoriaParecer,
+  OpcoesImpressao,
+  Parecer,
+  Parlamentar,
+  ProposicaoReferenciada,
+} from '../../models/diversos.modelo.js';
+import { LexmlParecerMateria } from '../materia/parecer-materia.component.js';
+import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
+import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
+import { Voto } from '../../models/voto.modelo.js';
+import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
+  @property({ type: Object }) lexmlParecerConfig: LexmlParecerConfig =
+    new LexmlParecerConfig();
+
+  @state() private _parlamentares: Parlamentar[] = [];
+
+  @state() private _comissoes: Comissao[] = [];
+
+  private _casa: 'SF' | 'CD' | 'CN' = 'SF';
+
   static _styles = css`
     :host {
       display: block;
-      padding: 25px;
       color: var(--lexml-eta-parecer-text-color, #000);
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 14px;
     }
   `;
 
   static styles = [LexmlEtaParecer._styles];
 
-  @property({ type: String }) header = 'Lexml-Eta-Parecer';
+  @state() private parecer: Parecer = new Parecer();
+
+  @query('wa-tab-panel[name="materia"] lexml-parecer-materia')
+  private _materia?: LexmlParecerMateria;
+
+  @query(
+    'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autria-impressao',
+  )
+  private _dataAutiraImpressao?: LexmlParecerDataAutoriaImpressao;
+
+  @query('wa-tab-panel[name="relatorio"] lexml-parecer-relatorio')
+  private _relatorio?: { getHtml: () => string };
+
+  @query('wa-tab-panel[name="analise"] lexml-parecer-analise')
+  private _analise?: { getHtml: () => string };
+
+  @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
+  private _voto?: LexmlParecerVoto;
+
+  public getParecer(): Parecer {
+    const materiaEl = this._materia;
+    const dataAutiraImpressaoEl = this._dataAutiraImpressao;
+    const votoEl = this._voto;
+    const relatorioHtml = this._relatorio?.getHtml() ?? '';
+    const analiseHtml = this._analise?.getHtml() ?? '';
+
+    if (!materiaEl) {
+      console.warn('lexml-parecer-materia não encontrado.');
+      return new Parecer();
+    }
+    if (!dataAutiraImpressaoEl) {
+      console.warn('lexml-parecer-data-autria-impressao não encontrado.');
+      return new Parecer();
+    }
+    if (!votoEl) {
+      console.warn('lexml-parecer-voto não encontrado.');
+      return new Parecer();
+    }
+
+    const destino: Destino = materiaEl.getDestino();
+    console.log('--------------------- [Destino] ---------------------');
+    console.log(destino);
+
+    const materia: ProposicaoReferenciada = materiaEl.getMateria();
+    const opcoesImpressao: OpcoesImpressao =
+      dataAutiraImpressaoEl.getOpcoesImpressao();
+    const data: string | null = dataAutiraImpressaoEl.getData();
+    const autoriaParecer: AutoriaParecer =
+      dataAutiraImpressaoEl.getAutoriaParecer();
+    const voto: Voto = votoEl.getVoto();
+
+    this.parecer = {
+      ...this.parecer,
+      dataUltimaModificacao: new Date().toISOString(),
+      materia: { ...materia },
+      ementa: materia.ementa ?? this.parecer.ementa,
+      opcoesImpressao: { ...opcoesImpressao },
+      data,
+      autoria: { ...autoriaParecer },
+      relatorio: relatorioHtml,
+      analise: analiseHtml,
+      voto,
+    };
+    return this.parecer;
+  }
+
+  async firstUpdated() {
+    try {
+      if (this.lexmlParecerConfig.urlConsultaParlamentares) {
+        this._parlamentares = await this.getParlamentares();
+      }
+      if (this.lexmlParecerConfig.urlComissoes) {
+        this._comissoes = await this.getComissoes(this._casa);
+      }
+    } catch (e) {
+      console.error('Falha ao dados:', e);
+    }
+  }
+
+  async getParlamentares(): Promise<Parlamentar[]> {
+    try {
+      const _response = await fetch(
+        this.lexmlParecerConfig.urlConsultaParlamentares,
+      );
+      const _parlamentares = await _response.json();
+      return _parlamentares
+        .filter((p: any) => this._casa === 'CN' || p.siglaCasa === this._casa)
+        .map((p: any) => ({
+          identificacao: String(p.id),
+          nome: p.nome,
+          sexo: p.sexo,
+          siglaPartido: p.siglaPartido,
+          siglaUF: p.siglaUF,
+          siglaCasaLegislativa: p.siglaCasa,
+        }));
+    } catch (err) {
+      console.log('Erro inesperado ao carregar lista de parlamentares');
+      console.log(err);
+    }
+    return Promise.resolve([]);
+  }
+
+  async getComissoes(siglaCasaLegislativa: string): Promise<Comissao[]> {
+    try {
+      if (!this.lexmlParecerConfig.urlComissoes) {
+        return Promise.resolve([]);
+      }
+      const _response = await fetch(
+        `${this.lexmlParecerConfig.urlComissoes}?siglaCasaLegislativa=${siglaCasaLegislativa}`,
+      );
+      const _comissoes = await _response.json();
+      return _comissoes
+        .filter((c: any) => c.siglaCasaLegislativa === siglaCasaLegislativa)
+        .map((c: any) => ({
+          siglaCasaLegislativa: c.siglaCasaLegislativa,
+          sigla: c.sigla,
+          nome: c.nome,
+        }));
+    } catch (err) {
+      console.log('Erro inesperado ao carregar lista de comissões');
+      console.log(err);
+    }
+    return Promise.resolve([]);
+  }
 
   render(): TemplateResult {
     return html`
-      <h2>${this.header}</h2>
       <wa-tab-group>
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
@@ -29,7 +178,9 @@ export class LexmlEtaParecer extends LitElement {
         <wa-tab slot="nav" panel="avisos">Avisos</wa-tab>
 
         <wa-tab-panel name="materia" class="overflow-hidden">
-          <lexml-parecer-materia></lexml-parecer-materia>
+          <lexml-parecer-materia
+            .comissoes=${this._comissoes}
+          ></lexml-parecer-materia>
         </wa-tab-panel>
         <wa-tab-panel name="relatorio" class="overflow-hidden">
           <lexml-parecer-relatorio></lexml-parecer-relatorio>
@@ -41,7 +192,9 @@ export class LexmlEtaParecer extends LitElement {
           <lexml-parecer-voto></lexml-parecer-voto>
         </wa-tab-panel>
         <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
-          <lexml-parecer-data-autria-impressao></lexml-parecer-data-autria-impressao>
+          <lexml-parecer-data-autria-impressao
+            .parlamentares=${this._parlamentares}
+          ></lexml-parecer-data-autria-impressao>
         </wa-tab-panel>
         <wa-tab-panel name="avisos" class="overflow-hidden">
           <lexml-parecer-avisos></lexml-parecer-avisos>

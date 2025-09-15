@@ -1,113 +1,42 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
-import { Comissao } from '@ui-commons';
-import { Materia } from '../../models/materia.modelo.js';
-import { Option } from '../../models/option.modelo.js';
+import { customElement, query, state, property } from 'lit/decorators.js';
+import { Comissao, Destino, DestinoComponent } from '@ui-commons';
+import { ProposicaoReferenciada } from '../../models/diversos.modelo.js';
 
 type WithValueEl = HTMLElement & { value: string };
 
 @customElement('lexml-parecer-materia')
 export class LexmlParecerMateria extends LitElement {
-  private materia = new Materia();
+  @state() private materia: ProposicaoReferenciada =
+    new ProposicaoReferenciada();
+
+  @property({ type: Array }) comissoes: Comissao[] = [];
 
   @query('#anoInput') anoInput!: WithValueEl;
 
   @query('#materiaInput') materiaInput!: WithValueEl;
 
-  @query('#destinoRadio') destinoRadio!: WithValueEl;
-
-  @query('#comissaoValue') comissaoValueInput!: WithValueEl;
-
-  @query('#comissaoDesc') comissaoDescInput!: WithValueEl;
-
   @query('#ementaInput') ementaInput!: WithValueEl;
 
-  private comissoesTeste: Comissao[] = [
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CCDD',
-      nome: 'Comissão de Comunicação e Direito Digital',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CSP',
-      nome: 'Comissão de Segurança Pública',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CDD',
-      nome: 'Comissão de Defesa da Democracia',
-    },
-    { siglaCasaLegislativa: 'SF', sigla: 'CEsp', nome: 'Comissão de Esporte' },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CTFC',
-      nome: 'Comissão de Transparência, Governança, Fiscalização e Controle e Defesa do Consumidor',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CRA',
-      nome: 'Comissão de Agricultura e Reforma Agrária',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CDR',
-      nome: 'Comissão de Desenvolvimento Regional e Turismo',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CCT',
-      nome: 'Comissão de Ciência, Tecnologia, Inovação e Informática',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CMA',
-      nome: 'Comissão de Meio Ambiente',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CI',
-      nome: 'Comissão de Serviços de Infraestrutura',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CRE',
-      nome: 'Comissão de Relações Exteriores e Defesa Nacional',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CE',
-      nome: 'Comissão de Educação e Cultura',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CAS',
-      nome: 'Comissão de Assuntos Sociais',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CCJ',
-      nome: 'Comissão de Constituição, Justiça e Cidadania',
-    },
-    {
-      siglaCasaLegislativa: 'SF',
-      sigla: 'CAE',
-      nome: 'Comissão de Assuntos Econômicos',
-    },
-  ];
+  @query('lexml-ui-destino')
+  private _destino!: DestinoComponent;
 
-  public getMateria(): Materia {
-    this.materia.ano = Number(this.anoInput.value) || this.materia.ano;
-    this.materia.materia = this.materiaInput.value ?? '';
+  public getDestino(): Destino {
+    return this._destino.getDestino();
+  }
 
-    const cValue = this.comissaoValueInput.value?.trim();
-    const cDesc = this.comissaoDescInput.value?.trim();
-    this.materia.comissao =
-      cValue || cDesc ? new Option(cValue ?? '', cDesc ?? '') : undefined;
-
-    this.materia.ementa = this.ementaInput.value ?? '';
-
-    return this.materia;
+  public getMateria(): ProposicaoReferenciada {
+    const ano = String(this.anoInput?.value ?? '').trim();
+    const idTxt = String(this.materiaInput?.value ?? '');
+    const ementa = String(this.ementaInput?.value ?? '');
+    return {
+      urn: this.materia.urn ?? '',
+      sigla: this.materia.sigla ?? '',
+      numero: this.materia.numero ?? '',
+      ano: ano ?? '',
+      ementa,
+      identificacaoTexto: idTxt,
+    };
   }
 
   static styles = css`
@@ -177,7 +106,7 @@ export class LexmlParecerMateria extends LitElement {
             placeholder="Digite o ano"
             min="1900"
             max="2100"
-            .value=${String(this.materia.ano)}
+            .value=${this.materia.ano || ''}
           ></wa-input>
 
           <wa-input
@@ -185,20 +114,17 @@ export class LexmlParecerMateria extends LitElement {
             class="block"
             type="text"
             label="Matéria"
-            placeholder="Digite a matéria"
-            .value=${this.materia.materia}
+            .value=${this.materia.identificacaoTexto || ''}
           ></wa-input>
           <div>
-            <lexml-ui-destino
-              .comissoes=${this.comissoesTeste}
-            ></lexml-ui-destino>
+            <lexml-ui-destino .comissoes=${this.comissoes}></lexml-ui-destino>
           </div>
           <wa-textarea
             id="ementaInput"
             class="span-2 block"
             label="Ementa"
             placeholder="Digite a ementa"
-            .value=${this.materia.ementa}
+            .value=${this.materia.ementa || ''}
           ></wa-textarea>
         </div>
       </div>

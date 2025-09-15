@@ -2,6 +2,8 @@
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-use-before-define */
 
+import { Voto } from './voto.modelo.js';
+
 export class Parecer {
   dataUltimaModificacao = new Date().toISOString();
   aplicacao = '';
@@ -17,11 +19,11 @@ export class Parecer {
 
   relatorio = '';
   analise = '';
-  voto: ItemVoto[] = [];
+  voto: Voto = new Voto();
 
   local = ''; // Calculado a partir do destino (Colegiado Apreciador)
 
-  data?: string = new Date().toISOString().replace(/T.*/, ''); // formato “YYYY-MM-DD”
+  data?: string | null = new Date().toISOString().replace(/T.*/, ''); // formato “YYYY-MM-DD”
 
   autoria = new AutoriaParecer();
 

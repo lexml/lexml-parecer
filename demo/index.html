@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -11,16 +11,20 @@
     }
   }
   </script>
+  <script type="module">
+    import { installMockApi } from './mock/fetch-mock.js';
+
+    installMockApi('/api');
+  </script>
+  <script type="module" src="../dist/demo/components/demoview.js"></script>
   <style>
     body {
-      background: #fafafa;
+      margin: 8px;      
     }
   </style>
 </head>
 <body>
-  <div id="demo"></div>
+  <demo-view></demo-view>
   <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/webawesome.css" />
-  <script type="module" src="../dist/src/index.js"></script>
-  <lexml-eta-parecer header="TESTE 2222"></lexml-eta-parecer>
 </body>
 </html>

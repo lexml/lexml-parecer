@@ -117,6 +117,7 @@ export class LexmlParecerVoto extends LitElement {
   `;
 
   public getVoto(): Voto {
+    console.log(this.itens);
     return { itensVoto: [...this.itens] };
   }
 
@@ -184,8 +185,10 @@ export class LexmlParecerVoto extends LitElement {
         <wa-textarea
           .value=${item.texto ?? ''}
           placeholder="Digite o texto do voto..."
-          @sl-input=${(e: CustomEvent) =>
+          @wa-input=${(e: CustomEvent) =>
             this.updateTexto(idx, (e.target as any).value)}
+          @input=${(e: Event) =>
+            this.updateTexto(idx, (e.target as HTMLTextAreaElement).value)}
         ></wa-textarea>
       </div>
     `;
@@ -235,8 +238,14 @@ export class LexmlParecerVoto extends LitElement {
           type="text"
           .value=${doc.nome ?? ''}
           placeholder="Nome do documento"
-          @sl-input=${(e: CustomEvent) =>
+          @wa-input=${(e: CustomEvent) =>
             this.updateDocField(idx, 'nome', (e.target as any).value)}
+          @input=${(e: Event) =>
+            this.updateDocField(
+              idx,
+              'nome',
+              (e.target as HTMLInputElement).value,
+            )}
         ></wa-input>
       </div>
 

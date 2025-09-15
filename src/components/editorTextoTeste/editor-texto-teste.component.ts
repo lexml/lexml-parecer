@@ -1,5 +1,5 @@
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, query, state, property } from 'lit/decorators.js';
 
 import { quillSnowStyles } from '../../assets/css/quill.snow.css.js';
 import { quillCoreStyles } from '../../assets/css/quill.core.css.js';
@@ -10,6 +10,10 @@ export class EditorTextoTeste extends LitElement {
   @query('#editor') private editorEl!: HTMLDivElement;
 
   @state() private quill?: any;
+
+  @property({ type: String }) value = '';
+
+  @property({ type: String }) placeholder = '';
 
   createRenderRoot() {
     return this;
@@ -51,6 +55,26 @@ export class EditorTextoTeste extends LitElement {
         modules: { toolbar: true },
       });
 
+      if (this.value) this.setHtml(this.value);
+
+      let t: number | undefined;
+      this.quill.on('text-change', () => {
+        clearTimeout(t);
+        t = window.setTimeout(() => {
+          this.dispatchEvent(
+            new CustomEvent('onchange', {
+              bubbles: true,
+              composed: true,
+              detail: {
+                html: this.getHtml(),
+                text: this.getText(),
+                delta: this.getDelta(),
+              },
+            }),
+          );
+        }, 300);
+      });
+
       console.log('Quill inicializado');
     } catch (err) {
       console.error('Falha ao carregar Quill:', err);
@@ -60,5 +84,30 @@ export class EditorTextoTeste extends LitElement {
   disconnectedCallback(): void {
     this.quill = undefined;
     super.disconnectedCallback?.();
+  }
+
+  public getHtml(): string {
+    if (!this.quill) return this.value || '';
+    return this.editorEl.querySelector('.ql-editor')?.innerHTML ?? '';
+  }
+
+  public getText(): string {
+    return this.quill ? this.quill.getText() : '';
+  }
+
+  public getDelta(): any {
+    return this.quill ? this.quill.getContents() : null;
+  }
+
+  public setHtml(markup: string): void {
+    if (!this.quill) {
+      this.value = markup;
+      return;
+    }
+    this.quill.clipboard.dangerouslyPasteHTML(markup || '');
+  }
+
+  public clear(): void {
+    this.setHtml('');
   }
 }

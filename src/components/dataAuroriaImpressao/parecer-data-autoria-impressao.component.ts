@@ -1,121 +1,36 @@
+import { Data, OpcoesImpressaoComponent } from '@ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-import { AutoriaParecer, Parlamentar } from 'src/models/diversos.modelo.js';
+import { customElement, state, query, property } from 'lit/decorators.js';
+import {
+  AutoriaParecer,
+  OpcoesImpressao,
+  Parlamentar,
+} from 'src/models/diversos.modelo.js';
+import { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.component.js';
 
 @customElement('lexml-parecer-data-autria-impressao')
 export class LexmlParecerDataAutoriaImpressao extends LitElement {
-  // Apenas para fins de testes
-  @state() private _parlamentares: Parlamentar[] = [
-    {
-      identificacao: 'SF001',
-      nome: 'João Pereira',
-      sexo: 'M',
-      siglaPartido: 'PSD',
-      siglaUF: 'MG',
-      siglaCasaLegislativa: 'SF',
-      cargo: '',
-    },
-    {
-      identificacao: 'SF002',
-      nome: 'Maria Albuquerque',
-      sexo: 'F',
-      siglaPartido: 'MDB',
-      siglaUF: 'BA',
-      siglaCasaLegislativa: 'SF',
-      cargo: '',
-    },
-    {
-      identificacao: 'SF003',
-      nome: 'Carlos Nogueira',
-      sexo: 'M',
-      siglaPartido: 'PL',
-      siglaUF: 'SP',
-      siglaCasaLegislativa: 'SF',
-      cargo: '',
-    },
-    {
-      identificacao: 'SF004',
-      nome: 'Ana Bezerra',
-      sexo: 'F',
-      siglaPartido: 'PDT',
-      siglaUF: 'CE',
-      siglaCasaLegislativa: 'SF',
-      cargo: '',
-    },
-    {
-      identificacao: 'SF005',
-      nome: 'Roberto Lima',
-      sexo: 'M',
-      siglaPartido: 'PSDB',
-      siglaUF: 'RJ',
-      siglaCasaLegislativa: 'SF',
-      cargo: '',
-    },
-    {
-      identificacao: 'SF006',
-      nome: 'Eliane Castro',
-      sexo: 'F',
-      siglaPartido: 'PSD',
-      siglaUF: 'MA',
-      siglaCasaLegislativa: 'SF',
-      cargo: '',
-    },
+  @query('lexml-ui-data') private _data!: Data;
 
-    {
-      identificacao: 'CD001',
-      nome: 'Bruno Rocha',
-      sexo: 'M',
-      siglaPartido: 'UNIÃO',
-      siglaUF: 'PE',
-      siglaCasaLegislativa: 'CD',
-      cargo: '',
-    },
-    {
-      identificacao: 'CD002',
-      nome: 'Fernanda Ribeiro',
-      sexo: 'F',
-      siglaPartido: 'PT',
-      siglaUF: 'RS',
-      siglaCasaLegislativa: 'CD',
-      cargo: '',
-    },
-    {
-      identificacao: 'CD003',
-      nome: 'Rafael Martins',
-      sexo: 'M',
-      siglaPartido: 'PSD',
-      siglaUF: 'PR',
-      siglaCasaLegislativa: 'CD',
-      cargo: '',
-    },
-    {
-      identificacao: 'CD004',
-      nome: 'Camila Duarte',
-      sexo: 'F',
-      siglaPartido: 'PSOL',
-      siglaUF: 'RJ',
-      siglaCasaLegislativa: 'CD',
-      cargo: '',
-    },
-    {
-      identificacao: 'CD005',
-      nome: 'Gustavo Azevedo',
-      sexo: 'M',
-      siglaPartido: 'NOVO',
-      siglaUF: 'MG',
-      siglaCasaLegislativa: 'CD',
-      cargo: '',
-    },
-    {
-      identificacao: 'CD006',
-      nome: 'Patrícia Gomes',
-      sexo: 'F',
-      siglaPartido: 'PODE',
-      siglaUF: 'GO',
-      siglaCasaLegislativa: 'CD',
-      cargo: '',
-    },
-  ];
+  @query('lexml-ui-opcoes-impressao')
+  private _opcoesImpressao!: OpcoesImpressaoComponent;
+
+  @query('lexml-parecer-autoria')
+  private _parecerAutoria!: LexmlParecerAutoriaComponent;
+
+  @property({ type: Array }) parlamentares: Parlamentar[] = [];
+
+  public getData(): string | null {
+    return this._data.getData();
+  }
+
+  public getOpcoesImpressao(): OpcoesImpressao {
+    return this._opcoesImpressao.getOpcoesImpressao();
+  }
+
+  public getAutoriaParecer(): AutoriaParecer {
+    return this._parecerAutoria.getAutoriaAtualizada();
+  }
 
   @state() private _autoria: AutoriaParecer = {
     relator: undefined,
@@ -134,7 +49,7 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
         <lexml-ui-data></lexml-ui-data>
         <br />
         <lexml-parecer-autoria
-          .parlamentares=${this._parlamentares}
+          .parlamentares=${this.parlamentares}
           .autoria=${this._autoria}
           @onchange=${this._onAutoriaChange}
         >

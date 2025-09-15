@@ -1,0 +1,27 @@
+[
+  { "id": 1,  "nome": "Ruan João Pereira",        "sexo": "M", "siglaPartido": "PSD",  "siglaUF": "MG", "siglaCasa": "SF" },
+  { "id": 2,  "nome": "Maria Albuquerque",   "sexo": "F", "siglaPartido": "MDB",  "siglaUF": "BA", "siglaCasa": "SF" },
+  { "id": 3,  "nome": "Carlos Nogueira",     "sexo": "M", "siglaPartido": "PL",   "siglaUF": "SP", "siglaCasa": "SF" },
+  { "id": 4,  "nome": "Ana Bezerra",         "sexo": "F", "siglaPartido": "PDT",  "siglaUF": "CE", "siglaCasa": "SF" },
+  { "id": 5,  "nome": "Roberto Lima",        "sexo": "M", "siglaPartido": "PSDB", "siglaUF": "RJ", "siglaCasa": "SF" },
+  { "id": 6,  "nome": "Eliane Castro",       "sexo": "F", "siglaPartido": "PSD",  "siglaUF": "MA", "siglaCasa": "SF" },
+  { "id": 7,  "nome": "Paulo Mendes",        "sexo": "M", "siglaPartido": "PT",   "siglaUF": "RS", "siglaCasa": "SF" },
+  { "id": 8,  "nome": "Letícia Carvalho",    "sexo": "F", "siglaPartido": "PSB",  "siglaUF": "PE", "siglaCasa": "SF" },
+  { "id": 9,  "nome": "Ricardo Araújo",      "sexo": "M", "siglaPartido": "UNIÃO","siglaUF": "PA", "siglaCasa": "SF" },
+  { "id": 10, "nome": "Teresa Campos",       "sexo": "F", "siglaPartido": "PODE", "siglaUF": "PR", "siglaCasa": "SF" },
+  { "id": 11, "nome": "Marcos Figueiredo",   "sexo": "M", "siglaPartido": "REPUBLICANOS","siglaUF": "GO", "siglaCasa": "SF" },
+  { "id": 12, "nome": "Daniela Souza",       "sexo": "F", "siglaPartido": "NOVO", "siglaUF": "SC", "siglaCasa": "SF" },
+
+  { "id": 101, "nome": "Bruno Rocha",        "sexo": "M", "siglaPartido": "UNIÃO","siglaUF": "PE", "siglaCasa": "CD" },
+  { "id": 102, "nome": "Fernanda Ribeiro",   "sexo": "F", "siglaPartido": "PT",   "siglaUF": "RS", "siglaCasa": "CD" },
+  { "id": 103, "nome": "Rafael Martins",     "sexo": "M", "siglaPartido": "PSD",  "siglaUF": "PR", "siglaCasa": "CD" },
+  { "id": 104, "nome": "Camila Duarte",      "sexo": "F", "siglaPartido": "PSOL", "siglaUF": "RJ", "siglaCasa": "CD" },
+  { "id": 105, "nome": "Gustavo Azevedo",    "sexo": "M", "siglaPartido": "NOVO", "siglaUF": "MG", "siglaCasa": "CD" },
+  { "id": 106, "nome": "Patrícia Gomes",     "sexo": "F", "siglaPartido": "PODE", "siglaUF": "GO", "siglaCasa": "CD" },
+  { "id": 107, "nome": "Lucas Andrade",      "sexo": "M", "siglaPartido": "MDB",  "siglaUF": "AL", "siglaCasa": "CD" },
+  { "id": 108, "nome": "Sabrina Costa",      "sexo": "F", "siglaPartido": "PSDB", "siglaUF": "SP", "siglaCasa": "CD" },
+  { "id": 109, "nome": "Mateus Almeida",     "sexo": "M", "siglaPartido": "PL",   "siglaUF": "BA", "siglaCasa": "CD" },
+  { "id": 110, "nome": "Priscila Nunes",     "sexo": "F", "siglaPartido": "PSB",  "siglaUF": "CE", "siglaCasa": "CD" },
+  { "id": 111, "nome": "Diego Santana",      "sexo": "M", "siglaPartido": "REPUBLICANOS","siglaUF": "DF", "siglaCasa": "CD" },
+  { "id": 112, "nome": "Aline Barros",       "sexo": "F", "siglaPartido": "PP",   "siglaUF": "ES", "siglaCasa": "CD" }
+]
