@@ -1,6 +1,9 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { Comissao } from '@ui-commons';
+import { quillSnowStyles } from '../../assets/css/quill.snow.css.js';
+import { quillCoreStyles } from '../../assets/css/quill.core.css.js';
+import { quillTableStyles } from '../../assets/css/quill.table.css.js';
 import { Materia } from '../../models/materia.modelo.js';
 import { Option } from '../../models/option.modelo.js';
 
@@ -20,7 +23,9 @@ export class LexmlParecerMateria extends LitElement {
 
   @query('#comissaoDesc') comissaoDescInput!: WithValueEl;
 
-  @query('#ementaInput') ementaInput!: WithValueEl;
+  @query('#ementaInput') ementaInput!: WithValueEl & HTMLDivElement;
+
+  @state() private quill?: any;
 
   private comissoesTeste: Comissao[] = [
     {
@@ -110,6 +115,51 @@ export class LexmlParecerMateria extends LitElement {
     return this.materia;
   }
 
+  async firstUpdated(): Promise<void> {
+    if (!this.ementaInput) return;
+
+    try {
+      const mod: any = await import('quill/dist/quill.js');
+      const QuillCtor =
+        mod?.default?.Quill ??
+        mod?.Quill ??
+        mod?.default ??
+        (window as any).Quill;
+
+      if (typeof QuillCtor !== 'function') {
+        throw new Error('Construtor do Quill não encontrado.');
+      }
+
+      this.quill = new QuillCtor(this.ementaInput, {
+        theme: 'snow',
+        modules: { toolbar: [['italic']] },
+        placeholder: 'Digite a ementa',
+      });
+
+      const initialText = this.materia.ementa ?? '';
+      try {
+        this.quill.setText(initialText);
+      } catch (_) {
+        // ignore
+      }
+      (this.ementaInput as any).value = initialText;
+
+      this.quill.on('text-change', () => {
+        if (!this.quill) return;
+        const text: string = this.quill.getText().replace(/\n$/, '');
+        (this.ementaInput as any).value = text;
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Falha ao inicializar Quill para ementa:', err);
+    }
+  }
+
+  disconnectedCallback(): void {
+    this.quill = undefined;
+    super.disconnectedCallback?.();
+  }
+
   static styles = css`
     :host {
       display: block;
@@ -168,14 +218,50 @@ export class LexmlParecerMateria extends LitElement {
     lexml-ui-destino lexml-destino {
       max-width: 100vw !important;
     }
+
+    fieldset {
+      font-size: 14px;
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background-color: var(--wa-color-gray-95);
+      box-shadow: var(--wa-shadow-m);
+      padding: 20px;
+      border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+      border-radius: var(--wa-border-radius-s);
+      max-width: 655px;
+      margin: 1em 0 2em 0;
+    }
+
+    legend {
+      background-color: var(--wa-color-gray-90);
+      font-weight: bold;
+      border-radius: 5px;
+      border: 1px solid var(--wa-color-gray-85);
+      padding: 2px 5px;
+      box-shadow: var(--wa-shadow-s);
+    }
   `;
 
   render(): TemplateResult {
     return html`
+      <style>
+        ${quillSnowStyles}${quillCoreStyles}${quillTableStyles}
+          #ementaInput
+          .ql-container.ql-snow {
+          height: auto;
+        }
+        #ementaInput .ql-container .ql-editor {
+          min-height: 160px;
+          height: auto;
+          max-height: none;
+          overflow-y: visible;
+        }
+      </style>
       <div class="card">
-        <div class="title">Dados da Matéria</div>
-
-        <div class="grid">
+        <fieldset>
+          <legend>Dados da Matéria</legend>
           <wa-input
             id="anoInput"
             class="block"
@@ -195,16 +281,11 @@ export class LexmlParecerMateria extends LitElement {
             placeholder="Digite a matéria"
             .value=${this.materia.materia}
           ></wa-input>
-          <lexml-ui-destino
-            .comissoes=${this.comissoesTeste}
-          ></lexml-ui-destino>
-          <wa-textarea
-            id="ementaInput"
-            class="span-2 block"
-            label="Ementa"
-            placeholder="Digite a ementa"
-            .value=${this.materia.ementa}
-          ></wa-textarea>
+        </fieldset>
+        <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
+        <div class="span-2 block">
+          <label class="muted">Ementa</label>
+          <div id="ementaInput"></div>
         </div>
       </div>
     `;
