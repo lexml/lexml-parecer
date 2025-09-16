@@ -1,4 +1,4 @@
-import { LitElement, html, css, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { REGEX_ACCENTS } from '@ui-commons';
 
@@ -6,31 +6,6 @@ import { Parlamentar, AutoriaParecer } from '../../models/diversos.modelo.js';
 
 @customElement('lexml-parecer-autoria')
 export class LexmlParecerAutoriaComponent extends LitElement {
-  static styles = css`
-    fieldset {
-      font-size: 14px;
-      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      background-color: var(--wa-color-gray-95);
-      box-shadow: var(--wa-shadow-m);
-      padding: 20px;
-      border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
-      border-radius: var(--wa-border-radius-s);
-      max-width: 655px;
-      margin: 1em 0 2em 0;
-    }
-    legend {
-      background-color: var(--wa-color-gray-90);
-      font-weight: bold;
-      border-radius: 5px;
-      border: 1px solid var(--wa-color-gray-85);
-      padding: 2px 5px;
-      box-shadow: var(--wa-shadow-s);
-    }
-  `;
-
   private _parlamentaresOpc: Parlamentar[] = [];
 
   @state() private _nomesAutocomplete: string[] = [];
@@ -137,6 +112,30 @@ export class LexmlParecerAutoriaComponent extends LitElement {
 
   render(): TemplateResult {
     return html`
+      <style>
+        fieldset {
+          font-size: 14px;
+          font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          background-color: var(--wa-color-gray-95);
+          box-shadow: var(--wa-shadow-m);
+          padding: 20px;
+          border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+          border-radius: var(--wa-border-radius-s);
+          max-width: 655px;
+          margin: 1em 0 2em 0;
+        }
+        legend {
+          background-color: var(--wa-color-gray-90);
+          font-weight: bold;
+          border-radius: 5px;
+          border: 1px solid var(--wa-color-gray-85);
+          padding: 2px 5px;
+          box-shadow: var(--wa-shadow-s);
+        }
+      </style>
       <fieldset>
         <legend>Autoria</legend>
         <lexml-ui-autocomplete

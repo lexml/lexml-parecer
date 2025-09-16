@@ -1,5 +1,5 @@
 import '@awesome.me/webawesome/dist/components/input/input.js';
-import { css, LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { query, state, customElement, property } from 'lit/decorators.js';
 import '@awesome.me/webawesome/dist/components/radio/radio.js';
 import '@awesome.me/webawesome/dist/components/radio-group/radio-group.js';
@@ -231,13 +231,34 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
             },
         ];
     }
+    createRenderRoot() {
+        return this;
+    }
     gerarId() {
         return 'a' + Math.random().toString(36).slice(2, 8);
     }
     // ******************************************* Fim dos Itens para o Teste do Destino
     render() {
         return html `
-      <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
+      <style>
+        lexml-ui-commons {
+          display: block;
+          padding: 25px;
+          color: var(--lexml-ui-commons-text-color, #000);
+        }
+        .linha {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+        .caixa {
+          background: #f2f2f2;
+          padding: 12px;
+          width: 1000px;
+          border-radius: 8px;
+        }
+      </style>
+      <div>
         <button @click=${this._log}>APRESENTAR VALORES NO CONSOLE</button>
         <h2>Start Projeto LEXML UI COMMONS</h2>
         <h2>Teste wa-input</h2>
@@ -288,24 +309,6 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
     `;
     }
 };
-LexmlUiCommons.styles = css `
-    :host {
-      display: block;
-      padding: 25px;
-      color: var(--lexml-ui-commons-text-color, #000);
-    }
-    .linha {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .caixa {
-      background: #f2f2f2;
-      padding: 12px;
-      width: 1000px;
-      border-radius: 8px;
-    }
-  `;
 __decorate([
     query('lexml-ui-destino')
 ], LexmlUiCommons.prototype, "_destinoEl", void 0);
@@ -1584,6 +1587,9 @@ let AlertasComponent = class AlertasComponent extends LitElement {
                 this.removeAlertaById(id);
         };
     }
+    createRenderRoot() {
+        return this;
+    }
     stateChanged(state) {
         this.alertas = state.elementoReducer.ui?.alertas || [];
     }
@@ -1653,6 +1659,23 @@ let AlertasComponent = class AlertasComponent extends LitElement {
     }
     render() {
         return html `
+      <style>
+        wa-callout {
+          box-shadow: var(--wa-shadow-l);
+          margin: 20px;
+        }
+        .field__alert {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .alert__close-button {
+          cursor: pointer;
+        }
+        wa-button::part(base) {
+          background-color: transparent;
+        }
+      </style>
       ${this.alertas.map(alerta => html ` ${alerta.podeFechar
             ? html `
                 <wa-callout
@@ -1688,23 +1711,6 @@ let AlertasComponent = class AlertasComponent extends LitElement {
     `;
     }
 };
-AlertasComponent.styles = css `
-    wa-callout {
-      box-shadow: var(--wa-shadow-l);
-      margin: 20px;
-    }
-    .field__alert {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .alert__close-button {
-      cursor: pointer;
-    }
-    wa-button::part(base) {
-      background-color: transparent;
-    }
-  `;
 __decorate([
     property({ type: Array })
 ], AlertasComponent.prototype, "alertas", void 0);
@@ -2054,85 +2060,6 @@ __decorate([
 Autocomplete = __decorate([
     customElement('lexml-ui-autocomplete')
 ], Autocomplete);
-
-// ===== Bootstrap global: tema Shoelace dentro de TODOS os <lexml-ui-*> =====
-const SHOELACE_THEME_URL = 'https://early.webawesome.com/webawesome@3.0.0-beta.4/dist/styles/themes/shoelace.css';
-const isLexmlHost = (el) => el.tagName.startsWith('LEXML-UI-') || el.tagName === 'AUTOCOMPLETE-UI-ASYNC';
-function injectThemeStyle(root) {
-    if (!root.querySelector('style[data-wa-shoelace]')) {
-        const style = document.createElement('style');
-        style.setAttribute('data-wa-shoelace', '');
-        style.textContent = `@import url('${SHOELACE_THEME_URL}');`;
-        root.prepend(style); // no topo, melhor precedência
-    }
-}
-function ensureThemeScope(root) {
-    // se já existe wrapper, ok
-    if (root.querySelector('[data-wa-theme-scope]'))
-        return;
-    // pegue tudo que já está no root (menos o <style data-wa-shoelace>)
-    const keep = new Set(root.querySelectorAll('style[data-wa-shoelace]'));
-    const toMove = [];
-    root.childNodes.forEach(n => {
-        if (!keep.has(n))
-            toMove.push(n);
-    });
-    // se ainda não renderizou nada, deixa o observer cuidar depois
-    if (toMove.length === 0)
-        return;
-    // cria o wrapper com as classes do tema (escopo exigido pela folha Shoelace)
-    const scope = document.createElement('div');
-    scope.setAttribute('data-wa-theme-scope', '');
-    scope.classList.add('wa-theme-shoelace', 'wa-palette-shoelace', 'wa-brand-blue');
-    root.appendChild(scope);
-    toMove.forEach(n => scope.appendChild(n));
-}
-function themeShadowRoot(root) {
-    injectThemeStyle(root);
-    ensureThemeScope(root);
-    // observa futuras inserções no root para manter o wrapper correto
-    if (!root.__waThemeObserved) {
-        root.__waThemeObserved = true;
-        const mo = new MutationObserver(() => ensureThemeScope(root));
-        mo.observe(root, { childList: true });
-    }
-}
-function installShoelaceThemeForLexml() {
-    // 1) intercepta attachShadow para pegar roots assim que nascerem
-    const origAttach = Element.prototype.attachShadow;
-    if (!window.__waThemePatched) {
-        Element.prototype.attachShadow = function (init) {
-            const root = origAttach.call(this, init);
-            if (isLexmlHost(this))
-                themeShadowRoot(root);
-            return root;
-        };
-        window.__waThemePatched = true;
-    }
-    // 2) aplica de imediato em hosts já montados
-    document.querySelectorAll('*').forEach(el => {
-        if (isLexmlHost(el)) {
-            const root = el.shadowRoot;
-            if (root)
-                themeShadowRoot(root);
-        }
-    });
-    // 3) observa a árvore por futuros hosts (caso o shadow já exista ao conectar)
-    const docMO = new MutationObserver(records => {
-        for (const r of records) {
-            r.addedNodes.forEach(n => {
-                if (n instanceof HTMLElement && isLexmlHost(n)) {
-                    const root = n.shadowRoot;
-                    if (root)
-                        themeShadowRoot(root);
-                }
-            });
-        }
-    });
-    docMO.observe(document.documentElement, { childList: true, subtree: true });
-}
-// dispara o bootstrap
-installShoelaceThemeForLexml();
 
 export { AlertasComponent, AutoFix, Autocomplete, Comissao, Data, Destino, DestinoComponent, LexmlUiCommons, OpcoesImpressaoComponent, REGEX_ACCENTS, TipoMensagem };
 //# sourceMappingURL=index.js.map

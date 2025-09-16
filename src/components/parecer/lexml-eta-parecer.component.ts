@@ -1,4 +1,4 @@
-import { html, css, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import { Comissao, Destino } from '@ui-commons';
 import {
@@ -16,6 +16,10 @@ import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
+  createRenderRoot(): LitElement {
+    return this;
+  }
+
   @property({ type: Object }) lexmlParecerConfig: LexmlParecerConfig =
     new LexmlParecerConfig();
 
@@ -24,21 +28,6 @@ export class LexmlEtaParecer extends LitElement {
   @state() private _comissoes: Comissao[] = [];
 
   private _casa: 'SF' | 'CD' | 'CN' = 'SF';
-
-  static _styles = css`
-    :host {
-      display: block;
-      color: var(--lexml-eta-parecer-text-color, #000);
-    }
-    .card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 12px 14px;
-    }
-  `;
-
-  static styles = [LexmlEtaParecer._styles];
 
   @state() private parecer: Parecer = new Parecer();
 
@@ -167,6 +156,12 @@ export class LexmlEtaParecer extends LitElement {
 
   render(): TemplateResult {
     return html`
+      <style>
+        lexml-eta-parecer {
+          display: block;
+          color: var(--lexml-eta-parecer-text-color, #000);
+        }
+      </style>
       <wa-tab-group>
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>

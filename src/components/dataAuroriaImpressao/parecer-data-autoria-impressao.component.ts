@@ -10,6 +10,10 @@ import { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.compone
 
 @customElement('lexml-parecer-data-autria-impressao')
 export class LexmlParecerDataAutoriaImpressao extends LitElement {
+  createRenderRoot(): LitElement {
+    return this;
+  }
+
   @query('lexml-ui-data') private _data!: Data;
 
   @query('lexml-ui-opcoes-impressao')

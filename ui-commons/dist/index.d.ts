@@ -3,7 +3,7 @@ import * as lit from 'lit';
 import { LitElement, TemplateResult, PropertyValues } from 'lit';
 
 declare class LexmlUiCommons extends LitElement {
-  static styles: lit.CSSResult;
+  createRenderRoot(): LitElement;
   private _destinoEl;
   private _dataEl;
   private _opcoesImpressaoEl;
@@ -242,7 +242,7 @@ interface Alerta {
 type RemoveAlertFn = (id: string) => void;
 type ClearAlertsFn = () => void;
 declare class AlertasComponent extends LitElement {
-  static styles: lit.CSSResult;
+  createRenderRoot(): LitElement;
   alertas: Alerta[];
   removeAlert?: RemoveAlertFn;
   clearAlerts?: ClearAlertsFn;
