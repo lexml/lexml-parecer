@@ -4,6 +4,10 @@ import { TipoMensagem, Alerta } from '@ui-commons';
 
 @customElement('lexml-parecer-avisos')
 export class LexmlParecerAvisos extends LitElement {
+  createRenderRoot(): LitElement {
+    return this;
+  }
+
   static styles = css`
     :host {
       display: block;
@@ -95,7 +99,22 @@ export class LexmlParecerAvisos extends LitElement {
   // ******************************************* Fim dos Itens para o Teste do Alert
 
   render(): TemplateResult {
-    return html` <br />
+    return html` <style>
+        lexml-parecer-avisos {
+          display: block;
+        }
+        .linha {
+          display: flex;
+          align-items: center;
+          background-color: #fafafa;
+          border: 6px solid #038d15;
+          gap: 8px;
+        }
+        .caixa {
+          padding: 12px 0;
+        }
+      </style>
+      <br />
       <div class="linha">
         <h2 style="margin: 0">
           Item apenas para testes e validar funcionalidade

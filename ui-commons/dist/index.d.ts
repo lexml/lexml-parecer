@@ -3,7 +3,11 @@ import * as lit from 'lit';
 import { LitElement, TemplateResult, PropertyValues } from 'lit';
 
 declare class LexmlUiCommons extends LitElement {
-  static styles: lit.CSSResult;
+  createRenderRoot(): LitElement;
+  private _destinoEl;
+  private _dataEl;
+  private _opcoesImpressaoEl;
+  private _log;
   private _nomesParlamentares;
   private _nomeSelecionado;
   private _onAutocomplete;
@@ -43,6 +47,11 @@ declare class Comissao {
   nome: string;
 }
 
+declare class Destino {
+  colegiadoApreciador: 'Plenário' | 'Comissão' | 'Plenário via Comissão';
+  comissao: Comissao | null;
+}
+
 /**
  * Exemplo de uso do componente <lexml-destino>:
  *
@@ -75,6 +84,7 @@ type RemoveAlertFn$1 = (id: string) => void;
 declare class DestinoComponent extends LitElement {
   private _autocomplete;
   private _comissoesAutocomplete;
+  private _comissaoSelecionada;
   private isMPV;
   private isPlenario;
   private tipoColegiadoPlenario;
@@ -87,6 +97,7 @@ declare class DestinoComponent extends LitElement {
   criticalType: string;
   set proposicao(value: RefProposicaoEmendada);
   constructor();
+  getDestino(): Destino;
   get proposicao(): RefProposicaoEmendada;
   private _comissoes;
   set comissoes(value: Comissao[]);
@@ -118,6 +129,7 @@ declare class Data extends LitElement {
   private group;
   optionNaoInformarData: any;
   data: string;
+  getData(): string | null;
   firstUpdated(): void;
   private selecionarRadioData;
   updated(): void;
@@ -148,6 +160,7 @@ declare class OpcoesImpressaoComponent extends LitElement {
   private _opcoesImpressao;
   set opcoesImpressao(value: OpcoesImpressao);
   get opcoesImpressao(): OpcoesImpressao;
+  getOpcoesImpressao(): OpcoesImpressao;
   private timerEmitirEventoOnChange;
   protected firstUpdated(): void;
   render(): TemplateResult;
@@ -229,7 +242,7 @@ interface Alerta {
 type RemoveAlertFn = (id: string) => void;
 type ClearAlertsFn = () => void;
 declare class AlertasComponent extends LitElement {
-  static styles: lit.CSSResult;
+  createRenderRoot(): LitElement;
   alertas: Alerta[];
   removeAlert?: RemoveAlertFn;
   clearAlerts?: ClearAlertsFn;
@@ -320,6 +333,7 @@ export {
   Autocomplete,
   Comissao,
   Data,
+  Destino,
   DestinoComponent,
   LexmlUiCommons,
   OpcoesImpressaoComponent,

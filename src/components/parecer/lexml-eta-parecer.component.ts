@@ -1,23 +1,23 @@
-import { html, css, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
-  static _styles = css`
-    :host {
-      display: block;
-      padding: 25px;
-      color: var(--lexml-eta-parecer-text-color, #000);
-    }
-  `;
-
-  static styles = [LexmlEtaParecer._styles];
+  createRenderRoot(): LitElement {
+    return this;
+  }
 
   @property({ type: String }) header = 'Lexml-Eta-Parecer';
 
   render(): TemplateResult {
     return html`
-      <h2>${this.header}</h2>
+      <style>
+        lexml-eta-parecer {
+          display: block;
+          padding: 25px;
+          color: var(--lexml-eta-parecer-text-color, #000);
+        }
+      </style>
       <wa-tab-group>
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>

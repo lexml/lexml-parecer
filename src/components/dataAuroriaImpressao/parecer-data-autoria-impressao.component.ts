@@ -4,7 +4,10 @@ import { AutoriaParecer, Parlamentar } from 'src/models/diversos.modelo.js';
 
 @customElement('lexml-parecer-data-autria-impressao')
 export class LexmlParecerDataAutoriaImpressao extends LitElement {
-  // Apenas para fins de testes
+  createRenderRoot(): LitElement {
+    return this;
+  }
+
   @state() private _parlamentares: Parlamentar[] = [
     {
       identificacao: 'SF001',
