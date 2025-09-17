@@ -1,4 +1,4 @@
-import { html, css, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { TipoMensagem, Alerta } from '@ui-commons';
 
@@ -7,22 +7,6 @@ export class LexmlParecerAvisos extends LitElement {
   createRenderRoot(): LitElement {
     return this;
   }
-
-  static styles = css`
-    :host {
-      display: block;
-    }
-    .linha {
-      display: flex;
-      align-items: center;
-      background-color: #fafafa;
-      border: 6px solid #038d15;
-      gap: 8px;
-    }
-    .caixa {
-      padding: 12px 0;
-    }
-  `;
 
   // ******************************************* Itens para o Teste do Alert
   @state() private _tipoIdx = 0;

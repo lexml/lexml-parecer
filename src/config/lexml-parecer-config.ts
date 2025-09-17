@@ -1,7 +1,13 @@
+import { Comissao } from '@ui-commons';
+import {
+  Parlamentar,
+  ProposicaoReferenciada,
+} from 'src/models/diversos.modelo.js';
+
 export class LexmlParecerConfig {
-  urlConsultaParlamentares = 'api/parlamentares';
+  parlamentares: Parlamentar[] = [];
 
-  urlAutocomplete = 'api/autocomplete-norma';
+  materias: ProposicaoReferenciada[] = [];
 
-  urlComissoes?: string;
+  comissoes?: Comissao[] = [];
 }

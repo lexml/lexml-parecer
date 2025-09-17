@@ -1,6 +1,6 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
-import { Comissao, Destino } from '@ui-commons';
+import { Comissao } from '@ui-commons';
 import {
   AutoriaParecer,
   OpcoesImpressao,
@@ -13,6 +13,7 @@ import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parece
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
 import { Voto } from '../../models/voto.modelo.js';
 import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
+import { Materia } from '../../models/materia.modelo.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
@@ -27,7 +28,7 @@ export class LexmlEtaParecer extends LitElement {
 
   @state() private _comissoes: Comissao[] = [];
 
-  private _casa: 'SF' | 'CD' | 'CN' = 'SF';
+  @state() private _materias: ProposicaoReferenciada[] = [];
 
   @state() private parecer: Parecer = new Parecer();
 
@@ -68,11 +69,7 @@ export class LexmlEtaParecer extends LitElement {
       return new Parecer();
     }
 
-    const destino: Destino = materiaEl.getDestino();
-    console.log('--------------------- [Destino] ---------------------');
-    console.log(destino);
-
-    const materia: ProposicaoReferenciada = materiaEl.getMateria();
+    const materia: Materia = materiaEl.getMateria();
     const opcoesImpressao: OpcoesImpressao =
       dataAutiraImpressaoEl.getOpcoesImpressao();
     const data: string | null = dataAutiraImpressaoEl.getData();
@@ -83,8 +80,9 @@ export class LexmlEtaParecer extends LitElement {
     this.parecer = {
       ...this.parecer,
       dataUltimaModificacao: new Date().toISOString(),
-      materia: { ...materia },
-      ementa: materia.ementa ?? this.parecer.ementa,
+      materia: { ...materia.materia },
+      ano: materia.ano,
+      ementa: materia.ementa,
       opcoesImpressao: { ...opcoesImpressao },
       data,
       autoria: { ...autoriaParecer },
@@ -97,61 +95,18 @@ export class LexmlEtaParecer extends LitElement {
 
   async firstUpdated() {
     try {
-      if (this.lexmlParecerConfig.urlConsultaParlamentares) {
-        this._parlamentares = await this.getParlamentares();
+      if (this.lexmlParecerConfig.parlamentares) {
+        this._parlamentares = this.lexmlParecerConfig.parlamentares;
       }
-      if (this.lexmlParecerConfig.urlComissoes) {
-        this._comissoes = await this.getComissoes(this._casa);
+      if (this.lexmlParecerConfig.comissoes) {
+        this._comissoes = this.lexmlParecerConfig.comissoes;
+      }
+      if (this.lexmlParecerConfig.materias) {
+        this._materias = this.lexmlParecerConfig.materias;
       }
     } catch (e) {
       console.error('Falha ao dados:', e);
     }
-  }
-
-  async getParlamentares(): Promise<Parlamentar[]> {
-    try {
-      const _response = await fetch(
-        this.lexmlParecerConfig.urlConsultaParlamentares,
-      );
-      const _parlamentares = await _response.json();
-      return _parlamentares
-        .filter((p: any) => this._casa === 'CN' || p.siglaCasa === this._casa)
-        .map((p: any) => ({
-          identificacao: String(p.id),
-          nome: p.nome,
-          sexo: p.sexo,
-          siglaPartido: p.siglaPartido,
-          siglaUF: p.siglaUF,
-          siglaCasaLegislativa: p.siglaCasa,
-        }));
-    } catch (err) {
-      console.log('Erro inesperado ao carregar lista de parlamentares');
-      console.log(err);
-    }
-    return Promise.resolve([]);
-  }
-
-  async getComissoes(siglaCasaLegislativa: string): Promise<Comissao[]> {
-    try {
-      if (!this.lexmlParecerConfig.urlComissoes) {
-        return Promise.resolve([]);
-      }
-      const _response = await fetch(
-        `${this.lexmlParecerConfig.urlComissoes}?siglaCasaLegislativa=${siglaCasaLegislativa}`,
-      );
-      const _comissoes = await _response.json();
-      return _comissoes
-        .filter((c: any) => c.siglaCasaLegislativa === siglaCasaLegislativa)
-        .map((c: any) => ({
-          siglaCasaLegislativa: c.siglaCasaLegislativa,
-          sigla: c.sigla,
-          nome: c.nome,
-        }));
-    } catch (err) {
-      console.log('Erro inesperado ao carregar lista de comissões');
-      console.log(err);
-    }
-    return Promise.resolve([]);
   }
 
   render(): TemplateResult {
@@ -175,6 +130,7 @@ export class LexmlEtaParecer extends LitElement {
         <wa-tab-panel name="materia" class="overflow-hidden">
           <lexml-parecer-materia
             .comissoes=${this._comissoes}
+            .materias=${this._materias}
           ></lexml-parecer-materia>
         </wa-tab-panel>
         <wa-tab-panel name="relatorio" class="overflow-hidden">

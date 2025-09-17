@@ -1,15 +1,13 @@
+import { Destino } from '@ui-commons';
 import { getAnoAtual } from '../util/date-util.js';
-import { Destino } from './destino.modelo.js';
-import { Option } from './option.modelo.js';
+import { ProposicaoReferenciada } from './diversos.modelo.js';
 
 export class Materia {
   ano: number = getAnoAtual();
 
-  materia: string = '';
+  materia: ProposicaoReferenciada = new ProposicaoReferenciada();
 
-  destino: Destino = Destino.PLENARIO;
-
-  comissao?: Option;
+  destino: Destino = new Destino();
 
   ementa: string = '';
 }
