@@ -28,7 +28,8 @@ export class LexmlEtaParecer extends LitElement {
 
   @state() private _comissoes: Comissao[] = [];
 
-  @state() private _materias: ProposicaoReferenciada[] = [];
+  @property({ attribute: false })
+  buscarMateriasFunction?: (termo: string) => Promise<ProposicaoReferenciada[]>;
 
   @state() private parecer: Parecer = new Parecer();
 
@@ -36,7 +37,7 @@ export class LexmlEtaParecer extends LitElement {
   private _materia?: LexmlParecerMateria;
 
   @query(
-    'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autria-impressao',
+    'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autoria-impressao',
   )
   private _dataAutiraImpressao?: LexmlParecerDataAutoriaImpressao;
 
@@ -61,7 +62,7 @@ export class LexmlEtaParecer extends LitElement {
       return new Parecer();
     }
     if (!dataAutiraImpressaoEl) {
-      console.warn('lexml-parecer-data-autria-impressao não encontrado.');
+      console.warn('lexml-parecer-data-autoria-impressao não encontrado.');
       return new Parecer();
     }
     if (!votoEl) {
@@ -77,6 +78,8 @@ export class LexmlEtaParecer extends LitElement {
       dataAutiraImpressaoEl.getAutoriaParecer();
     const voto: Voto = votoEl.getVoto();
 
+    console.log('---DESTINO---');
+    console.log(materia.destino);
     this.parecer = {
       ...this.parecer,
       dataUltimaModificacao: new Date().toISOString(),
@@ -93,19 +96,12 @@ export class LexmlEtaParecer extends LitElement {
     return this.parecer;
   }
 
-  async firstUpdated() {
-    try {
-      if (this.lexmlParecerConfig.parlamentares) {
-        this._parlamentares = this.lexmlParecerConfig.parlamentares;
-      }
-      if (this.lexmlParecerConfig.comissoes) {
-        this._comissoes = this.lexmlParecerConfig.comissoes;
-      }
-      if (this.lexmlParecerConfig.materias) {
-        this._materias = this.lexmlParecerConfig.materias;
-      }
-    } catch (e) {
-      console.error('Falha ao dados:', e);
+  protected willUpdate(changed: Map<string, unknown>) {
+    if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
+      this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
+      this._comissoes = this.lexmlParecerConfig.comissoes ?? [];
+      this.buscarMateriasFunction =
+        this.lexmlParecerConfig.buscarMateriasFunction;
     }
   }
 
@@ -130,7 +126,7 @@ export class LexmlEtaParecer extends LitElement {
         <wa-tab-panel name="materia" class="overflow-hidden">
           <lexml-parecer-materia
             .comissoes=${this._comissoes}
-            .materias=${this._materias}
+            .buscarMateriasFunction=${this.buscarMateriasFunction}
           ></lexml-parecer-materia>
         </wa-tab-panel>
         <wa-tab-panel name="relatorio" class="overflow-hidden">
@@ -143,9 +139,9 @@ export class LexmlEtaParecer extends LitElement {
           <lexml-parecer-voto></lexml-parecer-voto>
         </wa-tab-panel>
         <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
-          <lexml-parecer-data-autria-impressao
+          <lexml-parecer-data-autoria-impressao
             .parlamentares=${this._parlamentares}
-          ></lexml-parecer-data-autria-impressao>
+          ></lexml-parecer-data-autoria-impressao>
         </wa-tab-panel>
         <wa-tab-panel name="avisos" class="overflow-hidden">
           <lexml-parecer-avisos></lexml-parecer-avisos>

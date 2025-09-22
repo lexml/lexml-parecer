@@ -1,7 +1,7 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import '../../src/index.js';
-import { Parecer } from 'src/models/diversos.modelo.js';
+import { Parecer, ProposicaoReferenciada } from 'src/models/diversos.modelo.js';
 import { LexmlEtaParecer } from '../../src/components/parecer/lexml-eta-parecer.component.js';
 import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
 
@@ -316,146 +316,7 @@ export class DemoView extends LitElement {
         cargo: 'Deputado',
       },
     ];
-    this.parecerConfig.materias = [
-      {
-        urn: 'urn:lex:br:camara:pl:2024;1234',
-        sigla: 'PL',
-        numero: '1234',
-        ano: '2024',
-        ementa:
-          'Dispõe sobre diretrizes gerais de conectividade em escolas públicas.',
-        identificacaoTexto: 'PL 1234/2024 — Conectividade em escolas públicas',
-      },
-      {
-        urn: 'urn:lex:br:senado:pl:2024;987',
-        sigla: 'PL',
-        numero: '987',
-        ano: '2024',
-        ementa:
-          'Institui a Política Nacional de Incentivo à Inovação Municipal.',
-        identificacaoTexto: 'PL 987/2024 — Política de Inovação Municipal',
-      },
-      {
-        urn: 'urn:lex:br:senado:pec:2023;45',
-        sigla: 'PEC',
-        numero: '45',
-        ano: '2023',
-        ementa:
-          'Altera o Sistema Tributário Nacional para simplificação de impostos.',
-        identificacaoTexto: 'PEC 45/2023 — Reforma Tributária (simplificação)',
-      },
-      {
-        urn: 'urn:lex:br:camara:plp:2023;32',
-        sigla: 'PLP',
-        numero: '32',
-        ano: '2023',
-        ementa:
-          'Complementa regras de repartição de receitas entre entes federativos.',
-        identificacaoTexto: 'PLP 32/2023 — Repartição de receitas',
-      },
-      {
-        urn: 'urn:lex:br:senado:pdl:2024;51',
-        sigla: 'PDL',
-        numero: '51',
-        ano: '2024',
-        ementa:
-          'Susta dispositivo de decreto que trata de concessões de transporte.',
-        identificacaoTexto: 'PDL 51/2024 — Susta dispositivo de decreto',
-      },
-      {
-        urn: 'urn:lex:br:camara:pl:2022;4960',
-        sigla: 'PL',
-        numero: '4960',
-        ano: '2022',
-        ementa:
-          'Cria o Programa Nacional de Eficiência Hídrica em Edificações.',
-        identificacaoTexto: 'PL 4960/2022 — Eficiência hídrica em edificações',
-      },
-      {
-        urn: 'urn:lex:br:senado:pls:2021;221',
-        sigla: 'PLS',
-        numero: '221',
-        ano: '2021',
-        ementa:
-          'Estabelece diretrizes para transparência algorítmica em serviços digitais.',
-        identificacaoTexto: 'PLS 221/2021 — Transparência algorítmica',
-      },
-      {
-        urn: 'urn:lex:br:camara:pec:2021;12',
-        sigla: 'PEC',
-        numero: '12',
-        ano: '2021',
-        ementa: 'Inclui o acesso à internet entre os direitos sociais.',
-        identificacaoTexto: 'PEC 12/2021 — Internet como direito social',
-      },
-      {
-        urn: 'urn:lex:br:senado:pl:2020;3500',
-        sigla: 'PL',
-        numero: '3500',
-        ano: '2020',
-        ementa:
-          'Dispõe sobre o incentivo à economia circular e logística reversa.',
-        identificacaoTexto: 'PL 3500/2020 — Economia circular',
-      },
-      {
-        urn: 'urn:lex:br:camara:pl:2019;1292',
-        sigla: 'PL',
-        numero: '1292',
-        ano: '2019',
-        ementa: 'Atualiza a Lei de Licitações e Contratos Administrativos.',
-        identificacaoTexto: 'PL 1292/2019 — Nova Lei de Licitações',
-      },
-      {
-        urn: 'urn:lex:br:senado:pl:2023;2001',
-        sigla: 'PL',
-        numero: '2001',
-        ano: '2023',
-        ementa:
-          'Institui a Política Nacional de Combate às Mudanças Climáticas Locais.',
-        identificacaoTexto: 'PL 2001/2023 — Clima: ações locais',
-      },
-      {
-        urn: 'urn:lex:br:camara:pdl:2022;99',
-        sigla: 'PDL',
-        numero: '99',
-        ano: '2022',
-        ementa:
-          'Aprova acordo internacional de cooperação em pesquisa científica.',
-        identificacaoTexto: 'PDL 99/2022 — Acordo internacional de pesquisa',
-      },
-      {
-        urn: 'urn:lex:br:senado:pl:2024;150',
-        sigla: 'PL',
-        numero: '150',
-        ano: '2024',
-        ementa: 'Cria o Selo Verde para compras públicas sustentáveis.',
-        identificacaoTexto: 'PL 150/2024 — Selo Verde em compras públicas',
-      },
-      {
-        urn: 'urn:lex:br:camara:plp:2020;19',
-        sigla: 'PLP',
-        numero: '19',
-        ano: '2020',
-        ementa: 'Define regime fiscal de inovação para startups.',
-        identificacaoTexto: 'PLP 19/2020 — Regime fiscal para startups',
-      },
-      {
-        urn: 'urn:lex:br:senado:pec:2019;188',
-        sigla: 'PEC',
-        numero: '188',
-        ano: '2019',
-        ementa: 'Reestrutura o pacto federativo com novas regras fiscais.',
-        identificacaoTexto: 'PEC 188/2019 — Pacto Federativo',
-      },
-      {
-        urn: 'urn:lex:br:camara:pl:2024;777',
-        sigla: 'PL',
-        numero: '777',
-        ano: '2024',
-        ementa: 'Institui o Programa Nacional de Alfabetização Digital.',
-        identificacaoTexto: 'PL 777/2024 — Alfabetização Digital',
-      },
-    ];
+    this.parecerConfig.buscarMateriasFunction = this.buscarMateriasApi;
   }
 
   private getObjetoParecer = (): void => {
@@ -467,6 +328,22 @@ export class DemoView extends LitElement {
     const ObjetoParecer: Parecer = parecerEl.getParecer();
     console.log('--------------------- [PARECER] ---------------------');
     console.log(ObjetoParecer);
+  };
+
+  private buscarMateriasApi = async (
+    termo: string,
+  ): Promise<ProposicaoReferenciada[]> => {
+    try {
+      const response = await fetch(`/api/materias?q=${termo}`);
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.statusText}`);
+      }
+      const resultados: ProposicaoReferenciada[] = await response.json();
+      return resultados;
+    } catch (error) {
+      console.error('Falha ao buscar matérias na API:', error);
+      return [];
+    }
   };
 
   render(): TemplateResult {

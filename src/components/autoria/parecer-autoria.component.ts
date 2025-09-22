@@ -138,25 +138,27 @@ export class LexmlParecerAutoriaComponent extends LitElement {
       </style>
       <fieldset>
         <legend>Autoria</legend>
-        <lexml-ui-autocomplete
+        <lexml-autocomplete-universal
           label="Relator"
           .items=${this._nomesAutocomplete}
           .value=${this._autoriaParecer.relator?.nome ?? ''}
           @autocomplete=${(e: CustomEvent<{ value: string }>) =>
             this._onAutocomplete('relator', e)}
           @input=${(e: Event) => this._validarNomeCampo(e, 'relator')}
+          @wa-input=${(e: Event) => this._validarNomeCampo(e, 'relator')}
           @focusout=${(e: Event) => this._validarNomeCampo(e, 'relator')}
-        ></lexml-ui-autocomplete>
+        ></lexml-autocomplete-universal>
 
-        <lexml-ui-autocomplete
+        <lexml-autocomplete-universal
           label="Presidente"
           .items=${this._nomesAutocomplete}
           .value=${this._autoriaParecer.presidente?.nome ?? ''}
           @autocomplete=${(e: CustomEvent<{ value: string }>) =>
             this._onAutocomplete('presidente', e)}
           @input=${(e: Event) => this._validarNomeCampo(e, 'presidente')}
+          @wa-input=${(e: Event) => this._validarNomeCampo(e, 'presidente')}
           @focusout=${(e: Event) => this._validarNomeCampo(e, 'presidente')}
-        ></lexml-ui-autocomplete>
+        ></lexml-autocomplete-universal>
       </fieldset>
     `;
   }

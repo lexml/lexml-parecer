@@ -7,7 +7,7 @@ import {
 export class LexmlParecerConfig {
   parlamentares: Parlamentar[] = [];
 
-  materias: ProposicaoReferenciada[] = [];
+  buscarMateriasFunction?: (termo: string) => Promise<ProposicaoReferenciada[]>;
 
   comissoes?: Comissao[] = [];
 }

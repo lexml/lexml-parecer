@@ -272,6 +272,14 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
           @autocomplete=${this._onAutocomplete}
           @input=${this._onInput}
         ></lexml-ui-autocomplete>
+        <h4>Teste</h4>
+        <lexml-autocomplete-universal
+          label="Parlamentar"
+          .mode=${'sync'}
+          .items=${this._nomesParlamentares}
+          .value=${this._nomeSelecionado}
+          @autocomplete=${this._onAutocomplete}
+        ></lexml-autocomplete-universal>
         <br />
         <h2>Teste DestinoComponent</h2>
         <lexml-ui-destino .comissoes=${this.comissoesTeste}></lexml-ui-destino>
@@ -337,46 +345,75 @@ LexmlUiCommons = __decorate([
     customElement('lexml-ui-commons')
 ], LexmlUiCommons);
 
-let AutocompleteAsync = class AutocompleteAsync extends LitElement {
+class Option {
+    constructor(value, description) {
+        this.value = value;
+        this.description = description;
+    }
+}
+let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitElement {
     constructor() {
         super(...arguments);
-        this.placeholder = '';
+        // ---------- UI props ----------
         this.label = '';
-        this.items = [];
+        this.placeholder = '';
         this.disabled = false;
-        this.opened = false;
-        this.async = true;
+        this.readonly = false;
+        this.showOnEmpty = false;
+        // ---------- Modo de operação ----------
+        // Preferir 'mode'; manter 'async' como alias p/ retrocompatibilidade.
+        this.mode = 'sync';
+        // ---------- Dados / callbacks ----------
+        // Para 'sync': pode ser string[] ou Option[]
+        this.items = [];
+        // Para 'async': callback de busca
+        this.onSearch = undefined;
+        this.onSelect = () => { };
+        this.onChange = () => { };
+        this.onClick = () => { };
+        // ---------- Comportamento ----------
+        this.minChars = 3;
         this.maxSuggestions = 10;
-        this.onSearch = (value) => console.log('Texto da pesquisa', value);
-        this.onSelect = (value) => console.log('Item selecionado:', value);
-        this.onChange = (value) => console.log('Mudança texto:', value);
-        this.onClick = (value) => console.log('Click:', value);
-        this._interval = 1000;
+        this.opened = false;
         this._bound = {};
+        this._interval = 300; // debounce
         this._blur = false;
-        this._mouseEnter = false;
-        this._search = () => {
-            const { value } = this.contentElement;
-            if (this.async) {
-                clearTimeout(this._timer);
-                if (value.length >= 5 || !this.async) {
-                    this._timer = setTimeout(() => {
-                        this.onSearch(value);
-                    }, this.async ? this._interval : 0);
-                }
-            }
-            else {
-                this.onSearch(value);
+        this._syncListWidth = () => {
+            if (!this._suggestionEl || !this.contentElement)
+                return;
+            const w = this.contentElement.getBoundingClientRect().width || 0;
+            if (w > 0) {
+                this._suggestionEl.style.boxSizing = 'border-box';
+                this._suggestionEl.style.minWidth = `${w}px`;
+                this._suggestionEl.style.width = `${w}px`;
             }
         };
+        // ---------------- suggestions state ----------------
+        this._currentOptions = [];
     }
+    set async(v) {
+        this.mode = v ? 'async' : 'sync';
+    }
+    get async() {
+        return this.mode === 'async';
+    }
+    get value() {
+        return (this.contentElement && this.contentElement.value) || '';
+    }
+    set value(v) {
+        if (!this.contentElement) {
+            this._tempValue = v;
+            return;
+        }
+        this.contentElement.value = v ?? '';
+    }
+    // Render
     render() {
         return html `
       <style>
         .suggest-container {
           position: relative;
         }
-
         ul {
           position: absolute;
           display: block;
@@ -384,192 +421,165 @@ let AutocompleteAsync = class AutocompleteAsync extends LitElement {
           margin: 0;
           padding: 0;
           z-index: 10000;
-          border: 1px solid grey;
-          background: white;
+          border: 1px solid #ccc;
+          background: #fff;
+          overflow: auto;
         }
         li {
-          padding: 4px;
+          padding: 6px 8px;
           cursor: pointer;
         }
         li.active {
-          background: whitesmoke;
+          background: #f5f5f5;
         }
         [hidden] {
           display: none;
         }
-
         .lexml-autocomplete-input {
           width: 100%;
         }
         wa-input {
           font-size: 14px;
         }
-        @media (max-width: 576px) {
-          .lexml-autocomplete-label {
-            width: calc(100% - 2px);
-            display: block;
-          }
-          .lexml-autocomplete-input {
-            width: calc(100% - 2px);
-          }
-        }
       </style>
+
       <slot id="dropdown-input">
         <wa-input
           id="defaultInput"
           class="lexml-autocomplete-input"
           type="text"
+          .value=${this.value || ''}
           label=${this.label}
           placeholder=${this.placeholder}
-          .value=${this.value?.description || ''}
-          @change=${(e) => this._handleChange(e.target.value)}
-          @click=${(e) => this._handleClick(e.target.value)}
           ?disabled=${this.disabled}
+          ?readonly=${this.readonly}
         ></wa-input>
       </slot>
+
       <div class="suggest-container">
         <ul
           id="suggestions"
           ?hidden=${!this.opened}
-          @mouseenter=${this._handleItemMouseEnter}
-          @mouseleave=${this._handleItemMouseLeave}
+          @mousedown=${(e) => e.preventDefault()}
         >
-          ${this.items.map((item) => html `<li @click=${() => this.autocomplete(item)}>
-                ${item.description}
+          ${this._currentOptions.map((opt) => html ` <li
+                @click=${() => this._selectOption(opt)}
+                title=${opt.description}
+              >
+                ${opt.description}
               </li>`)}
         </ul>
       </div>
     `;
     }
-    /**
-     * Input element getter
-     */
+    // ---------------- lifecycle / element refs ----------------
     get contentElement() {
         if (this._inputEl)
-            return this._inputEl; // Cache
+            return this._inputEl;
         if (!this.hasUpdated)
-            return undefined; // No shadow root, no element to use
-        const slotElement = this.shadowRoot.getElementById('dropdown-input');
-        const slotInputList = slotElement.assignedElements();
-        this._inputEl = slotInputList.length
-            ? slotInputList[0]
+            return undefined;
+        const slotEl = this.shadowRoot.getElementById('dropdown-input');
+        const assigned = slotEl.assignedElements();
+        this._inputEl = assigned.length
+            ? assigned[0]
             : this.shadowRoot.getElementById('defaultInput');
         return this._inputEl;
     }
-    /**
-     * Value getter from input element.
-     */
-    get value() {
-        return this.contentElement && this.contentElement.value;
-    }
-    /**
-     * Value setter to input element.
-     */
-    set value(value) {
-        if (!this.contentElement) {
-            this._tempValue = value;
-            return;
-        }
-        this.contentElement.value = value;
-    }
     firstUpdated() {
         this._suggestionEl = this.shadowRoot.getElementById('suggestions');
-        this._suggestionEl.style = 'max-height: 250px; overflow: scroll';
-        this._suggestionEl.style.width = `${this.contentElement.getBoundingClientRect().width}px`;
+        this._syncListWidth();
+        this._ro = new ResizeObserver(() => this._syncListWidth());
+        this._ro.observe(this.contentElement);
+        this._io = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting)
+                this._syncListWidth();
+        }, { threshold: 0.01 });
+        this._io.observe(this);
         this._bound.onKeyDown = this._handleKeyDown.bind(this);
         this._bound.onKeyUp = this._handleKeyUp.bind(this);
         this._bound.onFocus = this._handleFocus.bind(this);
         this._bound.onBlur = this._handleBlur.bind(this);
-        this._bound.onChange = this._handleChange.bind(this);
-        this._bound.onClick = this._handleClick.bind(this);
-        this.contentElement.addEventListener('keydown', this._bound.onKeyDown);
-        this.contentElement.addEventListener('keyup', this._bound.onKeyUp);
-        this.contentElement.addEventListener('focus', this._bound.onFocus);
-        this.contentElement.addEventListener('blur', this._bound.onBlur);
-        this.contentElement.addEventListener('wa-input', this._bound.onChange);
-        this.contentElement.addEventListener('click', this._bound.onClick);
-        if (this._tempValue !== undefined) {
-            this.contentElement.value = this._tempValue;
-        }
+        this._bound.onChange = (e) => this._handleChange(e?.target?.value ?? this.value);
+        this._bound.onClick = (e) => this._handleClick(e?.target?.value ?? this.value);
+        const el = this.contentElement;
+        el.addEventListener('keydown', this._bound.onKeyDown);
+        el.addEventListener('keyup', this._bound.onKeyUp);
+        el.addEventListener('focus', this._bound.onFocus);
+        el.addEventListener('blur', this._bound.onBlur);
+        el.addEventListener('wa-input', this._bound.onChange);
+        el.addEventListener('click', this._bound.onClick);
+        if (this._tempValue !== undefined)
+            el.value = this._tempValue;
+        this._recalcList(); // primeira passada
     }
     disconnectedCallback() {
-        if (!this.contentElement)
-            return; // no events to remove
-        this.contentElement.removeEventListener('keydown', this._bound.onKeyDown);
-        this.contentElement.removeEventListener('keyup', this._bound.onKeyUp);
-        this.contentElement.removeEventListener('focus', this._bound.onFocus);
-        this.contentElement.removeEventListener('blur', this._bound.onBlur);
-        this.contentElement.removeEventListener('sl-input', this._bound.onChange);
-        this.contentElement.removeEventListener('click', this._bound.onClick);
-    }
-    focus(options) {
+        this._ro?.disconnect();
+        this._io?.disconnect();
+        window.removeEventListener('resize', this._syncListWidth);
         if (this.contentElement) {
-            this.contentElement.focus(options);
+            const el = this.contentElement;
+            el.removeEventListener('keydown', this._bound.onKeyDown);
+            el.removeEventListener('keyup', this._bound.onKeyUp);
+            el.removeEventListener('focus', this._bound.onFocus);
+            el.removeEventListener('blur', this._bound.onBlur);
+            el.removeEventListener('wa-input', this._bound.onChange);
+            el.removeEventListener('click', this._bound.onClick);
         }
+        super.disconnectedCallback();
     }
     updated(changed) {
-        if (changed.has('items')) {
-            this.items.length > 1 ||
-                (this.items.length === 1 && this.items[0] !== this.contentElement.value)
-                ? this.open()
-                : this.close();
+        if (changed.has('items') || changed.has('mode')) {
+            this._recalcList();
         }
         if (changed.has('opened') &&
             this.opened &&
-            this._suggestionEl.childElementCount) {
-            // Highlight the first when there are suggestions
-            // eslint-disable-next-line prefer-destructuring
+            this._suggestionEl?.childElementCount) {
             this._highlightedEl = this._suggestionEl.children[0];
             this._highlightedEl.classList.add('active');
         }
     }
-    /**
-     * Open suggestions.
-     */
-    open() {
-        if (this._suggestionEl.style.width === '0px') {
-            this._suggestionEl.style.width = `${this.contentElement.getBoundingClientRect().width}px`;
-        }
-        if (this.items.length) {
-            this.opened = true;
+    _itemsToOptions(src) {
+        return (src || []).map(it => typeof it === 'string' ? new Option(it, it) : it);
+    }
+    _recalcList() {
+        if (this.mode === 'sync') {
+            this._currentOptions = this.showOnEmpty
+                ? this._itemsToOptions(this.items).slice(0, this.maxSuggestions)
+                : [];
+            this.requestUpdate();
         }
     }
-    /**
-     * Close suggestions.
-     */
+    _setSuggestions(list) {
+        this._currentOptions = this._itemsToOptions(list).slice(0, this.maxSuggestions);
+        this._currentOptions.length ? this.open() : this.close();
+        this.requestUpdate();
+    }
+    // ---------------- open/close ----------------
+    open() {
+        this._syncListWidth();
+        if (this._currentOptions.length)
+            this.opened = true;
+    }
     close() {
         this.opened = false;
         this._highlightedEl = null;
     }
-    /**
-     * Autocomplete input with `value`.
-     * @param {String} value
-     */
-    autocomplete(value) {
-        this.contentElement.value = value;
-        this.onSelect(value);
+    // ---------------- select ----------------
+    _selectOption(opt) {
+        // escreve só o texto no input (sempre string)
+        this.contentElement.value = opt?.description ?? '';
+        this.onSelect?.(opt);
+        // compat com o autocomplete "antigo" que emitia evento
+        this.dispatchEvent(new CustomEvent('autocomplete', {
+            bubbles: true,
+            composed: true,
+            detail: { value: this.contentElement.value, option: opt },
+        }));
         this.close();
+        this.contentElement?.focus?.();
     }
-    _highlightPrev() {
-        if (!this._highlightedEl || !this._highlightedEl.previousElementSibling)
-            return;
-        this._highlightedEl.classList.remove('active');
-        this._highlightedEl = this._highlightedEl.previousElementSibling;
-        this._highlightedEl.classList.add('active');
-    }
-    _highlightNext() {
-        if (!this._highlightedEl || !this._highlightedEl.nextElementSibling)
-            return;
-        this._highlightedEl.classList.remove('active');
-        this._highlightedEl = this._highlightedEl.nextElementSibling;
-        this._highlightedEl.classList.add('active');
-    }
-    // eslint-disable-next-line class-methods-use-this
-    _handleChange(value) {
-        this.onChange(value);
-    }
+    // ---------------- keyboard / input handlers ----------------
     _handleKeyDown(ev) {
-        // Prevent up and down from behaving as home and end on some browsers
         if (ev.key === 'ArrowUp' || ev.key === 'ArrowDown') {
             ev.preventDefault();
             ev.stopPropagation();
@@ -581,94 +591,157 @@ let AutocompleteAsync = class AutocompleteAsync extends LitElement {
                 if (this._highlightedEl?.previousElementSibling) {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    this._highlightPrev();
+                    this._highlightedEl.classList.remove('active');
+                    this._highlightedEl = this._highlightedEl.previousElementSibling;
+                    this._highlightedEl.classList.add('active');
                 }
                 break;
             case 'ArrowDown':
                 if (this._highlightedEl?.nextElementSibling) {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    this._highlightNext();
+                    this._highlightedEl.classList.remove('active');
+                    this._highlightedEl = this._highlightedEl.nextElementSibling;
+                    this._highlightedEl.classList.add('active');
+                }
+                else if (!this.opened && this._currentOptions.length) {
+                    this.open();
                 }
                 break;
             case 'Enter':
-                // eslint-disable-next-line no-unused-expressions
-                this._highlightedEl && this._highlightedEl.click();
+                this._highlightedEl?.click?.();
                 this.contentElement.blur();
                 break;
             default:
-                this._search();
+                this._debouncedSearch();
         }
+    }
+    _debouncedSearch() {
+        const q = this.value || '';
+        clearTimeout(this._timer);
+        const run = async () => {
+            if (this.mode === 'async') {
+                if (!this.onSearch)
+                    return;
+                if ((q?.length ?? 0) < this.minChars) {
+                    this._setSuggestions([]);
+                    return;
+                }
+                try {
+                    const res = await this.onSearch(q);
+                    this._setSuggestions(Array.isArray(res) ? res : []);
+                }
+                catch {
+                    this._setSuggestions([]);
+                }
+            }
+            else {
+                // sync local: filtra items se fornecidos
+                const base = this._itemsToOptions(this.items);
+                if (!q) {
+                    this._setSuggestions([]);
+                    return;
+                }
+                const norm = (s) => s
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase();
+                const nq = norm(q);
+                // começa com, depois contém
+                let out = base
+                    .filter(o => norm(o.description).startsWith(nq))
+                    .slice(0, this.maxSuggestions);
+                if (out.length < this.maxSuggestions) {
+                    out = [
+                        ...out,
+                        ...base.filter(o => norm(o.description).includes(nq) &&
+                            !out.some(x => x.value === o.value)),
+                    ].slice(0, this.maxSuggestions);
+                }
+                this._setSuggestions(out);
+            }
+        };
+        this._timer = setTimeout(run, this._interval);
     }
     _handleFocus() {
         this._blur = false;
-        // eslint-disable-next-line no-unused-expressions
-        this.items.length > 1 && this.open();
+        if (this._currentOptions.length > 1)
+            this.open();
     }
     _handleBlur() {
         this._blur = true;
-        // eslint-disable-next-line no-unused-expressions
         setTimeout(() => this.close(), 200);
-        //this.items = [];
     }
-    // Handle mouse change focus to suggestions
-    _handleItemMouseEnter() {
-        this._mouseEnter = true;
-    }
-    _handleItemMouseLeave() {
-        this._mouseEnter = false;
-        // eslint-disable-next-line no-unused-expressions
-        this._blur && setTimeout(() => this.close(), 500); // Give user some slack before closing
+    _handleChange(value) {
+        this.onChange?.(value);
     }
     _handleClick(value) {
-        this.onClick(value);
+        this.onClick?.(value);
+        if (this.mode === 'sync') {
+            const q = (this.value ?? '').trim();
+            if (!q) {
+                if (this.showOnEmpty)
+                    this._setSuggestions(this.items);
+                else
+                    this.close();
+                return;
+            }
+            if (this._currentOptions.length)
+                this.open();
+        }
     }
 };
 __decorate([
     property({ type: String })
-], AutocompleteAsync.prototype, "placeholder", void 0);
+], LexmlAutocompleteUniversal.prototype, "label", void 0);
 __decorate([
     property({ type: String })
-], AutocompleteAsync.prototype, "label", void 0);
-__decorate([
-    property({ type: Array, reflect: true })
-], AutocompleteAsync.prototype, "items", void 0);
+], LexmlAutocompleteUniversal.prototype, "placeholder", void 0);
 __decorate([
     property({ type: Boolean, reflect: true })
-], AutocompleteAsync.prototype, "disabled", void 0);
+], LexmlAutocompleteUniversal.prototype, "disabled", void 0);
 __decorate([
     property({ type: Boolean, reflect: true })
-], AutocompleteAsync.prototype, "opened", void 0);
+], LexmlAutocompleteUniversal.prototype, "readonly", void 0);
+__decorate([
+    property({ type: Boolean })
+], LexmlAutocompleteUniversal.prototype, "showOnEmpty", void 0);
+__decorate([
+    property({ type: String })
+], LexmlAutocompleteUniversal.prototype, "mode", void 0);
 __decorate([
     property({ type: Boolean, reflect: true })
-], AutocompleteAsync.prototype, "async", void 0);
+], LexmlAutocompleteUniversal.prototype, "async", null);
+__decorate([
+    property({ type: Array })
+], LexmlAutocompleteUniversal.prototype, "items", void 0);
+__decorate([
+    property({ attribute: false })
+], LexmlAutocompleteUniversal.prototype, "onSearch", void 0);
+__decorate([
+    property({ attribute: false })
+], LexmlAutocompleteUniversal.prototype, "onSelect", void 0);
+__decorate([
+    property({ attribute: false })
+], LexmlAutocompleteUniversal.prototype, "onChange", void 0);
+__decorate([
+    property({ attribute: false })
+], LexmlAutocompleteUniversal.prototype, "onClick", void 0);
 __decorate([
     property({ type: Number })
-], AutocompleteAsync.prototype, "maxSuggestions", void 0);
+], LexmlAutocompleteUniversal.prototype, "minChars", void 0);
 __decorate([
-    property({ type: Function })
-], AutocompleteAsync.prototype, "onSearch", void 0);
+    property({ type: Number })
+], LexmlAutocompleteUniversal.prototype, "maxSuggestions", void 0);
 __decorate([
-    property({ type: Function })
-], AutocompleteAsync.prototype, "onSelect", void 0);
-__decorate([
-    property({ type: Function })
-], AutocompleteAsync.prototype, "onChange", void 0);
-__decorate([
-    property({ type: Function })
-], AutocompleteAsync.prototype, "onClick", void 0);
+    property({ type: Boolean, reflect: true })
+], LexmlAutocompleteUniversal.prototype, "opened", void 0);
 __decorate([
     property({ type: String })
-], AutocompleteAsync.prototype, "value", null);
-AutocompleteAsync = __decorate([
-    customElement('autocomplete-ui-async')
-], AutocompleteAsync);
-class Option {
-    constructor(value, description) {
-        this.description = description;
-        this.value = value;
-    }
-}
+], LexmlAutocompleteUniversal.prototype, "value", null);
+LexmlAutocompleteUniversal = __decorate([
+    customElement('lexml-autocomplete-universal')
+], LexmlAutocompleteUniversal);
 
 class ColegiadoApreciador {
     constructor() {
@@ -1048,23 +1121,21 @@ let DestinoComponent = class DestinoComponent extends LitElement {
           </wa-radio-group>
         </div>
         <div style="width:100%;margin-top:10px">
-          <autocomplete-ui-async
-            id="auto-complete-async"
+          <lexml-autocomplete-universal
+            id="auto-complete"
             label="Comissão"
-            .async=${false}
+            .mode=${'sync'}
             ?readonly=${this.isMPV || this.isPlenario}
             placeholder="ex: Comissão"
-            .items=${this._comissoesAutocomplete}
-            .onSearch=${(value) => this._filtroComissao(value)}
-            .onSelect=${(value) => this._selecionarComissao(value)}
-            .onChange=${() => true}
-            .onClick=${() => this._exibirComissoes()}
+            .items=${this._comissoesOptions}
+            .onSelect=${(opt) => this._selecionarComissao(opt)}
+            .onClick=${() => (this._autocomplete.value = '')}
             @blur=${this._blurAutoComplete}
             ?disabled=${this.isMPV ||
             this.isPlenario ||
             this.tipoColegiadoPlenario ||
             !this.comissoes?.length}
-          ></autocomplete-ui-async>
+          ></lexml-autocomplete-universal>
           ${this.isErroComissaoSelecionada
             ? html `
                 <div class="mensagem mensagem--danger">
@@ -1138,10 +1209,6 @@ let DestinoComponent = class DestinoComponent extends LitElement {
         this._colegiadoApreciador.siglaComissao = this._comissaoSelecionada.sigla;
         this.removerAlertaErroComissao();
     }
-    _filtroComissao(query) {
-        const regex = new RegExp(query, 'i');
-        this._comissoesAutocomplete = this._comissoesOptions.filter(comissao => comissao.description.match(regex));
-    }
     _blurAutoComplete() {
         if (!this.comissoes?.length)
             return;
@@ -1172,7 +1239,7 @@ let DestinoComponent = class DestinoComponent extends LitElement {
 };
 DestinoComponent.styles = [autoriaCss];
 __decorate([
-    query('#auto-complete-async')
+    query('#auto-complete')
 ], DestinoComponent.prototype, "_autocomplete", void 0);
 __decorate([
     state()
@@ -2061,5 +2128,332 @@ Autocomplete = __decorate([
     customElement('lexml-ui-autocomplete')
 ], Autocomplete);
 
-export { AlertasComponent, AutoFix, Autocomplete, Comissao, Data, Destino, DestinoComponent, LexmlUiCommons, OpcoesImpressaoComponent, REGEX_ACCENTS, TipoMensagem };
+let AutocompleteAsync = class AutocompleteAsync extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.placeholder = '';
+        this.label = '';
+        this.items = [];
+        this.disabled = false;
+        this.opened = false;
+        this.async = true;
+        this.maxSuggestions = 10;
+        this.onSearch = (value) => console.log('Texto da pesquisa', value);
+        this.onSelect = (value) => console.log('Item selecionado:', value);
+        this.onChange = (value) => console.log('Mudança texto:', value);
+        this.onClick = (value) => console.log('Click:', value);
+        this._interval = 1000;
+        this._bound = {};
+        this._blur = false;
+        this._mouseEnter = false;
+        this._search = () => {
+            const { value } = this.contentElement;
+            if (this.async) {
+                clearTimeout(this._timer);
+                if (value.length >= 5 || !this.async) {
+                    this._timer = setTimeout(() => {
+                        this.onSearch(value);
+                    }, this.async ? this._interval : 0);
+                }
+            }
+            else {
+                this.onSearch(value);
+            }
+        };
+    }
+    render() {
+        return html `
+      <style>
+        .suggest-container {
+          position: relative;
+        }
+
+        ul {
+          position: absolute;
+          display: block;
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          z-index: 10000;
+          border: 1px solid grey;
+          background: white;
+        }
+        li {
+          padding: 4px;
+          cursor: pointer;
+        }
+        li.active {
+          background: whitesmoke;
+        }
+        [hidden] {
+          display: none;
+        }
+
+        .lexml-autocomplete-input {
+          width: 100%;
+        }
+        wa-input {
+          font-size: 14px;
+        }
+        @media (max-width: 576px) {
+          .lexml-autocomplete-label {
+            width: calc(100% - 2px);
+            display: block;
+          }
+          .lexml-autocomplete-input {
+            width: calc(100% - 2px);
+          }
+        }
+      </style>
+      <slot id="dropdown-input">
+        <wa-input
+          id="defaultInput"
+          class="lexml-autocomplete-input"
+          type="text"
+          label=${this.label}
+          placeholder=${this.placeholder}
+          .value=${this.value?.description || ''}
+          @change=${(e) => this._handleChange(e.target.value)}
+          @click=${(e) => this._handleClick(e.target.value)}
+          ?disabled=${this.disabled}
+        ></wa-input>
+      </slot>
+      <div class="suggest-container">
+        <ul
+          id="suggestions"
+          ?hidden=${!this.opened}
+          @mouseenter=${this._handleItemMouseEnter}
+          @mouseleave=${this._handleItemMouseLeave}
+        >
+          ${this.items.map((item) => html `<li @click=${() => this.autocomplete(item)}>
+                ${item.description}
+              </li>`)}
+        </ul>
+      </div>
+    `;
+    }
+    /**
+     * Input element getter
+     */
+    get contentElement() {
+        if (this._inputEl)
+            return this._inputEl; // Cache
+        if (!this.hasUpdated)
+            return undefined; // No shadow root, no element to use
+        const slotElement = this.shadowRoot.getElementById('dropdown-input');
+        const slotInputList = slotElement.assignedElements();
+        this._inputEl = slotInputList.length
+            ? slotInputList[0]
+            : this.shadowRoot.getElementById('defaultInput');
+        return this._inputEl;
+    }
+    /**
+     * Value getter from input element.
+     */
+    get value() {
+        return this.contentElement && this.contentElement.value;
+    }
+    /**
+     * Value setter to input element.
+     */
+    set value(value) {
+        if (!this.contentElement) {
+            this._tempValue = value;
+            return;
+        }
+        this.contentElement.value = value;
+    }
+    firstUpdated() {
+        this._suggestionEl = this.shadowRoot.getElementById('suggestions');
+        this._suggestionEl.style = 'max-height: 250px; overflow: scroll';
+        this._suggestionEl.style.width = `${this.contentElement.getBoundingClientRect().width}px`;
+        this._bound.onKeyDown = this._handleKeyDown.bind(this);
+        this._bound.onKeyUp = this._handleKeyUp.bind(this);
+        this._bound.onFocus = this._handleFocus.bind(this);
+        this._bound.onBlur = this._handleBlur.bind(this);
+        this._bound.onChange = this._handleChange.bind(this);
+        this._bound.onClick = this._handleClick.bind(this);
+        this.contentElement.addEventListener('keydown', this._bound.onKeyDown);
+        this.contentElement.addEventListener('keyup', this._bound.onKeyUp);
+        this.contentElement.addEventListener('focus', this._bound.onFocus);
+        this.contentElement.addEventListener('blur', this._bound.onBlur);
+        this.contentElement.addEventListener('wa-input', this._bound.onChange);
+        this.contentElement.addEventListener('click', this._bound.onClick);
+        if (this._tempValue !== undefined) {
+            this.contentElement.value = this._tempValue;
+        }
+    }
+    disconnectedCallback() {
+        if (!this.contentElement)
+            return; // no events to remove
+        this.contentElement.removeEventListener('keydown', this._bound.onKeyDown);
+        this.contentElement.removeEventListener('keyup', this._bound.onKeyUp);
+        this.contentElement.removeEventListener('focus', this._bound.onFocus);
+        this.contentElement.removeEventListener('blur', this._bound.onBlur);
+        this.contentElement.removeEventListener('sl-input', this._bound.onChange);
+        this.contentElement.removeEventListener('click', this._bound.onClick);
+    }
+    focus(options) {
+        if (this.contentElement) {
+            this.contentElement.focus(options);
+        }
+    }
+    updated(changed) {
+        if (changed.has('items')) {
+            this.items.length > 1 ||
+                (this.items.length === 1 && this.items[0] !== this.contentElement.value)
+                ? this.open()
+                : this.close();
+        }
+        if (changed.has('opened') &&
+            this.opened &&
+            this._suggestionEl.childElementCount) {
+            // Highlight the first when there are suggestions
+            // eslint-disable-next-line prefer-destructuring
+            this._highlightedEl = this._suggestionEl.children[0];
+            this._highlightedEl.classList.add('active');
+        }
+    }
+    /**
+     * Open suggestions.
+     */
+    open() {
+        if (this._suggestionEl.style.width === '0px') {
+            this._suggestionEl.style.width = `${this.contentElement.getBoundingClientRect().width}px`;
+        }
+        if (this.items.length) {
+            this.opened = true;
+        }
+    }
+    /**
+     * Close suggestions.
+     */
+    close() {
+        this.opened = false;
+        this._highlightedEl = null;
+    }
+    /**
+     * Autocomplete input with `value`.
+     * @param {String} value
+     */
+    autocomplete(value) {
+        this.contentElement.value = value;
+        this.onSelect(value);
+        this.close();
+    }
+    _highlightPrev() {
+        if (!this._highlightedEl || !this._highlightedEl.previousElementSibling)
+            return;
+        this._highlightedEl.classList.remove('active');
+        this._highlightedEl = this._highlightedEl.previousElementSibling;
+        this._highlightedEl.classList.add('active');
+    }
+    _highlightNext() {
+        if (!this._highlightedEl || !this._highlightedEl.nextElementSibling)
+            return;
+        this._highlightedEl.classList.remove('active');
+        this._highlightedEl = this._highlightedEl.nextElementSibling;
+        this._highlightedEl.classList.add('active');
+    }
+    // eslint-disable-next-line class-methods-use-this
+    _handleChange(value) {
+        this.onChange(value);
+    }
+    _handleKeyDown(ev) {
+        // Prevent up and down from behaving as home and end on some browsers
+        if (ev.key === 'ArrowUp' || ev.key === 'ArrowDown') {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+    }
+    _handleKeyUp(ev) {
+        switch (ev.key) {
+            case 'ArrowUp':
+                if (this._highlightedEl?.previousElementSibling) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this._highlightPrev();
+                }
+                break;
+            case 'ArrowDown':
+                if (this._highlightedEl?.nextElementSibling) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this._highlightNext();
+                }
+                break;
+            case 'Enter':
+                // eslint-disable-next-line no-unused-expressions
+                this._highlightedEl && this._highlightedEl.click();
+                this.contentElement.blur();
+                break;
+            default:
+                this._search();
+        }
+    }
+    _handleFocus() {
+        this._blur = false;
+        // eslint-disable-next-line no-unused-expressions
+        this.items.length > 1 && this.open();
+    }
+    _handleBlur() {
+        this._blur = true;
+        // eslint-disable-next-line no-unused-expressions
+        setTimeout(() => this.close(), 200);
+        //this.items = [];
+    }
+    // Handle mouse change focus to suggestions
+    _handleItemMouseEnter() {
+        this._mouseEnter = true;
+    }
+    _handleItemMouseLeave() {
+        this._mouseEnter = false;
+        // eslint-disable-next-line no-unused-expressions
+        this._blur && setTimeout(() => this.close(), 500); // Give user some slack before closing
+    }
+    _handleClick(value) {
+        this.onClick(value);
+    }
+};
+__decorate([
+    property({ type: String })
+], AutocompleteAsync.prototype, "placeholder", void 0);
+__decorate([
+    property({ type: String })
+], AutocompleteAsync.prototype, "label", void 0);
+__decorate([
+    property({ type: Array, reflect: true })
+], AutocompleteAsync.prototype, "items", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true })
+], AutocompleteAsync.prototype, "disabled", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true })
+], AutocompleteAsync.prototype, "opened", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true })
+], AutocompleteAsync.prototype, "async", void 0);
+__decorate([
+    property({ type: Number })
+], AutocompleteAsync.prototype, "maxSuggestions", void 0);
+__decorate([
+    property({ type: Function })
+], AutocompleteAsync.prototype, "onSearch", void 0);
+__decorate([
+    property({ type: Function })
+], AutocompleteAsync.prototype, "onSelect", void 0);
+__decorate([
+    property({ type: Function })
+], AutocompleteAsync.prototype, "onChange", void 0);
+__decorate([
+    property({ type: Function })
+], AutocompleteAsync.prototype, "onClick", void 0);
+__decorate([
+    property({ type: String })
+], AutocompleteAsync.prototype, "value", null);
+AutocompleteAsync = __decorate([
+    customElement('autocomplete-ui-async')
+], AutocompleteAsync);
+
+export { AlertasComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, REGEX_ACCENTS, TipoMensagem };
 //# sourceMappingURL=index.js.map

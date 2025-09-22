@@ -113,7 +113,6 @@ declare class DestinoComponent extends LitElement {
   private removerAlertaErroComissao;
   private updateTipoColegiado;
   private _selecionarComissao;
-  private _filtroComissao;
   private _blurAutoComplete;
   private emitirEventoOnChange;
   private ajustarTipoColegiadoPlenario;
@@ -325,18 +324,159 @@ declare global {
   }
 }
 
+declare class AutocompleteAsync extends LitElement {
+  placeholder: string;
+  label: string;
+  items: Option$1[];
+  disabled: boolean;
+  opened: boolean;
+  async: boolean;
+  maxSuggestions: number;
+  onSearch: (value: string) => void;
+  onSelect: (value: Option$1) => void;
+  onChange: (value: string) => void;
+  onClick: (value: string) => void;
+  _interval: number;
+  _timer: any;
+  _bound: any;
+  _inputEl: any;
+  _suggestionEl: any;
+  _highlightedEl: any;
+  _blur: boolean;
+  _mouseEnter: boolean;
+  _search: () => void;
+  render(): TemplateResult;
+  /**
+   * Input element getter
+   */
+  get contentElement(): any;
+  private _tempValue?;
+  /**
+   * Value getter from input element.
+   */
+  get value(): any;
+  /**
+   * Value setter to input element.
+   */
+  set value(value: any);
+  firstUpdated(): void;
+  disconnectedCallback(): void;
+  focus(options?: FocusOptions): void;
+  updated(changed: PropertyValues): void;
+  /**
+   * Open suggestions.
+   */
+  open(): void;
+  /**
+   * Close suggestions.
+   */
+  close(): void;
+  /**
+   * Autocomplete input with `value`.
+   * @param {String} value
+   */
+  autocomplete(value: Option$1): void;
+  _highlightPrev(): void;
+  _highlightNext(): void;
+  _handleChange(value: string): void;
+  _handleKeyDown(ev: KeyboardEvent): void;
+  _handleKeyUp(ev: KeyboardEvent): void;
+  _handleFocus(): void;
+  _handleBlur(): void;
+  _handleItemMouseEnter(): void;
+  _handleItemMouseLeave(): void;
+  _handleClick(value: string): void;
+}
+declare class Option$1 {
+  description: string;
+  value: string;
+  constructor(value: string, description: string);
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'autocomplete-ui-async': AutocompleteAsync;
+  }
+}
+
+declare class Option {
+  value: string;
+  description: string;
+  constructor(value: string, description: string);
+}
+type OnSearchFn =
+  | ((q: string) => Option[] | string[] | Promise<Option[] | string[]>)
+  | undefined;
+declare class LexmlAutocompleteUniversal extends LitElement {
+  label: string;
+  placeholder: string;
+  disabled: boolean;
+  readonly: boolean;
+  showOnEmpty: boolean;
+  mode: 'sync' | 'async';
+  set async(v: boolean);
+  get async(): boolean;
+  items: Array<string | Option>;
+  onSearch: OnSearchFn;
+  onSelect: (opt: Option) => void;
+  onChange: (value: string) => void;
+  onClick: (value: string) => void;
+  minChars: number;
+  maxSuggestions: number;
+  opened: boolean;
+  private _inputEl;
+  private _suggestionEl;
+  private _highlightedEl;
+  private _bound;
+  private _timer;
+  private _interval;
+  private _blur;
+  private _tempValue?;
+  get value(): string;
+  set value(v: string);
+  render(): TemplateResult;
+  get contentElement(): any;
+  private _syncListWidth;
+  private _ro?;
+  private _io?;
+  firstUpdated(): void;
+  disconnectedCallback(): void;
+  updated(changed: PropertyValues): void;
+  private _currentOptions;
+  private _itemsToOptions;
+  private _recalcList;
+  private _setSuggestions;
+  open(): void;
+  close(): void;
+  private _selectOption;
+  private _handleKeyDown;
+  private _handleKeyUp;
+  private _debouncedSearch;
+  private _handleFocus;
+  private _handleBlur;
+  private _handleChange;
+  private _handleClick;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-autocomplete-universal': LexmlAutocompleteUniversal;
+  }
+}
+
 declare const REGEX_ACCENTS: RegExp;
 
 export {
   AlertasComponent,
   AutoFix,
   Autocomplete,
+  AutocompleteAsync,
   Comissao,
   Data,
   Destino,
   DestinoComponent,
+  LexmlAutocompleteUniversal,
   LexmlUiCommons,
   OpcoesImpressaoComponent,
+  Option,
   REGEX_ACCENTS,
   TipoMensagem,
 };

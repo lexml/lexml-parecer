@@ -1,6 +1,6 @@
 import { html, css, LitElement, TemplateResult } from 'lit';
 import { customElement, query, state, property } from 'lit/decorators.js';
-import { Comissao, DestinoComponent, REGEX_ACCENTS } from '@ui-commons';
+import { Comissao, DestinoComponent, Option } from '@ui-commons';
 import { ProposicaoReferenciada } from '../../models/diversos.modelo.js';
 import { quillSnowStyles } from '../../assets/css/quill.snow.css.js';
 import { quillCoreStyles } from '../../assets/css/quill.core.css.js';
@@ -19,31 +19,53 @@ export class LexmlParecerMateria extends LitElement {
 
   @property({ type: Array }) comissoes: Comissao[] = [];
 
-  private _materiasDisponiveis: ProposicaoReferenciada[] = [];
+  @property({ attribute: false })
+  buscarMateriasFunction?: (termo: string) => Promise<ProposicaoReferenciada[]>;
+
+  @state()
+  private _opcoesMateria: Option[] = [];
+
+  @state()
+  private _resultadosBusca: ProposicaoReferenciada[] = [];
 
   @property({ type: Number })
   ano: number = getAnoAtual();
 
   @state()
-  private _materiasIndetificacaoTexto: string[] = [];
-
-  @state()
   private _materiaSelecionada: ProposicaoReferenciada =
     new ProposicaoReferenciada();
 
-  @property({ type: Array })
-  set materias(value: ProposicaoReferenciada[]) {
-    const old = this._materiasDisponiveis;
-    this._materiasDisponiveis = value ?? [];
-    this._materiasIndetificacaoTexto = this._materiasDisponiveis.map(
-      m => m.identificacaoTexto,
-    );
-    this.requestUpdate('materias', old);
-  }
+  private _buscarMaterias = async (termo: string): Promise<Option[]> => {
+    if (!this.buscarMateriasFunction) {
+      console.warn("Nenhuma função 'buscarMateriasFunction' foi fornecida.");
+      return [];
+    }
 
-  get materias(): ProposicaoReferenciada[] {
-    return this._materiasDisponiveis;
-  }
+    try {
+      const resultados = await this.buscarMateriasFunction(termo);
+      this._resultadosBusca = resultados;
+
+      const opts = resultados.map(m => new Option(m.urn, m.identificacaoTexto));
+      this._opcoesMateria = opts;
+      return opts;
+    } catch (e) {
+      console.error('Erro ao buscar matérias:', e);
+      this._opcoesMateria = [];
+      return [];
+    }
+  };
+
+  private _selecionarMateria = (opcaoSelecionada: Option) => {
+    if (!opcaoSelecionada) {
+      this._materiaSelecionada = new ProposicaoReferenciada();
+    } else {
+      const materiaCompleta = this._resultadosBusca.find(
+        m => m.urn === opcaoSelecionada.value,
+      );
+      this._materiaSelecionada =
+        materiaCompleta || new ProposicaoReferenciada();
+    }
+  };
 
   @query('#anoInput') anoInput!: WithValueEl;
 
@@ -70,49 +92,6 @@ export class LexmlParecerMateria extends LitElement {
     materiaFinal.destino = this._destino.getDestino();
 
     return materiaFinal;
-  }
-
-  private _onAutocomplete(e: CustomEvent<{ value: string }>) {
-    const selecionado = this._materiasDisponiveis.find(
-      m => m.identificacaoTexto === e.detail.value,
-    );
-    this._materiaSelecionada = selecionado
-      ? { ...selecionado }
-      : new ProposicaoReferenciada();
-    this.requestUpdate();
-  }
-
-  private _validarMateria(ev: Event) {
-    const isBlur = ev.type === 'focusout';
-    const inputEl = ev.target as HTMLElement & { value?: string };
-    const textoAtual = inputEl.value ?? '';
-
-    if (!textoAtual) {
-      this._materiaSelecionada = new ProposicaoReferenciada();
-      if (isBlur) inputEl.value = '';
-      this.requestUpdate();
-      return;
-    }
-
-    const regex = new RegExp(
-      `^${textoAtual.normalize('NFD').replace(REGEX_ACCENTS, '')}$`,
-      'i',
-    );
-
-    const materiaEncontrada = this._materiasDisponiveis.find(p =>
-      p.identificacaoTexto
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .match(regex),
-    );
-
-    if (materiaEncontrada?.urn) {
-      this._materiaSelecionada = { ...materiaEncontrada };
-    } else if (isBlur) {
-      this._materiaSelecionada = new ProposicaoReferenciada();
-      inputEl.value = '';
-    }
-    this.requestUpdate();
   }
 
   async firstUpdated(): Promise<void> {
@@ -356,15 +335,17 @@ export class LexmlParecerMateria extends LitElement {
               this.ano = Number((e.target as HTMLInputElement).value);
             }}
           ></wa-input>
-          <lexml-ui-autocomplete
+          <lexml-autocomplete-universal
             class="block"
             label="Matéria"
-            .items=${this._materiasIndetificacaoTexto}
-            .value=${this._materiaSelecionada.identificacaoTexto || ''}
-            @autocomplete=${this._onAutocomplete}
-            @input=${this._validarMateria}
-            @focusout=${this._validarMateria}
-          ></lexml-ui-autocomplete>
+            placeholder="ex: PL 1/1997"
+            .mode=${'async'}
+            .maxSuggestions=${12}
+            .minChars=${1}
+            .onSearch=${this._buscarMaterias}
+            .onSelect=${(opcao: Option): void => this._selecionarMateria(opcao)}
+            .value=${this._materiaSelecionada.identificacaoTexto}
+          ></lexml-autocomplete-universal>
         </fieldset>
         <div>
           <lexml-ui-destino .comissoes=${this.comissoes}></lexml-ui-destino>

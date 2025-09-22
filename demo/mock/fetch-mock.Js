@@ -4,6 +4,7 @@ export function installMockApi(base = '/api') {
 
   const comissoesUrl      = new URL('./comissoes.json', import.meta.url).href;
   const parlamentaresUrl  = new URL('./parlamentares.json', import.meta.url).href;
+  const materiasUrl      = new URL('./materias.json', import.meta.url).href;
 
   async function loadJson(url) {
     const r = await origFetch(url, { cache: 'no-cache' });
@@ -39,8 +40,27 @@ export function installMockApi(base = '/api') {
       });
     }
 
+    if (method === 'GET' && isPath('/materias')) {
+      const data = await loadJson(materiasUrl);
+      const termo = reqUrl.searchParams.get('q'); 
+
+      const list = termo
+        ? data.filter(m => 
+            m.identificacaoTexto.toLowerCase().includes(termo.toLowerCase()) ||
+            m.ementa.toLowerCase().includes(termo.toLowerCase())
+          )
+        : data;
+        
+      return new Response(JSON.stringify(list), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     return origFetch(input, init);
   };
+
+  
 
   // opcional: retornar função para desfazer
   return () => { window.fetch = origFetch; };

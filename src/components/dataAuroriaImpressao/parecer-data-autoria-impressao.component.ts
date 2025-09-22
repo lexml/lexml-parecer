@@ -8,7 +8,7 @@ import {
 } from 'src/models/diversos.modelo.js';
 import { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.component.js';
 
-@customElement('lexml-parecer-data-autria-impressao')
+@customElement('lexml-parecer-data-autoria-impressao')
 export class LexmlParecerDataAutoriaImpressao extends LitElement {
   createRenderRoot(): LitElement {
     return this;

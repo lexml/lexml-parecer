@@ -1,0 +1,114 @@
+[
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.lei:2023;1234",
+    "sigla": "PL",
+    "numero": "1234",
+    "ano": "2023",
+    "ementa": "Institui o programa nacional de incentivo à reciclagem de materiais eletrônicos.",
+    "identificacaoTexto": "PL 1234/2023"
+  },
+  {
+    "urn": "urn:lex:br:camara.deputados:projeto.lei:2024;5678",
+    "sigla": "PL",
+    "numero": "5678",
+    "ano": "2024",
+    "ementa": "Altera a legislação sobre o uso de inteligência artificial em diagnósticos médicos.",
+    "identificacaoTexto": "PL 5678/2024"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:proposta.emenda.constituicao:2024;45",
+    "sigla": "PEC",
+    "numero": "45",
+    "ano": "2024",
+    "ementa": "Dispõe sobre a reforma do sistema tributário nacional.",
+    "identificacaoTexto": "PEC 45/2024"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.lei:2022;987",
+    "sigla": "PL",
+    "numero": "987",
+    "ano": "2022",
+    "ementa": "Cria o programa de incentivo à energia solar residencial.",
+    "identificacaoTexto": "PL 987/2022"
+  },
+  {
+    "urn": "urn:lex:br:camara.deputados:projeto.lei:2021;4321",
+    "sigla": "PL",
+    "numero": "4321",
+    "ano": "2021",
+    "ementa": "Dispõe sobre a política nacional de dados abertos.",
+    "identificacaoTexto": "PL 4321/2021"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.lei.complementar:2020;12",
+    "sigla": "PLP",
+    "numero": "12",
+    "ano": "2020",
+    "ementa": "Altera a Lei de Responsabilidade Fiscal para tratar de investimentos verdes.",
+    "identificacaoTexto": "PLP 12/2020"
+  },
+  {
+    "urn": "urn:lex:br:camara.deputados:projeto.decreto.legislativo:2023;88",
+    "sigla": "PDL",
+    "numero": "88",
+    "ano": "2023",
+    "ementa": "Susta ato normativo do Poder Executivo que dispõe sobre licenciamento ambiental.",
+    "identificacaoTexto": "PDL 88/2023"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.resolucao:2024;7",
+    "sigla": "PRS",
+    "numero": "7",
+    "ano": "2024",
+    "ementa": "Altera o Regimento Interno do Senado para instituir o Plenário Digital.",
+    "identificacaoTexto": "PRS 7/2024"
+  },
+  {
+    "urn": "urn:lex:br:camara.deputados:proposta.emenda.constituicao:2023;12",
+    "sigla": "PEC",
+    "numero": "12",
+    "ano": "2023",
+    "ementa": "Inclui a proteção de dados pessoais entre os direitos e garantias fundamentais.",
+    "identificacaoTexto": "PEC 12/2023"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.lei:2019;155",
+    "sigla": "PL",
+    "numero": "155",
+    "ano": "2019",
+    "ementa": "Dispõe sobre transparência algorítmica em serviços públicos digitais.",
+    "identificacaoTexto": "PL 155/2019"
+  },
+  {
+    "urn": "urn:lex:br:camara.deputados:projeto.lei:2020;3001",
+    "sigla": "PL",
+    "numero": "3001",
+    "ano": "2020",
+    "ementa": "Institui o selo 'Cidade Inteligente' para municípios com políticas de inovação.",
+    "identificacaoTexto": "PL 3001/2020"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.lei:2024;222",
+    "sigla": "PL",
+    "numero": "222",
+    "ano": "2024",
+    "ementa": "Cria o marco legal de mobilidade elétrica.",
+    "identificacaoTexto": "PL 222/2024"
+  },
+  {
+    "urn": "urn:lex:br:camara.deputados:projeto.lei.complementar:2022;101",
+    "sigla": "PLP",
+    "numero": "101",
+    "ano": "2022",
+    "ementa": "Dispõe sobre governança de IA no setor público.",
+    "identificacaoTexto": "PLP 101/2022"
+  },
+  {
+    "urn": "urn:lex:br:senado.federal:projeto.lei:2021;77",
+    "sigla": "PL",
+    "numero": "77",
+    "ano": "2021",
+    "ementa": "Cria o programa nacional de conectividade nas escolas.",
+    "identificacaoTexto": "PL 77/2021"
+  }
+]
