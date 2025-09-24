@@ -1,4 +1,4 @@
-import { html, css, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query, state, property } from 'lit/decorators.js';
 import { Comissao, DestinoComponent, Option } from '@ui-commons';
 import { ProposicaoReferenciada } from '../../models/diversos.modelo.js';
@@ -139,89 +139,87 @@ export class LexmlParecerMateria extends LitElement {
     super.disconnectedCallback?.();
   }
 
-  static styles = css`
-    :host {
-      display: block;
-    }
+  // static styles = css`
+  //   :host {
+  //     display: block;
+  //   }
 
-    .card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.75rem;
-      padding: 1rem;
-    }
+  //   .card {
+  //     background: #fff;
+  //     border: 1px solid #e5e7eb;
+  //     border-radius: 0.75rem;
+  //     padding: 1rem;
+  //   }
 
-    .title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0 0 0.75rem 0;
-      color: #111827;
-    }
+  //   .title {
+  //     font-size: 1rem;
+  //     font-weight: 600;
+  //     margin: 0 0 0.75rem 0;
+  //     color: #111827;
+  //   }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
+  //   .grid {
+  //     display: grid;
+  //     grid-template-columns: 1fr;
+  //     gap: 0.75rem;
+  //   }
 
-    @media (min-width: 700px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .grid lexml-ui-destino {
-        grid-column: 1 / -1;
-      }
-    }
+  //   @media (min-width: 700px) {
+  //     .grid {
+  //       grid-template-columns: repeat(2, minmax(0, 1fr));
+  //     }
+  //     .grid lexml-ui-destino {
+  //       grid-column: 1 / -1;
+  //     }
+  //   }
 
-    .span-2 {
-      grid-column: 1 / -1;
-    }
+  //   .span-2 {
+  //     grid-column: 1 / -1;
+  //   }
 
-    .block {
-      margin-top: 0.25rem;
-    }
+  //   .block {
+  //     margin-top: 0.25rem;
+  //   }
 
-    wa-input::part(form-control-label),
-    wa-textarea::part(form-control-label),
-    wa-radio-group::part(form-control-label) {
-      font-weight: 600;
-      color: #374151;
-    }
+  //   wa-input::part(form-control-label),
+  //   wa-textarea::part(form-control-label),
+  //   wa-radio-group::part(form-control-label) {
+  //     font-weight: 600;
+  //     color: #374151;
+  //   }
 
-    wa-input,
-    wa-textarea,
-    wa-radio-group {
-      width: 100%;
-    }
+  //   wa-input,
+  //   wa-textarea,
+  //   wa-radio-group {
+  //     width: 100%;
+  //   }
 
-    lexml-ui-destino lexml-destino {
-      max-width: 100vw !important;
-    }
+  //   lexml-ui-destino lexml-destino {
+  //     max-width: 100vw !important;
+  //   }
 
-    fieldset {
-      font-size: 14px;
-      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      background-color: var(--wa-color-gray-95);
-      box-shadow: var(--wa-shadow-m);
-      padding: 20px;
-      border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
-      border-radius: var(--wa-border-radius-s);
-      max-width: 655px;
-      margin: 1em 0 2em 0;
-    }
+  //   fieldset {
+  //     font-size: 14px;
+  //     font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  //     display: flex;
+  //     flex-direction: column;
+  //     gap: 0.75rem;
+  //     background-color: var(--wa-color-gray-95);
+  //     box-shadow: var(--wa-shadow-m);
+  //     padding: 20px;
+  //     border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+  //     border-radius: var(--wa-border-radius-s);
+  //   }
 
-    legend {
-      background-color: var(--wa-color-gray-90);
-      font-weight: bold;
-      border-radius: 5px;
-      border: 1px solid var(--wa-color-gray-85);
-      padding: 2px 5px;
-      box-shadow: var(--wa-shadow-s);
-    }
-  `;
+  //   legend {
+  //     background-color: var(--wa-color-gray-90);
+  //     font-weight: bold;
+  //     border-radius: 5px;
+  //     border: 1px solid var(--wa-color-gray-85);
+  //     padding: 2px 5px;
+  //     box-shadow: var(--wa-shadow-s);
+  //   }
+  // `;
 
   render(): TemplateResult {
     return html`
@@ -231,7 +229,8 @@ export class LexmlParecerMateria extends LitElement {
           .ql-container.ql-snow {
           height: auto;
         }
-        #ementaInput .ql-container .ql-editor {
+
+        /* #ementaInput .ql-container .ql-editor {
           min-height: 160px;
           height: auto;
           max-height: none;
@@ -293,7 +292,7 @@ export class LexmlParecerMateria extends LitElement {
 
         lexml-ui-destino lexml-destino {
           max-width: 100vw !important;
-        }
+        } */
 
         fieldset {
           font-size: 14px;
@@ -306,8 +305,7 @@ export class LexmlParecerMateria extends LitElement {
           padding: 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
-          max-width: 655px;
-          margin: 1em 0 2em 0;
+          width: 100%;
         }
 
         legend {
@@ -319,7 +317,7 @@ export class LexmlParecerMateria extends LitElement {
           box-shadow: var(--wa-shadow-s);
         }
       </style>
-      <div class="card">
+      <div class="wa-grid">
         <fieldset>
           <legend>Dados da Matéria</legend>
           <wa-input
@@ -347,13 +345,11 @@ export class LexmlParecerMateria extends LitElement {
             .value=${this._materiaSelecionada.identificacaoTexto}
           ></lexml-autocomplete-universal>
         </fieldset>
-        <div>
-          <lexml-ui-destino .comissoes=${this.comissoes}></lexml-ui-destino>
-        </div>
-        <div class="span-2 block">
-          <label class="muted">Ementa</label>
-          <div id="ementaInput"></div>
-        </div>
+        <lexml-ui-destino .comissoes=${this.comissoes}></lexml-ui-destino>
+      </div>
+      <div>
+        <label class="muted">Ementa</label>
+        <div id="ementaInput"></div>
       </div>
     `;
   }
