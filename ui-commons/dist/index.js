@@ -1042,7 +1042,6 @@ let DestinoComponent = class DestinoComponent extends LitElement {
           padding: 20px 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
-          max-width: 655px;
         }
 
         legend {
@@ -1329,7 +1328,6 @@ let Data = class Data extends LitElement {
           padding: 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
-          max-width: 655px;
           margin: 0;
         }
         legend {
@@ -1512,7 +1510,6 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
           padding: 20px 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
-          max-width: 655px;
           margin: 1em 0 2em 0;
         }
 
