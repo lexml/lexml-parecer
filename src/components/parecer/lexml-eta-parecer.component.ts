@@ -17,10 +17,6 @@ import { Materia } from '../../models/materia.modelo.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
-  createRenderRoot(): LitElement {
-    return this;
-  }
-
   @property({ type: Object }) lexmlParecerConfig: LexmlParecerConfig =
     new LexmlParecerConfig();
 

@@ -231,9 +231,6 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
             },
         ];
     }
-    createRenderRoot() {
-        return this;
-    }
     gerarId() {
         return 'a' + Math.random().toString(36).slice(2, 8);
     }
@@ -1654,9 +1651,6 @@ let AlertasComponent = class AlertasComponent extends LitElement {
                 this.removeAlertaById(id);
         };
     }
-    createRenderRoot() {
-        return this;
-    }
     stateChanged(state) {
         this.alertas = state.elementoReducer.ui?.alertas || [];
     }
@@ -1747,7 +1741,7 @@ let AlertasComponent = class AlertasComponent extends LitElement {
             ? html `
                 <wa-callout
                   variant="${mapTipoMensagem[alerta.tipo].variant}"
-                  appearance="outlined"
+                  appearance="outlined filled"
                 >
                   ${this.getAlertIcon(alerta.tipo)}
                   <div class="field__alert">

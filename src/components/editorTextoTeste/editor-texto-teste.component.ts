@@ -15,10 +15,6 @@ export class EditorTextoTeste extends LitElement {
 
   @property({ type: String }) placeholder = '';
 
-  createRenderRoot() {
-    return this;
-  }
-
   render(): TemplateResult {
     return html`
       <style>

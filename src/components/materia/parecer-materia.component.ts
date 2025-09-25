@@ -13,10 +13,6 @@ const getAnoAtual = (): number => new Date().getFullYear();
 
 @customElement('lexml-parecer-materia')
 export class LexmlParecerMateria extends LitElement {
-  createRenderRoot(): LitElement {
-    return this;
-  }
-
   @property({ type: Array }) comissoes: Comissao[] = [];
 
   @property({ attribute: false })

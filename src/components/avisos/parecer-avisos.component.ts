@@ -4,10 +4,6 @@ import { TipoMensagem, Alerta } from '@ui-commons';
 
 @customElement('lexml-parecer-avisos')
 export class LexmlParecerAvisos extends LitElement {
-  createRenderRoot(): LitElement {
-    return this;
-  }
-
   // ******************************************* Itens para o Teste do Alert
   @state() private _tipoIdx = 0;
 
