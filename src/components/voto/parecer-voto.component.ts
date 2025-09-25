@@ -55,20 +55,13 @@ export class LexmlParecerVoto extends LitElement {
       color: #6b7280;
       font-size: 0.9em;
     }
-    .row {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 0.75rem;
-      align-items: center;
-      margin: 0.5rem 0;
-    }
-    .row input[type='text'],
-    .row select,
+    wa-input,
+    wa-select,
+    wa-textarea,
+    input[type='text'],
+    select,
     textarea {
       width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-      padding: 0.5rem 0.6rem;
       box-sizing: border-box;
     }
     textarea {
@@ -105,7 +98,7 @@ export class LexmlParecerVoto extends LitElement {
     sl-details::part(base) {
       border: 1px solid #e5e7eb;
       border-radius: 0.75rem;
-      padding: 0.5rem 0.75rem;
+      padding: 0rem 0.75rem;
       margin-bottom: 0.75rem;
       background: #fff;
     }
@@ -117,7 +110,6 @@ export class LexmlParecerVoto extends LitElement {
   `;
 
   public getVoto(): Voto {
-    console.log(this.itens);
     return { itensVoto: [...this.itens] };
   }
 
@@ -135,7 +127,7 @@ export class LexmlParecerVoto extends LitElement {
         <wa-button size="small" @click=${this.addDocumento}
           >Importar documento</wa-button
         >
-        <wa-button size="small" variant="neutral" @click=${this.addTexto}
+        <wa-button size="small" variant="brand" @click=${this.addTexto}
           >Adicionar bloco de texto</wa-button
         >
       </div>
@@ -146,16 +138,15 @@ export class LexmlParecerVoto extends LitElement {
   }
 
   private renderItem(item: ItemVoto, idx: number): TemplateResult {
-    const label = item.documento
-      ? `Documento: ${item.documento.nome ?? 'sem nome'}`
+    const header = item.documento
+      ? `Documento: ${item.documento.arquivo?.name ?? item.documento.nome ?? 'sem nome'}`
       : 'Bloco de texto';
 
     return html`
       <wa-details open>
         <div slot="summary">
           <span class="chip">Voto #${item.posicao}</span>
-          <span>— ${label}</span>
-          <span class="meta">(clique para abrir/fechar)</span>
+          <span>— ${header}</span>
         </div>
         ${item.documento
           ? this.renderDocumento(item, idx)
@@ -169,7 +160,7 @@ export class LexmlParecerVoto extends LitElement {
           >
           <wa-button
             size="small"
-            variant="danger"
+            variant="neutral"
             @click=${() => this.removeItem(idx)}
             >Remover</wa-button
           >
@@ -180,16 +171,20 @@ export class LexmlParecerVoto extends LitElement {
 
   private renderTexto(item: ItemVoto, idx: number): TemplateResult {
     return html`
-      <div class="row">
-        <label class="muted">Texto:</label>
-        <wa-textarea
-          .value=${item.texto ?? ''}
-          placeholder="Digite o texto do voto..."
-          @wa-input=${(e: CustomEvent) =>
-            this.updateTexto(idx, (e.target as any).value)}
-          @input=${(e: Event) =>
-            this.updateTexto(idx, (e.target as HTMLTextAreaElement).value)}
-        ></wa-textarea>
+      <div class="wa-grid" style="--min-column-size: 16rem;">
+        <div class="wa-span-grid wa-cluster wa-gap-xs">
+          <label class="muted">Texto:</label>
+        </div>
+        <div class="wa-span-grid">
+          <wa-textarea
+            .value=${item.texto ?? ''}
+            placeholder="Digite o texto do voto..."
+            @wa-input=${(e: CustomEvent) =>
+              this.updateTexto(idx, (e.target as any).value)}
+            @input=${(e: Event) =>
+              this.updateTexto(idx, (e.target as HTMLTextAreaElement).value)}
+          ></wa-textarea>
+        </div>
       </div>
     `;
   }
@@ -197,9 +192,58 @@ export class LexmlParecerVoto extends LitElement {
   private renderDocumento(item: ItemVoto, idx: number): TemplateResult {
     const doc = item.documento!;
     return html`
-      <div class="row">
-        <label class="muted">Nonon nono&lt;Nome do documento&gt;</label>
-        <div class="file-actions">
+      <div class="wa-grid" style="--min-column-size: 16rem;">
+        <div><label>Tipo:</label></div>
+        <div>
+          <wa-select
+            placeholder="Selecione o tipo"
+            .value=${doc.tipo ?? ''}
+            @sl-change=${(e: CustomEvent) =>
+              this.updateDocField(idx, 'tipo', (e.target as any).value)}
+          >
+            <wa-option value="" label="Selecione…">Selecione…</wa-option>
+            <wa-option value="PDF" label="PDF">PDF</wa-option>
+            <wa-option value="DOCX" label="DOCX">DOCX</wa-option>
+            <wa-option value="IMG" label="Imagem">Imagem</wa-option>
+            <wa-option value="OUTRO" label="Outro">Outro</wa-option>
+          </wa-select>
+        </div>
+      </div>
+
+      <div class="wa-grid" style="--min-column-size: 16rem;">
+        <div><label>Nome:</label></div>
+        <div>
+          <wa-input
+            type="text"
+            .value=${doc.nome ?? ''}
+            placeholder="Nome do documento"
+            @wa-input=${(e: CustomEvent) =>
+              this.updateDocField(idx, 'nome', (e.target as any).value)}
+            @input=${(e: Event) =>
+              this.updateDocField(
+                idx,
+                'nome',
+                (e.target as HTMLInputElement).value,
+              )}
+          ></wa-input>
+        </div>
+      </div>
+
+      <div class="wa-grid" style="--min-column-size: 16rem;">
+        <div><label>Arquivo:</label></div>
+        <div>
+          <input
+            type="file"
+            @change=${(e: Event) => this.onFilePicked(idx, e as InputEvent)}
+          />
+        </div>
+      </div>
+
+      <div
+        class="wa-grid"
+        style="--min-column-size: 16rem; margin-top: 0.5rem;"
+      >
+        <div class="wa-span-grid wa-cluster wa-gap-xs file-actions">
           ${doc.url
             ? html`<wa-button href=${doc.url} target="_blank" size="small"
                   >Visualizar</wa-button
@@ -208,57 +252,11 @@ export class LexmlParecerVoto extends LitElement {
                   href=${doc.url}
                   download=${doc.nome || 'documento'}
                   size="small"
-                  variant="neutral"
+                  variant="brand"
                 >
                   Download
                 </wa-button>`
             : html`<span class="muted">Sem arquivo</span>`}
-        </div>
-      </div>
-
-      <div class="row">
-        <label>Tipo:</label>
-        <wa-select
-          placeholder="Selecione o tipo"
-          .value=${doc.tipo ?? ''}
-          @sl-change=${(e: CustomEvent) =>
-            this.updateDocField(idx, 'tipo', (e.target as any).value)}
-        >
-          <wa-option value="" label="Selecione…">Selecione…</wa-option>
-          <wa-option value="PDF" label="PDF">PDF</wa-option>
-          <wa-option value="DOCX" label="DOCX">DOCX</wa-option>
-          <wa-option value="IMG" label="Imagem">Imagem</wa-option>
-          <wa-option value="OUTRO" label="Outro">Outro</wa-option>
-        </wa-select>
-      </div>
-
-      <div class="row">
-        <label>Nome:</label>
-        <wa-input
-          type="text"
-          .value=${doc.nome ?? ''}
-          placeholder="Nome do documento"
-          @wa-input=${(e: CustomEvent) =>
-            this.updateDocField(idx, 'nome', (e.target as any).value)}
-          @input=${(e: Event) =>
-            this.updateDocField(
-              idx,
-              'nome',
-              (e.target as HTMLInputElement).value,
-            )}
-        ></wa-input>
-      </div>
-
-      <div class="row">
-        <label>Arquivo:</label>
-        <div>
-          <input
-            type="file"
-            @change=${(e: Event) => this.onFilePicked(idx, e as InputEvent)}
-          />
-          ${doc.arquivo
-            ? html`<div class="meta">${doc.arquivo.name}</div>`
-            : ''}
         </div>
       </div>
     `;

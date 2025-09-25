@@ -124,8 +124,8 @@ export class LexmlParecerAutoriaComponent extends LitElement {
           padding: 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
-          max-width: 655px;
-          margin: 1em 0 2em 0;
+          /* max-width: 655px;
+          margin: 1em 0 2em 0; */
         }
         legend {
           background-color: var(--wa-color-gray-90);
