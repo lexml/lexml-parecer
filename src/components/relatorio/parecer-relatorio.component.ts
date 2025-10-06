@@ -3,7 +3,11 @@ import { customElement, query } from 'lit/decorators.js';
 
 @customElement('lexml-parecer-relatorio')
 export class LexmlParecerRelatorio extends LitElement {
-  @query('editor-texto-teste') private _ed!: HTMLElement & {
+  createRenderRoot(): LitElement {
+    return this;
+  }
+
+  @query('lexml-ui-editor-texto-rico') private _ed!: HTMLElement & {
     getHtml: () => string;
   };
 
@@ -12,6 +16,6 @@ export class LexmlParecerRelatorio extends LitElement {
   }
 
   render(): TemplateResult {
-    return html` <editor-texto-teste></editor-texto-teste> `;
+    return html` <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico> `;
   }
 }

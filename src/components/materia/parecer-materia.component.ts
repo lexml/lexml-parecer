@@ -13,6 +13,10 @@ const getAnoAtual = (): number => new Date().getFullYear();
 
 @customElement('lexml-parecer-materia')
 export class LexmlParecerMateria extends LitElement {
+  createRenderRoot(): LitElement {
+    return this;
+  }
+
   @property({ type: Array }) comissoes: Comissao[] = [];
 
   @property({ attribute: false })
@@ -75,8 +79,6 @@ export class LexmlParecerMateria extends LitElement {
 
   @query('#ementaInput') ementaInput!: WithValueEl & HTMLDivElement;
 
-  @state() private quill?: any;
-
   @query('lexml-ui-destino')
   private _destino!: DestinoComponent;
 
@@ -88,51 +90,6 @@ export class LexmlParecerMateria extends LitElement {
     materiaFinal.destino = this._destino.getDestino();
 
     return materiaFinal;
-  }
-
-  async firstUpdated(): Promise<void> {
-    if (!this.ementaInput) return;
-
-    try {
-      const mod: any = await import('quill/dist/quill.js');
-      const QuillCtor =
-        mod?.default?.Quill ??
-        mod?.Quill ??
-        mod?.default ??
-        (window as any).Quill;
-
-      if (typeof QuillCtor !== 'function') {
-        throw new Error('Construtor do Quill não encontrado.');
-      }
-
-      this.quill = new QuillCtor(this.ementaInput, {
-        theme: 'snow',
-        modules: { toolbar: [['italic']] },
-        placeholder: 'Digite a ementa',
-      });
-
-      const initialText = this.ementaInput ?? '';
-      try {
-        this.quill.setText(initialText);
-      } catch (_) {
-        // ignore
-      }
-      (this.ementaInput as any).value = initialText;
-
-      this.quill.on('text-change', () => {
-        if (!this.quill) return;
-        const text: string = this.quill.getText().replace(/\n$/, '');
-        (this.ementaInput as any).value = text;
-      });
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Falha ao inicializar Quill para ementa:', err);
-    }
-  }
-
-  disconnectedCallback(): void {
-    this.quill = undefined;
-    super.disconnectedCallback?.();
   }
 
   // static styles = css`
@@ -345,7 +302,9 @@ export class LexmlParecerMateria extends LitElement {
       </div>
       <div>
         <label class="muted">Ementa</label>
-        <div id="ementaInput"></div>
+        <lexml-ui-editor-texto-rico
+          .toolbar=${'italic'}
+        ></lexml-ui-editor-texto-rico>
       </div>
     `;
   }

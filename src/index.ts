@@ -1,3 +1,6 @@
+import 'quill/dist/quill';
+(window as any).Quill = Quill;
+
 import '@awesome.me/webawesome/dist/components/tab-group/tab-group.js';
 import '@awesome.me/webawesome/dist/components/tab/tab.js';
 import '@awesome.me/webawesome/dist/components/tab-panel/tab-panel.js';

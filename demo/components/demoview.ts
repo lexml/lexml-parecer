@@ -7,6 +7,9 @@ import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
 
 @customElement('demo-view')
 export class DemoView extends LitElement {
+  createRenderRoot(): LitElement {
+    return this;
+  }
   @query('lexml-eta-parecer')
   private _parecer?: LexmlEtaParecer;
 

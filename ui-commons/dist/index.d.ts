@@ -3,6 +3,7 @@ import * as lit from 'lit';
 import { LitElement, TemplateResult, PropertyValues } from 'lit';
 
 declare class LexmlUiCommons extends LitElement {
+  createRenderRoot(): LitElement;
   private _destinoEl;
   private _dataEl;
   private _opcoesImpressaoEl;
@@ -78,8 +79,8 @@ type DestinoAlert = {
   mensagem: string;
   podeFechar?: boolean;
 };
-type AddAlertFn = (alerta: DestinoAlert) => void;
-type RemoveAlertFn$1 = (id: string) => void;
+type AddAlertFn$1 = (alerta: DestinoAlert) => void;
+type RemoveAlertFn$2 = (id: string) => void;
 declare class DestinoComponent extends LitElement {
   private _autocomplete;
   private _comissoesAutocomplete;
@@ -91,8 +92,8 @@ declare class DestinoComponent extends LitElement {
   private isErroComissaoSelecionada;
   private _proposicao;
   static styles: lit.CSSResult[];
-  addAlert?: AddAlertFn;
-  removeAlert?: RemoveAlertFn$1;
+  addAlert?: AddAlertFn$1;
+  removeAlert?: RemoveAlertFn$2;
   criticalType: string;
   set proposicao(value: RefProposicaoEmendada);
   constructor();
@@ -237,11 +238,11 @@ interface Alerta {
  * ></lexml-ui-alertas>
  * ```
  */
-type RemoveAlertFn = (id: string) => void;
+type RemoveAlertFn$1 = (id: string) => void;
 type ClearAlertsFn = () => void;
 declare class AlertasComponent extends LitElement {
   alertas: Alerta[];
-  removeAlert?: RemoveAlertFn;
+  removeAlert?: RemoveAlertFn$1;
   clearAlerts?: ClearAlertsFn;
   seletorHost: string;
   seletorBadge: string;
@@ -460,10 +461,188 @@ declare global {
   }
 }
 
+declare class Subscription {
+  callback: any;
+  private canceled?;
+  constructor(callback: any, canceled?: boolean);
+  isCanceled(): boolean;
+  cancel(): void;
+}
+declare class Observable<T = void> {
+  private subscriptions;
+  constructor();
+  subscribe(callback: any): Subscription;
+  notify(data: T): void;
+  clean(): void;
+}
+
+declare class Anexo {
+  nomeArquivo: string;
+  base64: string;
+}
+
+declare class NotaRodape {
+  id: any;
+  numero: any;
+  texto: any;
+  constructor({ id, numero, texto }: any);
+}
+
+type RteAlert = {
+  id: string;
+  tipo: string;
+  mensagem: string;
+  podeFechar?: boolean;
+};
+type AddAlertFn = (alerta: RteAlert) => void;
+type RemoveAlertFn = (id: string) => void;
+declare class EditorTextoRicoComponent extends LitElement {
+  texto: string;
+  anexos: Anexo[];
+  notasRodape: NotaRodape[];
+  registroEvento: string;
+  tamanhoMaximoImagem: number;
+  modo: string;
+  /** Toolbar opcional: string com tokens separados por vírgula.
+   * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
+   *         clean, align, textindent, marginbottom, image, link, notarodape, table.
+   * Ex.: .toolbar=('bold') | .toolbar=('bold, italic, image') | .toolbar=('ordered, bullet, align')
+   * Use como prop (.toolbar='...') ou atributo (toolbar="...").
+   * Vazio => usa a toolbar padrão; tokens desconhecidos são ignorados. */
+  toolbar: string;
+  addAlert?: AddAlertFn;
+  removeAlert?: RemoveAlertFn;
+  onRevisionCountChange?: (total: number) => void;
+  onChange: Observable<string>;
+  private timerOnChange?;
+  quill?: any;
+  lastSelecion?: any;
+  icons: any;
+  private alterarLarguraColunaModal;
+  private alterarLarguraTabelaModal;
+  private alterarLarguraImagemModal;
+  private switchRevisaoComponent;
+  _textoAntesRevisao?: string;
+  get textoAntesRevisao(): string | undefined;
+  setTextoAntesRevisao(texto: string | undefined): void;
+  private existeRevisaoByModo;
+  showAlterarLarguraImagemModal(img: any, width: string): void;
+  private showAlterarLarguraColunaModal;
+  private hideAlterarLarguraColunaModal;
+  private showAlterarLarguraTabelaModal;
+  private hideAlterarLarguraTabelaModal;
+  private agendarEmissaoEventoOnChange;
+  update(changedProperties: PropertyValues): void;
+  createRenderRoot(): LitElement;
+  updateRevisionStatus(value: boolean): void;
+  labelAnexo: () => string;
+  render(): TemplateResult;
+  constructor();
+  private renderBotaoAnexo;
+  private timerAlerta?;
+  private onTableInTable;
+  firstUpdated(): void;
+  disconnectedCallback(): void;
+  init: () => void;
+  menuContextImagem: (ev: MouseEvent) => void;
+  onClick: (ev: MouseEvent) => void;
+  selectImage: (img: any) => void;
+  imageHandler: () => void;
+  tamanhoPermitido: (e: any) => boolean;
+  alterarLarguraDaColuna: (valor: number) => void;
+  alterarLarguraDaTabela: (valor: number) => void;
+  alterarLarguraDaImagem: (img: any, valor: number) => void;
+  private elTableManagerButton?;
+  onSelectionChange: (range: any) => void;
+  highLightBotaoGerenciarTabela: (format: any) => void;
+  addBotoesExtra: () => void;
+  configureTooltip: () => void;
+  setTitle: (
+    toolbarContainer: HTMLElement,
+    seletor: string,
+    title: string,
+  ) => void;
+  setContent: (texto: string, notasRodape?: NotaRodape[]) => void;
+  configAbrindoTexto: (valor: boolean) => void;
+  updateApenasTexto: () => void;
+  updateTexto: () => void;
+  alertaGlobalRevisao(): void;
+  updateNotasRodape: () => void;
+  ajustaHtml: (html?: string) => string;
+  undo: () => any;
+  redo: () => any;
+  atualizaAnexo: (anexo: Anexo[]) => void;
+  isEditorVazio: () => boolean;
+  getTexto: () => string;
+  private getNomeSwitch;
+  private getNomeBadge;
+  private getQuantidadeDeRevisoes;
+  private aceitarRevisoes;
+  private rejeitarRevisoes;
+  private timerAtualizaStatusElementosRevisao?;
+  private atualizaStatusElementosRevisao;
+  private desabilitaBtn;
+  private buildRevisoes;
+  private removeRevisoes;
+  private atualizaQuantidadeRevisao;
+  editarNotaRodape(idNotaRodape: string): void;
+  removerNotaRodape(idNotaRodape: string): void;
+  private parseToolbarTokens;
+  private buildToolbarContainer;
+  /** Constrói a lista de formats do Quill conforme os tokens */
+  private buildFormats;
+  reset(): void;
+}
+
+declare class AlterarLarguraTabelaColunaModalComponent extends LitElement {
+  private dialog;
+  private exibirAviso;
+  private valorLargura;
+  private tipo;
+  callback: any;
+  private openDialog;
+  private closeDialog;
+  show(width: string): void;
+  hide(): void;
+  private onAfterShow;
+  private onAfterHide;
+  private alterarLargura;
+  render(): TemplateResult;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-alterar-largura-tabela-coluna-modal': AlterarLarguraTabelaColunaModalComponent;
+  }
+}
+
+declare class AlterarLarguraImagemModalComponent extends LitElement {
+  private dialog;
+  private exibirAviso;
+  private valorLargura;
+  private tipo;
+  callback: any;
+  private img;
+  private openDialog;
+  private closeDialog;
+  show(img: any, width: string): void;
+  hide(): void;
+  private onAfterShow;
+  private onAfterHide;
+  private alterarLargura;
+  render(): TemplateResult;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-alterar-largura-imagem-modal': AlterarLarguraImagemModalComponent;
+  }
+}
+
 declare const REGEX_ACCENTS: RegExp;
 
 export {
   AlertasComponent,
+  AlterarLarguraImagemModalComponent,
+  AlterarLarguraTabelaColunaModalComponent,
   AutoFix,
   Autocomplete,
   AutocompleteAsync,
@@ -471,6 +650,7 @@ export {
   Data,
   Destino,
   DestinoComponent,
+  EditorTextoRicoComponent,
   LexmlAutocompleteUniversal,
   LexmlUiCommons,
   OpcoesImpressaoComponent,
