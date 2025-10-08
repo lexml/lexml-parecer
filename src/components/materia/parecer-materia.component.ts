@@ -2,9 +2,6 @@ import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query, state, property } from 'lit/decorators.js';
 import { Comissao, DestinoComponent, Option } from '@ui-commons';
 import { ProposicaoReferenciada } from '../../models/diversos.modelo.js';
-import { quillSnowStyles } from '../../assets/css/quill.snow.css.js';
-import { quillCoreStyles } from '../../assets/css/quill.core.css.js';
-import { quillTableStyles } from '../../assets/css/quill.table.css.js';
 import { Materia } from '../../models/materia.modelo.js';
 
 type WithValueEl = HTMLElement & { value: string };
@@ -177,12 +174,6 @@ export class LexmlParecerMateria extends LitElement {
   render(): TemplateResult {
     return html`
       <style>
-        ${quillSnowStyles}${quillCoreStyles}${quillTableStyles}
-          #ementaInput
-          .ql-container.ql-snow {
-          height: auto;
-        }
-
         /* #ementaInput .ql-container .ql-editor {
           min-height: 160px;
           height: auto;
@@ -269,6 +260,16 @@ export class LexmlParecerMateria extends LitElement {
           padding: 2px 5px;
           box-shadow: var(--wa-shadow-s);
         }
+
+        .ementa-editor .ql-container {
+          height: calc(100% - 55px) !important;
+        }
+
+        .ementa-editor .ql-editor {
+          min-height: 220px !important;
+          height: 100% !important;
+          overflow-y: auto;
+        }
       </style>
       <div class="wa-grid">
         <fieldset>
@@ -303,6 +304,7 @@ export class LexmlParecerMateria extends LitElement {
       <div>
         <label class="muted">Ementa</label>
         <lexml-ui-editor-texto-rico
+          class="ementa-editor"
           .toolbar=${'italic'}
         ></lexml-ui-editor-texto-rico>
       </div>

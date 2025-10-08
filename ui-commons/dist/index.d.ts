@@ -476,11 +476,6 @@ declare class Observable<T = void> {
   clean(): void;
 }
 
-declare class Anexo {
-  nomeArquivo: string;
-  base64: string;
-}
-
 declare class NotaRodape {
   id: any;
   numero: any;
@@ -498,11 +493,12 @@ type AddAlertFn = (alerta: RteAlert) => void;
 type RemoveAlertFn = (id: string) => void;
 declare class EditorTextoRicoComponent extends LitElement {
   texto: string;
-  anexos: Anexo[];
   notasRodape: NotaRodape[];
   registroEvento: string;
   tamanhoMaximoImagem: number;
+  indHabilitarNotaRodape: boolean;
   modo: string;
+  nomeUsuarioRevisao: string;
   /** Toolbar opcional: string com tokens separados por vírgula.
    * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
    *         clean, align, textindent, marginbottom, image, link, notarodape, table.
@@ -522,10 +518,6 @@ declare class EditorTextoRicoComponent extends LitElement {
   private alterarLarguraTabelaModal;
   private alterarLarguraImagemModal;
   private switchRevisaoComponent;
-  _textoAntesRevisao?: string;
-  get textoAntesRevisao(): string | undefined;
-  setTextoAntesRevisao(texto: string | undefined): void;
-  private existeRevisaoByModo;
   showAlterarLarguraImagemModal(img: any, width: string): void;
   private showAlterarLarguraColunaModal;
   private hideAlterarLarguraColunaModal;
@@ -535,10 +527,8 @@ declare class EditorTextoRicoComponent extends LitElement {
   update(changedProperties: PropertyValues): void;
   createRenderRoot(): LitElement;
   updateRevisionStatus(value: boolean): void;
-  labelAnexo: () => string;
   render(): TemplateResult;
   constructor();
-  private renderBotaoAnexo;
   private timerAlerta?;
   private onTableInTable;
   firstUpdated(): void;
@@ -571,7 +561,6 @@ declare class EditorTextoRicoComponent extends LitElement {
   ajustaHtml: (html?: string) => string;
   undo: () => any;
   redo: () => any;
-  atualizaAnexo: (anexo: Anexo[]) => void;
   isEditorVazio: () => boolean;
   getTexto: () => string;
   private getNomeSwitch;
@@ -582,24 +571,22 @@ declare class EditorTextoRicoComponent extends LitElement {
   private timerAtualizaStatusElementosRevisao?;
   private atualizaStatusElementosRevisao;
   private desabilitaBtn;
-  private buildRevisoes;
-  private removeRevisoes;
   private atualizaQuantidadeRevisao;
   editarNotaRodape(idNotaRodape: string): void;
   removerNotaRodape(idNotaRodape: string): void;
+  reset(): void;
   private parseToolbarTokens;
   private buildToolbarContainer;
   /** Constrói a lista de formats do Quill conforme os tokens */
   private buildFormats;
-  reset(): void;
 }
 
 declare class AlterarLarguraTabelaColunaModalComponent extends LitElement {
   private dialog;
   private exibirAviso;
   private valorLargura;
-  private tipo;
-  callback: any;
+  tipo: string;
+  callback?: (percentual: number) => void;
   private openDialog;
   private closeDialog;
   show(width: string): void;
@@ -607,7 +594,8 @@ declare class AlterarLarguraTabelaColunaModalComponent extends LitElement {
   private onAfterShow;
   private onAfterHide;
   private alterarLargura;
-  render(): TemplateResult;
+  private onInput;
+  protected render(): TemplateResult;
 }
 declare global {
   interface HTMLElementTagNameMap {
@@ -628,6 +616,8 @@ declare class AlterarLarguraImagemModalComponent extends LitElement {
   hide(): void;
   private onAfterShow;
   private onAfterHide;
+  private onInput;
+  private onKeyDown;
   private alterarLargura;
   render(): TemplateResult;
 }
@@ -635,6 +625,19 @@ declare global {
   interface HTMLElementTagNameMap {
     'lexml-alterar-largura-imagem-modal': AlterarLarguraImagemModalComponent;
   }
+}
+
+declare class SwitchRevisaoComponent extends LitElement {
+  quantidadeRevisao: number;
+  nomeSwitch: string;
+  nomeBadgeQuantidadeRevisao: string;
+  modo: string;
+  update(changedProperties: PropertyValues): void;
+  createRenderRoot(): LitElement;
+  render(): TemplateResult;
+  constructor();
+  atualizaQuantidadeRevisao: (quantidade: number) => void;
+  ativarDesativarMarcaDeRevisao(): boolean | void;
 }
 
 declare const REGEX_ACCENTS: RegExp;
@@ -656,6 +659,7 @@ export {
   OpcoesImpressaoComponent,
   Option,
   REGEX_ACCENTS,
+  SwitchRevisaoComponent,
   TipoMensagem,
 };
 export type { Alerta, Mensagem, MensagemErro };

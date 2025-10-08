@@ -10,6 +10,7 @@ import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/icon/icon.js';
 import '@awesome.me/webawesome/dist/components/badge/badge.js';
 import '@awesome.me/webawesome/dist/components/dialog/dialog.js';
+import '@awesome.me/webawesome/dist/components/switch/switch.js';
 
 var quill$1 = {exports: {}};
 
@@ -11676,6 +11677,9 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
           width: 1000px;
           border-radius: 8px;
         }
+        .area-texto {
+          height: 200px;
+        }
       </style>
       <div>
         <button @click=${this._log}>APRESENTAR VALORES NO CONSOLE</button>
@@ -11685,22 +11689,30 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
         <br />
 
         <h2>Teste EditorTextoRicoComponent</h2>
-        <lexml-ui-editor-texto-rico
-          modo="textoLivre"
-          id="editortexto"
-          registroEvento="texto"
-          @onchange=${(e) => console.log('Mudou', e.detail.origemEvento)}
-          @alerta=${(e) => console.warn('Alerta:', e.detail.mensagem)}
-        ></lexml-ui-editor-texto-rico>
+        <div class="area-texto">
+          <lexml-ui-editor-texto-rico
+            modo="textoLivre"
+            id="editortexto"
+            registroEvento="texto"
+            @onchange=${(e) => console.log('Mudou', e.detail.origemEvento)}
+            @alerta=${(e) => console.warn('Alerta:', e.detail.mensagem)}
+          ></lexml-ui-editor-texto-rico>
+        </div>
         <br />
-        <lexml-ui-editor-texto-rico
-          modo="textoLivre"
-          id="emenda"
-          registroEvento="texto"
-          .toolbar=${'italic'}
-          @onchange=${(e) => console.log('Mudou', e.detail.origemEvento)}
-          @alerta=${(e) => console.warn('Alerta:', e.detail.mensagem)}
-        ></lexml-ui-editor-texto-rico>
+        <br />
+        <br />
+        <div class="area-texto">
+          <lexml-ui-editor-texto-rico
+            modo="textoLivre"
+            id="emenda"
+            registroEvento="texto"
+            .toolbar=${'italic'}
+            @onchange=${(e) => console.log('Mudou', e.detail.origemEvento)}
+            @alerta=${(e) => console.warn('Alerta:', e.detail.mensagem)}
+          ></lexml-ui-editor-texto-rico>
+        </div>
+        <br />
+        <br />
         <br />
         <h2>Teste AutoCompletComponent</h2>
         <lexml-ui-autocomplete
@@ -13230,6 +13242,16 @@ AlertasComponent = __decorate([
 ], AlertasComponent);
 
 const REGEX_ACCENTS = /[\u0300-\u036f]/g;
+const encodeHtml = (texto) => {
+    const p = document.createElement('p');
+    p.textContent = texto;
+    return p.innerHTML || '';
+};
+const decodeHtml = (texto) => {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = texto;
+    return txt.value;
+};
 
 let Autocomplete = class Autocomplete extends LitElement {
     constructor() {
@@ -13722,7 +13744,7 @@ let AutocompleteAsync = class AutocompleteAsync extends LitElement {
         this.contentElement.removeEventListener('keyup', this._bound.onKeyUp);
         this.contentElement.removeEventListener('focus', this._bound.onFocus);
         this.contentElement.removeEventListener('blur', this._bound.onBlur);
-        this.contentElement.removeEventListener('sl-input', this._bound.onChange);
+        this.contentElement.removeEventListener('wa-input', this._bound.onChange);
         this.contentElement.removeEventListener('click', this._bound.onClick);
     }
     focus(options) {
@@ -13957,213 +13979,6 @@ class Observable {
 }
 
 /* eslint-disable prettier/prettier */
-async function uploadAnexoDialog(anexos, atualizaAnexo, editorTextoRico) {
-    const dialogElem = document.createElement('wa-dialog');
-    editorTextoRico.appendChild(dialogElem);
-    //tamanhoMaximoAnexo = editorTextoRico.lexmlEtaConfig.tamanhoMaximoAnexo;
-    dialogElem.label = 'Anexo';
-    dialogElem.addEventListener('wa-request-close', (event) => {
-        if (event.detail.source === 'overlay') {
-            event.preventDefault();
-        }
-    });
-    const content = document.createRange().createContextualFragment(`
-  <style>
-    .anexo-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-      margin-bottom: 1em;
-    }
-
-    wa-icon[name="paperclip"] {
-      width: 1.5em;
-      height: 1.5em;
-    }
-
-    wa-button wa-icon {
-      font-size: 1.5em;
-      pointer-events: none;
-      vertical-align: -4px;
-    }
-
-    #input-upload::part(form-control) {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1em;
-    }
-  </style>
-  <div id="wp-upload">
-    <label for="input-upload">Selecione o arquivo a ser anexado à emenda</label>
-    <br/>
-    <br/>
-    <input id="input-upload" type="file" accept="application/pdf" size="small"></input>
-    <br/>
-    <label class="tipoErrado" style="color: red;" hidden="true" id="tipoErrado">Esse arquivo não é um PDF</label>
-    <br/>
-    <label class="tamanhoMaximoAtingido" style="color: red;" hidden="true" id="tamanhoMaximoAtingido">Ultrapassou o tamanho máximo permitido (${Math.trunc(editorTextoRico.tamanhoMaximoAnexo / 1024)}MB)</label>
-  </div>
-  <br/>
-  <div id="form" class="input-validation-required"></div>
-  <br/>
-  <wa-button id="btnConfirmarAnexo" class="controls" slot="footer" variant="primary">Confirmar</wa-button>
-  <wa-button class="controls" slot="footer" variant="default">Cancelar</wa-button>
-  `);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const removerAnexo = (e) => {
-        const nomeArquivo = e.target.getAttribute('nomeArquivo');
-        anexos = anexos.filter(a => a.nomeArquivo !== nomeArquivo);
-        conteudoDinamico();
-    };
-    // cria função para exibir anexo em nova aba
-    const exibirAnexo = (e) => {
-        const nomeArquivo = e.target.getAttribute('nomeArquivo');
-        const anexo = anexos.find(a => a.nomeArquivo === nomeArquivo);
-        const win = window.open();
-        if (anexo?.nomeArquivo?.match(/\.(pdf)$/)) {
-            win?.document.write(`<embed src="${anexo?.base64}" width="100%" height="100%" type="application/pdf"></embed>`);
-            return;
-        }
-        if (anexo?.nomeArquivo?.match(/\.(jpeg|jpg|gif|png|svg)$/)) {
-            win?.document.write(`<img src="${anexo?.base64}" style="width:100%; height:auto;">`);
-            return;
-        }
-        win?.document.write(`<a href="${anexo?.base64}" download="${anexo?.nomeArquivo}">Download do arquivo anexo</a>`);
-    };
-    const conteudoDinamico = () => {
-        let htmlConteudo = '';
-        wpUpload.hidden = anexos.length ? true : false;
-        anexos.forEach(a => (htmlConteudo += `<span class="anexo-item">
-                            <wa-icon name="paperclip"></wa-icon>
-                            <a download="${a.nomeArquivo}" href="data:application/pdf;base64,${a.base64}">
-                              <span>
-                                ${a.nomeArquivo}
-                              </span>
-                            </a>
-                            <!--
-                            <wa-button class="btn-preview-anexo" size="small" title="Visualizar o anexo em uma nova janela" nomeArquivo="${a.nomeArquivo}">
-                              <wa-icon name="eye"></wa-icon>
-                            </wa-button>
-                            -->
-                            <wa-button class="btn-remove-anexo" size="small" title="Remover anexo" nomeArquivo="${a.nomeArquivo}">
-                              <wa-icon name="x"></wa-icon>
-                            </wa-button>
-                          </span>`));
-        form.innerHTML = htmlConteudo;
-        const btns = form?.querySelectorAll('.btn-remove-anexo');
-        (btns || []).forEach((btn) => (btn.onclick = removerAnexo));
-        const btns_preview = form?.querySelectorAll('.btn-preview-anexo');
-        (btns_preview || []).forEach((btn_preview) => (btn_preview.onclick = exibirAnexo));
-    };
-    const wpUpload = content.querySelector('#wp-upload');
-    const inputUpload = content.querySelector('#input-upload');
-    const form = content.querySelector('#form');
-    const botoes = content.querySelectorAll('.controls');
-    const confirmar = botoes[0]; // SlButton;
-    const fechar = botoes[1]; // SlButton;
-    inputUpload.oninput = () => {
-        addAnexo(editorTextoRico);
-    };
-    confirmar.onclick = () => {
-        atualizaAnexo(anexos);
-        agendarEmissaoEventoOnChange(dialogElem);
-        // dialogElem?.hide();
-        dialogElem?.remove();
-        anexos = [];
-    };
-    fechar.onclick = () => {
-        // dialogElem?.hide();
-        dialogElem?.remove();
-        anexos = [];
-    };
-    const agendarEmissaoEventoOnChange = (elemento) => {
-        elemento.dispatchEvent(new CustomEvent('onchange', {
-            bubbles: true,
-            composed: true,
-            detail: {
-                origemEvento: 'anexo',
-            },
-        }));
-    };
-    const addAnexo = async (editorTextoRico) => {
-        if (inputUpload?.files) {
-            const file = inputUpload.files[0];
-            const listaRestricoes = restricoes(file, editorTextoRico);
-            if (listaRestricoes.length === 0) {
-                const anexo = await convertAnexo(file);
-                anexos.push(anexo);
-                inputUpload.files = null;
-                conteudoDinamico();
-                document
-                    .getElementById('btnConfirmarAnexo')
-                    ?.removeAttribute('disabled');
-            }
-            else {
-                document
-                    .getElementById('btnConfirmarAnexo')
-                    ?.setAttribute('disabled', 'true');
-                listaRestricoes.forEach(restricao => {
-                    document.getElementById(restricao)?.removeAttribute('hidden');
-                });
-                listaRestricoesCompleta.forEach(restricaoCompleta => {
-                    if (!listaRestricoes.includes(restricaoCompleta)) {
-                        document
-                            .getElementById(restricaoCompleta)
-                            ?.setAttribute('hidden', 'true');
-                    }
-                });
-            }
-        }
-    };
-    const listaRestricoesCompleta = [
-        'tamanhoMaximoAtingido',
-        'tipoErrado',
-    ];
-    const restricoes = (file, editorTextoRico) => {
-        const restricoes = [];
-        if (file) {
-            const size = Math.round(file.size / 1024);
-            if (size > editorTextoRico.lexmlEtaConfig.tamanhoMaximoAnexo) {
-                restricoes.push('tamanhoMaximoAtingido');
-            }
-            if (file.type !== 'application/pdf') {
-                restricoes.push('tipoErrado');
-            }
-            if (restricoes.length > 0) {
-                restricoes.push('restricao');
-            }
-        }
-        //const retorno = file && file.type === 'application/pdf' && size <= 4096;
-        return restricoes;
-    };
-    const convertAnexo = (file) => {
-        return new Promise((resolve, reject) => {
-            confirmar.disabled = true;
-            fechar.disabled = true;
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => {
-                confirmar.disabled = false;
-                fechar.disabled = false;
-                resolve({
-                    nomeArquivo: file.name,
-                    base64: (fileReader.result?.toString() || '').replace(/.*;base64,/, ''),
-                });
-            };
-            fileReader.onerror = error => reject(error);
-        });
-    };
-    conteudoDinamico();
-    await dialogElem.appendChild(content);
-    // await dialogElem.show();
-    dialogElem.open = true;
-    setTimeout(() => {
-        inputUpload.focus();
-    }, 0);
-}
-
-/* eslint-disable prettier/prettier */
 // import { SlMenuItem } from '@shoelace-style/shoelace';
 async function showMenuImagem(editorTextoRico, img, top, left) {
     const content = document.createRange().createContextualFragment(`
@@ -14195,32 +14010,27 @@ async function showMenuImagem(editorTextoRico, img, top, left) {
     await editorTextoRico.appendChild(content);
 }
 
-var Modo;
-(function (Modo) {
-    Modo["JUSTIFICATIVA"] = "justificativa";
-    Modo["TEXTO_LIVRE"] = "textoLivre";
-    Modo["EMENDA"] = "emenda";
-    Modo["EMENDA_ARTIGO_ONDE_COUBER"] = "emendaArtigoOndeCouber";
-})(Modo || (Modo = {}));
-
 const editorTextoRicoCss = html `
   <style>
-    .editor-texto-rico {
+    .lexml-ui-editor-texto-rico {
       height: 375px;
       font-size: 18px !important;
     }
-    .editor-texto-rico p,
-    .editor-texto-rico ol,
-    .editor-texto-rico ul {
+    .lexml-ui-editor-texto-rico .ql-editor {
+      font-size: 18px !important;
+    }
+    .lexml-ui-editor-texto-rico p,
+    .lexml-ui-editor-texto-rico ol,
+    .lexml-ui-editor-texto-rico ul {
       margin-bottom: 0.7rem;
     }
-    .editor-texto-rico p:not(.ql-align-rigth, .ql-align-center) {
+    .lexml-ui-editor-texto-rico p:not(.ql-align-rigth, .ql-align-center) {
       text-indent: 3rem;
     }
     .ql-toolbar.ql-snow .ql-formats {
       margin-right: 8px;
     }
-    .editor-texto-rico.ql-snow .ql-tooltip {
+    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip {
       font-family: var(--eta-font-sans);
       font-size: 0.9rem;
     }
@@ -14234,32 +14044,34 @@ const editorTextoRicoCss = html `
       padding: 0 15px;
       margin: 0 0 0 10px;
     }
-    .editor-texto-rico.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+    .lexml-ui-editor-texto-rico.ql-snow
+      .ql-tooltip.ql-editing
+      a.ql-action::after {
       content: 'Salvar';
       margin: 0 !important;
       padding: 0 !important;
     }
-    .editor-texto-rico.ql-snow .ql-tooltip a.ql-action::after {
+    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip a.ql-action::after {
       display: inline;
       content: 'Editar';
       margin: 0 !important;
       padding: 0 !important;
       border: 0;
     }
-    .editor-texto-rico.ql-snow .ql-tooltip a.ql-remove::before {
+    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip a.ql-remove::before {
       display: inline;
       content: 'Remover';
       margin: 0 !important;
       padding: 0 !important;
     }
-    .editor-texto-rico.ql-snow .ql-tooltip[data-mode='link']::before {
+    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip[data-mode='link']::before {
       content: 'Insira o link:';
     }
-    .editor-texto-rico.ql-snow .ql-tooltip::before {
+    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip::before {
       content: 'Visite o link:';
     }
     @media (max-width: 600px) {
-      .editor-texto-rico.ql-snow .ql-tooltip {
+      .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip {
         display: flex;
         gap: 5px;
         flex-direction: column;
@@ -14268,17 +14080,17 @@ const editorTextoRicoCss = html `
       .ql-tooltip .ql-remove {
         margin: 0;
       }
-      .editor-texto-rico.ql-snow .ql-tooltip.ql-hidden {
+      .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip.ql-hidden {
         display: none;
       }
     }
 
-    .editor-texto-rico .estilo-ementa {
+    .lexml-ui-editor-texto-rico .estilo-ementa {
       text-indent: 0 !important;
       text-align: justify;
       margin-left: 40%;
     }
-    .editor-texto-rico .estilo-norma-alterada {
+    .lexml-ui-editor-texto-rico .estilo-norma-alterada {
       margin-left: 3rem;
     }
 
@@ -14457,11 +14269,11 @@ const editorTextoRicoCss = html `
       max-width: 100%;
     }
 
-    .editor-texto-rico p.ql-text-indent-0px {
+    .lexml-ui-editor-texto-rico p.ql-text-indent-0px {
       text-indent: 0;
     }
 
-    .editor-texto-rico p.ql-margin-bottom-0px {
+    .lexml-ui-editor-texto-rico p.ql-margin-bottom-0px {
       margin-bottom: 0;
     }
 
@@ -14477,32 +14289,36 @@ const editorTextoRicoCss = html `
       /* #f8d7da; */
     }
 
-    .editor-texto-rico .ql-tooltip input:invalid {
+    .lexml-ui-editor-texto-rico .ql-tooltip input:invalid {
       color: red;
     }
 
-    .editor-texto-rico .ql-tooltip div.tooltip-invalid-message {
+    .lexml-ui-editor-texto-rico .ql-tooltip div.tooltip-invalid-message {
       color: red;
       display: none;
       font-family: var(--eta-font-sans);
       font-size: 0.9rem;
     }
 
-    .editor-texto-rico
+    .lexml-ui-editor-texto-rico
       .ql-tooltip[data-mode='link']
       div.tooltip-invalid-message::after {
       content: 'A URL deve iniciar com http:// ou https://';
     }
 
-    .editor-texto-rico
+    .lexml-ui-editor-texto-rico
       .ql-tooltip[data-mode='link']
       input:invalid
       ~ div.tooltip-invalid-message {
       display: block;
     }
 
+    .ql-image[type='file'] {
+      display: none;
+    }
+
     @-moz-document url-prefix() {
-      #editor-texto-rico-justificativa-inner > .ql-editor {
+      #lexml-ui-editor-texto-rico-justificativa-inner > .ql-editor {
         white-space: pre-wrap;
       }
     }
@@ -14526,12 +14342,12 @@ const editorTextoRicoCss = html `
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import * as QuillNamespace from 'quill/dist/quill.js';
 // const Quill: any = (QuillNamespace as any).default || QuillNamespace;
-const Parchment$9 = Quill.import('parchment');
+const Parchment$b = Quill.import('parchment');
 const config$2 = {
-    scope: Parchment$9.Scope.BLOCK,
+    scope: Parchment$b.Scope.BLOCK,
     whitelist: ['ementa', 'norma-alterada'],
 };
-const EstiloTextoClass = new Parchment$9.Attributor.Class('estilo', 'estilo', config$2);
+const EstiloTextoClass = new Parchment$b.Attributor.Class('estilo', 'estilo', config$2);
 
 const quillTableCss = html `<style>
   .ql-editor table {
@@ -14814,7 +14630,7 @@ const quillTableCss = html `<style>
 const Container$3 = Quill.import('blots/container');
 const Block$1 = Quill.import('blots/block');
 const BlockEmbed$1 = Quill.import('blots/block/embed');
-const Parchment$8 = Quill.import('parchment');
+const Parchment$a = Quill.import('parchment');
 
 class ContainBlot extends Container$3 {
   static create(value) {
@@ -14831,7 +14647,7 @@ class ContainBlot extends Container$3 {
 
 ContainBlot.blotName = 'contain';
 ContainBlot.tagName = 'contain';
-ContainBlot.scope = Parchment$8.Scope.BLOCK_BLOT;
+ContainBlot.scope = Parchment$a.Scope.BLOCK_BLOT;
 ContainBlot.defaultChild = 'block';
 ContainBlot.allowedChildren = [Block$1, BlockEmbed$1, Container$3];
 
@@ -14840,7 +14656,7 @@ ContainBlot.allowedChildren = [Block$1, BlockEmbed$1, Container$3];
 const Container$2 = Quill.import('blots/container');
 const Block = Quill.import('blots/block');
 const BlockEmbed = Quill.import('blots/block/embed');
-const Parchment$7 = Quill.import('parchment');
+const Parchment$9 = Quill.import('parchment');
 
 class TableCell extends ContainBlot {
   static create(value) {
@@ -14890,10 +14706,10 @@ class TableCell extends ContainBlot {
         return;
       } else if (parent.statics.blotName !== 'tr') {
         // we will mark td position, put in table and replace mark
-        let mark = Parchment$7.create('block');
+        let mark = Parchment$9.create('block');
         this.parent.insertBefore(mark, this.next);
-        let table = Parchment$7.create('table', this.domNode.getAttribute('table_id'));
-        let tr = Parchment$7.create('tr', this.domNode.getAttribute('row_id'));
+        let table = Parchment$9.create('table', this.domNode.getAttribute('table_id'));
+        let tr = Parchment$9.create('tr', this.domNode.getAttribute('row_id'));
         table.appendChild(tr);
         tr.appendChild(this);
         table.replace(mark);
@@ -14916,7 +14732,7 @@ class TableCell extends ContainBlot {
     if (this.statics.allowedChildren != null && !this.statics.allowedChildren.some(function (child) {
       return childBlot instanceof child;
     })) {
-      let newChild = Parchment$7.create(this.statics.defaultChild);
+      let newChild = Parchment$9.create(this.statics.defaultChild);
       newChild.appendChild(childBlot);
       childBlot = newChild;
     }
@@ -14925,7 +14741,7 @@ class TableCell extends ContainBlot {
 
   replace(target) {
     if (target.statics.blotName !== this.statics.blotName) {
-      let item = Parchment$7.create(this.statics.defaultChild);
+      let item = Parchment$9.create(this.statics.defaultChild);
       target.moveChildren(item);
       this.appendChild(item);
     }
@@ -14943,12 +14759,12 @@ class TableCell extends ContainBlot {
 TableCell.blotName = 'td';
 TableCell.tagName = 'td';
 TableCell.className = 'td-q';
-TableCell.scope = Parchment$7.Scope.BLOCK_BLOT;
+TableCell.scope = Parchment$9.Scope.BLOCK_BLOT;
 TableCell.allowedChildren = [Block, BlockEmbed, Container$2];
 
 // import Quill from 'quill';
 
-const Parchment$6 = Quill.import('parchment');
+const Parchment$8 = Quill.import('parchment');
 
 class TableHistory {
   // Register DOM change into current table history entry
@@ -15071,11 +14887,11 @@ class TableHistory {
   static insert(change) {
     const parentNode = change.parentNode || change.nextNode.parentNode;
     if (parentNode) {
-      const _parentNode = Parchment$6.find(parentNode);
+      const _parentNode = Parchment$8.find(parentNode);
       if (_parentNode) {
-        const _node = Parchment$6.create(change.node);
+        const _node = Parchment$8.create(change.node);
         if (change.nextNode) {
-          const _nextNode = Parchment$6.find(change.nextNode);
+          const _nextNode = Parchment$8.find(change.nextNode);
           if (_nextNode) {
             _parentNode.insertBefore(_node, _nextNode);
           }
@@ -15407,7 +15223,7 @@ TableSelection.cellSelectionOnClick = true;
 
 // import Quill from 'quill';
 
-const Parchment$5 = Quill.import('parchment');
+const Parchment$7 = Quill.import('parchment');
 const Container$1 = Quill.import('blots/container');
 const Scroll = Quill.import('blots/scroll');
 
@@ -15479,19 +15295,19 @@ class TableTrick {
 
   static insertTable(quill, col_count, row_count) {
     const table_id = TableTrick.random_id();
-    const table = Parchment$5.create('table', table_id);
+    const table = Parchment$7.create('table', table_id);
     for (let ri = 0; ri < row_count; ri++) {
       const row_id = TableTrick.random_id();
-      const tr = Parchment$5.create('tr', row_id);
+      const tr = Parchment$7.create('tr', row_id);
       table.appendChild(tr);
       for (let ci = 0; ci < col_count; ci++) {
         const cell_id = TableTrick.random_id();
         const value = [table_id, row_id, cell_id].join('|');
-        const td = Parchment$5.create('td', value);
+        const td = Parchment$7.create('td', value);
         tr.appendChild(td);
-        const p = Parchment$5.create('block');
+        const p = Parchment$7.create('block');
         td.appendChild(p);
-        const br = Parchment$5.create('break');
+        const br = Parchment$7.create('break');
         p.appendChild(br);
       }
     }
@@ -15512,7 +15328,7 @@ class TableTrick {
     let table;
     if (coords) {
       const _table = TableSelection.selectionStartElement.closest('table');
-      table = Parchment$5.find(_table);
+      table = Parchment$7.find(_table);
     } else {
       const td = TableTrick.find_td(quill);
       if (td) {
@@ -15549,7 +15365,7 @@ class TableTrick {
     if (coords) {
       const cell = TableSelection.getCellAt(coords.maxX, coords.minY) || TableSelection.getCellAt(coords.maxX, coords.maxY);
       if (cell) {
-        td = Parchment$5.find(cell);
+        td = Parchment$7.find(cell);
       }
     }
 
@@ -15560,7 +15376,7 @@ class TableTrick {
           Array.prototype.indexOf.call(td.parent.domNode.children, td.domNode) + Number.parseInt(td.domNode.getAttribute('colspan')) - 1
         ];
         if (endCell) {
-          td = Parchment$5.find(endCell);
+          td = Parchment$7.find(endCell);
         }
       }
 
@@ -15575,14 +15391,14 @@ class TableTrick {
       table.children.forEach(function (tr) {
         const row_id = tr.domNode.getAttribute('row_id');
         const cell_id = TableTrick.random_id();
-        const new_td = Parchment$5.create('td', [table_id, row_id, cell_id].join('|'));
+        const new_td = Parchment$7.create('td', [table_id, row_id, cell_id].join('|'));
         // do not add the cell for this row if selected cell is the last cell and if this row has more or less cells
         if (!last_cell || index === tr.domNode.children.length) {
           if (typeof tr.domNode.children[index] === 'undefined') {
             tr.appendChild(new_td);
             TableHistory.register('insert', { node: new_td.domNode, parentNode: tr.domNode });
           } else {
-            const td = Parchment$5.find(tr.domNode.children[index]);
+            const td = Parchment$7.find(tr.domNode.children[index]);
             if (td) {
               // manage merged cells
               if (td.domNode.previousSibling) {
@@ -15623,7 +15439,7 @@ class TableTrick {
     if (coords) {
       const cell = TableSelection.getCellAt(coords.minX, coords.maxY) || TableSelection.getCellAt(coords.maxX, coords.maxY);
       if (cell) {
-        td = Parchment$5.find(cell);
+        td = Parchment$7.find(cell);
       }
     }
 
@@ -15654,7 +15470,7 @@ class TableTrick {
       for (let i = 0; i < col_count; i++) {
         const prev_cell = tr.domNode.children[i];
         const cell_id = TableTrick.random_id();
-        const td = Parchment$5.create('td', [table_id, row_id, cell_id].join('|'));
+        const td = Parchment$7.create('td', [table_id, row_id, cell_id].join('|'));
         if (prev_cell && manage_merged_cells) {
           // manage merged cells
           let merge_id, merged_cell;
@@ -15687,9 +15503,9 @@ class TableTrick {
         }
 
         new_row.appendChild(td);
-        const p = Parchment$5.create('block');
+        const p = Parchment$7.create('block');
         td.appendChild(p);
-        const br = Parchment$5.create('break');
+        const br = Parchment$7.create('break');
         p.appendChild(br);
       }
 
@@ -15697,7 +15513,7 @@ class TableTrick {
         table.appendChild(new_row);
         TableHistory.register('insert', { node: new_row.domNode, parentNode: table.domNode });
       } else {
-        const row = Parchment$5.find(table.domNode.children[index]);
+        const row = Parchment$7.find(table.domNode.children[index]);
         if (row) {
           table.insertBefore(new_row, row);
           TableHistory.register('insert', { node: new_row.domNode, nextNode: row.domNode });
@@ -15714,7 +15530,7 @@ class TableTrick {
     if (coords) {
       // if we have a selection, remove all selected columns
       const _table = TableSelection.selectionStartElement.closest('table');
-      table = Parchment$5.find(_table);
+      table = Parchment$7.find(_table);
       colIndex = coords.minX;
       colsToRemove = coords.maxX - coords.minX + 1;
     } else {
@@ -15749,7 +15565,7 @@ class TableTrick {
             }
 
             TableHistory.register('remove', { node: td, nextNode: td.nextSibling, parentNode: tr.domNode });
-            const _td = Parchment$5.find(td);
+            const _td = Parchment$7.find(td);
             if (_td) { // remove node this way in order to update delta
               _td.remove();
             }
@@ -15768,7 +15584,7 @@ class TableTrick {
     if (coords) {
       // if we have a selection, remove all selected columns
       const _table = TableSelection.selectionStartElement.closest('table');
-      table = Parchment$5.find(_table);
+      table = Parchment$7.find(_table);
       colIndex = coords.minX;
       colsToRemove = coords.maxX - coords.minX + 1;
     } else {
@@ -15833,7 +15649,7 @@ class TableTrick {
         if (tr) {
           manageMergedCells(tr);
           TableHistory.register('remove', { node: tr, nextNode: tr.nextSibling, parentNode: table });
-          const _tr = Parchment$5.find(tr);
+          const _tr = Parchment$7.find(tr);
           if (_tr) { // remove node this way in order to update delta
             _tr.remove();
           }
@@ -15846,7 +15662,7 @@ class TableTrick {
         const tr = td.parent;
         manageMergedCells(tr.domNode);
         TableHistory.register('remove', { node: tr.domNode, nextNode: tr.next ? tr.next.domNode : null, parentNode: tr.parent.domNode });
-        const _tr = Parchment$5.find(tr.domNode);
+        const _tr = Parchment$7.find(tr.domNode);
         if (_tr) { // remove node this way in order to update delta
           _tr.remove();
         }
@@ -15863,7 +15679,7 @@ class TableTrick {
     let td = TableTrick.find_td(quill);
     if (coords && coords.maxX - coords.minX === 0 && coords.maxY - coords.minY === 0) {
       const _td = TableSelection.getCellAt(coords.minX, coords.minY);
-      td = Parchment$5.find(_td);
+      td = Parchment$7.find(_td);
     }
 
     if (td && TableTrick._split(td.domNode)) {
@@ -15948,7 +15764,7 @@ class TableTrick {
     let td = TableTrick.find_td(quill);
     if (coords && coords.maxX - coords.minX === 0 && coords.maxY - coords.minY === 0) {
       const _td = TableSelection.getCellAt(coords.minX, coords.minY);
-      td = Parchment$5.find(_td);
+      td = Parchment$7.find(_td);
     }
 
     if (td && TableTrick._removeCell(td.domNode)) {
@@ -16000,7 +15816,7 @@ class TableTrick {
       }
 
       nodesToRemove.forEach(node => {
-        const _node = Parchment$5.find(node);
+        const _node = Parchment$7.find(node);
         if (_node) { // remove node this way in order to update delta
           _node.remove();
         }
@@ -16047,7 +15863,7 @@ class TableTrick {
         }
       }
 
-      const _node = Parchment$5.find(node);
+      const _node = Parchment$7.find(node);
       if (_node) { // remove node this way in order to update delta
         _node.remove();
       }
@@ -16199,7 +16015,7 @@ class TableTrick {
 
 // import Quill from 'quill';
 
-const Parchment$4 = Quill.import('parchment');
+const Parchment$6 = Quill.import('parchment');
 
 class TableRow extends ContainBlot {
   static create(value) {
@@ -16262,19 +16078,19 @@ class TableRow extends ContainBlot {
       table_id = this.domNode.parent.getAttribute('table_id');
     }
 
-    return Parchment$4.create(this.statics.defaultChild, [table_id, this.domNode.getAttribute('row_id'), TableTrick.random_id()].join('|'));
+    return Parchment$6.create(this.statics.defaultChild, [table_id, this.domNode.getAttribute('row_id'), TableTrick.random_id()].join('|'));
   }
 }
 
 TableRow.blotName = 'tr';
 TableRow.tagName = 'tr';
-TableRow.scope = Parchment$4.Scope.BLOCK_BLOT;
+TableRow.scope = Parchment$6.Scope.BLOCK_BLOT;
 TableRow.defaultChild = 'td';
 TableRow.allowedChildren = [TableCell];
 
 // import Quill from 'quill';
 
-const Parchment$3 = Quill.import('parchment');
+const Parchment$5 = Quill.import('parchment');
 
 class Table extends ContainBlot {
   static create(value) {
@@ -16358,7 +16174,7 @@ class Table extends ContainBlot {
     if (this.statics.allowedChildren != null && !this.statics.allowedChildren.some(function (child) {
       return childBlot instanceof child;
     })) {
-      let newChild = Parchment$3.create(this.statics.defaultChild, TableTrick.random_id());
+      let newChild = Parchment$5.create(this.statics.defaultChild, TableTrick.random_id());
       newChild.appendChild(childBlot);
       childBlot = newChild;
     }
@@ -16368,7 +16184,7 @@ class Table extends ContainBlot {
 
 Table.blotName = 'table';
 Table.tagName = 'table';
-Table.scope = Parchment$3.Scope.BLOCK_BLOT;
+Table.scope = Parchment$5.Scope.BLOCK_BLOT;
 Table.defaultChild = 'tr';
 Table.allowedChildren = [TableRow];
 
@@ -16377,8 +16193,8 @@ Table.allowedChildren = [TableRow];
 // import './css/quill.table.css';
 
 const Container = Quill.import('blots/container');
-const Parchment$2 = Quill.import('parchment');
-const Delta$1 = Quill.import("delta");
+const Parchment$4 = Quill.import('parchment');
+const Delta$4 = Quill.import("delta");
 
 const nodeListToArray = collection => {
   const elementsIndex = [];
@@ -16433,7 +16249,7 @@ class TableModule {
     clipboard.addMatcher('TABLE', function (node, delta) {
       if (isInTable(quill)) {
         emitirEventoTableInTable(quill);
-        return new Delta$1();
+        return new Delta$4();
       }
 
       const is_pasted_data = node.closest('.ql-editor') === null;
@@ -16486,7 +16302,7 @@ class TableModule {
         node.setAttribute('cell_id', TableTrick.random_id());
       }
 
-      const newDelta = delta.compose(new Delta$1().retain(delta.length(), {
+      const newDelta = delta.compose(new Delta$4().retain(delta.length(), {
         td: [
           node.getAttribute('table_id'),
           node.getAttribute('row_id'),
@@ -16661,7 +16477,7 @@ class TableModule {
 
     let node = quill.selection.getNativeRange().start.node;
     if (!node) return false;
-    let blot = Parchment$2.find(node);
+    let blot = Parchment$4.find(node);
 
     if (
       key === 'delete' && blot &&
@@ -16723,25 +16539,25 @@ const removeElementosTDOcultos = (html = '') => {
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import Quill from 'quill/dist/quill.js';
-const Parchment$1 = Quill.import('parchment');
+const Parchment$3 = Quill.import('parchment');
 const config$1 = {
-    scope: Parchment$1.Scope.BLOCK,
+    scope: Parchment$3.Scope.BLOCK,
     whitelist: ['0px'],
 };
 // const NoIndentStyle = new Parchment.Attributor.Style('text-indent', 'text-indent', config);
-const NoIndentClass = new Parchment$1.Attributor.Class('text-indent', 'ql-text-indent', config$1);
+const NoIndentClass = new Parchment$3.Attributor.Class('text-indent', 'ql-text-indent', config$1);
 
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import Quill from 'quill/dist/quill.js';
-const Parchment = Quill.import('parchment');
+const Parchment$2 = Quill.import('parchment');
 const config = {
-    scope: Parchment.Scope.BLOCK,
+    scope: Parchment$2.Scope.BLOCK,
     whitelist: ['0px'],
 };
 // const MarginBottomStyle = new Parchment.Attributor.Style('margin-bottom', 'margin-bottom', config);
-const MarginBottomClass = new Parchment.Attributor.Class('margin-bottom', 'ql-margin-bottom', config);
+const MarginBottomClass = new Parchment$2.Attributor.Class('margin-bottom', 'ql-margin-bottom', config);
 
 const notaRodapeCss = html `
   <style>
@@ -16803,6 +16619,14 @@ const notaRodapeCss = html `
 `;
 
 /* eslint-disable prettier/prettier */
+class NotaRodape {
+    constructor({ id, numero, texto }) {
+        this.id = id;
+        this.numero = numero;
+        this.texto = texto;
+    }
+}
+const NOTA_RODAPE_INPUT_EVENT = 'nota-rodape:input';
 const NOTA_RODAPE_CHANGE_EVENT = 'nota-rodape:change';
 const NOTA_RODAPE_REMOVE_EVENT = 'nota-rodape:remove';
 
@@ -16837,29 +16661,856 @@ class QuillUtil {
     }
 }
 
+function toPx(v) {
+    if (v === null)
+        return undefined;
+    return typeof v === 'number' ? `${v}px` : v;
+}
+function ensureStack(width) {
+    const id = 'wa-callout-stack';
+    let el = document.getElementById(id);
+    if (!el) {
+        el = document.createElement('div');
+        el.id = id;
+        el.className = 'wa-callout-stack';
+        el.style.position = 'fixed';
+        el.style.top = '16px';
+        el.style.right = '16px';
+        el.style.zIndex = '9999';
+        el.style.display = 'flex';
+        el.style.flexDirection = 'column';
+        el.style.gap = '8px';
+        el.style.width = width || '420px';
+        document.body.appendChild(el);
+    }
+    else if (width) {
+        el.style.width = width;
+    }
+    return el;
+}
+function alertarInfo(msg, opts) {
+    const { variant = 'danger', duration = 4000, icon = 'circle-exclamation', iconWeight = 'solid', width, height, } = {};
+    const stack = ensureStack(toPx(width));
+    const callout = document.createElement('wa-callout');
+    callout.setAttribute('variant', variant);
+    callout.setAttribute('open', '');
+    callout.style.width = '100%';
+    const h = toPx(height);
+    if (h) {
+        callout.style.minHeight = h;
+        callout.style.display = 'flex';
+        callout.style.alignItems = 'center';
+    }
+    const waIcon = document.createElement('wa-icon');
+    waIcon.setAttribute('slot', 'icon');
+    waIcon.setAttribute('name', icon);
+    waIcon.setAttribute('variant', iconWeight);
+    const text = document.createTextNode(msg);
+    callout.append(waIcon, text);
+    stack.appendChild(callout);
+    if (duration > 0) {
+        setTimeout(() => callout.remove(), duration);
+    }
+}
+
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-var-requires */
+// import Quill from 'quill/dist/quill.js';
+const Delta$3 = Quill.import('delta');
+class ModuloAspasCurvas {
+    constructor(quill, options) {
+        this.enabled = true;
+        this.quill = quill;
+        this.options = options;
+        this.quill.root.addEventListener('keydown', (event) => {
+            const range = this.quill?.getSelection();
+            const key = event.key;
+            if (!this.enabled || !range || !['"', "'"].includes(key))
+                return;
+            this.tratarAspas(range, key);
+            event.preventDefault();
+        });
+        // O código abaixo é uma outra forma de fazer a mesma coisa.
+        // Se o código abaixo for usado, o código acima (addEventListener e todo o seu conteúdo) deve ser comentado.
+        // this.quill.keyboard.addBinding({ key: 192 }, { shiftKey: true }, (range: any, context: any): boolean => this.tratarAspas(range, '"'));
+        // this.quill.keyboard.addBinding({ key: 192 }, { shiftKey: false }, (range: any, context: any): boolean => this.tratarAspas(range, "'"));
+    }
+    // Imita autoformação de aspas curvas do Word
+    tratarAspas(range, caracter) {
+        if (!this.enabled)
+            return true;
+        const isAspasDuplas = caracter === '"';
+        const abreAspas = isAspasDuplas ? '“' : '‘';
+        const fechaAspas = isAspasDuplas ? '”' : '’';
+        const texto = this.quill?.getText().substring(0, range.index);
+        const aspasTransformada = !texto || texto?.match(/\s$/g) ? abreAspas : fechaAspas;
+        const format = this.quill?.getFormat(range);
+        // Insere o caracter normalmente
+        let delta = new Delta$3()
+            .retain(range.index)
+            .delete(range.length)
+            .insert(caracter, format);
+        this.quill?.updateContents(delta, 'user');
+        this.quill.history.cutoff();
+        // Troca por aspas curvas
+        delta = new Delta$3()
+            .retain(range.index)
+            .delete(1)
+            .insert(aspasTransformada, format);
+        this.quill?.updateContents(delta, 'user');
+        this.quill?.setSelection(range.index + 1, 'silent');
+        return false;
+    }
+    setEnabled(enabled) {
+        this.enabled = enabled;
+    }
+}
+
+const generateUUID = () => {
+    let uuid = '';
+    for (let i = 0; i < 32; i++) {
+        const randomNumber = (Math.random() * 16) | 0;
+        const value = (i === 12 ? 4 : i === 16 ? (randomNumber & 3) | 8 : randomNumber).toString(16);
+        uuid += (i === 8 || i === 12 || i === 16 || i === 20 ? '-' : '') + value;
+    }
+    return uuid;
+};
+
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-var-requires */
+// import Quill from 'quill/dist/quill.js';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable eqeqeq */
+/* eslint-disable prefer-const */
+const Delta$2 = Quill.import('delta');
+const Parchment$1 = Quill.import('parchment');
+const Module$1 = Quill.import('core/module');
+const Inline = Quill.import('blots/inline');
+const Clipboard = Quill.import('modules/clipboard');
+const Keyboard = Quill.import('modules/keyboard');
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
+class RevisaoUtil {
+    static valueToAttributes(value, domNode) {
+        if (!value)
+            return;
+        const partes = value.split('|');
+        domNode.setAttribute('usuario', partes[0]);
+        domNode.setAttribute('date', partes[1]);
+        domNode.setAttribute('title', 'Revisão de ' +
+            partes[0] +
+            ' em ' +
+            this.formatDDMMYYYYAndTime(new Date(partes[1])));
+        domNode.setAttribute('id-revisao', partes[2]);
+    }
+    static formats(domNode) {
+        if (domNode?.hasAttribute('usuario') && domNode?.hasAttribute('date')) {
+            return [
+                domNode.getAttribute('usuario'),
+                domNode.getAttribute('date'),
+                domNode.getAttribute('id-revisao'),
+            ].join('|');
+        }
+    }
+    static padTo2Digits(num) {
+        return num.toString().padStart(2, '0');
+    }
+    static formatDate(date) {
+        return ([
+            date.getFullYear(),
+            RevisaoUtil.padTo2Digits(date.getMonth() + 1),
+            RevisaoUtil.padTo2Digits(date.getDate()),
+        ].join('-') +
+            ' ' +
+            [
+                RevisaoUtil.padTo2Digits(date.getHours()),
+                RevisaoUtil.padTo2Digits(date.getMinutes()),
+                // RevisaoUtil.padTo2Digits(date.getSeconds()),
+                '00',
+            ].join(':'));
+    }
+    static formatDDMMYYYYAndTime(date) {
+        const data = [
+            this.padTo2Digits(date.getDate()),
+            this.padTo2Digits(date.getMonth() + 1),
+            date.getFullYear(),
+        ].join('/');
+        const hora = [
+            this.padTo2Digits(date.getHours()),
+            this.padTo2Digits(date.getMinutes()),
+        ].join(':');
+        return `${data} ${hora}`;
+    }
+}
+// --------------------------------------------------------------------------------------------------------------------
+// Fornatos de revisão inline
+class InlineRevisionBaseFormat extends Inline {
+    static create(value) {
+        let node = super.create();
+        RevisaoUtil.valueToAttributes(value, node);
+        return node;
+    }
+    static formats(domNode) {
+        return RevisaoUtil.formats(domNode);
+    }
+    format(name, value) {
+        if (name !== this.statics.blotName || !value)
+            return super.format(name, value);
+        RevisaoUtil.valueToAttributes(value, this.domNode);
+    }
+    optimize(context) {
+        const blotName = this.statics.blotName;
+        if (blotName === this.next?.statics?.blotName) {
+            const formatoAtual = this.formats();
+            this.next.domNode.setAttribute('date', this.domNode.getAttribute('date'));
+            this.next.domNode.setAttribute('usuario', this.domNode.getAttribute('usuario'));
+            this.next.format(blotName, formatoAtual[blotName]);
+        }
+        super.optimize(context);
+    }
+}
+InlineRevisionBaseFormat.blotName = 'revisionBaseFormat';
+InlineRevisionBaseFormat.tagName = '';
+class InsBlot extends InlineRevisionBaseFormat {
+}
+InsBlot.blotName = 'added';
+InsBlot.tagName = 'ins';
+class DelBlot extends InlineRevisionBaseFormat {
+}
+DelBlot.blotName = 'removed';
+DelBlot.tagName = 'del';
+const cursorEstaSobreBlotDel = (quill) => {
+    const range = quill.getSelection();
+    const blot = range && quill.getLeaf(range.index)[0];
+    return (blot?.statics.blotName === DelBlot.blotName ||
+        blot?.parent?.statics.blotName === DelBlot.blotName);
+};
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
+// Módulo de revisão
+// A classe abaixo adiciona um listener para o evento keydown para ser executado antes do listener padrão do Quill
+class CustomKeyboard extends Keyboard {
+    listen() {
+        this.quill.root.addEventListener('keydown', this.onKeyDown.bind(this));
+        this.quill.root.addEventListener('keypress', this.onKeyPress.bind(this));
+        super.listen();
+    }
+    onKeyDown(e) {
+        if (this.quill?.revisao?.gerenciarKeydown &&
+            this.quill?.revisao?.emRevisao) {
+            this.quill.revisao.handleKeyDown(e);
+        }
+    }
+    onKeyPress(e) {
+        if (cursorEstaSobreBlotDel(this.quill)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+}
+class CustomClipboard extends Clipboard {
+    constructor(quill, options) {
+        super(quill, options);
+        this.quill.root.addEventListener('cut', this.onCut.bind(this));
+    }
+    onCut(e) {
+        if (this.quill?.revisao?.emRevisao) {
+            e.preventDefault();
+            e.stopPropagation();
+            const range = this.quill.getSelection();
+            if (range?.length) {
+                this.copiarSelecaoParaClipboard();
+                this.quill?.revisao?.handleRemove(range, null, null);
+            }
+        }
+    }
+    onPaste(e) {
+        if (cursorEstaSobreBlotDel(this.quill)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        super.onPaste(e);
+    }
+    copiarSelecaoParaClipboard() {
+        const selection = window.getSelection();
+        if (selection) {
+            if (navigator.clipboard) {
+                // Cria um elemento div temporário para armazenar a seleção
+                const tempElement = document.createElement('div');
+                // Clona a seleção e a insere no elemento div temporário
+                for (let i = 0; i < selection.rangeCount; i++) {
+                    tempElement.appendChild(selection.getRangeAt(i).cloneContents());
+                }
+                // Copia o conteúdo do elemento div temporário para a área de transferência
+                navigator.clipboard
+                    .write([
+                    new ClipboardItem({
+                        'text/plain': new Blob([tempElement.innerText], {
+                            type: 'text/plain',
+                        }),
+                        'text/html': new Blob([tempElement.outerHTML], {
+                            type: 'text/html',
+                        }),
+                    }),
+                ])
+                    .finally(() => tempElement.remove());
+            }
+            else {
+                console.log('Clipboard API não suportada');
+                document.execCommand('copy'); // Alternativa para o caso de não suportar a Clipboard API
+            }
+        }
+    }
+}
+class ModuloRevisao extends Module$1 {
+    static register() {
+        Quill.register('modules/keyboard', CustomKeyboard, true);
+        Quill.register('modules/clipboard', CustomClipboard, true);
+        Quill.register(InsBlot, true);
+        Quill.register(DelBlot, true);
+    }
+    constructor(quill, options) {
+        super(quill, options);
+        this.ignorarEventoTextChange = false;
+        this.emRevisao = false;
+        this.gerenciarKeydown = true;
+        this.isAbrindoTexto = false;
+        this.quill = quill;
+        this.options = options;
+        if (!options || !Object.keys(options).length)
+            return;
+        // this.quill.options.formats.push(...['added', 'removed']);
+        this.usuario = options.usuario;
+        this.emRevisao = options.emRevisao ?? false;
+        this.gerenciarKeydown = options.gerenciarKeydown ?? true;
+        this.tableModule = options.tableModule;
+        this.tableTrick = options.tableTrick;
+        this.quill.revisao = this;
+        this.addClipboardMatcher();
+        this.addKeyboardBindings(this.quill);
+        this.quill.on('text-change', this.onTextChange.bind(this));
+        this.quill.root.addEventListener('click', this.tratarClick.bind(this));
+        if (this.tableModule) {
+            const toolbar = this.quill?.getModule('toolbar');
+            toolbar.addHandler('table', (value) => {
+                const quill = this.quill;
+                const isInsertTable = (value = '') => value.includes('newtable_');
+                const isInTable = (quill) => quill &&
+                    quill.getSelection(true) &&
+                    quill.getFormat(quill.getSelection(true)).td;
+                if (isInsertTable(value) && isInTable(quill)) {
+                    return false;
+                }
+                quill?.revisao?.setIgnorarEventoTextChange(true);
+                return this.tableTrick.table_handler(value, quill);
+            });
+        }
+    }
+    isTagRevisao(param) {
+        const tagName = typeof param === 'string' ? param : param?.tagName;
+        return ['INS', 'DEL'].includes(tagName);
+    }
+    getTagRevisaoMaisProxima(elemento) {
+        if (!elemento || ['BODY', 'HTML'].includes(elemento.tagName))
+            return null;
+        if (this.isTagRevisao(elemento))
+            return elemento;
+        return this.getTagRevisaoMaisProxima(elemento.parentNode);
+    }
+    tratarClick(event) {
+        const elRevisao = this.getTagRevisaoMaisProxima(event.target);
+        elRevisao && this.mostrarTooltipRevisao(elRevisao);
+    }
+    revisarTodos(aceitar) {
+        this.revisar(this.getRevisoes(), aceitar, true);
+    }
+    revisar(elementosRevisao, aceitar, todos = false) {
+        if (!this.emRevisao)
+            return;
+        elementosRevisao
+            .filter(el => this.isTagRevisao(el))
+            .forEach(elRevisao => {
+            const isTagIns = elRevisao.tagName === 'INS';
+            const blot = Quill.find(elRevisao);
+            this.ignorarEventoTextChange = true;
+            if (blot !== null) {
+                if ((aceitar && !isTagIns) || (!aceitar && isTagIns)) {
+                    const index = this.quill.getIndex(blot);
+                    const length = blot.length();
+                    this.quill.updateContents(new Delta$2().retain(index).delete(length), 'user');
+                }
+                else {
+                    blot.format(isTagIns ? 'added' : 'removed', false, 'user');
+                }
+            }
+        });
+        //força o revisar quando é "todos" e ainda sobrou revisões no quill
+        if (todos && this.getRevisoes().length > 0) {
+            this.revisar(this.getRevisoes(), aceitar);
+        }
+    }
+    padTo2Digits(num) {
+        return num.toString().padStart(2, '0');
+    }
+    mostrarTooltipRevisao(elRevisao) {
+        if (!elRevisao)
+            return;
+        const tooltip = document.createElement('div');
+        tooltip.classList.add('tooltip-revisao');
+        const data = new Date(elRevisao.getAttribute('date') || '');
+        tooltip.innerHTML = `
+        <style>
+        .tooltip-revisao {
+          position: absolute;
+          border: 1px solid black;
+          background-color: white;
+          padding: 10px;
+          border-radius: 4px;
+          z-index: 9999;
+          font-size: 0.9rem;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          max-width: 300px;
+          transition: all 0.3s ease-in-out;
+        }
+        .tooltip-revisao__actions {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          align-items: center;
+          justify-content: center;
+        }
+        .tooltip-revisao__actions button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid #ccc;
+          border-radius: 15px;
+          background-color: #eee;
+          cursor: pointer;
+          padding: 0;
+          width: 24px;
+          height: 24px;
+        }
+        .tooltip-revisao__actions svg {
+          fill: currentColor;
+          width: 24px;
+          height: 24px;
+        }
+        .tooltip-revisao button:hover {
+          background-color: #ddd;
+        }
+        .tooltip-revisao button:active {
+          background-color: #ccc;
+        }
+        .tooltip-revisao__body {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+        }
+        .tooltip-revisao__autor {
+          font-weight: bold;
+        }
+        .tooltip-revisao__data {
+          font-size: 0.8rem;
+          color: #666;
+        }
+      </style>
+      <div class="tooltip-revisao__body" role="tooltip">
+        <div>
+          <div class="tooltip-revisao__autor">${elRevisao.getAttribute('usuario')}</div>
+          <div class="tooltip-revisao__data">${RevisaoUtil.formatDDMMYYYYAndTime(data)}</div>
+        </div>
+        <div class="tooltip-revisao__actions">
+          <button id="button-rejeitar-revisao" aria-label="Rejeitar revisão" title="Rejeitar revisão">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+          </button>
+          <button id="button-aceitar-revisao" aria-label="Aceitar revisão" title="Aceitar revisão">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+              <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      `;
+        tooltip.style.opacity = '0';
+        document.body.appendChild(tooltip);
+        const fnActionRevisao = (event, aceitar) => {
+            const elementos = [
+                ...this.quill.root.querySelectorAll(`${elRevisao.tagName}[id-revisao="${elRevisao.getAttribute('id-revisao')}"]`),
+            ];
+            this.revisar(elementos, aceitar);
+            closeTooltip(event);
+        };
+        tooltip
+            .querySelector('#button-rejeitar-revisao')
+            .addEventListener('click', (event) => fnActionRevisao(event, false));
+        tooltip
+            .querySelector('#button-aceitar-revisao')
+            .addEventListener('click', (event) => fnActionRevisao(event, true));
+        this.ajustaPosicaoTooltip(tooltip, elRevisao);
+        const closeTooltip = (e) => {
+            if (e.type === 'click') {
+                limpaTooltip();
+            }
+            else if (e.type === 'keydown' &&
+                e.key === 'Escape') {
+                limpaTooltip();
+            }
+            setTimeout(() => this.quill.root.focus(), 0);
+        };
+        const limpaTooltip = () => {
+            tooltip.style.opacity = '0';
+            setTimeout(() => {
+                tooltip.remove();
+                document.removeEventListener('click', closeTooltip);
+                document.removeEventListener('keydown', closeTooltip);
+            }, 300);
+        };
+        setTimeout(() => {
+            document.addEventListener('click', closeTooltip);
+            document.addEventListener('keydown', closeTooltip);
+            tooltip.style.opacity = '1';
+        }, 0);
+        window.addEventListener('resize', () => this.ajustaPosicaoTooltip(tooltip, elRevisao));
+    }
+    ajustaPosicaoTooltip(tooltip, button) {
+        const rect = button.getBoundingClientRect();
+        const offset = 10;
+        // Abrir para cima por padrão, a menos que não haja espaço suficiente
+        let topOffset = rect.top - tooltip.clientHeight - offset;
+        if (topOffset < window.scrollY) {
+            topOffset = rect.bottom + offset;
+        }
+        tooltip.style.top = `${topOffset + window.scrollY}px`;
+        // Ajustar horizontalmente se estiver muito próximo à borda direita
+        let leftOffset = rect.left + rect.width / 2 - tooltip.clientWidth / 2;
+        if (leftOffset + tooltip.clientWidth > window.innerWidth) {
+            leftOffset = window.innerWidth - tooltip.clientWidth - offset;
+        }
+        else if (leftOffset < 0) {
+            leftOffset = offset;
+        }
+        tooltip.style.left = `${leftOffset + window.scrollX}px`;
+    }
+    createTooltip() {
+        Array.from(this.querySelectorAll('#tooltipAcceptRefuse')).forEach(el => this.removeChild(el));
+        const tooltipElem = document.createElement('tooltip');
+        tooltipElem.id = 'tooltipAcceptRefuse';
+        document.body.appendChild(tooltipElem);
+        document.createRange().createContextualFragment(`
+    <style>
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .tooltip .tooltiptext {
+      display: none;
+      width: 120px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      top: calc(100% + 5px);
+      left: 50%;
+      margin-left: -60px;
+    }
+
+    </style>
+    <div class="tooltip" id="tooltip">
+      Hover sobre mim
+      <span class="tooltiptext" id="tooltipContent">
+        <button onclick="botaoClicado(1)">Botão 1</button>
+        <button onclick="botaoClicado(2)">Botão 2</button>
+      </span>
+    </div>
+
+    <wa-button slot="footer" variant="primary">Fechar</wa-button>
+  `);
+    }
+    handleKeyDown(e) {
+        // Não implementado
+    }
+    addClipboardMatcher() {
+        // Handle para tratar colagem de trechos com tag <del>
+        this.quill.clipboard.addMatcher('DEL', (node, delta) => {
+            if (this.isAbrindoTexto) {
+                return delta;
+            }
+            else {
+                let match = Parchment$1.query(node);
+                if (match == null || match.blotName !== 'removed') {
+                    return delta;
+                }
+                const id = generateUUID();
+                const ops = delta.ops.reduce((acc, op) => {
+                    if (op.insert) {
+                        delete op.attributes.background;
+                        delete op.attributes.removed;
+                        if (this.emRevisao) {
+                            op.attributes.added = this.buildAttributes(id);
+                        }
+                        acc.push(op);
+                    }
+                    return acc;
+                }, []);
+                return new Delta$2(ops);
+            }
+        });
+    }
+    addKeyboardBindings(quill) {
+        function addBindingOnTop(keyBinding, context, handler) {
+            quill.keyboard.addBinding(keyBinding, context, handler);
+            const key = Object.keys(quill.keyboard.bindings)
+                .map(k => quill.keyboard.bindings[k])
+                .flat()
+                .find(binding => binding.handler === handler).key;
+            const newBinding = (quill.keyboard.bindings[key] || []).pop();
+            quill.keyboard.bindings[key].unshift(newBinding);
+        }
+        addBindingOnTop({ key: 'Backspace' }, null, (range, context) => this.handleRemove(range, context, 'Backspace'));
+        addBindingOnTop({ key: 'Delete' }, null, (range, context) => this.handleRemove(range, context, 'Delete'));
+        // Undo
+        addBindingOnTop({ key: 'z', shortKey: true }, null, (range, context) => this.handleUndo(range, context));
+        // Redo
+        addBindingOnTop({ key: 'z', shortKey: true, shiftKey: true }, null, (range, context) => this.handleRedo(range, context));
+        addBindingOnTop({ key: 'y', shortKey: true }, null, (range, context) => this.handleRedo(range, context));
+    }
+    handleUndo(range, context) {
+        const hasModuloTabela = this.quill.getModule('table') && this.tableModule;
+        if (this.emRevisao) {
+            this.ignorarEventoTextChange = true;
+        }
+        if (hasModuloTabela) {
+            return this.tableModule.keyboardHandler(this.quill, 'undo', range, context);
+        }
+        else {
+            this.quill.history.undo();
+        }
+    }
+    handleRedo(range, context) {
+        const hasModuloTabela = this.quill.getModule('table') && this.tableModule;
+        if (this.emRevisao) {
+            this.ignorarEventoTextChange = true;
+        }
+        if (hasModuloTabela) {
+            return this.tableModule.keyboardHandler(this.quill, 'redo', range, context);
+        }
+        else {
+            this.quill.history.redo();
+        }
+    }
+    buildAttributes(id = '') {
+        return this.usuario + '|' + RevisaoUtil.formatDate(new Date()) + ' |' + id;
+    }
+    handleRemove(range, context, key) {
+        const deslocamento = key === 'Delete' ? 1 : -1;
+        const quill = this.quill;
+        if (this.emRevisao) {
+            const blot = quill.getLeaf(range.index)[0];
+            const isEmbedBlot = ['image'].includes(blot.statics.blotName);
+            const index = (blot.text || isEmbedBlot) && deslocamento === -1 && !range.length
+                ? range.index - 1
+                : range.index;
+            let posicao = index;
+            if (index < 0 || index >= quill.getLength())
+                return true;
+            const delta = quill.getContents(index, range.length || 1);
+            const id = generateUUID();
+            const ops = delta.ops.reduce((acc, op) => {
+                const numChars = typeof op.insert === 'string' ? op.insert.length : 1;
+                if (op.attributes?.added) {
+                    acc.push({ delete: numChars });
+                }
+                else {
+                    if (op.attributes?.list && !blot.text) {
+                        acc.push({ retain: numChars, attributes: { list: false } });
+                    }
+                    else if (!blot.text && !isEmbedBlot) {
+                        acc.push({ delete: numChars });
+                    }
+                    else {
+                        acc.push({
+                            retain: numChars,
+                            attributes: {
+                                ...(op.attributes || {}),
+                                removed: this.buildAttributes(id),
+                            },
+                        });
+                        if (deslocamento === 1) {
+                            posicao += numChars;
+                        }
+                    }
+                }
+                return acc;
+            }, []);
+            index && ops.unshift({ retain: index });
+            this.ignorarEventoTextChange = true;
+            quill.updateContents({ ops }, 'user');
+            quill.setSelection(posicao);
+            return false;
+        }
+        return true;
+    }
+    onTextChange(delta, oldContent, source) {
+        const isInsertJaFormatadoEmModoDeRevisao = delta.ops.find((op) => op.insert)?.attributes?.added;
+        const apenasNovaLinha = delta.ops.length === 2 &&
+            delta.ops[0].retain &&
+            delta.ops[1].insert === '\n';
+        const quill = this.quill;
+        if (this.ignorarEventoTextChange ||
+            !this.emRevisao ||
+            isInsertJaFormatadoEmModoDeRevisao ||
+            !delta.ops.length ||
+            apenasNovaLinha) {
+            this.ignorarEventoTextChange = false;
+            return;
+        }
+        if (quill.history.stack.undo.length === 0)
+            return;
+        let numCaracteresRemovidos = 0;
+        this.ignorarEventoTextChange = true;
+        let itemUndo = quill.history.stack.undo.pop();
+        const redo = JSON.parse(JSON.stringify(itemUndo.redo));
+        quill.history.cutoff();
+        quill.history.ignoreChange = true;
+        quill.updateContents(itemUndo.undo, 'silent');
+        quill.history.ignoreChange = false;
+        if (!quill.history.options?.userOnly)
+            quill.history.stack.undo.pop();
+        this.ignorarEventoTextChange = true;
+        let rev = { ops: [] };
+        let idx = 0;
+        const id = generateUUID();
+        rev = redo.ops.reduce((acc, op) => {
+            const length = op.retain ||
+                op.delete ||
+                (typeof op.insert === 'string' ? op.insert.length : 1);
+            if (op.retain && op.attributes?.list) {
+                // idx += 1;
+                acc.ops.push({
+                    retain: op.retain,
+                    attributes: { ...(op.attributes || {}) },
+                });
+                idx += op.retain;
+            }
+            else if (op.retain) {
+                acc.ops.push({
+                    retain: op.retain,
+                    attributes: { ...(op.attributes || {}) },
+                });
+                idx += op.retain;
+            }
+            else if (op.delete) {
+                // Para refazer trechos removidos em modo de revisão é preciso identificar o que está sendo removido
+                const contentDeletedRange = quill.getContents(idx, op.delete);
+                contentDeletedRange.ops.forEach((op2) => {
+                    if (op2.insert && op2.attributes?.added) {
+                        // Deixa remover conteúdo adicionado em modo de revisão
+                        acc.ops.push({ delete: op2.insert.length });
+                    }
+                    else if (op2.insert && !op2.attributes?.added) {
+                        // Não deixa remover conteúdo adicionado FORA modo de revisão
+                        // Formata como removido em modo de revisão
+                        acc.ops.push({
+                            retain: op2.insert.length,
+                            attributes: { removed: this.buildAttributes(id) },
+                        });
+                        idx += op2.insert.length;
+                        numCaracteresRemovidos += op2.insert.length;
+                    }
+                    else {
+                        acc.ops.push({
+                            retain: op2.retain || op2.delete,
+                            attributes: { removed: this.buildAttributes(id) },
+                        });
+                        idx += op2.retain || op2.delete;
+                    }
+                });
+            }
+            else if (op.insert && !op.attributes?.added) {
+                op.attributes = {
+                    ...(op.attributes || {}),
+                    added: this.buildAttributes(id),
+                    removed: false,
+                };
+                acc.ops.push(op);
+                idx += length;
+            }
+            return acc;
+        }, rev);
+        quill.history.cutoff();
+        quill.updateContents(rev, 'user');
+        setTimeout(() => {
+            quill.setSelection(idx - numCaracteresRemovidos, 0);
+            this.ignorarEventoTextChange = false;
+        }, 0);
+    }
+    setUsuario(usuario) {
+        this.usuario = usuario;
+    }
+    setEmRevisao(emRevisao) {
+        this.emRevisao = emRevisao;
+    }
+    setIgnorarEventoTextChange(ignorarEventoTextChange) {
+        this.ignorarEventoTextChange = ignorarEventoTextChange;
+    }
+    getQuantidadeRevisoes() {
+        return this.getRevisoesSemDuplicidade(this.getRevisoes()).length;
+    }
+    getRevisoes() {
+        const cursorCode = 65279;
+        return [...this.quill.root.querySelectorAll('ins, del')].filter(el => el.innerText?.charCodeAt(0) !== cursorCode);
+    }
+    getRevisoesSemDuplicidade(listElements) {
+        const revisoesSemDuplicidade = [];
+        listElements.forEach(element => {
+            if (!revisoesSemDuplicidade.find((r) => r.getAttribute('id-revisao') ===
+                element.getAttribute('id-revisao') &&
+                r.nodeName === element.nodeName)) {
+                revisoesSemDuplicidade.push(element);
+            }
+        });
+        return revisoesSemDuplicidade;
+    }
+}
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
+Quill.register('modules/revisao', ModuloRevisao, true);
+
+// Foi utilizado TemplateResult porque o editor.component.ts não usa ShadowDom
 const quillSnowStyles = html `
   <style>
     /*!
- * Quill Editor v2.0.3
- * https://quilljs.com
- * Copyright (c) 2017-2024, Slab
- * Copyright (c) 2014, Jason Chen
- * Copyright (c) 2013, salesforce.com
- */
+    * Quill Editor v1.3.7
+    * https://quilljs.com/
+    * Copyright (c) 2014, Jason Chen
+    * Copyright (c) 2013, salesforce.com
+    */
     .ql-container {
       box-sizing: border-box;
-      font-family: Helvetica, Arial, sans-serif;
+      /* font-family: Helvetica, Arial, sans-serif; */
+      font-family: var(--eta-font-serif);
       font-size: 13px;
       height: 100%;
-      margin: 0;
+      margin: 0px;
       position: relative;
     }
     .ql-container.ql-disabled .ql-tooltip {
       visibility: hidden;
     }
-    .ql-container:not(.ql-disabled) li[data-list='checked'] > .ql-ui,
-    .ql-container:not(.ql-disabled) li[data-list='unchecked'] > .ql-ui {
-      cursor: pointer;
+    .ql-container.ql-disabled .ql-editor ul[data-checked] > li::before {
+      pointer-events: none;
     }
     .ql-clipboard {
       left: -100000px;
@@ -16874,8 +17525,6 @@ const quillSnowStyles = html `
     }
     .ql-editor {
       box-sizing: border-box;
-      counter-reset: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-        list-8 list-9;
       line-height: 1.42;
       height: 100%;
       outline: none;
@@ -16884,7 +17533,7 @@ const quillSnowStyles = html `
       tab-size: 4;
       -moz-tab-size: 4;
       text-align: left;
-      white-space: pre-wrap;
+      /* white-space: pre-wrap; */
       word-wrap: break-word;
     }
     .ql-editor > * {
@@ -16892,6 +17541,7 @@ const quillSnowStyles = html `
     }
     .ql-editor p,
     .ql-editor ol,
+    .ql-editor ul,
     .ql-editor pre,
     .ql-editor blockquote,
     .ql-editor h1,
@@ -16902,217 +17552,150 @@ const quillSnowStyles = html `
     .ql-editor h6 {
       margin: 0;
       padding: 0;
+      counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
+        list-9;
     }
-    @supports (counter-set: none) {
-      .ql-editor p,
-      .ql-editor h1,
-      .ql-editor h2,
-      .ql-editor h3,
-      .ql-editor h4,
-      .ql-editor h5,
-      .ql-editor h6 {
-        counter-set: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-          list-8 list-9;
-      }
+    .ql-editor p {
+      line-height: 1.42;
+      font-size: 18px;
     }
-    @supports not (counter-set: none) {
-      .ql-editor p,
-      .ql-editor h1,
-      .ql-editor h2,
-      .ql-editor h3,
-      .ql-editor h4,
-      .ql-editor h5,
-      .ql-editor h6 {
-        counter-reset: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-          list-8 list-9;
-      }
-    }
-    .ql-editor table {
-      border-collapse: collapse;
-    }
-    .ql-editor td {
-      border: 1px solid #000;
-      padding: 2px 5px;
-    }
-    .ql-editor ol {
+    .ql-editor ol,
+    .ql-editor ul {
       padding-left: 1.5em;
     }
-    .ql-editor li {
+    .ql-editor ol > li,
+    .ql-editor ul > li {
       list-style-type: none;
-      padding-left: 1.5em;
-      position: relative;
     }
-    .ql-editor li > .ql-ui:before {
+    .ql-editor ul > li::before {
+      content: '\\2022';
+    }
+    .ql-editor ul[data-checked='true'],
+    .ql-editor ul[data-checked='false'] {
+      pointer-events: none;
+    }
+    .ql-editor ul[data-checked='true'] > li *,
+    .ql-editor ul[data-checked='false'] > li * {
+      pointer-events: all;
+    }
+    .ql-editor ul[data-checked='true'] > li::before,
+    .ql-editor ul[data-checked='false'] > li::before {
+      color: #777;
+      cursor: pointer;
+      pointer-events: all;
+    }
+    .ql-editor ul[data-checked='true'] > li::before {
+      content: '\\2611';
+    }
+    .ql-editor ul[data-checked='false'] > li::before {
+      content: '\\2610';
+    }
+    .ql-editor li::before {
       display: inline-block;
-      margin-left: -1.5em;
-      margin-right: 0.3em;
-      text-align: right;
       white-space: nowrap;
       width: 1.2em;
     }
-    .ql-editor li[data-list='checked'] > .ql-ui,
-    .ql-editor li[data-list='unchecked'] > .ql-ui {
-      color: #777;
+    .ql-editor li:not(.ql-direction-rtl)::before {
+      margin-left: -1.5em;
+      margin-right: 0.3em;
+      text-align: right;
     }
-    .ql-editor li[data-list='bullet'] > .ql-ui:before {
-      content: '\\2022';
+    .ql-editor li.ql-direction-rtl::before {
+      margin-left: 0.3em;
+      margin-right: -1.5em;
     }
-    .ql-editor li[data-list='checked'] > .ql-ui:before {
-      content: '\\2611';
+    .ql-editor ol li:not(.ql-direction-rtl),
+    .ql-editor ul li:not(.ql-direction-rtl) {
+      padding-left: 1.5em;
     }
-    .ql-editor li[data-list='unchecked'] > .ql-ui:before {
-      content: '\\2610';
+    .ql-editor ol li.ql-direction-rtl,
+    .ql-editor ul li.ql-direction-rtl {
+      padding-right: 1.5em;
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list] {
-        counter-set: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-          list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list] {
-        counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-          list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'] {
+    .ql-editor ol li {
+      counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
+        list-9;
       counter-increment: list-0;
     }
-    .ql-editor li[data-list='ordered'] > .ql-ui:before {
+    .ql-editor ol li:before {
       content: counter(list-0, decimal) '. ';
     }
-    .ql-editor li[data-list='ordered'].ql-indent-1 {
+    .ql-editor ol li.ql-indent-1 {
       counter-increment: list-1;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-1 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-1:before {
       content: counter(list-1, lower-alpha) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-1 {
-        counter-set: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-1 {
+      counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-1 {
-        counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-2 {
+    .ql-editor ol li.ql-indent-2 {
       counter-increment: list-2;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-2 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-2:before {
       content: counter(list-2, lower-roman) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-2 {
-        counter-set: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-2 {
+      counter-reset: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-2 {
-        counter-reset: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-3 {
+    .ql-editor ol li.ql-indent-3 {
       counter-increment: list-3;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-3 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-3:before {
       content: counter(list-3, decimal) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-3 {
-        counter-set: list-4 list-5 list-6 list-7 list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-3 {
+      counter-reset: list-4 list-5 list-6 list-7 list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-3 {
-        counter-reset: list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-4 {
+    .ql-editor ol li.ql-indent-4 {
       counter-increment: list-4;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-4 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-4:before {
       content: counter(list-4, lower-alpha) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-4 {
-        counter-set: list-5 list-6 list-7 list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-4 {
+      counter-reset: list-5 list-6 list-7 list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-4 {
-        counter-reset: list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-5 {
+    .ql-editor ol li.ql-indent-5 {
       counter-increment: list-5;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-5 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-5:before {
       content: counter(list-5, lower-roman) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-5 {
-        counter-set: list-6 list-7 list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-5 {
+      counter-reset: list-6 list-7 list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-5 {
-        counter-reset: list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-6 {
+    .ql-editor ol li.ql-indent-6 {
       counter-increment: list-6;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-6 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-6:before {
       content: counter(list-6, decimal) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-6 {
-        counter-set: list-7 list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-6 {
+      counter-reset: list-7 list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-6 {
-        counter-reset: list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-7 {
+    .ql-editor ol li.ql-indent-7 {
       counter-increment: list-7;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-7 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-7:before {
       content: counter(list-7, lower-alpha) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-7 {
-        counter-set: list-8 list-9;
-      }
+    .ql-editor ol li.ql-indent-7 {
+      counter-reset: list-8 list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-7 {
-        counter-reset: list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-8 {
+    .ql-editor ol li.ql-indent-8 {
       counter-increment: list-8;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-8 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-8:before {
       content: counter(list-8, lower-roman) '. ';
     }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-8 {
-        counter-set: list-9;
-      }
+    .ql-editor ol li.ql-indent-8 {
+      counter-reset: list-9;
     }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-8 {
-        counter-reset: list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-9 {
+    .ql-editor ol li.ql-indent-9 {
       counter-increment: list-9;
     }
-    .ql-editor li[data-list='ordered'].ql-indent-9 > .ql-ui:before {
+    .ql-editor ol li.ql-indent-9:before {
       content: counter(list-9, decimal) '. ';
     }
     .ql-editor .ql-indent-1:not(.ql-direction-rtl) {
@@ -17223,24 +17806,6 @@ const quillSnowStyles = html `
     .ql-editor li.ql-indent-9.ql-direction-rtl.ql-align-right {
       padding-right: 28.5em;
     }
-    .ql-editor li.ql-direction-rtl {
-      padding-right: 1.5em;
-    }
-    .ql-editor li.ql-direction-rtl > .ql-ui:before {
-      margin-left: 0.3em;
-      margin-right: -1.5em;
-      text-align: left;
-    }
-    .ql-editor table {
-      table-layout: fixed;
-      width: 100%;
-    }
-    .ql-editor table td {
-      outline: none;
-    }
-    .ql-editor .ql-code-block-container {
-      font-family: monospace;
-    }
     .ql-editor .ql-video {
       display: block;
       max-width: 100%;
@@ -17326,9 +17891,6 @@ const quillSnowStyles = html `
     }
     .ql-editor .ql-align-right {
       text-align: right;
-    }
-    .ql-editor .ql-ui {
-      position: absolute;
     }
     .ql-editor.ql-blank::before {
       color: rgba(0, 0, 0, 0.6);
@@ -17563,11 +18125,12 @@ const quillSnowStyles = html `
       padding-left: 16px;
     }
     .ql-snow .ql-editor code,
-    .ql-snow .ql-editor .ql-code-block-container {
+    .ql-snow .ql-editor pre {
       background-color: #f0f0f0;
       border-radius: 3px;
     }
-    .ql-snow .ql-editor .ql-code-block-container {
+    .ql-snow .ql-editor pre {
+      white-space: pre-wrap;
       margin-bottom: 5px;
       margin-top: 5px;
       padding: 5px 10px;
@@ -17576,7 +18139,7 @@ const quillSnowStyles = html `
       font-size: 85%;
       padding: 2px 4px;
     }
-    .ql-snow .ql-editor .ql-code-block-container {
+    .ql-snow .ql-editor pre.ql-syntax {
       background-color: #23241f;
       color: #f8f8f2;
       overflow: visible;
@@ -17650,7 +18213,7 @@ const quillSnowStyles = html `
       right: 4px;
     }
     .ql-snow .ql-icon-picker .ql-picker-options {
-      padding: 4px 0;
+      padding: 4px 0px;
     }
     .ql-snow .ql-icon-picker .ql-picker-item {
       height: 24px;
@@ -17666,7 +18229,7 @@ const quillSnowStyles = html `
       float: left;
       height: 16px;
       margin: 2px;
-      padding: 0;
+      padding: 0px;
       width: 16px;
     }
     .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
@@ -17812,13 +18375,6 @@ const quillSnowStyles = html `
     .ql-snow .ql-color-picker.ql-color .ql-picker-item {
       background-color: #000;
     }
-    .ql-code-block-container {
-      position: relative;
-    }
-    .ql-code-block-container .ql-ui {
-      right: 5px;
-      top: 5px;
-    }
     .ql-toolbar.ql-snow {
       border: 1px solid #ccc;
       box-sizing: border-box;
@@ -17846,12 +18402,12 @@ const quillSnowStyles = html `
       border-color: #000;
     }
     .ql-toolbar.ql-snow + .ql-container.ql-snow {
-      border-top: 0;
+      border-top: 0px;
     }
     .ql-snow .ql-tooltip {
       background-color: #fff;
       border: 1px solid #ccc;
-      box-shadow: 0 0 5px #ddd;
+      box-shadow: 0px 0px 5px #ddd;
       color: #444;
       padding: 5px 12px;
       white-space: nowrap;
@@ -17866,7 +18422,7 @@ const quillSnowStyles = html `
       border: 1px solid #ccc;
       font-size: 13px;
       height: 26px;
-      margin: 0;
+      margin: 0px;
       padding: 3px 5px;
       width: 170px;
     }
@@ -17898,9 +18454,9 @@ const quillSnowStyles = html `
       display: inline-block;
     }
     .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
-      border-right: 0;
+      border-right: 0px;
       content: 'Save';
-      padding-right: 0;
+      padding-right: 0px;
     }
     .ql-snow .ql-tooltip[data-mode='link']::before {
       content: 'Enter link:';
@@ -17917,1024 +18473,566 @@ const quillSnowStyles = html `
     .ql-container.ql-snow {
       border: 1px solid #ccc;
     }
-
-    /*# sourceMappingURL=quill.snow.css.map*/
   </style>
 `;
 
-const quillCoreStyles = html `
-  <style>
-    /*!
- * Quill Editor v2.0.3
- * https://quilljs.com
- * Copyright (c) 2017-2024, Slab
- * Copyright (c) 2014, Jason Chen
- * Copyright (c) 2013, salesforce.com
- */
-    .ql-container {
-      box-sizing: border-box;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 13px;
-      height: 100%;
-      margin: 0;
-      position: relative;
-    }
-    .ql-container.ql-disabled .ql-tooltip {
-      visibility: hidden;
-    }
-    .ql-container:not(.ql-disabled) li[data-list='checked'] > .ql-ui,
-    .ql-container:not(.ql-disabled) li[data-list='unchecked'] > .ql-ui {
-      cursor: pointer;
-    }
-    .ql-clipboard {
-      left: -100000px;
-      height: 1px;
-      overflow-y: hidden;
-      position: absolute;
-      top: 50%;
-    }
-    .ql-clipboard p {
-      margin: 0;
-      padding: 0;
-    }
-    .ql-editor {
-      box-sizing: border-box;
-      counter-reset: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-        list-8 list-9;
-      line-height: 1.42;
-      height: 100%;
-      outline: none;
-      overflow-y: auto;
-      padding: 12px 15px;
-      tab-size: 4;
-      -moz-tab-size: 4;
-      text-align: left;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    .ql-editor > * {
-      cursor: text;
-    }
-    .ql-editor p,
-    .ql-editor ol,
-    .ql-editor pre,
-    .ql-editor blockquote,
-    .ql-editor h1,
-    .ql-editor h2,
-    .ql-editor h3,
-    .ql-editor h4,
-    .ql-editor h5,
-    .ql-editor h6 {
-      margin: 0;
-      padding: 0;
-    }
-    @supports (counter-set: none) {
-      .ql-editor p,
-      .ql-editor h1,
-      .ql-editor h2,
-      .ql-editor h3,
-      .ql-editor h4,
-      .ql-editor h5,
-      .ql-editor h6 {
-        counter-set: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-          list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor p,
-      .ql-editor h1,
-      .ql-editor h2,
-      .ql-editor h3,
-      .ql-editor h4,
-      .ql-editor h5,
-      .ql-editor h6 {
-        counter-reset: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-          list-8 list-9;
-      }
-    }
-    .ql-editor table {
-      border-collapse: collapse;
-    }
-    .ql-editor td {
-      border: 1px solid #000;
-      padding: 2px 5px;
-    }
-    .ql-editor ol {
-      padding-left: 1.5em;
-    }
-    .ql-editor li {
-      list-style-type: none;
-      padding-left: 1.5em;
-      position: relative;
-    }
-    .ql-editor li > .ql-ui:before {
-      display: inline-block;
-      margin-left: -1.5em;
-      margin-right: 0.3em;
-      text-align: right;
-      white-space: nowrap;
-      width: 1.2em;
-    }
-    .ql-editor li[data-list='checked'] > .ql-ui,
-    .ql-editor li[data-list='unchecked'] > .ql-ui {
-      color: #777;
-    }
-    .ql-editor li[data-list='bullet'] > .ql-ui:before {
-      content: '\\2022';
-    }
-    .ql-editor li[data-list='checked'] > .ql-ui:before {
-      content: '\\2611';
-    }
-    .ql-editor li[data-list='unchecked'] > .ql-ui:before {
-      content: '\\2610';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list] {
-        counter-set: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-          list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list] {
-        counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-          list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'] {
-      counter-increment: list-0;
-    }
-    .ql-editor li[data-list='ordered'] > .ql-ui:before {
-      content: counter(list-0, decimal) '. ';
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-1 {
-      counter-increment: list-1;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-1 > .ql-ui:before {
-      content: counter(list-1, lower-alpha) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-1 {
-        counter-set: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-1 {
-        counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-2 {
-      counter-increment: list-2;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-2 > .ql-ui:before {
-      content: counter(list-2, lower-roman) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-2 {
-        counter-set: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-2 {
-        counter-reset: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-3 {
-      counter-increment: list-3;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-3 > .ql-ui:before {
-      content: counter(list-3, decimal) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-3 {
-        counter-set: list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-3 {
-        counter-reset: list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-4 {
-      counter-increment: list-4;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-4 > .ql-ui:before {
-      content: counter(list-4, lower-alpha) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-4 {
-        counter-set: list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-4 {
-        counter-reset: list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-5 {
-      counter-increment: list-5;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-5 > .ql-ui:before {
-      content: counter(list-5, lower-roman) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-5 {
-        counter-set: list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-5 {
-        counter-reset: list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-6 {
-      counter-increment: list-6;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-6 > .ql-ui:before {
-      content: counter(list-6, decimal) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-6 {
-        counter-set: list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-6 {
-        counter-reset: list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-7 {
-      counter-increment: list-7;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-7 > .ql-ui:before {
-      content: counter(list-7, lower-alpha) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-7 {
-        counter-set: list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-7 {
-        counter-reset: list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-8 {
-      counter-increment: list-8;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-8 > .ql-ui:before {
-      content: counter(list-8, lower-roman) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-8 {
-        counter-set: list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-8 {
-        counter-reset: list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-9 {
-      counter-increment: list-9;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-9 > .ql-ui:before {
-      content: counter(list-9, decimal) '. ';
-    }
-    .ql-editor .ql-indent-1:not(.ql-direction-rtl) {
-      padding-left: 3em;
-    }
-    .ql-editor li.ql-indent-1:not(.ql-direction-rtl) {
-      padding-left: 4.5em;
-    }
-    .ql-editor .ql-indent-1.ql-direction-rtl.ql-align-right {
-      padding-right: 3em;
-    }
-    .ql-editor li.ql-indent-1.ql-direction-rtl.ql-align-right {
-      padding-right: 4.5em;
-    }
-    .ql-editor .ql-indent-2:not(.ql-direction-rtl) {
-      padding-left: 6em;
-    }
-    .ql-editor li.ql-indent-2:not(.ql-direction-rtl) {
-      padding-left: 7.5em;
-    }
-    .ql-editor .ql-indent-2.ql-direction-rtl.ql-align-right {
-      padding-right: 6em;
-    }
-    .ql-editor li.ql-indent-2.ql-direction-rtl.ql-align-right {
-      padding-right: 7.5em;
-    }
-    .ql-editor .ql-indent-3:not(.ql-direction-rtl) {
-      padding-left: 9em;
-    }
-    .ql-editor li.ql-indent-3:not(.ql-direction-rtl) {
-      padding-left: 10.5em;
-    }
-    .ql-editor .ql-indent-3.ql-direction-rtl.ql-align-right {
-      padding-right: 9em;
-    }
-    .ql-editor li.ql-indent-3.ql-direction-rtl.ql-align-right {
-      padding-right: 10.5em;
-    }
-    .ql-editor .ql-indent-4:not(.ql-direction-rtl) {
-      padding-left: 12em;
-    }
-    .ql-editor li.ql-indent-4:not(.ql-direction-rtl) {
-      padding-left: 13.5em;
-    }
-    .ql-editor .ql-indent-4.ql-direction-rtl.ql-align-right {
-      padding-right: 12em;
-    }
-    .ql-editor li.ql-indent-4.ql-direction-rtl.ql-align-right {
-      padding-right: 13.5em;
-    }
-    .ql-editor .ql-indent-5:not(.ql-direction-rtl) {
-      padding-left: 15em;
-    }
-    .ql-editor li.ql-indent-5:not(.ql-direction-rtl) {
-      padding-left: 16.5em;
-    }
-    .ql-editor .ql-indent-5.ql-direction-rtl.ql-align-right {
-      padding-right: 15em;
-    }
-    .ql-editor li.ql-indent-5.ql-direction-rtl.ql-align-right {
-      padding-right: 16.5em;
-    }
-    .ql-editor .ql-indent-6:not(.ql-direction-rtl) {
-      padding-left: 18em;
-    }
-    .ql-editor li.ql-indent-6:not(.ql-direction-rtl) {
-      padding-left: 19.5em;
-    }
-    .ql-editor .ql-indent-6.ql-direction-rtl.ql-align-right {
-      padding-right: 18em;
-    }
-    .ql-editor li.ql-indent-6.ql-direction-rtl.ql-align-right {
-      padding-right: 19.5em;
-    }
-    .ql-editor .ql-indent-7:not(.ql-direction-rtl) {
-      padding-left: 21em;
-    }
-    .ql-editor li.ql-indent-7:not(.ql-direction-rtl) {
-      padding-left: 22.5em;
-    }
-    .ql-editor .ql-indent-7.ql-direction-rtl.ql-align-right {
-      padding-right: 21em;
-    }
-    .ql-editor li.ql-indent-7.ql-direction-rtl.ql-align-right {
-      padding-right: 22.5em;
-    }
-    .ql-editor .ql-indent-8:not(.ql-direction-rtl) {
-      padding-left: 24em;
-    }
-    .ql-editor li.ql-indent-8:not(.ql-direction-rtl) {
-      padding-left: 25.5em;
-    }
-    .ql-editor .ql-indent-8.ql-direction-rtl.ql-align-right {
-      padding-right: 24em;
-    }
-    .ql-editor li.ql-indent-8.ql-direction-rtl.ql-align-right {
-      padding-right: 25.5em;
-    }
-    .ql-editor .ql-indent-9:not(.ql-direction-rtl) {
-      padding-left: 27em;
-    }
-    .ql-editor li.ql-indent-9:not(.ql-direction-rtl) {
-      padding-left: 28.5em;
-    }
-    .ql-editor .ql-indent-9.ql-direction-rtl.ql-align-right {
-      padding-right: 27em;
-    }
-    .ql-editor li.ql-indent-9.ql-direction-rtl.ql-align-right {
-      padding-right: 28.5em;
-    }
-    .ql-editor li.ql-direction-rtl {
-      padding-right: 1.5em;
-    }
-    .ql-editor li.ql-direction-rtl > .ql-ui:before {
-      margin-left: 0.3em;
-      margin-right: -1.5em;
-      text-align: left;
-    }
-    .ql-editor table {
-      table-layout: fixed;
-      width: 100%;
-    }
-    .ql-editor table td {
-      outline: none;
-    }
-    .ql-editor .ql-code-block-container {
-      font-family: monospace;
-    }
-    .ql-editor .ql-video {
-      display: block;
-      max-width: 100%;
-    }
-    .ql-editor .ql-video.ql-align-center {
-      margin: 0 auto;
-    }
-    .ql-editor .ql-video.ql-align-right {
-      margin: 0 0 0 auto;
-    }
-    .ql-editor .ql-bg-black {
-      background-color: #000;
-    }
-    .ql-editor .ql-bg-red {
-      background-color: #e60000;
-    }
-    .ql-editor .ql-bg-orange {
-      background-color: #f90;
-    }
-    .ql-editor .ql-bg-yellow {
-      background-color: #ff0;
-    }
-    .ql-editor .ql-bg-green {
-      background-color: #008a00;
-    }
-    .ql-editor .ql-bg-blue {
-      background-color: #06c;
-    }
-    .ql-editor .ql-bg-purple {
-      background-color: #93f;
-    }
-    .ql-editor .ql-color-white {
-      color: #fff;
-    }
-    .ql-editor .ql-color-red {
-      color: #e60000;
-    }
-    .ql-editor .ql-color-orange {
-      color: #f90;
-    }
-    .ql-editor .ql-color-yellow {
-      color: #ff0;
-    }
-    .ql-editor .ql-color-green {
-      color: #008a00;
-    }
-    .ql-editor .ql-color-blue {
-      color: #06c;
-    }
-    .ql-editor .ql-color-purple {
-      color: #93f;
-    }
-    .ql-editor .ql-font-serif {
-      font-family:
-        Georgia,
-        Times New Roman,
-        serif;
-    }
-    .ql-editor .ql-font-monospace {
-      font-family:
-        Monaco,
-        Courier New,
-        monospace;
-    }
-    .ql-editor .ql-size-small {
-      font-size: 0.75em;
-    }
-    .ql-editor .ql-size-large {
-      font-size: 1.5em;
-    }
-    .ql-editor .ql-size-huge {
-      font-size: 2.5em;
-    }
-    .ql-editor .ql-direction-rtl {
-      direction: rtl;
-      text-align: inherit;
-    }
-    .ql-editor .ql-align-center {
-      text-align: center;
-    }
-    .ql-editor .ql-align-justify {
-      text-align: justify;
-    }
-    .ql-editor .ql-align-right {
-      text-align: right;
-    }
-    .ql-editor .ql-ui {
-      position: absolute;
-    }
-    .ql-editor.ql-blank::before {
-      color: rgba(0, 0, 0, 0.6);
-      content: attr(data-placeholder);
-      font-style: italic;
-      left: 15px;
-      pointer-events: none;
-      position: absolute;
-      right: 15px;
-    }
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-var-requires */
+// import Quill from 'quill/dist/quill.js';
+const DefaultKeyboardModule$1 = Quill.import('modules/keyboard');
+const DefaultClipboardModule$1 = Quill.import('modules/clipboard');
+class NotaRodapeModal {
+    constructor(options) {
+        this.ajustaHtml = (html = '') => {
+            return html
+                .replace(/ql-indent/g, 'indent')
+                .replace(/ql-align-justify/g, 'align-justify')
+                .replace(/ql-align-center/g, 'align-center')
+                .replace(/ql-align-right/g, 'align-right');
+        };
+        this.idNotaRodape = options.idNotaRodape;
+        this.textoInicialNotaRodape = options.textoInicialNotaRodape ?? '';
+        this.domNodeNotaRodape = options.domNodeNotaRodape;
+        this.tituloModal = options.tituloModal;
+        this.modalElement = document.createElement('div');
+        this.modalElement.classList.add('modal');
+        this.modalElement.classList.add('modal-nota-rodape');
+        this.shadowRoot = document.createElement('div');
+        this.shadowRoot.classList.add('d-flex');
+        this.modalElement.appendChild(this.shadowRoot);
+        this.shadowRoot.innerHTML = `
+      ${quillSnowStyles.strings.join('')}
+      <style>
 
-    /*# sourceMappingURL=quill.core.css.map*/
-  </style>
-`;
+        .modal-nota-rodape {
+          display: inline-table;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          min-width: 100px;
+          max-width: 640px;
+          width: 80%;
+          background-color: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          z-index: 1010;
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.95);
+          transition: opacity 0.3s, transform 0.3s;
+        }
 
-const quillTableStyles = html `
-  <style>
-    /*!
- * Quill Editor v2.0.3
- * https://quilljs.com
- * Copyright (c) 2017-2024, Slab
- * Copyright (c) 2014, Jason Chen
- * Copyright (c) 2013, salesforce.com
- */
-    .ql-container {
-      box-sizing: border-box;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 13px;
-      height: 100%;
-      margin: 0;
-      position: relative;
-    }
-    .ql-container.ql-disabled .ql-tooltip {
-      visibility: hidden;
-    }
-    .ql-container:not(.ql-disabled) li[data-list='checked'] > .ql-ui,
-    .ql-container:not(.ql-disabled) li[data-list='unchecked'] > .ql-ui {
-      cursor: pointer;
-    }
-    .ql-clipboard {
-      left: -100000px;
-      height: 1px;
-      overflow-y: hidden;
-      position: absolute;
-      top: 50%;
-    }
-    .ql-clipboard p {
-      margin: 0;
-      padding: 0;
-    }
-    .ql-editor {
-      box-sizing: border-box;
-      counter-reset: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-        list-8 list-9;
-      line-height: 1.42;
-      height: 100%;
-      outline: none;
-      overflow-y: auto;
-      padding: 12px 15px;
-      tab-size: 4;
-      -moz-tab-size: 4;
-      text-align: left;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    .ql-editor > * {
-      cursor: text;
-    }
-    .ql-editor p,
-    .ql-editor ol,
-    .ql-editor pre,
-    .ql-editor blockquote,
-    .ql-editor h1,
-    .ql-editor h2,
-    .ql-editor h3,
-    .ql-editor h4,
-    .ql-editor h5,
-    .ql-editor h6 {
-      margin: 0;
-      padding: 0;
-    }
-    @supports (counter-set: none) {
-      .ql-editor p,
-      .ql-editor h1,
-      .ql-editor h2,
-      .ql-editor h3,
-      .ql-editor h4,
-      .ql-editor h5,
-      .ql-editor h6 {
-        counter-set: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-          list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor p,
-      .ql-editor h1,
-      .ql-editor h2,
-      .ql-editor h3,
-      .ql-editor h4,
-      .ql-editor h5,
-      .ql-editor h6 {
-        counter-reset: list-0 list-1 list-2 list-3 list-4 list-5 list-6 list-7
-          list-8 list-9;
-      }
-    }
-    .ql-editor table {
-      border-collapse: collapse;
-    }
-    .ql-editor td {
-      border: 1px solid #000;
-      padding: 2px 5px;
-    }
-    .ql-editor ol {
-      padding-left: 1.5em;
-    }
-    .ql-editor li {
-      list-style-type: none;
-      padding-left: 1.5em;
-      position: relative;
-    }
-    .ql-editor li > .ql-ui:before {
-      display: inline-block;
-      margin-left: -1.5em;
-      margin-right: 0.3em;
-      text-align: right;
-      white-space: nowrap;
-      width: 1.2em;
-    }
-    .ql-editor li[data-list='checked'] > .ql-ui,
-    .ql-editor li[data-list='unchecked'] > .ql-ui {
-      color: #777;
-    }
-    .ql-editor li[data-list='bullet'] > .ql-ui:before {
-      content: '\\2022';
-    }
-    .ql-editor li[data-list='checked'] > .ql-ui:before {
-      content: '\\2611';
-    }
-    .ql-editor li[data-list='unchecked'] > .ql-ui:before {
-      content: '\\2610';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list] {
-        counter-set: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-          list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list] {
-        counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-          list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'] {
-      counter-increment: list-0;
-    }
-    .ql-editor li[data-list='ordered'] > .ql-ui:before {
-      content: counter(list-0, decimal) '. ';
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-1 {
-      counter-increment: list-1;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-1 > .ql-ui:before {
-      content: counter(list-1, lower-alpha) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-1 {
-        counter-set: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-1 {
-        counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-2 {
-      counter-increment: list-2;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-2 > .ql-ui:before {
-      content: counter(list-2, lower-roman) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-2 {
-        counter-set: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-2 {
-        counter-reset: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-3 {
-      counter-increment: list-3;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-3 > .ql-ui:before {
-      content: counter(list-3, decimal) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-3 {
-        counter-set: list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-3 {
-        counter-reset: list-4 list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-4 {
-      counter-increment: list-4;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-4 > .ql-ui:before {
-      content: counter(list-4, lower-alpha) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-4 {
-        counter-set: list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-4 {
-        counter-reset: list-5 list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-5 {
-      counter-increment: list-5;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-5 > .ql-ui:before {
-      content: counter(list-5, lower-roman) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-5 {
-        counter-set: list-6 list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-5 {
-        counter-reset: list-6 list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-6 {
-      counter-increment: list-6;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-6 > .ql-ui:before {
-      content: counter(list-6, decimal) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-6 {
-        counter-set: list-7 list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-6 {
-        counter-reset: list-7 list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-7 {
-      counter-increment: list-7;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-7 > .ql-ui:before {
-      content: counter(list-7, lower-alpha) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-7 {
-        counter-set: list-8 list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-7 {
-        counter-reset: list-8 list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-8 {
-      counter-increment: list-8;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-8 > .ql-ui:before {
-      content: counter(list-8, lower-roman) '. ';
-    }
-    @supports (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-8 {
-        counter-set: list-9;
-      }
-    }
-    @supports not (counter-set: none) {
-      .ql-editor li[data-list].ql-indent-8 {
-        counter-reset: list-9;
-      }
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-9 {
-      counter-increment: list-9;
-    }
-    .ql-editor li[data-list='ordered'].ql-indent-9 > .ql-ui:before {
-      content: counter(list-9, decimal) '. ';
-    }
-    .ql-editor .ql-indent-1:not(.ql-direction-rtl) {
-      padding-left: 3em;
-    }
-    .ql-editor li.ql-indent-1:not(.ql-direction-rtl) {
-      padding-left: 4.5em;
-    }
-    .ql-editor .ql-indent-1.ql-direction-rtl.ql-align-right {
-      padding-right: 3em;
-    }
-    .ql-editor li.ql-indent-1.ql-direction-rtl.ql-align-right {
-      padding-right: 4.5em;
-    }
-    .ql-editor .ql-indent-2:not(.ql-direction-rtl) {
-      padding-left: 6em;
-    }
-    .ql-editor li.ql-indent-2:not(.ql-direction-rtl) {
-      padding-left: 7.5em;
-    }
-    .ql-editor .ql-indent-2.ql-direction-rtl.ql-align-right {
-      padding-right: 6em;
-    }
-    .ql-editor li.ql-indent-2.ql-direction-rtl.ql-align-right {
-      padding-right: 7.5em;
-    }
-    .ql-editor .ql-indent-3:not(.ql-direction-rtl) {
-      padding-left: 9em;
-    }
-    .ql-editor li.ql-indent-3:not(.ql-direction-rtl) {
-      padding-left: 10.5em;
-    }
-    .ql-editor .ql-indent-3.ql-direction-rtl.ql-align-right {
-      padding-right: 9em;
-    }
-    .ql-editor li.ql-indent-3.ql-direction-rtl.ql-align-right {
-      padding-right: 10.5em;
-    }
-    .ql-editor .ql-indent-4:not(.ql-direction-rtl) {
-      padding-left: 12em;
-    }
-    .ql-editor li.ql-indent-4:not(.ql-direction-rtl) {
-      padding-left: 13.5em;
-    }
-    .ql-editor .ql-indent-4.ql-direction-rtl.ql-align-right {
-      padding-right: 12em;
-    }
-    .ql-editor li.ql-indent-4.ql-direction-rtl.ql-align-right {
-      padding-right: 13.5em;
-    }
-    .ql-editor .ql-indent-5:not(.ql-direction-rtl) {
-      padding-left: 15em;
-    }
-    .ql-editor li.ql-indent-5:not(.ql-direction-rtl) {
-      padding-left: 16.5em;
-    }
-    .ql-editor .ql-indent-5.ql-direction-rtl.ql-align-right {
-      padding-right: 15em;
-    }
-    .ql-editor li.ql-indent-5.ql-direction-rtl.ql-align-right {
-      padding-right: 16.5em;
-    }
-    .ql-editor .ql-indent-6:not(.ql-direction-rtl) {
-      padding-left: 18em;
-    }
-    .ql-editor li.ql-indent-6:not(.ql-direction-rtl) {
-      padding-left: 19.5em;
-    }
-    .ql-editor .ql-indent-6.ql-direction-rtl.ql-align-right {
-      padding-right: 18em;
-    }
-    .ql-editor li.ql-indent-6.ql-direction-rtl.ql-align-right {
-      padding-right: 19.5em;
-    }
-    .ql-editor .ql-indent-7:not(.ql-direction-rtl) {
-      padding-left: 21em;
-    }
-    .ql-editor li.ql-indent-7:not(.ql-direction-rtl) {
-      padding-left: 22.5em;
-    }
-    .ql-editor .ql-indent-7.ql-direction-rtl.ql-align-right {
-      padding-right: 21em;
-    }
-    .ql-editor li.ql-indent-7.ql-direction-rtl.ql-align-right {
-      padding-right: 22.5em;
-    }
-    .ql-editor .ql-indent-8:not(.ql-direction-rtl) {
-      padding-left: 24em;
-    }
-    .ql-editor li.ql-indent-8:not(.ql-direction-rtl) {
-      padding-left: 25.5em;
-    }
-    .ql-editor .ql-indent-8.ql-direction-rtl.ql-align-right {
-      padding-right: 24em;
-    }
-    .ql-editor li.ql-indent-8.ql-direction-rtl.ql-align-right {
-      padding-right: 25.5em;
-    }
-    .ql-editor .ql-indent-9:not(.ql-direction-rtl) {
-      padding-left: 27em;
-    }
-    .ql-editor li.ql-indent-9:not(.ql-direction-rtl) {
-      padding-left: 28.5em;
-    }
-    .ql-editor .ql-indent-9.ql-direction-rtl.ql-align-right {
-      padding-right: 27em;
-    }
-    .ql-editor li.ql-indent-9.ql-direction-rtl.ql-align-right {
-      padding-right: 28.5em;
-    }
-    .ql-editor li.ql-direction-rtl {
-      padding-right: 1.5em;
-    }
-    .ql-editor li.ql-direction-rtl > .ql-ui:before {
-      margin-left: 0.3em;
-      margin-right: -1.5em;
-      text-align: left;
-    }
-    .ql-editor table {
-      table-layout: fixed;
-      width: 100%;
-    }
-    .ql-editor table td {
-      outline: none;
-    }
-    .ql-editor .ql-code-block-container {
-      font-family: monospace;
-    }
-    .ql-editor .ql-video {
-      display: block;
-      max-width: 100%;
-    }
-    .ql-editor .ql-video.ql-align-center {
-      margin: 0 auto;
-    }
-    .ql-editor .ql-video.ql-align-right {
-      margin: 0 0 0 auto;
-    }
-    .ql-editor .ql-bg-black {
-      background-color: #000;
-    }
-    .ql-editor .ql-bg-red {
-      background-color: #e60000;
-    }
-    .ql-editor .ql-bg-orange {
-      background-color: #f90;
-    }
-    .ql-editor .ql-bg-yellow {
-      background-color: #ff0;
-    }
-    .ql-editor .ql-bg-green {
-      background-color: #008a00;
-    }
-    .ql-editor .ql-bg-blue {
-      background-color: #06c;
-    }
-    .ql-editor .ql-bg-purple {
-      background-color: #93f;
-    }
-    .ql-editor .ql-color-white {
-      color: #fff;
-    }
-    .ql-editor .ql-color-red {
-      color: #e60000;
-    }
-    .ql-editor .ql-color-orange {
-      color: #f90;
-    }
-    .ql-editor .ql-color-yellow {
-      color: #ff0;
-    }
-    .ql-editor .ql-color-green {
-      color: #008a00;
-    }
-    .ql-editor .ql-color-blue {
-      color: #06c;
-    }
-    .ql-editor .ql-color-purple {
-      color: #93f;
-    }
-    .ql-editor .ql-font-serif {
-      font-family:
-        Georgia,
-        Times New Roman,
-        serif;
-    }
-    .ql-editor .ql-font-monospace {
-      font-family:
-        Monaco,
-        Courier New,
-        monospace;
-    }
-    .ql-editor .ql-size-small {
-      font-size: 0.75em;
-    }
-    .ql-editor .ql-size-large {
-      font-size: 1.5em;
-    }
-    .ql-editor .ql-size-huge {
-      font-size: 2.5em;
-    }
-    .ql-editor .ql-direction-rtl {
-      direction: rtl;
-      text-align: inherit;
-    }
-    .ql-editor .ql-align-center {
-      text-align: center;
-    }
-    .ql-editor .ql-align-justify {
-      text-align: justify;
-    }
-    .ql-editor .ql-align-right {
-      text-align: right;
-    }
-    .ql-editor .ql-ui {
-      position: absolute;
-    }
-    .ql-editor.ql-blank::before {
-      color: rgba(0, 0, 0, 0.6);
-      content: attr(data-placeholder);
-      font-style: italic;
-      left: 15px;
-      pointer-events: none;
-      position: absolute;
-      right: 15px;
-    }
+        .modal-body .ql-editor {
+          min-height: 400px;
+        }
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
 
-    /*# sourceMappingURL=quill.core.css.map*/
-  </style>
-`;
+        .modal-title {
+          margin: 0;
+          width: 100%;
+          font-size: var(--wa-font-size-large);
+        }
+
+        .modal-footer {
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+        }
+
+        .modal-textarea {
+          width: 100%;
+          height: 100px;
+          margin-bottom: 15px;
+          font-family: inherit;
+          font-size: inherit;
+          padding: 10px;
+          box-sizing: border-box;
+        }
+
+        .modal-close-button {
+          cursor: pointer;
+          background-color: #eee;
+          padding: 5px 10px;
+          border-radius: 5px;
+          transition: background-color 0.3s;
+          border: none;
+        }
+
+        .header-close-button {
+          background-color: transparent;
+          font-size: 30px;
+        }
+
+        .modal-save-button {
+          cursor: pointer;
+          background-color: #0284c7;
+          color: white;
+          padding: 9px 14px;
+          border-radius: 5px;
+          border: none;
+        }
+
+        .modal-save-button:hover {
+          background-color: #0ea5e9;
+        }
+
+        .modal-close-button: hover {
+          background-color: #ddd;
+        }
+
+        @media (max-width: 600px) {
+          :host {
+            width: 80%;
+            min-width: 0;
+          }
+        }
+
+        .ql-snow .ql-tooltip {
+          font-family: var(--eta-font-sans);
+          font-size: 0.9rem;
+        }
+        .ql-tooltip .ql-action,
+        .ql-tooltip .ql-remove {
+          background-color: var(--wa-color-gray-100);
+          border: 1px solid var(--wa-color-gray-500);
+          border-radius: 3px;
+          color: var(--wa-color-gray-900);
+          width: fit-content !important;
+          padding: 0 15px;
+          margin: 0 0 0 10px;
+        }
+        .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+          content: 'Salvar';
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .ql-snow .ql-tooltip a.ql-action::after {
+          display: inline;
+          content: 'Editar';
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .ql-snow .ql-tooltip a.ql-remove::before {
+          display: inline;
+          content: 'Remover';
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .ql-snow .ql-tooltip[data-mode='link']::before {
+          content: 'Insira o link:';
+        }
+        .ql-snow .ql-tooltip::before {
+          content: 'Visite o link:';
+        }
+        @media (max-width: 600px) {
+          .ql-snow .ql-tooltip {
+            display: flex;
+            gap: 5px;
+            flex-direction: column;
+          }
+          .ql-tooltip .ql-action,
+          .ql-tooltip .ql-remove {
+            margin: 0;
+          }
+          .ql-snow .ql-tooltip.ql-hidden {
+            display: none;
+          }
+        }
+
+        .modal-nota-rodape .ql-tooltip input:invalid {
+          color: red;
+        }
+
+        .modal-nota-rodape .ql-tooltip div.tooltip-invalid-message {
+          color: red;
+          display: none;
+          font-family: var(--eta-font-sans);
+          font-size: 0.9rem;
+        }
+
+        .modal-nota-rodape .ql-tooltip[data-mode='link'] div.tooltip-invalid-message::after {
+          content: 'A URL deve iniciar com http:// ou https://';
+        }
+
+        .modal-nota-rodape .ql-tooltip[data-mode='link'] input:invalid ~ div.tooltip-invalid-message {
+          display: block;
+        }
+        .d-flex {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+      </style>
+      <div class="modal-header">
+        <h1 id="modalTitle" class="modal-title">Editar nota de rodapé</h1>
+        <button class="modal-close-button header-close-button" aria-label="Fechar" title="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="editor-nota-rodape-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-save-button" aria-label="Salvar">Salvar</button>
+        <button class="modal-close-button" aria-label="Fechar">Fechar</button>
+      </div>
+    `;
+        this.overlayElement = document.createElement('div');
+        this.overlayElement.classList.add('overlay');
+        this.overlayElement.style.opacity = '0';
+        this.overlayElement.style.transition = 'opacity 0.3s';
+        this.overlayElement.style.position = 'fixed';
+        this.overlayElement.style.top = '0';
+        this.overlayElement.style.left = '0';
+        this.overlayElement.style.width = '100%';
+        this.overlayElement.style.height = '100%';
+        this.overlayElement.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        this.overlayElement.style.zIndex = '1000';
+        document.body.appendChild(this.overlayElement);
+        document.body.appendChild(this.modalElement);
+        this.keydownListener = (event) => {
+            if (event.key === 'Escape') {
+                this.close();
+            }
+        };
+        document.addEventListener('keydown', this.keydownListener);
+        Array.from(this.shadowRoot.querySelectorAll('.modal-close-button')).forEach(element => element.addEventListener('click', () => this.close()));
+        this.shadowRoot
+            .querySelector('.modal-save-button')
+            ?.addEventListener('click', this.save.bind(this));
+        const quillContainer = this.shadowRoot.querySelector('#editor-nota-rodape-container');
+        Quill.register('modules/keyboard', DefaultKeyboardModule$1, true);
+        Quill.register('modules/clipboard', DefaultClipboardModule$1, true);
+        Quill.register('formats/estilo-texto', EstiloTextoClass, true);
+        Quill.register('formats/text-indent', NoIndentClass, true);
+        Quill.register('formats/margin-bottom', MarginBottomClass, true);
+        this.quill = new Quill(quillContainer, {
+            formats: ['bold', 'italic', 'underline', 'link'],
+            modules: {
+                toolbar: {
+                    container: [['bold', 'italic', 'underline'], ['link']],
+                },
+            },
+            placeholder: 'Digite a nota de rodapé aqui...',
+            theme: 'snow',
+        });
+        QuillUtil.configurarAcoesLink(this.quill);
+    }
+    open() {
+        this.overlayElement.style.display = 'block';
+        setTimeout(() => {
+            this.overlayElement.style.opacity = '1';
+            this.modalElement.style.opacity = '1';
+            this.modalElement.style.transform = 'translate(-50%, -50%) scale(1)';
+        }, 10);
+        this.quill.root.innerHTML = this.textoInicialNotaRodape ?? '';
+        this.quill.root.focus();
+        const modalTitle = this.shadowRoot.querySelector('.modal-title');
+        if (modalTitle) {
+            modalTitle.innerHTML = this.tituloModal ?? modalTitle.innerHTML;
+        }
+    }
+    close(fromSave = false) {
+        if (fromSave || this.shouldClose()) {
+            this.modalElement.style.opacity = '0';
+            this.overlayElement.style.opacity = '0';
+            setTimeout(() => this.removeModal(), 300); // Tempo de transição
+        }
+    }
+    shouldClose() {
+        const texto = this.quill.root.innerHTML;
+        console.log(texto, this.textoInicialNotaRodape);
+        if (texto !== this.textoInicialNotaRodape) {
+            return confirm('Tem certeza que deseja fechar? As alterações não salvas serão perdidas.');
+        }
+        return true;
+    }
+    removeModal() {
+        document.removeEventListener('keydown', this.keydownListener);
+        this.modalElement.remove();
+        this.overlayElement.remove();
+    }
+    save() {
+        const texto = this.quill.root.innerHTML;
+        if (texto === this.textoInicialNotaRodape || !texto) {
+            this.close(true);
+            return;
+        }
+        this.domNodeNotaRodape.dispatchEvent(new CustomEvent(NOTA_RODAPE_INPUT_EVENT, {
+            detail: { id: this.idNotaRodape, texto: this.quill.root.innerHTML },
+        }));
+        this.close(true);
+    }
+}
+
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-var-requires */
+// import Quill from 'quill/dist/quill.js';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable eqeqeq */
+/* eslint-disable prefer-const */
+const PREFIXO_ID = 'nr';
+const Delta$1 = Quill.import('delta');
+const Module = Quill.import('core/module');
+const Embed = Quill.import('blots/embed'); // Inline Embed
+const Text$1 = Quill.import('blots/text'); // Inline Text
+const Parchment = Quill.import('parchment');
+const cfgInline = {
+    scope: Parchment.Scope.INLINE_ATTRIBUTE,
+};
+const IdNotaRodapeAttribute = new Parchment.Attributor.Attribute('id-nota-rodape', 'id-nota-rodape', cfgInline);
+const NumeroAttribute = new Parchment.Attributor.Attribute('numero', 'numero', cfgInline);
+const TextoAttribute = new Parchment.Attributor.Attribute('texto', 'texto', cfgInline);
+class NotaRodapeBlot extends Embed {
+    static create(value) {
+        let node = super.create(value);
+        node.setAttribute('class', 'nota-rodape');
+        node.setAttribute('contenteditable', 'false');
+        NotaRodapeBlot.valueToAttributes(value, node);
+        return node;
+    }
+    static value(domNode) {
+        return domNode.notaRodape || NotaRodapeBlot.buildNotaRodape(domNode);
+    }
+    format(name, value) {
+        if (name !== this.statics.blotName || !value)
+            return super.format(name, value);
+        NotaRodapeBlot.valueToAttributes(value, this.domNode);
+    }
+    // static formats(domNode) {
+    //   return { 'nota-rodape': domNode.notaRodape || NotaRodapeBlot.buildNotaRodape(domNode) };
+    // }
+    static buildNotaRodape(domNode) {
+        return {
+            // id: domNode.getAttribute('id'),
+            id: domNode.getAttribute('id-nota-rodape'),
+            numero: domNode.getAttribute('numero'),
+            texto: decodeHtml(domNode.getAttribute('texto')),
+        };
+    }
+    static valueToAttributes(value, domNode) {
+        if (!value || typeof value === 'boolean')
+            return;
+        // value.id && domNode.setAttribute('id', value.id);
+        value.id && domNode.setAttribute('id-nota-rodape', value.id);
+        value.numero && domNode.setAttribute('numero', value.numero);
+        domNode.notaRodape = value;
+        domNode.innerText = value.numero;
+        domNode.setAttribute('texto', encodeHtml(value.texto));
+    }
+}
+NotaRodapeBlot.blotName = 'nota-rodape';
+NotaRodapeBlot.tagName = 'nota-rodape';
+NotaRodapeBlot.allowedChildren = [Text$1];
+class ModuloNotaRodape extends Module {
+    get isAbrindoTexto() {
+        return this._isAbrindoTexto;
+    }
+    set isAbrindoTexto(value) {
+        this._isAbrindoTexto = value;
+        // if (!value) {
+        //   setTimeout(() => {
+        //     this.quill.root.innerHTML = this.ajustarConteudoTagsNotaRodape(this.quill.root.innerHTML);
+        //   }, 0);
+        // }
+    }
+    static register() {
+        Quill.register(NotaRodapeBlot);
+        Quill.register(IdNotaRodapeAttribute);
+        Quill.register(NumeroAttribute);
+        Quill.register(TextoAttribute);
+    }
+    constructor(quill, options) {
+        super(quill, options);
+        this._isAbrindoTexto = false;
+        this.quill = quill;
+        this.options = options;
+        this.options.numeroInicial = this.options.numeroInicial ?? 1;
+        this.quill.notasRodape = this;
+        const toolbar = this.quill.getModule('toolbar');
+        if (toolbar) {
+            toolbar.addHandler('nota-rodape', this.solicitarTexto.bind(this));
+        }
+        this.addClipboardMatcher();
+        this.quill.on('text-change', this.onTextChange.bind(this));
+        this.quill.root.addEventListener('click', this.onClick.bind(this));
+        this.quill.root.addEventListener(NOTA_RODAPE_INPUT_EVENT, this.tratarRespostaModal.bind(this));
+    }
+    addClipboardMatcher() {
+        this.quill.clipboard.addMatcher('nota-rodape', (node, delta) => {
+            let match = Parchment.query(node);
+            if (match == null || match.blotName !== 'nota-rodape') {
+                return delta;
+            }
+            const id = this.isAbrindoTexto
+                ? node.getAttribute('id-nota-rodape')
+                : this.gerarId();
+            const numero = node.getAttribute('numero');
+            const texto = decodeHtml(node.getAttribute('texto'));
+            const notaRodape = new NotaRodape({ id, numero, texto });
+            return new Delta$1().insert({ 'nota-rodape': notaRodape });
+            // const ops = delta.ops.reduce((acc, op) => {
+            //   if (op.insert && op.attributes?.['id-nota-rodape']) {
+            //     const { 'id-nota-rodape': id, numero, texto } = op.attributes || {};
+            //     const notaRodape = new NotaRodape({ id, numero: +numero, texto });
+            //     acc.push({ insert: { 'nota-rodape': notaRodape } });
+            //   }
+            //   return acc;
+            // }, []);
+            // return new Delta(ops);
+        });
+    }
+    onTextChange(delta, oldContent, source) {
+        const undo = this.quill.history.stack.undo[this.quill.history.stack.undo.length - 1];
+        const redo = this.quill.history.stack.redo[this.quill.history.stack.redo.length - 1];
+        if (this.hasNotaRodape(delta) ||
+            this.hasNotaRodape(undo?.undo) ||
+            this.hasNotaRodape(undo?.redo) ||
+            this.hasNotaRodape(redo?.redo)) {
+            this.renumerarTodasNotas();
+            this.emitirEventoNotaRodapeAdicionadaOuRemovida(this.hasNotaRodape(delta));
+        }
+        if (this.hasNotaRodape(delta)) {
+            this.removerEspacosAoRedorNotaRodape();
+        }
+    }
+    removerEspacosAoRedorNotaRodape() {
+        // A operação de colar texto que possua nota de rodapé está adicionando \t antes e depois do número da nota
+        // O código abaixo remove esses espaços
+        const notas = this.findBlotsNotaRodape();
+        notas.forEach(item => {
+            item.blot.next?.text?.match(/^\t/) &&
+                this.quill.deleteText(item.index + 1, 1, 'silent');
+            item.blot.prev?.text?.match(/\s$/) &&
+                this.quill.deleteText(item.index - 1, 1, 'silent');
+        });
+    }
+    emitirEventoNotaRodapeAdicionadaOuRemovida(isAdicionadaOuAtualizada) {
+        clearTimeout(this.timerEmitirEventoNotaRodapeChange);
+        this.timerEmitirEventoNotaRodapeChange = setTimeout(() => {
+            const eventName = isAdicionadaOuAtualizada
+                ? NOTA_RODAPE_CHANGE_EVENT
+                : NOTA_RODAPE_REMOVE_EVENT;
+            this.quill.root.dispatchEvent(new CustomEvent(eventName, { bubbles: true }));
+        }, 100);
+    }
+    hasNotaRodape(delta) {
+        return delta?.ops?.find((op) => op.insert?.['nota-rodape']);
+    }
+    onClick(e) {
+        const el = e.target;
+        const elRev = el?.closest('ins, del');
+        if (!elRev &&
+            (el?.tagName === 'NOTA-RODAPE' ||
+                el?.parentElement?.tagName === 'NOTA-RODAPE')) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.solicitarTexto(el.notaRodape || el.parentElement.notaRodape);
+        }
+    }
+    tratarRespostaModal(event) {
+        event.stopPropagation();
+        const { id, texto } = event.detail;
+        const el = id && this.findNodeById(id);
+        this.quill.focus();
+        el ? this.atualizarTexto(el.notaRodape, texto) : this.adicionar(texto);
+    }
+    solicitarTexto(notaRodape) {
+        // const texto = prompt('Texto da nota', notaRodape?.texto);
+        // if (!texto) return;
+        // typeof notaRodape === 'object' ? this.atualizarTexto(notaRodape, texto) : this.adicionar(texto);
+        const notaRodapeModal = new NotaRodapeModal({
+            domNodeNotaRodape: this.quill.root,
+            idNotaRodape: notaRodape?.id,
+            textoInicialNotaRodape: notaRodape?.texto,
+            tituloModal: typeof notaRodape === 'object'
+                ? 'Editar nota de rodapé'
+                : 'Adicionar nota de rodapé',
+        });
+        notaRodapeModal.open();
+    }
+    atualizarTexto(notaRodape, novoTexto) {
+        const elemento = this.findNodeById(notaRodape.id);
+        const blot = Quill.find(elemento);
+        blot.format('nota-rodape', { ...notaRodape, texto: novoTexto });
+        return blot.domNode.notaRodape;
+    }
+    adicionar(texto) {
+        const quill = this.quill;
+        const range = quill.getSelection();
+        if (!range)
+            return;
+        const id = this.gerarId();
+        const notaRodape = new NotaRodape({ id, numero: 0, texto });
+        const delta = new Delta$1()
+            .retain(range.index)
+            .delete(range.length)
+            .insert({ 'nota-rodape': notaRodape });
+        quill.updateContents(delta, 'user');
+        quill.setSelection(range.index + 1, 0);
+        return notaRodape;
+    }
+    remover(idNotaRodape) {
+        const elemento = this.findNodeById(idNotaRodape);
+        const blot = Quill.find(elemento);
+        blot?.remove();
+    }
+    editar(idNotaRodape) {
+        const notaRodape = this.findNodeById(idNotaRodape)?.notaRodape;
+        notaRodape && this.solicitarTexto(notaRodape);
+    }
+    associar(notasRodape) {
+        notasRodape.forEach(nota => {
+            const elemento = this.findNodeById(nota.id);
+            if (elemento) {
+                elemento.notaRodape = nota;
+            }
+        });
+    }
+    getNotasRodape() {
+        return this.findBlotsNotaRodape().map(item => item.blot.domNode.notaRodape);
+    }
+    gerarId() {
+        return PREFIXO_ID + new Date().getTime();
+    }
+    findNodeById(id) {
+        return this.quill.root.querySelector(`nota-rodape[id-nota-rodape="${id}"]`);
+    }
+    findBlotsNotaRodape() {
+        return Array.from(this.quill.root.querySelectorAll('nota-rodape')).map(domNode => {
+            const blot = Quill.find(domNode);
+            const index = blot.offset(this.quill.scroll);
+            return {
+                index,
+                blot,
+            };
+        });
+    }
+    renumerarTodasNotas() {
+        const range = this.quill.getSelection();
+        const notas = this.findBlotsNotaRodape();
+        notas.forEach((item, idx) => {
+            const numero = idx + this.options.numeroInicial;
+            const node = item.blot.domNode;
+            node.innerText = numero;
+            node.setAttribute('numero', numero);
+            if (node.notaRodape?.id) {
+                node.notaRodape.numero = numero;
+            }
+        });
+        range && this.quill.setSelection(range.index, range.length);
+    }
+    ajustarConteudoTagsNotaRodape(html) {
+        // Ajusta o conteúdo das tags <nota-rodape> para que o número da nota fique dentro da tag <nota-rodape>
+        return html.replace(/<nota-rodape.+?<\/nota-rodape>/g, (texto) => texto.replace(/>.?<span[^>]*>(\d+)<\/span>.?</g, '>$1<'));
+    }
+}
 
 // Foi utilizado TemplateResult porque o editor.component.ts não usa ShadowDom
 const editorStyles = html `
@@ -18942,15 +19040,9 @@ const editorStyles = html `
     :root {
       --elemento-padding-factor: 20;
       --eta-font-serif: 'Times New Roman', Times, serif;
-      --eta-font-sans: var(--sl-font-sans);
+      --eta-font-sans: var(--wa-font-sans);
     }
-    .editor-texto-rico {
-      height: 100%;
-      overflow: auto;
-    }
-    .editor-texto-rico .ql-container {
-      height: 100%;
-    }
+
     #lx-eta-box {
       /* display: grid;
       grid-template-columns: 1fr;
@@ -19055,7 +19147,7 @@ const editorStyles = html `
       text-align: center;
     }
 
-    .container__menu sl-button::part(base) {
+    .container__menu wa-button::part(base) {
       position: absolute;
       margin: -13px 0 0 -15px;
       background-color: #e1e1e1;
@@ -19066,12 +19158,12 @@ const editorStyles = html `
       font-size: 15px;
     }
 
-    .container__menu sl-menu-item::part(suffix) {
+    .container__menu wa-menu-item::part(suffix) {
       font-size: 14px;
       padding-left: 20px;
     }
 
-    .container__menu sl-menu-item:hover .lx-eta-dropbtn {
+    .container__menu wa-menu-item:hover .lx-eta-dropbtn {
       background-color: #e1e1e1;
     }
 
@@ -19234,7 +19326,7 @@ const editorStyles = html `
     [bloqueado='true']::before {
       content: '';
       display: inline-block;
-      mask-image: url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.or  g/2000/svg%22%20width=%2216%22%20height=%2216%22%20fill=%22currentColor%22%20class=%22bi%20bi-ban%22%20viewBox=%220%200%2016%2016%22%3E%3Cpath%20d=%22M15%208a6.97%206.97%200%200%200-1.71-4.584l-9.874%209.875A7%207%200%200%200%2015%208M2.71%2012.584l9.874-9.875a7%207%200%200%200-9.874%209.874ZM16%208A8%208%200%201%201%200%208a8%208%200%200%201%2016%200%22/%3E%3C/svg%3E');
+      mask-image: url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216%22%20height=%2216%22%20fill=%22currentColor%22%20class=%22bi%20bi-ban%22%20viewBox=%220%200%2016%2016%22%3E%3Cpath%20d=%22M15%208a6.97%206.97%200%200%200-1.71-4.584l-9.874%209.875A7%207%200%200%200%2015%208M2.71%2012.584l9.874-9.875a7%207%200%200%200-9.874%209.874ZM16%208A8%208%200%201%201%200%208a8%208%200%200%201%2016%200%22/%3E%3C/svg%3E');
       width: 0.7em;
       height: 0.7em;
       background-color: currentColor;
@@ -19289,7 +19381,7 @@ const editorStyles = html `
 
     /* [existenanormaalterada] label:after, */
     .existencia {
-      font-family: var(--sl-font-sans);
+      font-family: var(--wa-font-sans);
       position: relative;
       left: 5px;
       top: -1px;
@@ -19334,7 +19426,7 @@ const editorStyles = html `
 
     .texto__rotulo--omissis,
     .tipo-omissis {
-      font-family: var(--sl-font-sans);
+      font-family: var(--wa-font-sans);
       box-shadow: none;
     }
 
@@ -19426,7 +19518,7 @@ const editorStyles = html `
     }
 
     .mensagem {
-      font-family: var(--sl-font-sans);
+      font-family: var(--wa-font-sans);
       font-size: 0.8em;
       font-weight: normal;
       border: 1px solid;
@@ -19541,7 +19633,7 @@ const editorStyles = html `
       width: auto !important;
     }
 
-    .mobile-button sl-icon {
+    .mobile-button wa-icon {
       font-size: 18px;
     }
 
@@ -19571,11 +19663,11 @@ const editorStyles = html `
       .button-navegacao-marca {
         display: none;
       }
-      sl-dialog {
-        --sl-font-size-large: 1rem;
+      wa-dialog {
+        --wa-font-size-large: 1rem;
       }
       .modal {
-        --sl-font-size-large: 1rem;
+        --wa-font-size-large: 1rem;
       }
     }
 
@@ -19593,7 +19685,7 @@ const editorStyles = html `
     }
 
     [em-revisao='true'] {
-      background-color: var(--sl-color-blue-100);
+      background-color: var(--wa-color-blue-90);
     }
 
     [excluido='true'] .texto__dispositivo {
@@ -19623,6 +19715,9 @@ const editorStyles = html `
       width: 1.3rem;
       height: 1.3rem;
       top: -1px;
+      background:
+        url('assets/icons/check-lg.svg') no-repeat center,
+        white;
       background-size: 1rem;
     }
 
@@ -19641,6 +19736,9 @@ const editorStyles = html `
       width: 1.3rem;
       height: 1.3rem;
       top: -1px;
+      background:
+        url('assets/icons/plus-minus.svg') no-repeat center,
+        white;
       background-size: 0.8rem;
       margin-right: 1.2px;
     }
@@ -19660,6 +19758,9 @@ const editorStyles = html `
       width: 1.3rem;
       height: 1.3rem;
       top: -1px;
+      background:
+        url('assets/icons/x.svg') no-repeat center,
+        white;
       background-size: 1rem;
     }
 
@@ -19683,7 +19784,7 @@ const editorStyles = html `
       background-color: #eee;
     }
     #chk-em-revisao[checked] {
-      background-color: var(--sl-color-blue-100);
+      background-color: var(--wa-color-blue-90);
     }
 
     .container__revisao {
@@ -19721,20 +19822,15 @@ const editorStyles = html `
   </style>
 `;
 
+Quill.register('modules/aspasCurvas', ModuloAspasCurvas, true);
+Quill.register('modules/revisao', ModuloRevisao, true);
+Quill.register('modules/notaRodape', ModuloNotaRodape, true);
 const DefaultKeyboardModule = Quill.import('modules/keyboard');
 const DefaultClipboardModule = Quill.import('modules/clipboard');
 const Delta = Quill.import('delta');
 const CLASS_BUTTON_ACEITAR_REVISAO = 'aceitar-revisao';
 const CLASS_BUTTON_REJEITAR_REVISAO = 'rejeitar-revisao';
 let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement {
-    get textoAntesRevisao() {
-        // TODO: se contém revisão e texto antes da revisão for igual ao texto atual, ainda assim retorna texto antes da revisão
-        //return (!this.existeRevisaoByModo() && this._textoAntesRevisao === this.texto) || !this._textoAntesRevisao ? undefined : this._textoAntesRevisao;
-        return !this.existeRevisaoByModo() ? undefined : this._textoAntesRevisao;
-    }
-    setTextoAntesRevisao(texto) {
-        this._textoAntesRevisao = texto;
-    }
     showAlterarLarguraImagemModal(img, width) {
         this.alterarLarguraImagemModal.show(img, width);
     }
@@ -19770,7 +19866,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         return this;
     }
     // stateChanged(state: any): void {
-    //   const moduloRevisao = (this.quill as any)?.revisao;
+    //   const moduloRevisao = this.quill?.revisao;
     //   const events: StateEvent[] = state.elementoReducer.ui?.events;
     //   if (events) {
     //     if (events.some(ev => ev.stateType === StateType.RevisaoAtivada)) {
@@ -19794,21 +19890,26 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             moduloRevisao.textoAntesRevisao = value ? this.texto : undefined;
         }
     }
+    // labelAnexo = (): string => {
+    //   const lengthAnexos = this.anexos?.length;
+    //   return lengthAnexos === 1
+    //     ? '1 anexo'
+    //     : lengthAnexos > 1
+    //       ? `${lengthAnexos} anexos`
+    //       : '';
+    // };
     render() {
         return html `
-      ${quillSnowStyles} ${quillCoreStyles} ${quillTableStyles} ${quillTableCss}${editorStyles}
-      ${editorTextoRicoCss} ${notaRodapeCss}
-      ${this.modo === Modo.TEXTO_LIVRE ? this.renderBotaoAnexo() : ''}
-
+     ${quillSnowStyles} ${quillTableCss} ${editorStyles} ${editorTextoRicoCss} ${notaRodapeCss}
       <div class="panel-revisao">
-        <lexml-switch-revisao
-          id="lexml-switch-revisao-component"
+        <lexml-ui-switch-revisao
+          id="lexml-ui-switch-revisao-component"
           modo="${this.modo}"
           class="revisao-container"
           .nomeSwitch="${this.getNomeSwitch()}"
           .nomeBadgeQuantidadeRevisao="${this.getNomeBadge()}"
         >
-        </lexml-switch-revisao>
+        </lexml-ui-switch-revisao>
 
         <wa-button
           class="aceitar-revisao"
@@ -19854,12 +19955,14 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     constructor() {
         super();
         this.texto = '';
-        this.anexos = [];
+        // @property({ type: Array }) anexos: Anexo[] = [];
         this.notasRodape = [];
         this.registroEvento = '';
         // @property({ type: Object }) lexmlEtaConfig: LexmlEmendaConfig = new LexmlEmendaConfig();
         this.tamanhoMaximoImagem = 2048; //2MB
+        this.indHabilitarNotaRodape = true;
         this.modo = '';
+        this.nomeUsuarioRevisao = 'Anônimo';
         /** Toolbar opcional: string com tokens separados por vírgula.
          * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
          *         clean, align, textindent, marginbottom, image, link, notarodape, table.
@@ -19869,26 +19972,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.toolbar = '';
         this.onChange = new Observable();
         this.icons = Quill.import('ui/icons');
-        this.existeRevisaoByModo = () => {
-            // if (this.modo === Modo.TEXTO_LIVRE) {
-            //   return getQuantidadeRevisoesTextoLivre(rootStore.getState().elementoReducer.revisoes) > 0;
-            // } else {
-            //   return getQuantidadeRevisoesJustificativa(rootStore.getState().elementoReducer.revisoes) > 0;
-            // }
-            return false;
-        };
-        this.labelAnexo = () => {
-            const lengthAnexos = this.anexos?.length;
-            return lengthAnexos === 1
-                ? '1 anexo'
-                : lengthAnexos > 1
-                    ? `${lengthAnexos} anexos`
-                    : '';
-        };
         this.onTableInTable = () => {
             clearTimeout(this.timerAlerta);
-            // TODO: notificar usuário que não é permitido inserir tabela dentro de tabela
-            // this.timerAlerta = setTimeout(() => alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.'), 100);
+            console.log("Teste");
+            alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.');
         };
         this.init = () => {
             const quillContainer = this.querySelector(`#${this.id}-inner`);
@@ -19909,12 +19996,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 else {
                     customToolbarOptions = [...toolbarOptions];
                     customFormatsOptions = [...formatsOptions];
-                    // Mantém sua lógica especial do modo JUSTIFICATIVA **apenas** quando não há toolbar custom
-                    if (this.modo === Modo.JUSTIFICATIVA) {
-                        customToolbarOptions.push(['nota-rodape']);
-                        customToolbarOptions[1] = ['bold', 'italic', 'underline', 'link'];
-                        customFormatsOptions.push('nota-rodape', 'link');
-                    }
+                }
+                if (this.indHabilitarNotaRodape) {
+                    customToolbarOptions.push(['nota-rodape']);
+                    customToolbarOptions[1] = ['bold', 'italic', 'underline', 'link'];
+                    customFormatsOptions.push('nota-rodape', 'link');
                 }
                 this.quill = new Quill(quillContainer, {
                     formats: customFormatsOptions,
@@ -19927,21 +20013,18 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                                 image: this.imageHandler,
                             },
                         },
-                        //TODOX ----
-                        //aspasCurvas: true,
-                        //notaRodape: true,
+                        aspasCurvas: true,
+                        notaRodape: true,
                         table: {
                             cellSelectionOnClick: false,
                         },
-                        //TODOX ----
-                        //revisao: {
-                        // TODO: receber dados do usuário
-                        // usuario: rootStore.getState().elementoReducer.usuario?.nome || 'Anônimo',
-                        //  emRevisao: false,
-                        //  gerenciarKeydown: true,
-                        //  tableModule: TableModule,
-                        //  tableTrick: TableTrick,
-                        //},
+                        revisao: {
+                            usuario: this.nomeUsuarioRevisao || 'Anônimo',
+                            emRevisao: false,
+                            gerenciarKeydown: true,
+                            tableModule: TableModule,
+                            tableTrick: TableTrick,
+                        },
                         history: {
                             delay: 1000,
                             maxStack: 500,
@@ -20062,8 +20145,12 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 });
                 this.quill.root.addEventListener(NOTA_RODAPE_CHANGE_EVENT, this.updateNotasRodape);
                 this.quill.root.addEventListener(NOTA_RODAPE_REMOVE_EVENT, this.updateNotasRodape);
-                this.buildRevisoes();
+                // this.buildRevisoes();
                 QuillUtil.configurarAcoesLink(this.quill);
+                this.addEventListener('switch-revisao:change', (ev) => {
+                    console.log(11111, 'switch-revisao:change', ev.detail.checked);
+                    this.updateRevisionStatus(ev.detail.checked);
+                });
             }
         };
         this.menuContextImagem = (ev) => {
@@ -20106,8 +20193,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                                 fileInput.remove();
                             }
                             else {
-                                // alertarInfo(`Essa imagem ultrapassa o tamanho máximo permitido (${Math.trunc(this.lexmlEtaConfig.tamanhoMaximoImagem / 1024)}MB)`);
-                                // TODO: alertar usuário que a imagem é maior que o tamanho permitido
+                                alertarInfo(`Essa imagem ultrapassa o tamanho máximo permitido (${Math.trunc(this.tamanhoMaximoImagem / 1024)}MB)`);
                                 fileInput.remove();
                             }
                         };
@@ -20198,8 +20284,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.quill.revisao.modo = this.modo;
             }
             this.configAbrindoTexto(true);
-            // TODO: implementar conversão
-            // this.quill.setContents(this.quill.clipboard.convert(textoAjustado), 'silent');
+            this.quill.setContents(this.quill.clipboard.convert(textoAjustado), 'silent');
             this.configAbrindoTexto(false);
             this.notasRodape = notasRodape;
             setTimeout(() => {
@@ -20222,14 +20307,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             if (!valor) {
                 if (this.getQuantidadeDeRevisoes() > 0 && !emRevisao) {
                     if (this.switchRevisaoComponent) {
-                        this.switchRevisaoComponent.ativarDesativarMarcaDeRevisao(false);
+                        this.switchRevisaoComponent.ativarDesativarMarcaDeRevisao();
                         setTimeout(() => this.alertaGlobalRevisao(), 0);
                     }
                 }
             }
-            // setTimeout(() => {
-            //   this.atualizaQuantidadeRevisao(this.getQuantidadeDeRevisoes());
-            // }, 0);
         };
         this.updateApenasTexto = () => {
             const texto = this.ajustaHtml(this.quill?.root.innerHTML);
@@ -20241,15 +20323,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.agendarEmissaoEventoOnChange();
             this.onSelectionChange(this.quill?.getSelection());
             this.atualizaStatusElementosRevisao(false);
-            this.buildRevisoes();
+            // this.buildRevisoes();
             this.alertaGlobalRevisao();
         };
         this.updateNotasRodape = () => {
-            const q = this.quill;
-            this.notasRodape = q?.notasRodape?.getNotasRodape
-                ? q.notasRodape.getNotasRodape()
-                : [];
-            // this.agendarEmissaoEventoOnChange();
+            this.notasRodape = this.quill.notasRodape.getNotasRodape();
         };
         this.ajustaHtml = (html = '') => {
             let result = html
@@ -20258,37 +20336,31 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 .replace(/ql-align-center/g, 'align-center')
                 .replace(/ql-align-right/g, 'align-right');
             result = removeElementosTDOcultos(result);
-            const q = this.quill;
-            if (q?.notasRodape?.ajustarConteudoTagsNotaRodape) {
-                return q.notasRodape.ajustarConteudoTagsNotaRodape(result);
-            }
-            return result;
+            return this.quill.notasRodape.ajustarConteudoTagsNotaRodape(result);
         };
         this.undo = () => {
             this.quill?.focus();
-            const q = this.quill;
-            if (q?.revisao?.handleUndo?.(this.quill?.getSelection(), undefined)) {
-                q?.history?.undo?.();
+            if (this.quill.revisao?.handleUndo(this.quill?.getSelection(), undefined)) {
+                this.quill?.history.undo();
                 this.atualizaStatusElementosRevisao();
             }
             else {
-                q?.history?.undo?.();
+                this.quill?.history.undo();
             }
         };
         this.redo = () => {
             this.quill?.focus();
-            const q = this.quill;
-            if (q?.revisao?.handleRedo?.(this.quill?.getSelection(), undefined)) {
-                q?.history?.redo?.();
+            if (this.quill.revisao?.handleRedo(this.quill?.getSelection(), undefined)) {
+                this.quill?.history.redo();
                 this.atualizaStatusElementosRevisao();
             }
             else {
-                q?.history?.redo?.();
+                this.quill?.history.redo();
             }
         };
-        this.atualizaAnexo = (anexo) => {
-            this.anexos = [...anexo];
-        };
+        // atualizaAnexo = (anexo: Anexo[]): void => {
+        //   this.anexos = [...anexo];
+        // };
         this.isEditorVazio = () => {
             const delta = this.quill?.getContents();
             if (!delta || !delta.ops || delta.ops.length === 0) {
@@ -20305,45 +20377,29 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             return this.texto;
         };
         this.getNomeSwitch = () => {
-            return this.modo === Modo.JUSTIFICATIVA
-                ? 'chk-em-revisao-justificativa'
-                : 'chk-em-revisao-texto-livre';
+            return 'chk-em-revisao-texto-livre';
         };
         this.getNomeBadge = () => {
-            return this.modo === Modo.JUSTIFICATIVA
-                ? 'badge-marca-alteracao-justificativa'
-                : 'badge-marca-alteracao-texto-livre';
+            return 'badge-marca-alteracao-texto-livre';
         };
         this.getQuantidadeDeRevisoes = () => {
-            return this.quill?.revisao?.getQuantidadeRevisoes?.() ?? 0;
+            return this.quill?.revisao?.getQuantidadeRevisoes() ?? 0;
         };
         this.aceitarRevisoes = () => {
-            this.quill?.revisao?.revisarTodos?.(true);
-            this.setTextoAntesRevisao(undefined);
+            this.quill?.revisao?.revisarTodos(true);
+            // this.setTextoAntesRevisao(undefined);
             this.atualizaStatusElementosRevisao();
-            this.removeRevisoes();
+            // this.removeRevisoes();
         };
         this.rejeitarRevisoes = () => {
-            this.quill?.revisao?.revisarTodos?.(false);
-            this.setTextoAntesRevisao(undefined);
+            this.quill?.revisao?.revisarTodos(false);
+            // this.setTextoAntesRevisao(undefined);
             this.atualizaStatusElementosRevisao();
-            this.removeRevisoes();
+            // this.removeRevisoes();
         };
         this.atualizaStatusElementosRevisao = (immediate = true) => {
             const fnUpdate = () => {
                 const quantidade = this.getQuantidadeDeRevisoes();
-                // TODO: rever essa lógica de ativar/desativar marca de revisão
-                // if (quantidade > 0 && !rootStore.getState().elementoReducer.emRevisao) {
-                //   if (this.switchRevisaoComponent) {
-                //     this.switchRevisaoComponent.ativarDesativarMarcaDeRevisao(false);
-                //   }
-                // }
-                if (quantidade === 0) {
-                    this.removeRevisoes();
-                }
-                else if (quantidade > 0) {
-                    this.buildRevisoes();
-                }
                 this.desabilitaBtn(quantidade === 0, CLASS_BUTTON_REJEITAR_REVISAO);
                 this.desabilitaBtn(quantidade === 0, CLASS_BUTTON_ACEITAR_REVISAO);
                 this.atualizaQuantidadeRevisao(quantidade);
@@ -20367,28 +20423,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 }
             }
         };
-        this.buildRevisoes = () => {
-            // TODO: revisar essa parte de atualização das revisões
-            // if (this.modo === Modo.JUSTIFICATIVA) {
-            //   atualizaRevisaoJustificativa(rootStore.getState().elementoReducer);
-            // } else {
-            //   atualizaRevisaoTextoLivre(rootStore.getState().elementoReducer);
-            // }
-        };
-        this.removeRevisoes = () => {
-            // TODO: revisar essa parte de atualização das revisões
-            // atualizaRevisaoJustificativa(rootStore.getState().elementoReducer, true);
-            // atualizaRevisaoTextoLivre(rootStore.getState().elementoReducer, true);
-        };
         this.atualizaQuantidadeRevisao = (quantidade) => {
-            // TODO: revisar essa parte de atualização das revisões
-            // const elemento = this.querySelector(`#${this.getNomeBadge()}`) as any;
-            // atualizaQuantidadeRevisaoTextoRico(quantidade, elemento);
-            //TODOX ----
-            if (this.onRevisionCountChange) {
-                this.onRevisionCountChange(quantidade);
-            }
-            console.log(quantidade);
+            this.switchRevisaoComponent?.atualizaQuantidadeRevisao(quantidade);
         };
         this.icons['undo'] = `<svg viewbox="0 0 18 18">
     <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
@@ -20404,34 +20440,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.icons['text-indent'] = iconeTextIndent;
         this.icons['margin-bottom'] = iconeMarginBottom;
         this.icons['nota-rodape'] = iconeNotaDeRodape;
-    }
-    renderBotaoAnexo() {
-        return html `
-      <div class="panel-anexo">
-        <button
-          type="button"
-          style="width:auto"
-          title="Anexo"
-          @click=${() => uploadAnexoDialog(this.anexos, this.atualizaAnexo, this)}
-        >
-          <span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="15px"
-              height="15px"
-              viewBox="0 0 35 35"
-              data-name="Layer 2"
-              id="Layer_2"
-            >
-              <path
-                d="M18,34.75A11.32,11.32,0,0,1,6.69,23.45V8A7.78,7.78,0,0,1,22.25,8V22.49a4.58,4.58,0,1,1-9.15,0V9.29a1.25,1.25,0,0,1,2.5,0v13.2a2.08,2.08,0,1,0,4.15,0V8A5.28,5.28,0,0,0,9.19,8V23.45A8.82,8.82,0,0,0,18,32.25c4.6,0,7.81-3.62,7.81-8.8V9.66a1.25,1.25,0,0,1,2.5,0V23.45C28.31,30,24,34.75,18,34.75Z"
-              />
-            </svg>
-            ${this.labelAnexo()}
-          </span>
-        </button>
-      </div>
-    `;
+        this.classList.add('lexml-ui-editor-texto-rico');
     }
     firstUpdated() {
         this.init();
@@ -20473,14 +20482,20 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         }
     }
     editarNotaRodape(idNotaRodape) {
-        this.quill?.notasRodape?.editar?.(idNotaRodape);
+        this.quill?.notasRodape?.editar(idNotaRodape);
     }
     removerNotaRodape(idNotaRodape) {
-        this.quill?.notasRodape?.remover?.(idNotaRodape);
+        this.quill?.notasRodape?.remover(idNotaRodape);
+    }
+    reset() {
+        this.setContent('');
     }
     parseToolbarTokens() {
         const raw = this.toolbar || this.getAttribute('toolbar') || '';
-        return raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        return raw
+            .split(',')
+            .map(s => s.trim().toLowerCase())
+            .filter(Boolean);
     }
     buildToolbarContainer(tokens) {
         const map = {
@@ -20499,10 +20514,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             clean: ['clean'],
             image: ['image'],
             link: ['link'],
-            notarodape: ['nota-rodape'],
+            // notarodape: ['nota-rodape'],
             table: [
                 { table: TableModule.tableOptions() },
-                { table: [
+                {
+                    table: [
                         'change-width-col-modal',
                         'change-width-table-modal',
                         'append-row-above',
@@ -20514,7 +20530,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                         'remove-table',
                         'split-cell',
                         'merge-selection',
-                    ] },
+                    ],
+                },
             ],
         };
         // Quill espera um array de GRUPOS (cada grupo é um array)
@@ -20557,18 +20574,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         tokens.forEach(t => (formatsMap[t] || []).forEach(f => set.add(f)));
         return Array.from(set);
     }
-    reset() {
-        this.setContent('');
-        // TODO: rever essa parte de atualização das revisões
-        // rootStore.dispatch(limparArticulacaoAction.execute());
-    }
 };
 __decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "texto", void 0);
-__decorate([
-    property({ type: Array })
-], EditorTextoRicoComponent.prototype, "anexos", void 0);
 __decorate([
     property({ type: Array })
 ], EditorTextoRicoComponent.prototype, "notasRodape", void 0);
@@ -20579,8 +20588,14 @@ __decorate([
     property({ type: Number })
 ], EditorTextoRicoComponent.prototype, "tamanhoMaximoImagem", void 0);
 __decorate([
+    property({ type: Boolean })
+], EditorTextoRicoComponent.prototype, "indHabilitarNotaRodape", void 0);
+__decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "modo", void 0);
+__decorate([
+    property({ type: String })
+], EditorTextoRicoComponent.prototype, "nomeUsuarioRevisao", void 0);
 __decorate([
     property({ type: String, attribute: 'toolbar' })
 ], EditorTextoRicoComponent.prototype, "toolbar", void 0);
@@ -20603,7 +20618,7 @@ __decorate([
     query('#lexml-alterar-largura-img-modal')
 ], EditorTextoRicoComponent.prototype, "alterarLarguraImagemModal", void 0);
 __decorate([
-    query('#lexml-switch-revisao-component')
+    query('#lexml-ui-switch-revisao-component')
 ], EditorTextoRicoComponent.prototype, "switchRevisaoComponent", void 0);
 EditorTextoRicoComponent = __decorate([
     customElement('lexml-ui-editor-texto-rico')
@@ -20672,10 +20687,19 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
         this.valorLargura = '';
         this.tipo = '';
         this.onAfterShow = () => {
+            // foca no input ao abrir
             this.shadowRoot?.querySelector('wa-input')?.focus();
         };
         this.onAfterHide = () => {
             this.exibirAviso = false;
+            this.valorLargura = '';
+        };
+        this.onInput = (e) => {
+            const target = e.target;
+            this.valorLargura = target.value ?? '';
+            // sempre que editar, some com o aviso
+            if (this.exibirAviso)
+                this.exibirAviso = false;
         };
     }
     openDialog() {
@@ -20698,12 +20722,13 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
     }
     show(width) {
         this.valorLargura = width ? width.replace('%', '') : '';
-        this.exibirAviso = false; // callout só aparece se inválido
+        this.exibirAviso = false;
         this.openDialog();
     }
     hide() {
         this.closeDialog();
     }
+    // ---------- ação principal ----------
     alterarLargura() {
         const width = parseInt(this.valorLargura);
         if (isNaN(width) || width < 1 || width > 100) {
@@ -20714,6 +20739,7 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
             this.hide();
         }
     }
+    // ---------- render ----------
     render() {
         return html `
       <style>
@@ -20728,32 +20754,34 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
           margin-top: 20px;
         }
       </style>
-      <wa-dialog 
+
+      <wa-dialog
         label="Alterar a largura da ${this.tipo}"
         @wa-after-show=${this.onAfterShow}
         @wa-after-hide=${this.onAfterHide}
+      >
         <label>Informe o percentual da largura da ${this.tipo}</label>
         <wa-input
           type="number"
-          value=${this.valorLargura}
-          width="30px"
-          @input=${(e) => (this.valorLargura = e.target.value)}
+          .value=${this.valorLargura}
+          @input=${this.onInput}
         >
           <wa-icon name="percent" slot="suffix"></wa-icon>
         </wa-input>
-        ${this.exibirAviso ? html `
-          <wa-callout variant="warning" closable>
-            <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
-            Informe um valor numérico de 1 a 100.
-          </wa-callout>
-        ` : null}
-        <wa-button
-          slot="footer"
-          variant="brand"
-          @click=${() => this.alterarLargura()}
-          >Alterar</wa-button
-        >
-         <wa-button slot="footer" @click=${this.hide}>Fechar</wa-button>
+
+        ${this.exibirAviso
+            ? html `
+              <wa-callout variant="warning" closable>
+                <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
+                Informe um valor numérico de 1 a 100.
+              </wa-callout>
+            `
+            : null}
+
+        <wa-button slot="footer" variant="brand" @click=${this.alterarLargura}>
+          Alterar
+        </wa-button>
+        <wa-button slot="footer" @click=${this.hide}>Fechar</wa-button>
       </wa-dialog>
     `;
     }
@@ -20782,14 +20810,32 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         super(...arguments);
         this.exibirAviso = false;
         this.valorLargura = '';
+        // Mantive para simetria com o outro modal (não é usada aqui)
         this.tipo = '';
+        // ---------- lifecycle do dialog ----------
         this.onAfterShow = () => {
             this.shadowRoot?.querySelector('wa-input')?.focus();
         };
         this.onAfterHide = () => {
+            // ⚠️ ALTERAÇÃO: limpar estado ao fechar para não “vazar” valor antigo
             this.exibirAviso = false;
+            this.valorLargura = '';
+            this.img = undefined;
+        };
+        // ---------- handlers ----------
+        // ⚠️ ALTERAÇÃO: tratar input via PROPRIEDADE (binding com .value) e resetar aviso ao digitar
+        this.onInput = (e) => {
+            const target = e.target;
+            this.valorLargura = target.value ?? '';
+            if (this.exibirAviso)
+                this.exibirAviso = false;
+        };
+        this.onKeyDown = (e) => {
+            if (e.key === 'Enter')
+                this.alterarLargura();
         };
     }
+    // ---------- utilitários para abrir/fechar ----------
     openDialog() {
         if (this.dialog?.show)
             this.dialog.show();
@@ -20808,8 +20854,10 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         else
             this.dialog?.removeAttribute?.('open');
     }
+    // ---------- API pública ----------
     show(img, width) {
         this.img = img;
+        // ⚠️ ALTERAÇÃO: normalizar valor e resetar aviso ao abrir
         this.valorLargura = width ? width.replace('%', '') : '';
         this.exibirAviso = false;
         this.openDialog();
@@ -20826,6 +20874,7 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         this.callback?.(this.img, width);
         this.hide();
     }
+    // ---------- render ----------
     render() {
         return html `
       <style>
@@ -20840,38 +20889,39 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
           margin-top: 20px;
         }
       </style>
-      <wa-dialog 
+
+      <wa-dialog
         label="Alterar a largura da Imagem"
         @wa-after-show=${this.onAfterShow}
         @wa-after-hide=${this.onAfterHide}
-        >
+      >
         <label>Informe o percentual da largura da Imagem</label>
+
+        <!-- ⚠️ ALTERAÇÃO: usar binding de PROPRIEDADE (.value) ao invés de atributo value= -->
         <wa-input
           type="number"
-          value=${this.valorLargura}
-          width="30px"
-          @input=${(e) => { this.valorLargura = e.target.value; if (this.exibirAviso)
-            this.exibirAviso = false; }}
-          @keydown=${(e) => { if (e.key === 'Enter')
-            this.alterarLargura(); }}
+          .value=${this.valorLargura}
+          @input=${this.onInput}           <!-- se seu wa-input emitir 'wa-input', pode trocar para @wa-input -->
+          @keydown=${this.onKeyDown}
         >
           <wa-icon name="percent" slot="suffix"></wa-icon>
         </wa-input>
-        ${this.exibirAviso ? html `
-          <wa-callout variant="warning" closable>
-            <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
-            Informe um valor numérico de 1 a 100.
-          </wa-callout>
-        ` : null}
-        <wa-button
-          slot="footer"
-          variant="brand"
-          @click=${() => this.alterarLargura()}
-          >Alterar</wa-button
-        >
-        <wa-button slot="footer" @click=${() => this.hide()}
-          >Fechar</wa-button
-        >
+
+        ${this.exibirAviso
+            ? html `
+              <wa-callout variant="warning" closable>
+                <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
+                Informe um valor numérico de 1 a 100.
+              </wa-callout>
+            `
+            : null}
+
+        <wa-button slot="footer" variant="brand" @click=${this.alterarLargura}>
+          Alterar
+        </wa-button>
+        <wa-button slot="footer" @click=${this.hide}>
+          Fechar
+        </wa-button>
       </wa-dialog>
     `;
     }
@@ -20895,7 +20945,152 @@ AlterarLarguraImagemModalComponent = __decorate([
     customElement('lexml-alterar-largura-imagem-modal')
 ], AlterarLarguraImagemModalComponent);
 
+// import { Observable } from '../../utils/observable';
+// import { ativarDesativarMarcaDeRevisao, atualizaQuantidadeRevisao, getQuantidadeRevisoesAll, setCheckedElement } from '../../redux/elemento/util/revisaoUtil';
+// import { StateEvent, StateType } from '../../redux/state';
+// import { alertarInfo } from '../../redux/elemento/util/alertaUtil';
+// import { Modo } from '../../model/modo.model';
+let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
+    // onChange: Observable<string> = new Observable<string>();
+    update(changedProperties) {
+        super.update(changedProperties);
+    }
+    createRenderRoot() {
+        return this;
+    }
+    // TODO: revisar essa parte de integração com o redux
+    // stateChanged(state: any): void {
+    //   if (state.elementoReducer.ui) {
+    //     if (state.elementoReducer.ui.events) {
+    //       if (state.elementoReducer.ui.message && state.elementoReducer.ui.events[0]?.stateType === 'AtualizacaoAlertas') {
+    //         alertarInfo(state.elementoReducer.ui.message.descricao);
+    //       }
+    //       this.processarStateEvents(state.elementoReducer.ui.events);
+    //     }
+    //   }
+    // }
+    // TODO: revisar essa parte de integração com o redux
+    // private processarStateEvents(events: StateEvent[]): void {
+    //   events?.forEach((event: StateEvent): void => {
+    //     switch (event.stateType) {
+    //       case StateType.RevisaoAtivada:
+    //       case StateType.RevisaoDesativada:
+    //         this.checkedSwitchMarcaAlteracao();
+    //         break;
+    //     }
+    //     this.atualizaQuantidadeRevisao();
+    //   });
+    // }
+    render() {
+        return html `
+      <style>
+        #revisoes-justificativa-icon wa-icon {
+          border: 1px solid #ccc !important;
+          padding: 0.4rem 0.4rem !important;
+          border-radius: 15px !important;
+          font-weight: bold;
+          background-color: #eee;
+          cursor: pointer;
+        }
+
+        #revisoes-texto-livre-icon wa-icon {
+          border: 1px solid #ccc !important;
+          padding: 0.4rem 0.4rem !important;
+          border-radius: 15px !important;
+          font-weight: bold;
+          background-color: #eee;
+          cursor: pointer;
+        }
+        #chk-em-revisao {
+          border: 1px solid #ccc !important;
+          padding: 5px 10px !important;
+          border-radius: 20px !important;
+          margin-left: auto;
+          margin-right: 5px;
+          font-weight: bold;
+          background-color: #eee;
+        }
+        #chk-em-revisao[checked] {
+          background-color: var(--wa-color-blue-100);
+        }
+        .revisao-container {
+          margin-left: auto;
+        }
+        .wa-toast-stack wa-alert::part(base) {
+          background-color: var(--wa-color-danger-100);
+        }
+        @media (max-width: 992px) {
+          .mobile-buttons {
+            display: inline-block !important;
+          }
+          #chk-em-revisao span {
+            display: none;
+          }
+        }
+      </style>
+      <div id="switch-container">
+        <wa-switch
+          id="${this.nomeSwitch}"
+          size="small"
+          @input=${() => console.log(11111, 'input')}
+          @change=${() => this.ativarDesativarMarcaDeRevisao()}
+        >
+          <span>Marcas de revisão</span>
+          <wa-badge
+            id="${this.nomeBadgeQuantidadeRevisao}"
+            variant="warning"
+            pill
+            >${this.quantidadeRevisao}</wa-badge
+          >
+        </wa-switch>
+      </div>
+    `;
+    }
+    constructor() {
+        super();
+        this.quantidadeRevisao = 0;
+        this.nomeSwitch = '';
+        this.nomeBadgeQuantidadeRevisao = '';
+        // @property({ type: Boolean, reflect: true })
+        // checkedRevisao = false;
+        this.modo = '';
+        this.atualizaQuantidadeRevisao = (quantidade) => {
+            this.quantidadeRevisao = quantidade;
+        };
+    }
+    ativarDesativarMarcaDeRevisao() {
+        const switchElement = document.getElementById(this.nomeSwitch);
+        const checked = switchElement?.checked;
+        if (!checked && this.quantidadeRevisao > 0) {
+            switchElement.checked = true;
+            // alertarInfo('Desative as marcas de revisão somente após aceitar ou rejeitar todas as alterações.');
+            console.log(11111, 'Desative as marcas de revisão somente após aceitar ou rejeitar todas as alterações.');
+            return;
+        }
+        this.dispatchEvent(new CustomEvent('switch-revisao:change', {
+            bubbles: true,
+            detail: { checked },
+        }));
+        // this.checkedSwitchMarcaAlteracao(checked);
+    }
+};
+__decorate([
+    property({ type: Number })
+], SwitchRevisaoComponent.prototype, "quantidadeRevisao", void 0);
+__decorate([
+    property({ type: String })
+], SwitchRevisaoComponent.prototype, "nomeSwitch", void 0);
+__decorate([
+    property({ type: String })
+], SwitchRevisaoComponent.prototype, "nomeBadgeQuantidadeRevisao", void 0);
+__decorate([
+    property({ type: String })
+], SwitchRevisaoComponent.prototype, "modo", void 0);
+SwitchRevisaoComponent = __decorate([
+    customElement('lexml-ui-switch-revisao')
+], SwitchRevisaoComponent);
+
 window.Quill = Quill;
 
-export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, REGEX_ACCENTS, TipoMensagem };
+export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem };
 //# sourceMappingURL=index.js.map

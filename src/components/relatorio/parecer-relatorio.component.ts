@@ -16,6 +16,13 @@ export class LexmlParecerRelatorio extends LitElement {
   }
 
   render(): TemplateResult {
-    return html` <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico> `;
+    return html`
+      <style>
+        lexml-ui-editor-texto-rico .ql-editor {
+          min-height: 420px !important;
+        }
+      </style>
+      <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
+    `;
   }
 }
