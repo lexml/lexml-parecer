@@ -21,12 +21,13 @@ export class LexmlEtaParecer extends LitElement {
     return this;
   }
 
-  @property({ type: Object }) lexmlParecerConfig: LexmlParecerConfig =
-    new LexmlParecerConfig();
+  @property({ type: Object }) lexmlParecerConfig?: Partial<LexmlParecerConfig>;
 
   @state() private _parlamentares: Parlamentar[] = [];
 
   @state() private _comissoes: Comissao[] = [];
+
+  @state() private disableAnalise: boolean = false;
 
   @property({ attribute: false })
   buscarMateriasFunction?: (termo: string) => Promise<ProposicaoReferenciada[]>;
@@ -96,12 +97,13 @@ export class LexmlEtaParecer extends LitElement {
     return this.parecer;
   }
 
-  protected willUpdate(changed: Map<string, unknown>) {
+  willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
       this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
       this._comissoes = this.lexmlParecerConfig.comissoes ?? [];
       this.buscarMateriasFunction =
         this.lexmlParecerConfig.buscarMateriasFunction;
+      this.disableAnalise = this.lexmlParecerConfig.disableAnalise ?? true;
     }
   }
 
@@ -116,7 +118,9 @@ export class LexmlEtaParecer extends LitElement {
       <wa-tab-group>
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
-        <wa-tab slot="nav" panel="analise">Análise</wa-tab>
+        ${!this.disableAnalise
+          ? html`<wa-tab slot="nav" panel="analise">Análise</wa-tab>`
+          : html``}
         <wa-tab slot="nav" panel="voto">Voto</wa-tab>
         <wa-tab slot="nav" panel="dataAutoriaImpressao"
           >Data, Autoria e Impressão</wa-tab
@@ -132,9 +136,13 @@ export class LexmlEtaParecer extends LitElement {
         <wa-tab-panel name="relatorio" class="overflow-hidden">
           <lexml-parecer-relatorio></lexml-parecer-relatorio>
         </wa-tab-panel>
-        <wa-tab-panel name="analise" class="overflow-hidden">
-          <lexml-parecer-analise></lexml-parecer-analise>
-        </wa-tab-panel>
+        ${!this.disableAnalise
+          ? html`
+              <wa-tab-panel name="analise" class="overflow-hidden">
+                <lexml-parecer-analise></lexml-parecer-analise>
+              </wa-tab-panel>
+            `
+          : html``}
         <wa-tab-panel name="voto" class="overflow-hidden">
           <lexml-parecer-voto></lexml-parecer-voto>
         </wa-tab-panel>

@@ -14317,6 +14317,11 @@ const editorTextoRicoCss = html `
       display: none;
     }
 
+    .aceitar-revisao,
+    .rejeitar-revisao {
+      margin-left: 0.5rem;
+    }
+
     @-moz-document url-prefix() {
       #lexml-ui-editor-texto-rico-justificativa-inner > .ql-editor {
         white-space: pre-wrap;
@@ -19900,7 +19905,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     // };
     render() {
         return html `
-     ${quillSnowStyles} ${quillTableCss} ${editorStyles} ${editorTextoRicoCss} ${notaRodapeCss}
+      ${quillSnowStyles} ${quillTableCss} ${editorStyles} ${editorTextoRicoCss}
+      ${notaRodapeCss}
       <div class="panel-revisao">
         <lexml-ui-switch-revisao
           id="lexml-ui-switch-revisao-component"
@@ -19913,23 +19919,25 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
 
         <wa-button
           class="aceitar-revisao"
-          variant="brand"
+          variant="neutral"
           size="small"
           title="Aceitar revisões"
+          appearance="outlined"
           @click=${() => this.aceitarRevisoes()}
           disabled
-          circle
+          pill
         >
           <wa-icon name="check" label="Aceitar revisões"></wa-icon>
         </wa-button>
         <wa-button
           class="rejeitar-revisao"
-          variant="brand"
+          variant="neutral"
           size="small"
           title="Rejeitar revisões"
+          appearance="outlined"
           @click=${() => this.rejeitarRevisoes()}
           disabled
-          circle
+          pill
         >
           <wa-icon name="x" label="Rejeitar revisões"></wa-icon>
         </wa-button>
@@ -19974,7 +19982,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.icons = Quill.import('ui/icons');
         this.onTableInTable = () => {
             clearTimeout(this.timerAlerta);
-            console.log("Teste");
+            console.log('Teste');
             alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.');
         };
         this.init = () => {
@@ -20687,7 +20695,6 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
         this.valorLargura = '';
         this.tipo = '';
         this.onAfterShow = () => {
-            // foca no input ao abrir
             this.shadowRoot?.querySelector('wa-input')?.focus();
         };
         this.onAfterHide = () => {
@@ -20697,7 +20704,6 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
         this.onInput = (e) => {
             const target = e.target;
             this.valorLargura = target.value ?? '';
-            // sempre que editar, some com o aviso
             if (this.exibirAviso)
                 this.exibirAviso = false;
         };
@@ -20728,7 +20734,6 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
     hide() {
         this.closeDialog();
     }
-    // ---------- ação principal ----------
     alterarLargura() {
         const width = parseInt(this.valorLargura);
         if (isNaN(width) || width < 1 || width > 100) {
@@ -20739,7 +20744,6 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
             this.hide();
         }
     }
-    // ---------- render ----------
     render() {
         return html `
       <style>
@@ -20810,20 +20814,15 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         super(...arguments);
         this.exibirAviso = false;
         this.valorLargura = '';
-        // Mantive para simetria com o outro modal (não é usada aqui)
         this.tipo = '';
-        // ---------- lifecycle do dialog ----------
         this.onAfterShow = () => {
             this.shadowRoot?.querySelector('wa-input')?.focus();
         };
         this.onAfterHide = () => {
-            // ⚠️ ALTERAÇÃO: limpar estado ao fechar para não “vazar” valor antigo
             this.exibirAviso = false;
             this.valorLargura = '';
             this.img = undefined;
         };
-        // ---------- handlers ----------
-        // ⚠️ ALTERAÇÃO: tratar input via PROPRIEDADE (binding com .value) e resetar aviso ao digitar
         this.onInput = (e) => {
             const target = e.target;
             this.valorLargura = target.value ?? '';
@@ -20835,7 +20834,6 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
                 this.alterarLargura();
         };
     }
-    // ---------- utilitários para abrir/fechar ----------
     openDialog() {
         if (this.dialog?.show)
             this.dialog.show();
@@ -20854,10 +20852,8 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         else
             this.dialog?.removeAttribute?.('open');
     }
-    // ---------- API pública ----------
     show(img, width) {
         this.img = img;
-        // ⚠️ ALTERAÇÃO: normalizar valor e resetar aviso ao abrir
         this.valorLargura = width ? width.replace('%', '') : '';
         this.exibirAviso = false;
         this.openDialog();
@@ -20874,7 +20870,6 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         this.callback?.(this.img, width);
         this.hide();
     }
-    // ---------- render ----------
     render() {
         return html `
       <style>
@@ -20897,11 +20892,10 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
       >
         <label>Informe o percentual da largura da Imagem</label>
 
-        <!-- ⚠️ ALTERAÇÃO: usar binding de PROPRIEDADE (.value) ao invés de atributo value= -->
         <wa-input
           type="number"
           .value=${this.valorLargura}
-          @input=${this.onInput}           <!-- se seu wa-input emitir 'wa-input', pode trocar para @wa-input -->
+          @input=${this.onInput}
           @keydown=${this.onKeyDown}
         >
           <wa-icon name="percent" slot="suffix"></wa-icon>
@@ -20909,11 +20903,11 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
 
         ${this.exibirAviso
             ? html `
-              <wa-callout variant="warning" closable>
-                <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
-                Informe um valor numérico de 1 a 100.
-              </wa-callout>
-            `
+                <wa-callout variant="warning" closable>
+                  <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
+                  Informe um valor numérico de 1 a 100.
+                </wa-callout>
+              `
             : null}
 
         <wa-button slot="footer" variant="brand" @click=${this.alterarLargura}>

@@ -4,10 +4,12 @@ import {
   ProposicaoReferenciada,
 } from 'src/models/diversos.modelo.js';
 
-export class LexmlParecerConfig {
-  parlamentares: Parlamentar[] = [];
+export interface LexmlParecerConfig {
+  parlamentares: Parlamentar[];
 
-  buscarMateriasFunction?: (termo: string) => Promise<ProposicaoReferenciada[]>;
+  buscarMateriasFunction: (termo: string) => Promise<ProposicaoReferenciada[]>;
 
-  comissoes?: Comissao[] = [];
+  comissoes: Comissao[];
+
+  disableAnalise: boolean;
 }
