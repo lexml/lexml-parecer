@@ -21,6 +21,8 @@ export class LexmlEtaParecer extends LitElement {
     return this;
   }
 
+  @property({ type: Number }) totalAlertas = 0;
+
   @property({ type: Object }) lexmlParecerConfig?: Partial<LexmlParecerConfig>;
 
   @state() private _parlamentares: Parlamentar[] = [];
@@ -114,6 +116,16 @@ export class LexmlEtaParecer extends LitElement {
           display: block;
           color: var(--lexml-eta-parecer-text-color, #000);
         }
+        .badge-pulse {
+          margin-left: 7px;
+          height: 16px;
+          margin-top: -4px;
+        }
+        .badge-alertas {
+          height: 20px;
+          width: 18px;
+          display: flex;
+        }
       </style>
       <wa-tab-group>
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
@@ -125,7 +137,23 @@ export class LexmlEtaParecer extends LitElement {
         <wa-tab slot="nav" panel="dataAutoriaImpressao"
           >Data, Autoria e Impressão</wa-tab
         >
-        <wa-tab slot="nav" panel="avisos">Avisos</wa-tab>
+        <wa-tab slot="nav" panel="avisos">
+          Avisos
+          <div class="badge-pulse" id="contadorAvisos">
+            ${this.totalAlertas > 0
+              ? html`
+                  <wa-badge
+                    class="badge-alertas"
+                    variant="danger"
+                    attention="pulse"
+                    pill
+                  >
+                    ${this.totalAlertas}
+                  </wa-badge>
+                `
+              : ''}
+          </div>
+        </wa-tab>
 
         <wa-tab-panel name="materia" class="overflow-hidden">
           <lexml-parecer-materia
@@ -152,7 +180,12 @@ export class LexmlEtaParecer extends LitElement {
           ></lexml-parecer-data-autoria-impressao>
         </wa-tab-panel>
         <wa-tab-panel name="avisos" class="overflow-hidden">
-          <lexml-parecer-avisos></lexml-parecer-avisos>
+          <lexml-parecer-avisos
+            @parecer-total-alertas=${(e: CustomEvent<{ total: number }>) => {
+              this.totalAlertas = e.detail.total;
+              console.log('TOTAL vindo dos avisos:', e.detail.total);
+            }}
+          ></lexml-parecer-avisos>
         </wa-tab-panel>
       </wa-tab-group>
     `;

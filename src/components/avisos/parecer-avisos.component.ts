@@ -24,7 +24,34 @@ export class LexmlParecerAvisos extends LitElement {
       mensagem: 'Atenção: verifique os dados preenchidos.',
       podeFechar: true,
     },
+    {
+      id: 'a3',
+      tipo: TipoMensagem.SUCCESS,
+      mensagem: 'Operação concluída com sucesso.',
+      podeFechar: true,
+    },
+    {
+      id: 'a4',
+      tipo: TipoMensagem.ERROR,
+      mensagem: 'Alerta: erro ao processar a solicitação.',
+      podeFechar: true,
+    },
   ];
+
+  private _notifyParentTotal() {
+    this.dispatchEvent(
+      new CustomEvent('parecer-total-alertas', {
+        detail: { total: this.totalAlertas },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  protected firstUpdated(): void {
+    this.totalAlertas = this.alertasDemo.length;
+    this._notifyParentTotal();
+  }
 
   private gerarId(): string {
     // pega o MAIOR número já usado no id (ex.: a1, a2, a10) e soma +1
@@ -67,14 +94,20 @@ export class LexmlParecerAvisos extends LitElement {
     };
 
     this.alertasDemo = [novo, ...this.alertasDemo];
+    this.totalAlertas = this.alertasDemo.length;
+    this._notifyParentTotal();
   };
 
   private removerAlertaDemo = (id: string): void => {
     this.alertasDemo = this.alertasDemo.filter(a => a.id !== id);
+    this.totalAlertas = this.alertasDemo.length;
+    this._notifyParentTotal();
   };
 
   private limparAlertasDemo = (): void => {
     this.alertasDemo = [];
+    this.totalAlertas = 0;
+    this._notifyParentTotal();
   };
   // ******************************************* Fim dos Itens para o Teste do Alert
 
@@ -94,7 +127,7 @@ export class LexmlParecerAvisos extends LitElement {
           padding: 12px 0;
         }
       </style>
-      <br />
+      <!-- Este é um comentário em HTML 
       <div class="linha">
         <h2 style="margin: 0">
           Item apenas para testes e validar funcionalidade
@@ -105,6 +138,7 @@ export class LexmlParecerAvisos extends LitElement {
         <button @click=${this.adicionarAlertaDemo}>Adicionar alerta</button>
         <button @click=${this.limparAlertasDemo}>Limpar alertas</button>
       </div>
+      -->
 
       <div class="caixa">
         <lexml-ui-alertas
@@ -117,6 +151,7 @@ export class LexmlParecerAvisos extends LitElement {
             e: CustomEvent<{ total: number; aumentou: boolean }>,
           ): any => {
             this.totalAlertas = e.detail.total;
+            this._notifyParentTotal();
           }}
         ></lexml-ui-alertas>
       </div>`;

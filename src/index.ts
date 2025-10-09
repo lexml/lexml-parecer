@@ -12,6 +12,7 @@ import '@awesome.me/webawesome/dist/components/select/select.js';
 import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/details/details.js';
 import '@awesome.me/webawesome/dist/components/option/option.js';
+import '@awesome.me/webawesome/dist/components/badge/badge.js';
 
 export { LexmlEtaParecer } from './components/parecer/lexml-eta-parecer.component.js';
 export { LexmlParecerMateria } from './components/materia/parecer-materia.component.js';
