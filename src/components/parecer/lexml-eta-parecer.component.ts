@@ -183,7 +183,6 @@ export class LexmlEtaParecer extends LitElement {
           <lexml-parecer-avisos
             @parecer-total-alertas=${(e: CustomEvent<{ total: number }>) => {
               this.totalAlertas = e.detail.total;
-              console.log('TOTAL vindo dos avisos:', e.detail.total);
             }}
           ></lexml-parecer-avisos>
         </wa-tab-panel>

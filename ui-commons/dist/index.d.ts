@@ -492,6 +492,8 @@ type RteAlert = {
 type AddAlertFn = (alerta: RteAlert) => void;
 type RemoveAlertFn = (id: string) => void;
 declare class EditorTextoRicoComponent extends LitElement {
+  private _uid;
+  private _containerId;
   texto: string;
   notasRodape: NotaRodape[];
   registroEvento: string;
@@ -517,7 +519,7 @@ declare class EditorTextoRicoComponent extends LitElement {
   private alterarLarguraColunaModal;
   private alterarLarguraTabelaModal;
   private alterarLarguraImagemModal;
-  private switchRevisaoComponent;
+  private _switchRevisaoEl?;
   showAlterarLarguraImagemModal(img: any, width: string): void;
   private showAlterarLarguraColunaModal;
   private hideAlterarLarguraColunaModal;
@@ -577,7 +579,6 @@ declare class EditorTextoRicoComponent extends LitElement {
   reset(): void;
   private parseToolbarTokens;
   private buildToolbarContainer;
-  /** Constrói a lista de formats do Quill conforme os tokens */
   private buildFormats;
 }
 

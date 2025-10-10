@@ -7,7 +7,7 @@ export class LexmlParecerAnalise extends LitElement {
     return this;
   }
 
-  @query('editor-texto-teste') private _ed!: HTMLElement & {
+  @query('lexml-ui-editor-texto-rico') private _ed!: HTMLElement & {
     getHtml: () => string;
   };
 

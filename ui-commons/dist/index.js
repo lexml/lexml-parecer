@@ -11690,25 +11690,20 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
 
         <h2>Teste EditorTextoRicoComponent</h2>
         <div class="area-texto">
-          <lexml-ui-editor-texto-rico
-            modo="textoLivre"
-            id="editortexto"
-            registroEvento="texto"
-            @onchange=${(e) => console.log('Mudou', e.detail.origemEvento)}
-            @alerta=${(e) => console.warn('Alerta:', e.detail.mensagem)}
-          ></lexml-ui-editor-texto-rico>
+          <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div class="area-texto">
+          <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <br />
         <br />
         <div class="area-texto">
           <lexml-ui-editor-texto-rico
-            modo="textoLivre"
-            id="emenda"
-            registroEvento="texto"
             .toolbar=${'italic'}
-            @onchange=${(e) => console.log('Mudou', e.detail.origemEvento)}
-            @alerta=${(e) => console.warn('Alerta:', e.detail.mensagem)}
           ></lexml-ui-editor-texto-rico>
         </div>
         <br />
@@ -14114,7 +14109,7 @@ const editorTextoRicoCss = html `
       padding-left: 1rem;
       padding-right: 0.5rem;
     }
-    #chk-em-revisao-justificativa {
+    [id^='chk-em-revisao-justificativa-'] {
       border: 1px solid #ccc !important;
       padding: 5px 10px !important;
       border-radius: 20px !important;
@@ -14123,11 +14118,11 @@ const editorTextoRicoCss = html `
       font-weight: bold;
       background-color: #eee;
     }
-    #chk-em-revisao-justificativa[checked] {
+    [id^='chk-em-revisao-justificativa-'][checked] {
       background-color: var(--wa-color-blue-100);
     }
 
-    #chk-em-revisao-texto-livre {
+    [id^='chk-em-revisao-texto-livre-'] {
       border: 1px solid #ccc !important;
       padding: 5px 10px !important;
       border-radius: 20px !important;
@@ -14136,7 +14131,7 @@ const editorTextoRicoCss = html `
       font-weight: bold;
       background-color: #eee;
     }
-    #chk-em-revisao-texto-livre[checked] {
+    [id^='chk-em-revisao-texto-livre-'][checked] {
       background-color: var(--wa-color-blue-100);
     }
 
@@ -14144,11 +14139,11 @@ const editorTextoRicoCss = html `
       padding: 1.5px 0 1.5px 8px;
     }
 
-    #badge-marca-alteracao-justificativa::part(base) {
+    [id^='badge-marca-alteracao-justificativa-']::part(base) {
       min-width: 1.4rem;
     }
 
-    #badge-marca-alteracao-texto-livre::part(base) {
+    [id^='badge-marca-alteracao-texto-livre-']::part(base) {
       min-width: 1.4rem;
     }
     revisao-container {
@@ -14332,7 +14327,7 @@ const editorTextoRicoCss = html `
       .mobile-buttons {
         display: inline-block !important;
       }
-      #chk-em-revisao-justificativa span {
+      [id^='chk-em-revisao-justificativa-'] span {
         display: none;
       }
       .ql-snow .ql-editor img {
@@ -19662,7 +19657,7 @@ const editorStyles = html `
       .mobile-buttons {
         display: inline-block !important;
       }
-      #chk-em-revisao span {
+      [id^='chk-em-revisao-'] span {
         display: none;
       }
       .button-navegacao-marca {
@@ -19779,7 +19774,7 @@ const editorStyles = html `
       border: 1px solid #000;
     }
 
-    #chk-em-revisao {
+    [id^='chk-em-revisao-'] {
       border: 1px solid #ccc !important;
       padding: 5px 10px !important;
       border-radius: 20px !important;
@@ -19788,7 +19783,7 @@ const editorStyles = html `
       font-weight: bold;
       background-color: #eee;
     }
-    #chk-em-revisao[checked] {
+    [id^='chk-em-revisao-'][checked] {
       background-color: var(--wa-color-blue-90);
     }
 
@@ -19909,7 +19904,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
       ${notaRodapeCss}
       <div class="panel-revisao">
         <lexml-ui-switch-revisao
-          id="lexml-ui-switch-revisao-component"
+          id="lexml-ui-switch-revisao-component-${this._uid}"
           modo="${this.modo}"
           class="revisao-container"
           .nomeSwitch="${this.getNomeSwitch()}"
@@ -19943,7 +19938,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         </wa-button>
       </div>
       <div
-        id="${this.id}-inner"
+        id="${this._containerId}"
         class="editor-texto-rico"
         @onTableInTable=${this.onTableInTable}
       ></div>
@@ -19962,6 +19957,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
     constructor() {
         super();
+        this._uid = crypto.randomUUID();
+        // NEW — container id único do Quill
+        this._containerId = `rte-${this._uid}`;
         this.texto = '';
         // @property({ type: Array }) anexos: Anexo[] = [];
         this.notasRodape = [];
@@ -19986,7 +19984,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.');
         };
         this.init = () => {
-            const quillContainer = this.querySelector(`#${this.id}-inner`);
+            const quillContainer = this.querySelector(`#${this._containerId}`);
             if (quillContainer) {
                 Quill.register('modules/keyboard', DefaultKeyboardModule, true);
                 Quill.register('modules/clipboard', DefaultClipboardModule, true);
@@ -20314,8 +20312,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             const emRevisao = q?.revisao?.emRevisao ?? false;
             if (!valor) {
                 if (this.getQuantidadeDeRevisoes() > 0 && !emRevisao) {
-                    if (this.switchRevisaoComponent) {
-                        this.switchRevisaoComponent.ativarDesativarMarcaDeRevisao();
+                    if (this._switchRevisaoEl) {
+                        this._switchRevisaoEl.ativarDesativarMarcaDeRevisao();
                         setTimeout(() => this.alertaGlobalRevisao(), 0);
                     }
                 }
@@ -20384,12 +20382,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.getTexto = () => {
             return this.texto;
         };
-        this.getNomeSwitch = () => {
-            return 'chk-em-revisao-texto-livre';
-        };
-        this.getNomeBadge = () => {
-            return 'badge-marca-alteracao-texto-livre';
-        };
+        this.getNomeSwitch = () => `chk-em-revisao-texto-livre-${this._uid}`;
+        this.getNomeBadge = () => `badge-marca-alteracao-texto-livre-${this._uid}`;
         this.getQuantidadeDeRevisoes = () => {
             return this.quill?.revisao?.getQuantidadeRevisoes() ?? 0;
         };
@@ -20432,7 +20426,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             }
         };
         this.atualizaQuantidadeRevisao = (quantidade) => {
-            this.switchRevisaoComponent?.atualizaQuantidadeRevisao(quantidade);
+            this._switchRevisaoEl?.atualizaQuantidadeRevisao(quantidade);
         };
         this.icons['undo'] = `<svg viewbox="0 0 18 18">
     <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
@@ -20452,6 +20446,14 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
     firstUpdated() {
         this.init();
+        const switchEl = this.querySelector(`#lexml-ui-switch-revisao-component-${this._uid}`);
+        if (switchEl) {
+            this._switchRevisaoEl = switchEl;
+            switchEl.addEventListener('switch-revisao:change', (ev) => {
+                this.updateRevisionStatus(!!ev.detail?.checked);
+                ev.stopPropagation();
+            });
+        }
     }
     disconnectedCallback() {
         this.quill?.off('text-change', this.updateTexto);
@@ -20542,24 +20544,20 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 },
             ],
         };
-        // Quill espera um array de GRUPOS (cada grupo é um array)
         const container = [];
         tokens.forEach(t => {
             const entry = map[t];
             if (!entry)
                 return;
-            // se entry já é um grupo simples (ex.: ['bold']), empurra como grupo
             if (t !== 'table') {
                 container.push(entry);
             }
             else {
-                // no caso de table, são dois objetos → 2 grupos separados
                 entry.forEach(obj => container.push([obj]));
             }
         });
         return container;
     }
-    /** Constrói a lista de formats do Quill conforme os tokens */
     buildFormats(tokens) {
         const formatsMap = {
             bold: ['bold'],
@@ -20576,10 +20574,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             link: ['link'],
             notarodape: ['nota-rodape'],
             table: ['table', 'tr', 'td', 'width'],
-            // undo/redo/clean não precisam de entries em "formats"
         };
-        const set = new Set(['estilo']); // mantém seu 'estilo-texto'
+        const set = new Set(['estilo']);
         tokens.forEach(t => (formatsMap[t] || []).forEach(f => set.add(f)));
+        set.add('added');
+        set.add('removed');
         return Array.from(set);
     }
 };
@@ -20625,9 +20624,6 @@ __decorate([
 __decorate([
     query('#lexml-alterar-largura-img-modal')
 ], EditorTextoRicoComponent.prototype, "alterarLarguraImagemModal", void 0);
-__decorate([
-    query('#lexml-ui-switch-revisao-component')
-], EditorTextoRicoComponent.prototype, "switchRevisaoComponent", void 0);
 EditorTextoRicoComponent = __decorate([
     customElement('lexml-ui-editor-texto-rico')
 ], EditorTextoRicoComponent);
@@ -20903,19 +20899,17 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
 
         ${this.exibirAviso
             ? html `
-                <wa-callout variant="warning" closable>
-                  <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
-                  Informe um valor numérico de 1 a 100.
-                </wa-callout>
-              `
+              <wa-callout variant="warning" closable>
+                <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
+                Informe um valor numérico de 1 a 100.
+              </wa-callout>
+            `
             : null}
 
         <wa-button slot="footer" variant="brand" @click=${this.alterarLargura}>
           Alterar
         </wa-button>
-        <wa-button slot="footer" @click=${this.hide}>
-          Fechar
-        </wa-button>
+        <wa-button slot="footer" @click=${this.hide}> Fechar </wa-button>
       </wa-dialog>
     `;
     }
@@ -20995,7 +20989,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           background-color: #eee;
           cursor: pointer;
         }
-        #chk-em-revisao {
+        [id^="chk-em-revisao-"] {
           border: 1px solid #ccc !important;
           padding: 5px 10px !important;
           border-radius: 20px !important;
@@ -21004,7 +20998,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           font-weight: bold;
           background-color: #eee;
         }
-        #chk-em-revisao[checked] {
+        [id^="chk-em-revisao-"][checked] {
           background-color: var(--wa-color-blue-100);
         }
         .revisao-container {
@@ -21057,6 +21051,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
         const checked = switchElement?.checked;
         if (!checked && this.quantidadeRevisao > 0) {
             switchElement.checked = true;
+            switchElement.setAttribute('checked', '');
             // alertarInfo('Desative as marcas de revisão somente após aceitar ou rejeitar todas as alterações.');
             console.log(11111, 'Desative as marcas de revisão somente após aceitar ou rejeitar todas as alterações.');
             return;
