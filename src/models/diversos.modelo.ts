@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-use-before-define */
-
 import { Voto } from './voto.modelo.js';
 
 export class Parecer {
@@ -81,11 +80,6 @@ export class Usuario {
   }
 }
 
-export class Anexo {
-  nomeArquivo = '';
-  base64 = '';
-}
-
 export class ColegiadoApreciador {
   siglaCasaLegislativa?: 'CN' | 'SF' | 'CD' = 'CN';
   tipoColegiado: 'Plenário' | 'Comissão' | 'Plenário via Comissão' = 'Plenário';
@@ -95,18 +89,6 @@ export class ColegiadoApreciador {
 export class AutoriaParecer {
   relator?: Parlamentar;
   presidente?: Parlamentar;
-}
-
-export class ItemVoto {
-  texto?: string;
-
-  documento?: Anexo;
-
-  posicao?: number;
-}
-
-export class AnexoParecer extends Anexo {
-  tipo?: string;
 }
 
 // ********************************************************************************************

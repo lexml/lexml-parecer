@@ -20,6 +20,7 @@ export class LexmlParecerRelatorio extends LitElement {
       <style>
         lexml-ui-editor-texto-rico .ql-editor {
           min-height: 420px !important;
+          max-height: 420px !important;
         }
       </style>
       <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>

@@ -267,6 +267,7 @@ export class LexmlParecerMateria extends LitElement {
 
         .ementa-editor .ql-editor {
           min-height: 220px !important;
+          max-height: 220px !important;
           height: 100% !important;
           overflow-y: auto;
         }

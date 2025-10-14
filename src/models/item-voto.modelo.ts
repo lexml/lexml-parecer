@@ -1,9 +1,9 @@
-import { Documento } from './documento.modelo.js';
+import { AnexoParecer } from './anexo.modelo.js';
 
 export class ItemVoto {
   texto?: string;
 
-  documento?: Documento;
+  documento?: AnexoParecer;
 
   posicao?: number;
 }

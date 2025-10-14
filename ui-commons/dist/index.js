@@ -16194,7 +16194,7 @@ Table.allowedChildren = [TableRow];
 
 const Container = Quill.import('blots/container');
 const Parchment$4 = Quill.import('parchment');
-const Delta$4 = Quill.import("delta");
+const Delta$5 = Quill.import("delta");
 
 const nodeListToArray = collection => {
   const elementsIndex = [];
@@ -16249,7 +16249,7 @@ class TableModule {
     clipboard.addMatcher('TABLE', function (node, delta) {
       if (isInTable(quill)) {
         emitirEventoTableInTable(quill);
-        return new Delta$4();
+        return new Delta$5();
       }
 
       const is_pasted_data = node.closest('.ql-editor') === null;
@@ -16302,7 +16302,7 @@ class TableModule {
         node.setAttribute('cell_id', TableTrick.random_id());
       }
 
-      const newDelta = delta.compose(new Delta$4().retain(delta.length(), {
+      const newDelta = delta.compose(new Delta$5().retain(delta.length(), {
         td: [
           node.getAttribute('table_id'),
           node.getAttribute('row_id'),
@@ -16660,6 +16660,27 @@ class QuillUtil {
         };
     }
 }
+const isIgnored = (quill, index, length) => quill.getContents(index, length).ops.some((op) => op.attributes?.ignore);
+const addBindingOnTop = (quill, key, context, handler) => {
+    quill.keyboard.addBinding(key, context, handler);
+    const _key = Object.keys(quill.keyboard.bindings)
+        .map(k => quill.keyboard.bindings[k])
+        .flat()
+        .find(binding => binding.handler === handler && binding.key === key)?.key;
+    if (!_key)
+        return;
+    const newBinding = (quill.keyboard.bindings[_key] || []).pop();
+    newBinding && quill.keyboard.bindings[_key].unshift(newBinding);
+};
+const addMultipleBindingsOnTop = (quill, keys, context, handler) => {
+    keys.forEach(key => addBindingOnTop(quill, key, context, handler));
+};
+class Range {
+    constructor(index, length) {
+        this.index = index;
+        this.length = length ?? 0;
+    }
+}
 
 function toPx(v) {
     if (v === null)
@@ -16689,7 +16710,7 @@ function ensureStack(width) {
     return el;
 }
 function alertarInfo(msg, opts) {
-    const { variant = 'danger', duration = 4000, icon = 'circle-exclamation', iconWeight = 'solid', width, height, } = {};
+    const { variant = 'danger', duration = 4000, icon = 'circle-exclamation', iconWeight = 'solid', width, height, } = opts || {};
     const stack = ensureStack(toPx(width));
     const callout = document.createElement('wa-callout');
     callout.setAttribute('variant', variant);
@@ -16717,7 +16738,7 @@ function alertarInfo(msg, opts) {
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import Quill from 'quill/dist/quill.js';
-const Delta$3 = Quill.import('delta');
+const Delta$4 = Quill.import('delta');
 class ModuloAspasCurvas {
     constructor(quill, options) {
         this.enabled = true;
@@ -16747,14 +16768,14 @@ class ModuloAspasCurvas {
         const aspasTransformada = !texto || texto?.match(/\s$/g) ? abreAspas : fechaAspas;
         const format = this.quill?.getFormat(range);
         // Insere o caracter normalmente
-        let delta = new Delta$3()
+        let delta = new Delta$4()
             .retain(range.index)
             .delete(range.length)
             .insert(caracter, format);
         this.quill?.updateContents(delta, 'user');
         this.quill.history.cutoff();
         // Troca por aspas curvas
-        delta = new Delta$3()
+        delta = new Delta$4()
             .retain(range.index)
             .delete(1)
             .insert(aspasTransformada, format);
@@ -16780,17 +16801,14 @@ const generateUUID = () => {
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
-// import Quill from 'quill/dist/quill.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable eqeqeq */
 /* eslint-disable prefer-const */
-const Delta$2 = Quill.import('delta');
+const Delta$3 = Quill.import('delta');
 const Parchment$1 = Quill.import('parchment');
-const Module$1 = Quill.import('core/module');
-const Inline = Quill.import('blots/inline');
-const Clipboard = Quill.import('modules/clipboard');
-const Keyboard = Quill.import('modules/keyboard');
+const Module$2 = Quill.import('core/module');
+const Inline$1 = Quill.import('blots/inline');
 // --------------------------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------
 class RevisaoUtil {
@@ -16847,7 +16865,7 @@ class RevisaoUtil {
 }
 // --------------------------------------------------------------------------------------------------------------------
 // Fornatos de revisão inline
-class InlineRevisionBaseFormat extends Inline {
+class InlineRevisionBaseFormat extends Inline$1 {
     static create(value) {
         let node = super.create();
         RevisaoUtil.valueToAttributes(value, node);
@@ -16888,88 +16906,8 @@ const cursorEstaSobreBlotDel = (quill) => {
     return (blot?.statics.blotName === DelBlot.blotName ||
         blot?.parent?.statics.blotName === DelBlot.blotName);
 };
-// --------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------------------------------
-// Módulo de revisão
-// A classe abaixo adiciona um listener para o evento keydown para ser executado antes do listener padrão do Quill
-class CustomKeyboard extends Keyboard {
-    listen() {
-        this.quill.root.addEventListener('keydown', this.onKeyDown.bind(this));
-        this.quill.root.addEventListener('keypress', this.onKeyPress.bind(this));
-        super.listen();
-    }
-    onKeyDown(e) {
-        if (this.quill?.revisao?.gerenciarKeydown &&
-            this.quill?.revisao?.emRevisao) {
-            this.quill.revisao.handleKeyDown(e);
-        }
-    }
-    onKeyPress(e) {
-        if (cursorEstaSobreBlotDel(this.quill)) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    }
-}
-class CustomClipboard extends Clipboard {
-    constructor(quill, options) {
-        super(quill, options);
-        this.quill.root.addEventListener('cut', this.onCut.bind(this));
-    }
-    onCut(e) {
-        if (this.quill?.revisao?.emRevisao) {
-            e.preventDefault();
-            e.stopPropagation();
-            const range = this.quill.getSelection();
-            if (range?.length) {
-                this.copiarSelecaoParaClipboard();
-                this.quill?.revisao?.handleRemove(range, null, null);
-            }
-        }
-    }
-    onPaste(e) {
-        if (cursorEstaSobreBlotDel(this.quill)) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        super.onPaste(e);
-    }
-    copiarSelecaoParaClipboard() {
-        const selection = window.getSelection();
-        if (selection) {
-            if (navigator.clipboard) {
-                // Cria um elemento div temporário para armazenar a seleção
-                const tempElement = document.createElement('div');
-                // Clona a seleção e a insere no elemento div temporário
-                for (let i = 0; i < selection.rangeCount; i++) {
-                    tempElement.appendChild(selection.getRangeAt(i).cloneContents());
-                }
-                // Copia o conteúdo do elemento div temporário para a área de transferência
-                navigator.clipboard
-                    .write([
-                    new ClipboardItem({
-                        'text/plain': new Blob([tempElement.innerText], {
-                            type: 'text/plain',
-                        }),
-                        'text/html': new Blob([tempElement.outerHTML], {
-                            type: 'text/html',
-                        }),
-                    }),
-                ])
-                    .finally(() => tempElement.remove());
-            }
-            else {
-                console.log('Clipboard API não suportada');
-                document.execCommand('copy'); // Alternativa para o caso de não suportar a Clipboard API
-            }
-        }
-    }
-}
-class ModuloRevisao extends Module$1 {
+class ModuloRevisao extends Module$2 {
     static register() {
-        Quill.register('modules/keyboard', CustomKeyboard, true);
-        Quill.register('modules/clipboard', CustomClipboard, true);
         Quill.register(InsBlot, true);
         Quill.register(DelBlot, true);
     }
@@ -17041,7 +16979,7 @@ class ModuloRevisao extends Module$1 {
                 if ((aceitar && !isTagIns) || (!aceitar && isTagIns)) {
                     const index = this.quill.getIndex(blot);
                     const length = blot.length();
-                    this.quill.updateContents(new Delta$2().retain(index).delete(length), 'user');
+                    this.quill.updateContents(new Delta$3().retain(index).delete(length), 'user');
                 }
                 else {
                     blot.format(isTagIns ? 'added' : 'removed', false, 'user');
@@ -17264,7 +17202,7 @@ class ModuloRevisao extends Module$1 {
                     }
                     return acc;
                 }, []);
-                return new Delta$2(ops);
+                return new Delta$3(ops);
             }
         });
     }
@@ -17484,9 +17422,6 @@ class ModuloRevisao extends Module$1 {
         return revisoesSemDuplicidade;
     }
 }
-// --------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------------------------------
-Quill.register('modules/revisao', ModuloRevisao, true);
 
 // Foi utilizado TemplateResult porque o editor.component.ts não usa ShadowDom
 const quillSnowStyles = html `
@@ -18480,8 +18415,8 @@ const quillSnowStyles = html `
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import Quill from 'quill/dist/quill.js';
-const DefaultKeyboardModule$1 = Quill.import('modules/keyboard');
-const DefaultClipboardModule$1 = Quill.import('modules/clipboard');
+const DefaultKeyboardModule = Quill.import('modules/keyboard');
+const DefaultClipboardModule = Quill.import('modules/clipboard');
 class NotaRodapeModal {
     constructor(options) {
         this.ajustaHtml = (html = '') => {
@@ -18705,8 +18640,8 @@ class NotaRodapeModal {
             .querySelector('.modal-save-button')
             ?.addEventListener('click', this.save.bind(this));
         const quillContainer = this.shadowRoot.querySelector('#editor-nota-rodape-container');
-        Quill.register('modules/keyboard', DefaultKeyboardModule$1, true);
-        Quill.register('modules/clipboard', DefaultClipboardModule$1, true);
+        Quill.register('modules/keyboard', DefaultKeyboardModule, true);
+        Quill.register('modules/clipboard', DefaultClipboardModule, true);
         Quill.register('formats/estilo-texto', EstiloTextoClass, true);
         Quill.register('formats/text-indent', NoIndentClass, true);
         Quill.register('formats/margin-bottom', MarginBottomClass, true);
@@ -18778,8 +18713,8 @@ class NotaRodapeModal {
 /* eslint-disable eqeqeq */
 /* eslint-disable prefer-const */
 const PREFIXO_ID = 'nr';
-const Delta$1 = Quill.import('delta');
-const Module = Quill.import('core/module');
+const Delta$2 = Quill.import('delta');
+const Module$1 = Quill.import('core/module');
 const Embed = Quill.import('blots/embed'); // Inline Embed
 const Text$1 = Quill.import('blots/text'); // Inline Text
 const Parchment = Quill.import('parchment');
@@ -18830,7 +18765,7 @@ class NotaRodapeBlot extends Embed {
 NotaRodapeBlot.blotName = 'nota-rodape';
 NotaRodapeBlot.tagName = 'nota-rodape';
 NotaRodapeBlot.allowedChildren = [Text$1];
-class ModuloNotaRodape extends Module {
+class ModuloNotaRodape extends Module$1 {
     get isAbrindoTexto() {
         return this._isAbrindoTexto;
     }
@@ -18876,7 +18811,7 @@ class ModuloNotaRodape extends Module {
             const numero = node.getAttribute('numero');
             const texto = decodeHtml(node.getAttribute('texto'));
             const notaRodape = new NotaRodape({ id, numero, texto });
-            return new Delta$1().insert({ 'nota-rodape': notaRodape });
+            return new Delta$2().insert({ 'nota-rodape': notaRodape });
             // const ops = delta.ops.reduce((acc, op) => {
             //   if (op.insert && op.attributes?.['id-nota-rodape']) {
             //     const { 'id-nota-rodape': id, numero, texto } = op.attributes || {};
@@ -18970,7 +18905,7 @@ class ModuloNotaRodape extends Module {
             return;
         const id = this.gerarId();
         const notaRodape = new NotaRodape({ id, numero: 0, texto });
-        const delta = new Delta$1()
+        const delta = new Delta$2()
             .retain(range.index)
             .delete(range.length)
             .insert({ 'nota-rodape': notaRodape });
@@ -19822,11 +19757,437 @@ const editorStyles = html `
   </style>
 `;
 
+/* eslint-disable prettier/prettier */
+// import Quill, { Module, Range } from 'quill';
+// import Inline from 'quill/blots/inline';
+const Module = Quill.import('core/module');
+const Inline = Quill.import('blots/inline');
+// const Range = Quill.import('core/selection').Range;
+class Utils {
+    static debounce(fn, delay) {
+        let timeoutID;
+        return function () {
+            clearTimeout(timeoutID);
+            // const args = arguments;
+            // const that = this;
+            timeoutID = window.setTimeout(() => {
+                // fn.apply(that, args);
+                fn();
+            }, delay);
+        };
+    }
+}
+Utils.isWordCharacter = (c) => (c ?? '').match(/[\p{L}\d-]/u) !== null;
+Utils.extractWords = (str) => {
+    const words = [];
+    let currentWord = '';
+    let currentStart = -1;
+    for (let i = 0; i < str.length; i++) {
+        if (Utils.isWordCharacter(str[i])) {
+            if (currentWord === '') {
+                currentStart = i;
+            }
+            currentWord += str[i];
+        }
+        else {
+            if (currentWord !== '') {
+                words.push({
+                    offset: currentStart,
+                    length: currentWord.length,
+                    word: currentWord,
+                });
+                currentWord = '';
+                currentStart = -1;
+            }
+        }
+    }
+    // Adiciona a última palavra se a string terminar com uma palavra
+    if (currentWord !== '') {
+        words.push({
+            offset: currentStart,
+            length: currentWord.length,
+            word: currentWord,
+        });
+    }
+    return words;
+};
+const defaultOptions = {
+    debounceTime: 300,
+    urlVerificadorOrtografico: '',
+    enabled: true,
+    callBackVerificadorOrtografico: async function (texto) {
+        if (!this.urlVerificadorOrtografico || !texto?.trim().length) {
+            return [];
+        }
+        try {
+            // O retorno da função deve ser um array de objetos do tipo VerificadorOrtograficoResponse
+            const response = await fetch(this.urlVerificadorOrtografico, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: texto,
+            });
+            return await response.json();
+        }
+        catch (error) {
+            console.log('Erro ao chamar o verificador ortográfico');
+            return [];
+        }
+    },
+    callbackRenderErrosOrtograficos: function () { },
+};
+class IgnoreBlot extends Inline {
+}
+IgnoreBlot.blotName = 'ignore';
+IgnoreBlot.className = 'ql-ignore';
+IgnoreBlot.tagName = 'ignore';
+class MisspelledBlot extends Inline {
+    static create(value) {
+        const node = super.create();
+        MisspelledBlot.updateAttributes(node, value);
+        return node;
+    }
+    static updateAttributes(node, value) {
+        if (value) {
+            node.setAttribute('data-uuid', value.uuid);
+            node.setAttribute('data-rule-id', value.ruleId);
+            node.setAttribute('data-issue-type', value.issueType);
+            node.setAttribute('data-category-id', value.categoryId);
+            node.setAttribute('data-category-name', value.categoryName);
+            node.setAttribute('data-message', value.message);
+            node.setAttribute('data-short-message', value.shortMessage);
+            node.setAttribute('title', value.message);
+        }
+    }
+    static format(node, value) {
+        if (value) {
+            MisspelledBlot.updateAttributes(node, value);
+        }
+    }
+    static formats(node) {
+        return {
+            uuid: node.getAttribute('data-uuid'),
+            ruleId: node.getAttribute('data-rule-id'),
+            issueType: node.getAttribute('data-issue-type'),
+            categoryId: node.getAttribute('data-category-id'),
+            categoryName: node.getAttribute('data-category-name'),
+            message: node.getAttribute('data-message'),
+            shortMessage: node.getAttribute('data-short-message'),
+        };
+    }
+}
+MisspelledBlot.blotName = 'misspelled';
+MisspelledBlot.className = 'ql-misspelled';
+MisspelledBlot.tagName = 'misspelled';
+class EditorCustomEventErrosOrtograficos extends CustomEvent {
+    constructor(detalhes) {
+        super('editor:erros-ortograficos', {
+            detail: detalhes,
+            bubbles: true,
+        });
+    }
+}
+class ModuloVerificacaoOrtografica extends Module {
+    static register() {
+        Quill.register(MisspelledBlot, true);
+        Quill.register(IgnoreBlot, true);
+    }
+    constructor(quill, options) {
+        super(quill, options);
+        this.lastResponses = [];
+        if (!options)
+            return;
+        this.quill = quill;
+        this.options = { ...defaultOptions, ...options };
+        // this.quill.root.addEventListener("input", this.checkSpelling.bind(this));
+        addBindingOnTop(this.quill, 'Backspace', undefined, (range) => {
+            if (!range.index && !range.length)
+                return true;
+            const index = range.length ? range.index : range.index - 1;
+            const length = range.length || 1;
+            return this.removeIgnoreFormatting(new Range(index, length));
+        });
+        addMultipleBindingsOnTop(this.quill, ['Delete', 'Enter'], undefined, this.removeIgnoreFormatting);
+        addMultipleBindingsOnTop(this.quill, ['x', 'v', 'X', 'V'], { ctrlKey: true }, this.removeIgnoreFormatting);
+        if (this.options.debounceTime) {
+            this.quill.on('text-change', Utils.debounce(this.checkSpelling.bind(this), this.options.debounceTime));
+        }
+        else {
+            this.quill.on('text-change', this.checkSpelling.bind(this));
+        }
+        this.quill.root.setAttribute('spellcheck', 'false');
+    }
+    removeIgnoreFormatting(range) {
+        let { index, length } = range;
+        // expande seleção para remover formatação de ignore, pegando início e fim da palavra
+        while (index > 0 && isIgnored(this.quill, index - 1, 1)) {
+            index--;
+        }
+        const totalLength = this.quill.getLength();
+        while (index + length < totalLength &&
+            isIgnored(this.quill, index + length, 1)) {
+            length++;
+        }
+        this.quill.formatText(index, length, { ignore: false }, 'user');
+        return true;
+    }
+    async checkSpelling() {
+        if (!this.options.enabled) {
+            return;
+        }
+        const text = this.quill.getText();
+        const numErrosAntigos = this.lastResponses?.length;
+        if (this.options.callBackVerificadorOrtografico) {
+            this.lastResponses =
+                await this.options.callBackVerificadorOrtografico(text);
+        }
+        if (!this.lastResponses?.length) {
+            if (numErrosAntigos) {
+                this.limparFormatacoesDeErros(text);
+                if (this.options.callbackRenderErrosOrtograficos) {
+                    this.options.callbackRenderErrosOrtograficos([]);
+                }
+            }
+            return;
+        }
+        this.lastResponses = this.removerErrosIgnorados(this.lastResponses);
+        this.formatarErrosOrtograficos(text, this.lastResponses);
+        if (this.options.callbackRenderErrosOrtograficos) {
+            this.options.callbackRenderErrosOrtograficos(this.lastResponses);
+        }
+    }
+    removerErrosIgnorados(erros) {
+        return erros.filter(erro => !isIgnored(this.quill, erro.offset, erro.length));
+    }
+    limparFormatacoesDeErros(text = '') {
+        this.quill.focus();
+        // this.quill.formatText(0, text.length, formatName, false, 'silent');
+        try {
+            this.quill.formatText(0, text.length - 1, { misspelled: false, ignore: false }, 'silent');
+        }
+        catch {
+            /* empty */
+        }
+        try {
+            this.quill.formatText(0, text.length, { misspelled: false, ignore: false }, 'silent');
+        }
+        catch {
+            /* empty */
+        }
+    }
+    formatarErrosOrtograficos(text, erros) {
+        const formatName = 'misspelled';
+        this.limparFormatacoesDeErros(text);
+        erros.forEach(response => {
+            try {
+                this.quill.formatText(response.offset, response.length, formatName, response, 'silent');
+            }
+            catch (error) {
+                // empty
+            }
+        });
+    }
+    ignorarErro(erro) {
+        this.quill.formatText(erro.offset, erro.length, { misspelled: false, ignore: true }, 'user');
+        console.log('Ignorando erro', erro);
+    }
+}
+// Quill.register('modules/verificadorOrtografico', VerificadorOrtografico);
+
+const verificacaoOrtograficaCss = html `
+  <style>
+    .ql-ignore {
+      border: 1px solid #aaa;
+    }
+
+    .ql-misspelled[data-rule-id='MORFOLOGIK_RULE_PT_BR'] {
+      text-decoration: underline wavy red;
+    }
+
+    .ql-misspelled:not([data-rule-id='MORFOLOGIK_RULE_PT_BR']) {
+      text-decoration: underline wavy orange;
+    }
+
+    .ql-misspelled[data-rule-id='MORFOLOGIK_RULE_PT_BR']:hover {
+      cursor: pointer;
+      background-color: #ffe5e5;
+    }
+
+    .ql-misspelled:not([data-rule-id='MORFOLOGIK_RULE_PT_BR']):hover {
+      cursor: pointer;
+      background-color: peachpuff;
+    }
+  </style>
+`;
+
+/* eslint-disable prettier/prettier */
+// Este módulo substitui o módulo Clipboard padrão do Quill para tratar cenários de colagem
+// em que há formatações de revisão (blots <del>) ou de correção ortográfica (misspelled, ignore).
+const Clipboard = Quill.import('modules/clipboard');
+const Delta$1 = Quill.import('delta');
+const DOM_KEY = '__ql-matcher';
+function traverse(node, elementMatchers, textMatchers) {
+    // Post-order
+    if (node.nodeType === node.TEXT_NODE) {
+        return textMatchers.reduce(function (delta, matcher) {
+            return matcher(node, delta);
+        }, new Delta$1());
+    }
+    else if (node.nodeType === node.ELEMENT_NODE) {
+        return [].reduce.call(node.childNodes || [], (delta, childNode) => {
+            let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
+            if (childNode.nodeType === node.ELEMENT_NODE) {
+                childrenDelta = elementMatchers.reduce(function (childrenDelta, matcher) {
+                    return matcher(childNode, childrenDelta);
+                }, childrenDelta);
+                childrenDelta = (childNode[DOM_KEY] || []).reduce(function (childrenDelta, matcher) {
+                    return matcher(childNode, childrenDelta);
+                }, childrenDelta);
+            }
+            return delta.concat(childrenDelta);
+        }, new Delta$1());
+    }
+    else {
+        return new Delta$1();
+    }
+}
+function deltaEndsWith(delta, text) {
+    let endText = '';
+    for (let i = delta.ops.length - 1; i >= 0 && endText.length < text.length; --i) {
+        const op = delta.ops[i];
+        if (typeof op.insert !== 'string')
+            break;
+        endText = op.insert + endText;
+    }
+    return endText.slice(-1 * text.length) === text;
+}
+class ModuloCustomClipboard extends Clipboard {
+    constructor(quill, options) {
+        super(quill, options);
+        this.quill.root.addEventListener('cut', this.onCut.bind(this));
+    }
+    onCut(e) {
+        if (this.quill?.revisao?.emRevisao) {
+            e.preventDefault();
+            e.stopPropagation();
+            const range = this.quill.getSelection();
+            if (range?.length) {
+                this.copiarSelecaoParaClipboard();
+                this.quill?.revisao?.handleRemove(range, null, null);
+            }
+        }
+    }
+    onPaste(e) {
+        if (cursorEstaSobreBlotDel(this.quill)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        // super.onPaste(e);
+        if (e.defaultPrevented || !this.quill.isEnabled())
+            return;
+        const range = this.quill.getSelection();
+        let delta = new Delta$1().retain(range.index);
+        const scrollTop = this.quill.scrollingContainer.scrollTop;
+        this.container.focus();
+        this.quill.selection.update('silent');
+        setTimeout(() => {
+            delta = delta.concat(this.convert()).delete(range.length);
+            // WORKAROUND: o Quill insere um \t (tab) quando cola conteúdo rich text que possui formatação de correção ortográfica
+            // TODO: descobrir por quê e tentar corrigir na fonte
+            delta.ops = delta.ops.filter((o) => o.insert !== '\t' || o.attributes);
+            this.quill.updateContents(delta, 'user');
+            // range.length contributes to delta.length()
+            this.quill.setSelection(delta.length() - range.length, 'silent');
+            this.quill.scrollingContainer.scrollTop = scrollTop;
+            this.quill.focus();
+        }, 1);
+    }
+    convert(html) {
+        if (typeof html === 'string') {
+            // this.container.innerHTML = html.replace(/\>\r?\n +\</g, '><'); // Remove spaces between tags
+            this.container.innerHTML = html.replace(/>\r?\n +</g, '><'); // Remove spaces between tags
+            return this.convert();
+        }
+        const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
+        if (formats['code']) {
+            const text = this.container.innerText;
+            this.container.innerHTML = '';
+            return new Delta$1().insert(text, { ['code']: formats['code'] });
+        }
+        const [elementMatchers, textMatchers] = this.prepareMatching();
+        let delta = traverse(this.container, elementMatchers, textMatchers);
+        // Remove trailing newline
+        if (deltaEndsWith(delta, '\n') &&
+            delta.ops[delta.ops.length - 1].attributes === null) {
+            delta = delta.compose(new Delta$1().retain(delta.length() - 1).delete(1));
+        }
+        // debug.log('convert', this.container.innerHTML, delta);
+        this.container.innerHTML = '';
+        return delta;
+    }
+    copiarSelecaoParaClipboard() {
+        const selection = window.getSelection();
+        if (selection) {
+            if (navigator.clipboard) {
+                // Cria um elemento div temporário para armazenar a seleção
+                const tempElement = document.createElement('div');
+                // Clona a seleção e a insere no elemento div temporário
+                for (let i = 0; i < selection.rangeCount; i++) {
+                    tempElement.appendChild(selection.getRangeAt(i).cloneContents());
+                }
+                // Copia o conteúdo do elemento div temporário para a área de transferência
+                navigator.clipboard
+                    .write([
+                    new ClipboardItem({
+                        'text/plain': new Blob([tempElement.innerText], {
+                            type: 'text/plain',
+                        }),
+                        'text/html': new Blob([tempElement.outerHTML], {
+                            type: 'text/html',
+                        }),
+                    }),
+                ])
+                    .finally(() => tempElement.remove());
+            }
+            else {
+                console.log('Clipboard API não suportada');
+                document.execCommand('copy'); // Alternativa para o caso de não suportar a Clipboard API
+            }
+        }
+    }
+}
+
+const Keyboard = Quill.import('modules/keyboard');
+// A classe abaixo adiciona um listener para o evento keydown para ser executado antes do listener padrão do Quill
+class ModuloCustomKeyboard extends Keyboard {
+    listen() {
+        this.quill.root.addEventListener('keydown', this.onKeyDown.bind(this));
+        this.quill.root.addEventListener('keypress', this.onKeyPress.bind(this));
+        super.listen();
+    }
+    onKeyDown(e) {
+        if (this.quill?.revisao?.gerenciarKeydown &&
+            this.quill?.revisao?.emRevisao) {
+            this.quill.revisao.handleKeyDown(e);
+        }
+    }
+    onKeyPress(e) {
+        if (cursorEstaSobreBlotDel(this.quill)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+}
+
+Quill.register('modules/clipboard', ModuloCustomClipboard, true);
+Quill.register('modules/keyboard', ModuloCustomKeyboard, true);
 Quill.register('modules/aspasCurvas', ModuloAspasCurvas, true);
 Quill.register('modules/revisao', ModuloRevisao, true);
 Quill.register('modules/notaRodape', ModuloNotaRodape, true);
-const DefaultKeyboardModule = Quill.import('modules/keyboard');
-const DefaultClipboardModule = Quill.import('modules/clipboard');
+Quill.register('modules/verificadorOrtografico', ModuloVerificacaoOrtografica);
+// const DefaultKeyboardModule = Quill.import('modules/keyboard');
+// const DefaultClipboardModule = Quill.import('modules/clipboard');
 const Delta = Quill.import('delta');
 const CLASS_BUTTON_ACEITAR_REVISAO = 'aceitar-revisao';
 const CLASS_BUTTON_REJEITAR_REVISAO = 'rejeitar-revisao';
@@ -19901,7 +20262,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     render() {
         return html `
       ${quillSnowStyles} ${quillTableCss} ${editorStyles} ${editorTextoRicoCss}
-      ${notaRodapeCss}
+      ${notaRodapeCss} ${verificacaoOrtograficaCss}
       <div class="panel-revisao">
         <lexml-ui-switch-revisao
           id="lexml-ui-switch-revisao-component-${this._uid}"
@@ -19942,23 +20303,22 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         class="editor-texto-rico"
         @onTableInTable=${this.onTableInTable}
       ></div>
-      <lexml-alterar-largura-tabela-coluna-modal
+      <lexml-ui-alterar-largura-tabela-coluna-modal
         id="lexml-alterar-largura-tabela-modal"
         tipo="tabela"
-      ></lexml-alterar-largura-tabela-coluna-modal>
-      <lexml-alterar-largura-tabela-coluna-modal
+      ></lexml-ui-alterar-largura-tabela-coluna-modal>
+      <lexml-ui-alterar-largura-tabela-coluna-modal
         id="lexml-alterar-largura-coluna-modal"
         tipo="coluna"
-      ></lexml-alterar-largura-tabela-coluna-modal>
-      <lexml-alterar-largura-imagem-modal
+      ></lexml-ui-alterar-largura-tabela-coluna-modal>
+      <lexml-ui-alterar-largura-imagem-modal
         id="lexml-alterar-largura-img-modal"
-      ></lexml-alterar-largura-imagem-modal>
+      ></lexml-ui-alterar-largura-imagem-modal>
     `;
     }
     constructor() {
         super();
         this._uid = crypto.randomUUID();
-        // NEW — container id único do Quill
         this._containerId = `rte-${this._uid}`;
         this.texto = '';
         // @property({ type: Array }) anexos: Anexo[] = [];
@@ -19986,8 +20346,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.init = () => {
             const quillContainer = this.querySelector(`#${this._containerId}`);
             if (quillContainer) {
-                Quill.register('modules/keyboard', DefaultKeyboardModule, true);
-                Quill.register('modules/clipboard', DefaultClipboardModule, true);
+                // Quill.register('modules/keyboard', DefaultKeyboardModule, true);
+                // Quill.register('modules/clipboard', DefaultClipboardModule, true);
                 Quill.register('modules/table', TableModule, true);
                 Quill.register('formats/estilo-texto', EstiloTextoClass, true);
                 Quill.register('formats/text-indent', NoIndentClass, true);
@@ -20002,11 +20362,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 else {
                     customToolbarOptions = [...toolbarOptions];
                     customFormatsOptions = [...formatsOptions];
-                }
-                if (this.indHabilitarNotaRodape) {
-                    customToolbarOptions.push(['nota-rodape']);
-                    customToolbarOptions[1] = ['bold', 'italic', 'underline', 'link'];
-                    customFormatsOptions.push('nota-rodape', 'link');
+                    if (this.indHabilitarNotaRodape) {
+                        customToolbarOptions.push(['nota-rodape']);
+                        customFormatsOptions.push('nota-rodape', 'link');
+                    }
                 }
                 this.quill = new Quill(quillContainer, {
                     formats: customFormatsOptions,
@@ -20030,6 +20389,18 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                             gerenciarKeydown: true,
                             tableModule: TableModule,
                             tableTrick: TableTrick,
+                        },
+                        verificadorOrtografico: {
+                            urlVerificadorOrtografico: 'https://verificador-ortografico.camara.leg.br/grammarcheck',
+                            debounceTime: 500,
+                            callbackRenderErrosOrtograficos: (erros) => {
+                                // const codItemReferencia = +(this.quill?.root.getAttribute('data-cod-item-referencia') ?? 0);
+                                const evt = new EditorCustomEventErrosOrtograficos({
+                                    erros,
+                                    codItemReferencia: 0,
+                                });
+                                this.quill?.root.dispatchEvent(evt);
+                            },
                         },
                         history: {
                             delay: 1000,
@@ -20524,7 +20895,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             clean: ['clean'],
             image: ['image'],
             link: ['link'],
-            // notarodape: ['nota-rodape'],
+            notarodape: ['nota-rodape'],
             table: [
                 { table: TableModule.tableOptions() },
                 {
@@ -20646,6 +21017,7 @@ const formatsOptions = [
     'width',
     'added',
     'removed',
+    'misspelled',
 ];
 const toolbarOptions = [
     [{ estilo: [false, 'ementa', 'norma-alterada'] }],
@@ -20802,7 +21174,7 @@ __decorate([
     property({ type: Function })
 ], AlterarLarguraTabelaColunaModalComponent.prototype, "callback", void 0);
 AlterarLarguraTabelaColunaModalComponent = __decorate([
-    customElement('lexml-alterar-largura-tabela-coluna-modal')
+    customElement('lexml-ui-alterar-largura-tabela-coluna-modal')
 ], AlterarLarguraTabelaColunaModalComponent);
 
 let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponent extends LitElement {
@@ -20930,7 +21302,7 @@ __decorate([
     property({ type: Function })
 ], AlterarLarguraImagemModalComponent.prototype, "callback", void 0);
 AlterarLarguraImagemModalComponent = __decorate([
-    customElement('lexml-alterar-largura-imagem-modal')
+    customElement('lexml-ui-alterar-largura-imagem-modal')
 ], AlterarLarguraImagemModalComponent);
 
 // import { Observable } from '../../utils/observable';
@@ -20989,7 +21361,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           background-color: #eee;
           cursor: pointer;
         }
-        [id^="chk-em-revisao-"] {
+        [id^='chk-em-revisao-'] {
           border: 1px solid #ccc !important;
           padding: 5px 10px !important;
           border-radius: 20px !important;
@@ -20998,7 +21370,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           font-weight: bold;
           background-color: #eee;
         }
-        [id^="chk-em-revisao-"][checked] {
+        [id^='chk-em-revisao-'][checked] {
           background-color: var(--wa-color-blue-100);
         }
         .revisao-container {
@@ -21081,5 +21453,5 @@ SwitchRevisaoComponent = __decorate([
 
 window.Quill = Quill;
 
-export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem };
+export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem, alertarInfo };
 //# sourceMappingURL=index.js.map

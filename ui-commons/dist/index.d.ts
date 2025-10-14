@@ -600,7 +600,7 @@ declare class AlterarLarguraTabelaColunaModalComponent extends LitElement {
 }
 declare global {
   interface HTMLElementTagNameMap {
-    'lexml-alterar-largura-tabela-coluna-modal': AlterarLarguraTabelaColunaModalComponent;
+    'lexml-ui-alterar-largura-tabela-coluna-modal': AlterarLarguraTabelaColunaModalComponent;
   }
 }
 
@@ -624,7 +624,7 @@ declare class AlterarLarguraImagemModalComponent extends LitElement {
 }
 declare global {
   interface HTMLElementTagNameMap {
-    'lexml-alterar-largura-imagem-modal': AlterarLarguraImagemModalComponent;
+    'lexml-ui-alterar-largura-imagem-modal': AlterarLarguraImagemModalComponent;
   }
 }
 
@@ -642,6 +642,26 @@ declare class SwitchRevisaoComponent extends LitElement {
 }
 
 declare const REGEX_ACCENTS: RegExp;
+
+type WaVariant =
+  | 'brand'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'neutral';
+type WaIconWeight = 'regular' | 'solid' | 'light' | 'thin' | 'duotone';
+declare function alertarInfo(
+  msg: string,
+  opts?: {
+    variant?: WaVariant;
+    duration?: number;
+    icon?: string;
+    iconWeight?: WaIconWeight;
+    width?: number | string;
+    height?: number | string;
+  },
+): void;
 
 export {
   AlertasComponent,
@@ -662,5 +682,6 @@ export {
   REGEX_ACCENTS,
   SwitchRevisaoComponent,
   TipoMensagem,
+  alertarInfo,
 };
 export type { Alerta, Mensagem, MensagemErro };
