@@ -6,6 +6,8 @@ import { AnexoParecer } from '../../models/anexo.modelo.js';
 import { TipoDocumento } from '../../types/tipo-documento.js';
 import { alertarInfo } from '@ui-commons';
 
+type ItemVotoRuntime = ItemVoto & { _uid: string };
+
 type AnexoParecerRuntime = AnexoParecer & {
   arquivo?: File | null;
   url?: string | null;
@@ -16,7 +18,15 @@ export class LexmlParecerVoto extends LitElement {
     return this;
   }
 
-  @state() private itens: ItemVoto[] = [];
+  @state() private itens: ItemVotoRuntime[] = [];
+
+  private uid(): string {
+    try {
+      return crypto.randomUUID();
+    } catch {
+      return 'uid_' + Math.random().toString(36).slice(2);
+    }
+  }
 
   private static readonly ALLOWED_MIME_TYPES = new Set([
     'application/pdf',
@@ -117,6 +127,7 @@ export class LexmlParecerVoto extends LitElement {
     this.itens = (voto?.itensVoto ?? []).map((it, i) => ({
       ...it,
       posicao: i + 1,
+      _uid: this.uid(),
     }));
   }
 
@@ -127,7 +138,8 @@ export class LexmlParecerVoto extends LitElement {
           display: flex;
           gap: 0.5rem;
           flex-wrap: wrap;
-          margin-bottom: 1rem;
+          margin-top: 1rem;
+          justify-content: center;
         }
         button {
           border: 1px solid #d0d7de;
@@ -139,39 +151,22 @@ export class LexmlParecerVoto extends LitElement {
         button:hover {
           background: #f6f8fa;
         }
-        details {
-          border: 1px solid #e5e7eb;
-          border-radius: 0.75rem;
-          padding: 0.5rem 0.75rem;
+        wa-card {
           margin-bottom: 0.75rem;
-          background: #fff;
+          box-shadow: var(--wa-shadow-m);
+          border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+          border-radius: var(--wa-border-radius-s);
         }
-        summary {
-          list-style: none;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        summary::-webkit-details-marker {
-          display: none;
+        wa-card.card-header {
+          will-change: transform;
+          transition: box-shadow 0.2s ease;
         }
         .caret {
           transition: transform 0.16s ease;
         }
-        wa-details[open] .caret {
-          transform: rotate(90deg);
-        }
         .meta {
           color: #6b7280;
           font-size: 0.9em;
-        }
-        wa-input,
-        wa-select,
-        input[type='text'],
-        select {
-          width: 100%;
-          box-sizing: border-box;
         }
         .chip {
           display: inline-flex;
@@ -183,102 +178,133 @@ export class LexmlParecerVoto extends LitElement {
           border-radius: 999px;
           background: #f9fafb;
         }
+        .filed-header {
+          display: flex;
+          justify-content: space-between;
+        }
         .item-actions {
           display: flex;
           gap: 0.5rem;
-          margin-top: 0.5rem;
         }
         .file-actions {
           display: inline-flex;
           gap: 0.5rem;
         }
         .muted {
-          color: #9ca3af;
-        }
-        wa-input,
-        wa-select {
-          width: 100%;
-        }
-        wa-details::part(base) {
-          border: 1px solid #e5e7eb;
-          border-radius: 0.75rem;
-          padding: 0rem 0.75rem;
-          margin-bottom: 0.75rem;
-          background: #fff;
-        }
-        wa-details::part(summary) {
           display: flex;
-          align-items: center;
-          gap: 0.5rem;
+          color: #9ca3af;
+          margin-bottom: 2rem;
+          justify-content: center;
         }
         .voto-editor .ql-container {
           height: calc(100% - 55px) !important;
         }
-
         .voto-editor .ql-editor {
-          min-height: 220px !important;
-          max-height: 220px !important;
+          min-height: 160px !important;
+          max-height: 160px !important;
           height: 100% !important;
           overflow-y: auto;
         }
+        .card-header .wa-grid {
+          align-items: end;
+        }
+        .field-file {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .input-file {
+          width: 100%;
+          margin-right: 0.5em;
+          border-color: var(--wa-form-control-border-color);
+          border-radius: var(--wa-form-control-border-radius);
+          border-style: var(--wa-form-control-border-style);
+          border-width: var(--wa-form-control-border-width);
+          color: var(--wa-form-control-value-color);
+        }
+        .input-file input {
+          width: 100%;
+        }
       </style>
-      <div class="toolbar">
-        <wa-button size="small" @click=${this.addDocumento}
-          >Importar documento</wa-button
-        >
-        <wa-button size="small" variant="brand" @click=${this.addTexto}
-          >Adicionar bloco de texto</wa-button
-        >
-      </div>
       ${this.itens.length === 0
         ? html`<div class="muted">Nenhum voto adicionado ainda.</div>`
         : this.itens.map((item, idx) => this.renderItem(item, idx))}
+      <div class="toolbar">
+        <wa-button size="small" @click=${this.addDocumento}
+          >Importar anexo</wa-button
+        >
+        <wa-button size="small" variant="brand" @click=${this.addTexto}
+          >Adicionar texto</wa-button
+        >
+      </div>
     `;
   }
 
-  private renderItem(item: ItemVoto, idx: number): TemplateResult {
-    const header = item.documento
-      ? `Documento: ${
-          (item.documento as AnexoParecerRuntime).arquivo?.name ??
-          item.documento.nomeArquivo ??
-          'sem nome'
-        }`
-      : 'Bloco de texto';
+  private renderItem(item: ItemVotoRuntime, idx: number): TemplateResult {
+    const header = item.documento ? 'Anexo' : 'Texto';
 
     return html`
-      <wa-details open>
-        <div slot="summary">
-          <span class="chip">Voto #${item.posicao}</span>
-          <span>— ${header}</span>
+      <wa-card with-header class="card-header" data-uid=${item._uid}>
+        <div slot="header" class="filed-header">
+          <div>
+            <span class="chip">#${item.posicao}</span>
+            <span>— ${header}</span>
+          </div>
+          <div class="item-actions">
+            <div class="item-actions">
+              <wa-button
+                title="Mover para cima"
+                appearance="outlined"
+                pill
+                size="small"
+                @click=${() => this.move(idx, -1)}
+              >
+                <wa-icon
+                  name="arrow-up"
+                  variant="solid"
+                  label="Mover para cima"
+                ></wa-icon>
+              </wa-button>
+              <wa-button
+                title="Mover para baixo"
+                appearance="outlined"
+                pill
+                size="small"
+                @click=${() => this.move(idx, 1)}
+              >
+                <wa-icon
+                  name="arrow-down"
+                  variant="solid"
+                  label="Mover para baixo"
+                ></wa-icon>
+              </wa-button>
+              <wa-button
+                title="Excluir item"
+                pill
+                size="small"
+                variant="danger"
+                @click=${() => this.removeItem(idx)}
+              >
+                <wa-icon
+                  name="trash"
+                  variant="solid"
+                  label="Excluir item"
+                ></wa-icon>
+              </wa-button>
+            </div>
+          </div>
         </div>
         ${item.documento
           ? this.renderDocumento(item, idx)
           : this.renderTexto(item, idx)}
-        <div class="item-actions">
-          <wa-button size="small" @click=${() => this.move(idx, -1)}
-            >↑</wa-button
-          >
-          <wa-button size="small" @click=${() => this.move(idx, 1)}
-            >↓</wa-button
-          >
-          <wa-button
-            size="small"
-            variant="neutral"
-            @click=${() => this.removeItem(idx)}
-            >Remover</wa-button
-          >
-        </div>
-      </wa-details>
+      </wa-card>
     `;
   }
 
   private renderTexto(item: ItemVoto, idx: number): TemplateResult {
     return html`
       <div class="wa-grid" style="--min-column-size: 16rem;">
-        <div class="wa-span-grid wa-cluster wa-gap-xs">
-          <label class="muted">Texto:</label>
-        </div>
-        <div class="wa-span-grid ">
+        <div class="wa-span-grid">
           <lexml-ui-editor-texto-rico
             class="voto-editor"
             .texto=${item.texto ?? ''}
@@ -292,10 +318,10 @@ export class LexmlParecerVoto extends LitElement {
   private renderDocumento(item: ItemVoto, idx: number): TemplateResult {
     const doc = item.documento!;
     return html`
-      <div>
-        <div><label>Tipo:</label></div>
+      <div class="wa-grid" style="--min-column-size: 48rem;">
         <div>
           <wa-select
+            label="Tipo"
             placeholder="Selecione o tipo"
             .value=${(doc.tipo as TipoDocumento) ?? ''}
             @change=${(e: Event) => this.onTipoChange(idx, e)}
@@ -314,57 +340,68 @@ export class LexmlParecerVoto extends LitElement {
             </wa-option>
           </wa-select>
         </div>
-      </div>
-
-      <div>
-        <div><label>Nome:</label></div>
         <div>
-          <wa-input
-            type="text"
-            .value=${doc.nomeArquivo ?? ''}
-            placeholder="Nome do documento"
-            @wa-input=${(e: CustomEvent) =>
-              this.updateDocField(idx, 'nomeArquivo', (e.target as any).value)}
-            @input=${(e: Event) =>
-              this.updateDocField(
-                idx,
-                'nomeArquivo',
-                (e.target as HTMLInputElement).value,
-              )}
-          ></wa-input>
+          <div>
+            <wa-input
+              label="Nome"
+              type="text"
+              .value=${doc.nomeArquivo ?? ''}
+              placeholder="Nome do documento"
+              @wa-input=${(e: CustomEvent) =>
+                this.updateDocField(
+                  idx,
+                  'nomeArquivo',
+                  (e.target as any).value,
+                )}
+              @input=${(e: Event) =>
+                this.updateDocField(
+                  idx,
+                  'nomeArquivo',
+                  (e.target as HTMLInputElement).value,
+                )}
+            ></wa-input>
+          </div>
         </div>
-      </div>
-
-      <div>
-        <div><label>Arquivo:</label></div>
         <div>
-          <input
-            type="file"
-            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            @change=${(e: Event) => this.onFilePicked(idx, e as InputEvent)}
-          />
-        </div>
-      </div>
-
-      <div
-        class="wa-grid"
-        style="--min-column-size: 16rem; margin-top: 0.5rem;"
-      >
-        <div class="wa-span-grid wa-cluster wa-gap-xs file-actions">
-          ${doc.base64 || (doc as AnexoParecerRuntime).arquivo
-            ? html`
-                <wa-button size="small" @click=${() => this.view(idx)}>
-                  Visualizar
-                </wa-button>
-                <wa-button
-                  size="small"
-                  variant="brand"
-                  @click=${() => this.download(idx)}
-                >
-                  Download
-                </wa-button>
-              `
-            : html`<span class="muted">Sem arquivo</span>`}
+          <div><label>Arquivo</label></div>
+          <div class="field-file">
+            <div class="input-file">
+              <input
+                type="file"
+                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                @change=${(e: Event) => this.onFilePicked(idx, e as InputEvent)}
+              />
+            </div>
+            <div class="file-actions">
+              <wa-button
+                title="Visualizar Documento"
+                appearance="outlined"
+                pill
+                size="small"
+                @click=${() => this.view(idx)}
+              >
+                <wa-icon
+                  name="eye"
+                  variant="solid"
+                  label="Visualizar Documento"
+                ></wa-icon>
+              </wa-button>
+              <wa-button
+                title="Baixar Documento"
+                appearance="outlined"
+                pill
+                size="small"
+                variant="brand"
+                @click=${() => this.download(idx)}
+              >
+                <wa-icon
+                  name="download"
+                  variant="solid"
+                  label="Baixar Documento"
+                ></wa-icon>
+              </wa-button>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -433,6 +470,7 @@ export class LexmlParecerVoto extends LitElement {
     this.itens = [
       ...this.itens,
       {
+        _uid: this.uid(),
         documento: {
           tipo: undefined,
           nomeArquivo: '',
@@ -447,7 +485,10 @@ export class LexmlParecerVoto extends LitElement {
   };
 
   private addTexto = () => {
-    this.itens = [...this.itens, { texto: '', posicao: this.itens.length + 1 }];
+    this.itens = [
+      ...this.itens,
+      { _uid: this.uid(), texto: '', posicao: this.itens.length + 1 },
+    ];
     this.emitChange();
   };
 
@@ -458,14 +499,17 @@ export class LexmlParecerVoto extends LitElement {
     this.emitChange();
   }
 
-  private move(idx: number, delta: number) {
+  private async move(idx: number, delta: number) {
     const to = idx + delta;
     if (to < 0 || to >= this.itens.length) return;
-    const arr = [...this.itens];
-    const [item] = arr.splice(idx, 1);
-    arr.splice(to, 0, item);
-    this.itens = arr.map((it, i) => ({ ...it, posicao: i + 1 }));
-    this.emitChange();
+
+    await this.animateReorder(() => {
+      const arr = [...this.itens];
+      const [item] = arr.splice(idx, 1);
+      arr.splice(to, 0, item);
+      this.itens = arr.map((it, i) => ({ ...it, posicao: i + 1 }));
+      this.emitChange();
+    });
   }
 
   private updateTexto(idx: number, value: string) {
@@ -551,15 +595,19 @@ export class LexmlParecerVoto extends LitElement {
 
   private sanitizeItens(): ItemVoto[] {
     return this.itens.map(it => {
-      const doc = (it.documento ?? {}) as AnexoParecerRuntime;
+      const { ...rest } = it;
+      delete (rest as any)._uid;
+
+      const doc = (rest.documento ?? {}) as AnexoParecerRuntime;
       const persistente: AnexoParecer = {
         tipo: doc.tipo,
         nomeArquivo: doc.nomeArquivo ?? '',
         base64: doc.base64 ?? '',
       };
+
       return {
-        ...it,
-        documento: it.documento ? persistente : undefined,
+        ...rest,
+        documento: rest.documento ? persistente : undefined,
       };
     });
   }
@@ -585,6 +633,46 @@ export class LexmlParecerVoto extends LitElement {
       };
       fr.onerror = () => reject(fr.error);
       fr.readAsDataURL(file);
+    });
+  }
+
+  private async animateReorder(reorderFn: () => void) {
+    const cards = Array.from(
+      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
+    );
+    const first = new Map<string, DOMRect>();
+    cards.forEach(el => {
+      const uid = el.dataset.uid!;
+      first.set(uid, el.getBoundingClientRect());
+    });
+
+    reorderFn();
+
+    await this.updateComplete;
+
+    const afterCards = Array.from(
+      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
+    );
+    afterCards.forEach(el => {
+      const uid = el.dataset.uid!;
+      const last = el.getBoundingClientRect();
+      const prev = first.get(uid);
+      if (!prev) return;
+
+      const dx = prev.left - last.left;
+      const dy = prev.top - last.top;
+      if (dx === 0 && dy === 0) return;
+
+      el.animate(
+        [
+          {
+            transform: `translate(${dx}px, ${dy}px)`,
+            boxShadow: 'var(--wa-shadow-l)',
+          },
+          { transform: 'translate(0, 0)', boxShadow: 'var(--wa-shadow-m)' },
+        ],
+        { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' },
+      );
     });
   }
 

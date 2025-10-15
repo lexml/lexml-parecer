@@ -128,12 +128,12 @@ export class LexmlEtaParecer extends LitElement {
         }
       </style>
       <wa-tab-group>
+        <wa-tab slot="nav" panel="voto">Voto</wa-tab>
         <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
         ${!this.disableAnalise
           ? html`<wa-tab slot="nav" panel="analise">Análise</wa-tab>`
           : html``}
-        <wa-tab slot="nav" panel="voto">Voto</wa-tab>
         <wa-tab slot="nav" panel="dataAutoriaImpressao"
           >Data, Autoria e Impressão</wa-tab
         >
