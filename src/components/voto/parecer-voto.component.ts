@@ -317,6 +317,7 @@ export class LexmlParecerVoto extends LitElement {
 
   private renderDocumento(item: ItemVoto, idx: number): TemplateResult {
     const doc = item.documento!;
+    const hasFile = Boolean(doc?.base64 && doc.base64.trim() !== '');
     return html`
       <div class="wa-grid" style="--min-column-size: 48rem;">
         <div>
@@ -377,6 +378,7 @@ export class LexmlParecerVoto extends LitElement {
                 title="Visualizar Documento"
                 appearance="outlined"
                 pill
+                ?disabled=${!hasFile}
                 size="small"
                 @click=${() => this.view(idx)}
               >
@@ -390,6 +392,7 @@ export class LexmlParecerVoto extends LitElement {
                 title="Baixar Documento"
                 appearance="outlined"
                 pill
+                ?disabled=${!hasFile}
                 size="small"
                 variant="brand"
                 @click=${() => this.download(idx)}
