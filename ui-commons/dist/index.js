@@ -9,6 +9,8 @@ import '@awesome.me/webawesome/dist/components/callout/callout.js';
 import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/icon/icon.js';
 import '@awesome.me/webawesome/dist/components/badge/badge.js';
+import '@awesome.me/webawesome/dist/components/split-panel/split-panel.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import '@awesome.me/webawesome/dist/components/dialog/dialog.js';
 import '@awesome.me/webawesome/dist/components/switch/switch.js';
 
@@ -11475,6 +11477,18 @@ var AutoFix;
     AutoFix["RENUMERAR_DISPOSITIVO"] = "Numere o dispositivo";
 })(AutoFix || (AutoFix = {}));
 
+/* eslint-disable prettier/prettier */
+class NotaRodape {
+    constructor({ id, numero, texto }) {
+        this.id = id;
+        this.numero = numero;
+        this.texto = texto;
+    }
+}
+const NOTA_RODAPE_INPUT_EVENT = 'nota-rodape:input';
+const NOTA_RODAPE_CHANGE_EVENT = 'nota-rodape:change';
+const NOTA_RODAPE_REMOVE_EVENT = 'nota-rodape:remove';
+
 // import { EditorTextoRicoComponent } from '../richtext/editor-texto-rico.component';
 let LexmlUiCommons = class LexmlUiCommons extends LitElement {
     constructor() {
@@ -11681,7 +11695,7 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
           height: 200px;
         }
       </style>
-      <div>
+      <div id="main-container">
         <button @click=${this._log}>APRESENTAR VALORES NO CONSOLE</button>
         <h2>Start Projeto LEXML UI COMMONS</h2>
         <h2>Teste wa-input</h2>
@@ -11689,26 +11703,25 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
         <br />
 
         <h2>Teste EditorTextoRicoComponent</h2>
-        <div class="area-texto">
-          <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
+        <div class="teste">
+          <lexml-ui-editor-texto-rico height=400 orientacaoNotaRodaPe=abaixo ></lexml-ui-editor-texto-rico>
         </div>
         <br />
-        <br />
-        <br />
-        <div class="area-texto">
-          <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
-        </div>
-        <br />
-        <br />
-        <br />
-        <div class="area-texto">
-          <lexml-ui-editor-texto-rico
+        <lexml-ui-editor-texto-rico
             .toolbar=${'italic'}
           ></lexml-ui-editor-texto-rico>
+        <!-- <div class="area-texto">
+          <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <br />
         <br />
+          
+
+        <br />
+        <br />
+        <br />
+
         <h2>Teste AutoCompletComponent</h2>
         <lexml-ui-autocomplete
           label="Parlamentar"
@@ -11760,6 +11773,17 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     `;
+    }
+    renumerarNotasRodape() {
+        let numeroInicial = 1;
+        [...this.querySelectorAll('lexml-ui-editor-texto-rico')].forEach((ed) => {
+            ed.renumerarNotasRodape(numeroInicial);
+            numeroInicial += ed.getNotasRodape().length;
+        });
+    }
+    firstUpdated() {
+        this.querySelector('#main-container')?.addEventListener(NOTA_RODAPE_CHANGE_EVENT, this.renumerarNotasRodape);
+        this.querySelector('#main-container')?.addEventListener(NOTA_RODAPE_REMOVE_EVENT, this.renumerarNotasRodape);
     }
 };
 __decorate([
@@ -14007,25 +14031,84 @@ async function showMenuImagem(editorTextoRico, img, top, left) {
 
 const editorTextoRicoCss = html `
   <style>
-    .lexml-ui-editor-texto-rico {
-      height: 375px;
+    :host {
+      --rte-toolbar-h: 55px;
+    }
+
+    .rte-split {
+      box-sizing: border-box;
+    }
+    wa-split-panel.notas-desabilitadas::part(divider),
+    wa-split-panel.notas-desabilitadas::part(panel end) {
+      display: none;
+    }
+
+    wa-split-panel.notas-desabilitadas {
+      grid-template-rows: 1fr !important;
+      grid-template-columns: 1fr !important;
+    }
+    .split-start,
+    .split-end {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .split-end,
+    .panel-nota-rodape-container {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    /* editor ocupa tudo e libera scroll no conteúdo interno */
+    .editor-wrapper {
+      display: flex;
+      flex: 1 1 auto;
+      min-height: 0;
+      min-width: 0;
+      flex-direction: column;
+    }
+    .editor-texto-rico {
+      flex: 1 1 auto;
+      min-height: 0;
+      box-sizing: border-box;
       font-size: 18px !important;
     }
-    .lexml-ui-editor-texto-rico .ql-editor {
+    .editor-texto-rico .ql-container {
+      flex: 1 1 auto;
+      min-height: 0;
+      border: none;
+    }
+    .editor-texto-rico .ql-editor {
+      height: 100%;
+      overflow: auto;
       font-size: 18px !important;
     }
-    .lexml-ui-editor-texto-rico p,
-    .lexml-ui-editor-texto-rico ol,
-    .lexml-ui-editor-texto-rico ul {
+
+    .rte-toolbar .ql-toolbar.ql-snow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      padding: 6px 8px;
+      box-shadow: none;
+      border-bottom: 0px;
+    }
+    .editor-texto-rico p,
+    .editor-texto-rico ol,
+    .editor-texto-rico ul {
       margin-bottom: 0.7rem;
     }
-    .lexml-ui-editor-texto-rico p:not(.ql-align-rigth, .ql-align-center) {
+    .editor-texto-rico p:not(.ql-align-rigth, .ql-align-center) {
       text-indent: 3rem;
     }
-    .ql-toolbar.ql-snow .ql-formats {
+    .rte-toolbar .ql-toolbar.ql-snow .ql-formats {
       margin-right: 8px;
     }
-    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip {
+    .editor-texto-rico.ql-snow .ql-tooltip {
       font-family: var(--eta-font-sans);
       font-size: 0.9rem;
     }
@@ -14039,34 +14122,32 @@ const editorTextoRicoCss = html `
       padding: 0 15px;
       margin: 0 0 0 10px;
     }
-    .lexml-ui-editor-texto-rico.ql-snow
-      .ql-tooltip.ql-editing
-      a.ql-action::after {
+    .editor-texto-rico.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
       content: 'Salvar';
       margin: 0 !important;
       padding: 0 !important;
     }
-    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip a.ql-action::after {
+    .editor-texto-rico.ql-snow .ql-tooltip a.ql-action::after {
       display: inline;
       content: 'Editar';
       margin: 0 !important;
       padding: 0 !important;
       border: 0;
     }
-    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip a.ql-remove::before {
+    .editor-texto-rico.ql-snow .ql-tooltip a.ql-remove::before {
       display: inline;
       content: 'Remover';
       margin: 0 !important;
       padding: 0 !important;
     }
-    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip[data-mode='link']::before {
+    .editor-texto-rico.ql-snow .ql-tooltip[data-mode='link']::before {
       content: 'Insira o link:';
     }
-    .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip::before {
+    .editor-texto-rico.ql-snow .ql-tooltip::before {
       content: 'Visite o link:';
     }
     @media (max-width: 600px) {
-      .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip {
+      .editor-texto-rico.ql-snow .ql-tooltip {
         display: flex;
         gap: 5px;
         flex-direction: column;
@@ -14075,17 +14156,17 @@ const editorTextoRicoCss = html `
       .ql-tooltip .ql-remove {
         margin: 0;
       }
-      .lexml-ui-editor-texto-rico.ql-snow .ql-tooltip.ql-hidden {
+      .editor-texto-rico.ql-snow .ql-tooltip.ql-hidden {
         display: none;
       }
     }
 
-    .lexml-ui-editor-texto-rico .estilo-ementa {
+    .editor-texto-rico .estilo-ementa {
       text-indent: 0 !important;
       text-align: justify;
       margin-left: 40%;
     }
-    .lexml-ui-editor-texto-rico .estilo-norma-alterada {
+    .editor-texto-rico .estilo-norma-alterada {
       margin-left: 3rem;
     }
 
@@ -14150,7 +14231,7 @@ const editorTextoRicoCss = html `
       margin-left: auto;
     }
 
-    .ql-toolbar .panel-revisao {
+    .rte-toolbar .ql-toolbar.ql-snow .panel-revisao {
       display: flex;
       flex-grow: 1;
     }
@@ -14264,11 +14345,11 @@ const editorTextoRicoCss = html `
       max-width: 100%;
     }
 
-    .lexml-ui-editor-texto-rico p.ql-text-indent-0px {
+    .editor-texto-rico p.ql-text-indent-0px {
       text-indent: 0;
     }
 
-    .lexml-ui-editor-texto-rico p.ql-margin-bottom-0px {
+    .editor-texto-rico p.ql-margin-bottom-0px {
       margin-bottom: 0;
     }
 
@@ -14284,24 +14365,24 @@ const editorTextoRicoCss = html `
       /* #f8d7da; */
     }
 
-    .lexml-ui-editor-texto-rico .ql-tooltip input:invalid {
+    .editor-texto-rico .ql-tooltip input:invalid {
       color: red;
     }
 
-    .lexml-ui-editor-texto-rico .ql-tooltip div.tooltip-invalid-message {
+    .editor-texto-rico .ql-tooltip div.tooltip-invalid-message {
       color: red;
       display: none;
       font-family: var(--eta-font-sans);
       font-size: 0.9rem;
     }
 
-    .lexml-ui-editor-texto-rico
+    .editor-texto-rico
       .ql-tooltip[data-mode='link']
       div.tooltip-invalid-message::after {
       content: 'A URL deve iniciar com http:// ou https://';
     }
 
-    .lexml-ui-editor-texto-rico
+    .editor-texto-rico
       .ql-tooltip[data-mode='link']
       input:invalid
       ~ div.tooltip-invalid-message {
@@ -14318,7 +14399,7 @@ const editorTextoRicoCss = html `
     }
 
     @-moz-document url-prefix() {
-      #lexml-ui-editor-texto-rico-justificativa-inner > .ql-editor {
+      #editor-texto-rico-justificativa-inner > .ql-editor {
         white-space: pre-wrap;
       }
     }
@@ -14333,6 +14414,13 @@ const editorTextoRicoCss = html `
       .ql-snow .ql-editor img {
         max-width: 100%;
       }
+    }
+    /* ======== painel de notas ======== */
+    .panel-nota-rodape-container,
+    .panel-nota-rodape {
+      flex: 1 1 auto;
+      min-height: 0;
+      min-width: 0;
     }
   </style>
 `;
@@ -16579,7 +16667,7 @@ const notaRodapeCss = html `
       left: 50%;
       transform: translate(-50%, 50%);
       opacity: 0;
-      background-color: var(--wa-color-red-300);
+      background-color: var(--wa-color-red-80);
       color: black;
       width: 20px;
       height: 20px;
@@ -16617,18 +16705,6 @@ const notaRodapeCss = html `
     }
   </style>
 `;
-
-/* eslint-disable prettier/prettier */
-class NotaRodape {
-    constructor({ id, numero, texto }) {
-        this.id = id;
-        this.numero = numero;
-        this.texto = texto;
-    }
-}
-const NOTA_RODAPE_INPUT_EVENT = 'nota-rodape:input';
-const NOTA_RODAPE_CHANGE_EVENT = 'nota-rodape:change';
-const NOTA_RODAPE_REMOVE_EVENT = 'nota-rodape:remove';
 
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable prettier/prettier */
@@ -16953,11 +17029,7 @@ class ModuloRevisao extends Module$2 {
         return ['INS', 'DEL'].includes(tagName);
     }
     getTagRevisaoMaisProxima(elemento) {
-        if (!elemento || ['BODY', 'HTML'].includes(elemento.tagName))
-            return null;
-        if (this.isTagRevisao(elemento))
-            return elemento;
-        return this.getTagRevisaoMaisProxima(elemento.parentNode);
+        return elemento?.closest(`${InsBlot.tagName}, ${DelBlot.tagName}`);
     }
     tratarClick(event) {
         const elRevisao = this.getTagRevisaoMaisProxima(event.target);
@@ -18415,8 +18487,6 @@ const quillSnowStyles = html `
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import Quill from 'quill/dist/quill.js';
-const DefaultKeyboardModule = Quill.import('modules/keyboard');
-const DefaultClipboardModule = Quill.import('modules/clipboard');
 class NotaRodapeModal {
     constructor(options) {
         this.ajustaHtml = (html = '') => {
@@ -18640,8 +18710,6 @@ class NotaRodapeModal {
             .querySelector('.modal-save-button')
             ?.addEventListener('click', this.save.bind(this));
         const quillContainer = this.shadowRoot.querySelector('#editor-nota-rodape-container');
-        Quill.register('modules/keyboard', DefaultKeyboardModule, true);
-        Quill.register('modules/clipboard', DefaultClipboardModule, true);
         Quill.register('formats/estilo-texto', EstiloTextoClass, true);
         Quill.register('formats/text-indent', NoIndentClass, true);
         Quill.register('formats/margin-bottom', MarginBottomClass, true);
@@ -18788,7 +18856,7 @@ class ModuloNotaRodape extends Module$1 {
         this._isAbrindoTexto = false;
         this.quill = quill;
         this.options = options;
-        this.options.numeroInicial = this.options.numeroInicial ?? 1;
+        this.options.numeroInicial = this.options.numeroInicial || 1;
         this.quill.notasRodape = this;
         const toolbar = this.quill.getModule('toolbar');
         if (toolbar) {
@@ -18949,11 +19017,12 @@ class ModuloNotaRodape extends Module$1 {
             };
         });
     }
-    renumerarTodasNotas() {
+    renumerarTodasNotas(numeroInicial = this.options.numeroInicial || 1) {
+        this.options.numeroInicial = numeroInicial;
         const range = this.quill.getSelection();
         const notas = this.findBlotsNotaRodape();
         notas.forEach((item, idx) => {
-            const numero = idx + this.options.numeroInicial;
+            const numero = idx + numeroInicial;
             const node = item.blot.domNode;
             node.innerText = numero;
             node.setAttribute('numero', numero);
@@ -19757,6 +19826,202 @@ const editorStyles = html `
   </style>
 `;
 
+function mostrarToolTipVerificacaoOrtografica(elMisspell, erro) {
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip-erro-ortografico');
+    tooltip.innerHTML = buildTooltipHtml(erro);
+    tooltip.style.opacity = '0';
+    document.body.appendChild(tooltip);
+    tooltip
+        .querySelector('.tooltip-lista-sugestoes')
+        ?.addEventListener('click', (evt) => {
+        const el = evt.target;
+        if (el?.tagName === 'LI') {
+            const sugestaoSelecionada = el.getAttribute('data-sugestao');
+            if (sugestaoSelecionada) {
+                const customEvent = new CustomEvent('verificacao-ortografica:corrigir', {
+                    bubbles: true,
+                    detail: {
+                        erro,
+                        sugestaoSelecionada,
+                    },
+                });
+                elMisspell.dispatchEvent(customEvent);
+                limpaTooltip();
+            }
+        }
+    });
+    tooltip
+        .querySelector('#button-fechar-erro-ortografico')
+        .addEventListener('click', () => limpaTooltip());
+    ajustaPosicaoTooltip(tooltip, elMisspell);
+    const closeTooltip = (e) => {
+        if (e.type === 'click' && !isClickDentroDaTooltip(e.target)) {
+            limpaTooltip();
+        }
+        else if (e.type === 'keydown' && e.key === 'Escape') {
+            limpaTooltip();
+        }
+        // setTimeout(() => this.quill.root.focus(), 0);
+    };
+    const limpaTooltip = () => {
+        tooltip.style.opacity = '0';
+        setTimeout(() => {
+            tooltip.remove();
+            document.removeEventListener('click', closeTooltip);
+            document.removeEventListener('keydown', closeTooltip);
+        }, 300);
+    };
+    const isClickDentroDaTooltip = (element) => {
+        return !!element.closest('.tooltip-erro-ortografico');
+    };
+    setTimeout(() => {
+        document.addEventListener('click', closeTooltip);
+        document.addEventListener('keydown', closeTooltip);
+        tooltip.style.opacity = '1';
+    }, 0);
+    window.addEventListener('resize', () => ajustaPosicaoTooltip(tooltip, elMisspell));
+}
+function buildTooltipHtml(erro) {
+    const html = `
+        <style>
+        .tooltip-erro-ortografico {
+          position: absolute;
+          border: 1px solid black;
+          background-color: white;
+          padding: 10px;
+          border-radius: 4px;
+          z-index: 9999;
+          font-size: 0.9rem;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          min-width: 200px;
+          max-width: 500px;
+          transition: all 0.3s ease-in-out;
+        }
+        .tooltip-erro-ortografico__actions {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          align-items: center;
+          justify-content: center;
+        }
+        .tooltip-erro-ortografico__actions button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid #ccc;
+          border-radius: 15px;
+          background-color: #eee;
+          cursor: pointer;
+          padding: 0;
+          width: 24px;
+          height: 24px;
+          color: black;
+        }
+        .tooltip-erro-ortografico__actions svg {
+          fill: currentColor;
+          width: 24px;
+          height: 24px;
+        }
+        .tooltip-erro-ortografico button:hover {
+          background-color: #ddd;
+        }
+        .tooltip-erro-ortografico button:active {
+          background-color: #ccc;
+        }
+        .tooltip-erro-ortografico__container {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .tooltip-erro-ortografico__header {
+          border-bottom: 1px solid #ccc;
+        }
+
+        .tooltip-erro-ortografico__word {
+          font-weight: bold;
+        }
+
+        .tooltip-erro-ortografico__message {
+          color: #333;
+        }
+
+        .tooltip-erro-ortografico__sugestao {
+          font-size: 0.8rem;
+          color: #333;
+          padding: 3px 5px;
+          cursor: pointer;
+        }
+
+        .tooltip-erro-ortografico__sugestao:hover {
+          background-color: #f0f0f0;
+        }
+        .tooltip-erro-ortografico__sugestao.selected {
+          background-color: #cceeff;
+          font-weight: bold;
+          color: #333;
+        }
+
+        .tooltip-lista-sugestoes {
+          list-style: none;
+          padding: 0;
+          margin-top: 5px;
+          max-height: 200px;
+          overflow-y: auto;
+        }
+      </style>
+      <div class="tooltip-erro-ortografico__container" role="tooltip">
+        <div class="tooltip-erro-ortografico__header">
+          <div class="tooltip-erro-ortografico__word">${erro.word}</div>
+          <div class="tooltip-erro-ortografico__message">(${erro.message})</div>
+        </div>
+        <div>
+          ${buildListaSugestoes(erro)}
+        </div>
+        <div class="tooltip-erro-ortografico__actions">
+          <button id="button-fechar-erro-ortografico" aria-label="Fechar" title="Fechar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+`;
+    return html;
+}
+// eslint-disable-next-line prettier/prettier
+const buildListaSugestoes = (erro) => {
+    return `
+    <ul class="tooltip-lista-sugestoes">
+      ${erro.suggestions.map(buildItemSugestao).join('\n')}
+    </ul>
+  `;
+};
+const buildItemSugestao = (sugestao) => {
+    // return `<li class="tooltip-erro-ortografico__sugestao">${sugestao}</li>`;
+    return `<li class="tooltip-erro-ortografico__sugestao" data-sugestao="${sugestao}">${sugestao}</li>`;
+};
+const ajustaPosicaoTooltip = (tooltip, button) => {
+    const rect = button.getBoundingClientRect();
+    const offset = 10;
+    // Abrir para cima por padrão, a menos que não haja espaço suficiente
+    let topOffset = rect.top - tooltip.clientHeight - offset;
+    if (topOffset < window.scrollY) {
+        topOffset = rect.bottom + offset;
+    }
+    tooltip.style.top = `${topOffset + window.scrollY}px`;
+    // Ajustar horizontalmente se estiver muito próximo à borda direita
+    let leftOffset = rect.left + rect.width / 2 - tooltip.clientWidth / 2;
+    if (leftOffset + tooltip.clientWidth > window.innerWidth) {
+        leftOffset = window.innerWidth - tooltip.clientWidth - offset;
+    }
+    else if (leftOffset < 0) {
+        leftOffset = offset;
+    }
+    tooltip.style.left = `${leftOffset + window.scrollX}px`;
+};
+
 /* eslint-disable prettier/prettier */
 // import Quill, { Module, Range } from 'quill';
 // import Inline from 'quill/blots/inline';
@@ -19824,14 +20089,19 @@ const defaultOptions = {
             const response = await fetch(this.urlVerificadorOrtografico, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain',
                 },
                 body: texto,
             });
-            return await response.json();
+            if (!response.ok) {
+                console.error('Erro na resposta da verificação ortográfica:', response.status, response.statusText);
+                return [];
+            }
+            const json = await response.json();
+            return json.map((it) => ({ ...it, uuid: generateUUID() }));
         }
         catch (error) {
-            console.log('Erro ao chamar o verificador ortográfico');
+            console.log('Erro ao chamar o verificador ortográfico', error);
             return [];
         }
     },
@@ -19917,6 +20187,26 @@ class ModuloVerificacaoOrtografica extends Module {
             this.quill.on('text-change', this.checkSpelling.bind(this));
         }
         this.quill.root.setAttribute('spellcheck', 'false');
+        this.quill.root.addEventListener('click', this.tratarClick.bind(this));
+        this.quill.root.addEventListener('verificacao-ortografica:corrigir', this.corrigirErroOrtografico.bind(this));
+    }
+    tratarClick(event) {
+        const elMisspell = this.getErroOrtograficoMaisProximo(event.target);
+        if (!elMisspell)
+            return;
+        const uuid = elMisspell.getAttribute('data-uuid');
+        const erro = this.lastResponses.find((err) => err.uuid === uuid);
+        erro && mostrarToolTipVerificacaoOrtografica(elMisspell, erro);
+    }
+    corrigirErroOrtografico(event) {
+        const { erro, sugestaoSelecionada } = event.detail;
+        const el = this.quill.root.querySelector(`misspelled[data-uuid="${erro.uuid}"]`);
+        if (el) {
+            el.innerText = sugestaoSelecionada;
+        }
+    }
+    getErroOrtograficoMaisProximo(elemento) {
+        return elemento?.closest(MisspelledBlot.tagName);
     }
     removeIgnoreFormatting(range) {
         let { index, length } = range;
@@ -19993,7 +20283,6 @@ class ModuloVerificacaoOrtografica extends Module {
         console.log('Ignorando erro', erro);
     }
 }
-// Quill.register('modules/verificadorOrtografico', VerificadorOrtografico);
 
 const verificacaoOrtograficaCss = html `
   <style>
@@ -20180,18 +20469,402 @@ class ModuloCustomKeyboard extends Keyboard {
     }
 }
 
+let PanelNotaRodapeComponent = class PanelNotaRodapeComponent extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.posicao = 'abaixo';
+        this.desabilitarTrocaOrientacao = false;
+        this.notasRodape = [];
+    }
+    mudarPosicao() {
+        if (this.desabilitarTrocaOrientacao)
+            return;
+        const nova = this.posicao === 'lado' ? 'abaixo' : 'lado';
+        this.dispatchEvent(new CustomEvent('nota-rodape:mudar-posicao', {
+            bubbles: true,
+            composed: true,
+            detail: { posicao: nova },
+        }));
+    }
+    render() {
+        const podeTrocar = !this.desabilitarTrocaOrientacao;
+        const indoPara = this.posicao === 'lado'
+            ? 'Notas de rodapé para baixo'
+            : 'Notas de rodapé para o lado';
+        const icon = this.posicao === 'lado' ? 'arrow-down' : 'arrow-right';
+        return html `
+      <div class="notas-rodape">
+        <div class="header-notas-rodape">
+          <h4>Notas de rodapé</h4>
+          ${podeTrocar
+            ? html `
+                <wa-button
+                  title=${indoPara}
+                  appearance="outlined"
+                  pill
+                  size="small"
+                  @click=${this.mudarPosicao}
+                >
+                  <wa-icon
+                    name=${icon}
+                    variant="solid"
+                    label=${indoPara}
+                  ></wa-icon>
+                </wa-button>
+              `
+            : null}
+        </div>
+        <div class="notas-scroll">${this.renderNotasRodape()}</div>
+      </div>
+    `;
+    }
+    renderNotasRodape() {
+        if (!this.notasRodape.length) {
+            return html `
+        <span class="notas-texto-vazio">
+          Não há notas de rodapé registradas.
+        </span>
+      `;
+        }
+        const minNumero = Math.min(...this.notasRodape.map(n => n.numero));
+        const startOffset = minNumero - 1;
+        return html `
+      <ol style="counter-reset: item ${startOffset};">
+        ${this.notasRodape.map((nr) => html `
+            <li>
+              <input
+                type="checkbox"
+                idNotaRodape="${nr.id}"
+                class="notas-checkbox"
+                id="checkbox-${nr.id}"
+                @change=${() => this.selecionarNotaRodape(nr.id)}
+              />
+              <label for="checkbox-${nr.id}" class="notas-texto"
+                >${unsafeHTML(nr.texto)}</label
+              >
+              <span class="notas-acoes">
+                <wa-button
+                  class="notas-acao"
+                  appearance="outlined"
+                  variant="neutral"
+                  size="small"
+                  aria-label="Editar nota de rodapé"
+                  title="Editar nota de rodapé"
+                  idNotaRodape="${nr.id}"
+                  @click=${() => this.editarNotaRodape(nr.id)}
+                >
+                  <wa-icon name="pen-to-square"></wa-icon>
+                </wa-button>
+                <wa-button
+                  class="notas-acao"
+                  appearance="outlined"
+                  variant="neutral"
+                  size="small"
+                  aria-label="Excluir nota de rodapé"
+                  title="Excluir nota de rodapé"
+                  idNotaRodape="${nr.id}"
+                  @click=${() => this.removerNotaRodape(nr.id)}
+                >
+                  <wa-icon name="trash"></wa-icon>
+                </wa-button>
+              </span>
+            </li>
+          `)}
+      </ol>
+    `;
+    }
+    selecionarNotaRodape(idNotaRodape) {
+        const checkbox = this.shadowRoot?.querySelector(`#checkbox-${idNotaRodape}`);
+        if (checkbox) {
+            if (checkbox.checked) {
+                const checkboxes = this.shadowRoot?.querySelectorAll('.notas-checkbox');
+                checkboxes?.forEach(cb => {
+                    if (cb.id !== checkbox.id) {
+                        cb.checked = false;
+                    }
+                });
+                this.localizarNotaRodape(idNotaRodape);
+            }
+            else {
+                this.removerPulsarNotaRodape(idNotaRodape);
+            }
+        }
+    }
+    removerPulsarNotaRodape(idNotaRodape) {
+        this.emitirEvento(NOTA_RODAPE_REMOVER_PULSAR, idNotaRodape);
+    }
+    editarNotaRodape(idNotaRodape) {
+        this.emitirEvento(NOTA_RODAPE_EDITAR, idNotaRodape);
+    }
+    removerNotaRodape(idNotaRodape) {
+        this.emitirEvento(NOTA_RODAPE_REMOVER, idNotaRodape);
+    }
+    localizarNotaRodape(idNotaRodape) {
+        this.emitirEvento(NOTA_RODAPE_LOCALIZAR, idNotaRodape);
+    }
+    emitirEvento(nomeEvento, idNotaRodape) {
+        this.dispatchEvent(new CustomEvent(nomeEvento, {
+            bubbles: true,
+            detail: { idNotaRodape },
+        }));
+    }
+};
+PanelNotaRodapeComponent.styles = css `
+    .notas-rodape {
+      font-family: var(--eta-font-serif);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      min-height: 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      padding: 0 10px 10px 10px;
+    }
+    .notas-rodape h4 {
+      font-family: var(--eta-font-sans);
+      font-style: normal;
+      font-size: 0.95rem;
+      padding: 1rem 0px 0.5rem;
+      margin: 0px;
+    }
+    .header-notas-rodape {
+      border-bottom: var(--wa-color-gray-50) 0.5px solid;
+      margin-bottom: 8px;
+      height: 40px;
+      padding: 0 2px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: white;
+    }
+    .header-notas-rodape wa-button::part(base) {
+      height: 28px;
+      width: 28px;
+    }
+    .notas-texto-vazio {
+      padding-left: 20px;
+      color: var(--wa-color-gray-50);
+      font-style: italic;
+    }
+
+    .notas-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .notas-rodape ol {
+      padding-left: 20px;
+      list-style: none;
+      counter-reset: item;
+      margin: 0px;
+    }
+
+    .notas-rodape li {
+      padding: 0px;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notas-rodape li:hover {
+      background-color: var(--wa-color-gray-95);
+    }
+
+    .notas-rodape li::before {
+      content: counter(item);
+      counter-increment: item;
+      width: 20px;
+      left: -20px;
+      top: 4px;
+      font-size: smaller;
+      vertical-align: super;
+      font-weight: bold;
+      font-size: 12px;
+      color: var(--wa-color-gray-50);
+      text-align: right;
+    }
+
+    .notas-texto {
+      flex-grow: 1;
+      cursor: pointer;
+      padding: 5px;
+      color: var(--wa-color-gray-50);
+    }
+
+    .notas-texto p {
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
+
+    .notas-acoes {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .notas-acao {
+      margin-left: 5px;
+      visibility: hidden;
+      cursor: pointer;
+    }
+
+    .notas-rodape li:hover .notas-acao {
+      visibility: visible;
+    }
+
+    .notas-checkbox {
+      appearance: none;
+      background: transparent;
+      display: none;
+    }
+
+    .notas-checkbox:checked + .notas-texto {
+      color: black;
+      font-style: italic;
+    }
+  `;
+__decorate([
+    property({ type: String })
+], PanelNotaRodapeComponent.prototype, "posicao", void 0);
+__decorate([
+    property({ type: Boolean })
+], PanelNotaRodapeComponent.prototype, "desabilitarTrocaOrientacao", void 0);
+__decorate([
+    property({ type: Array })
+], PanelNotaRodapeComponent.prototype, "notasRodape", void 0);
+PanelNotaRodapeComponent = __decorate([
+    customElement('panel-nota-rodape')
+], PanelNotaRodapeComponent);
+const NOTA_RODAPE_LOCALIZAR = 'nota-rodape:localizar';
+const NOTA_RODAPE_REMOVER_PULSAR = 'nota-rodape:remover-pulsar';
+const NOTA_RODAPE_REMOVER = 'nota-rodape:remover';
+const NOTA_RODAPE_EDITAR = 'nota-rodape:editar';
+
 Quill.register('modules/clipboard', ModuloCustomClipboard, true);
 Quill.register('modules/keyboard', ModuloCustomKeyboard, true);
 Quill.register('modules/aspasCurvas', ModuloAspasCurvas, true);
 Quill.register('modules/revisao', ModuloRevisao, true);
 Quill.register('modules/notaRodape', ModuloNotaRodape, true);
-Quill.register('modules/verificadorOrtografico', ModuloVerificacaoOrtografica);
+Quill.register('modules/verificacaoOrtografico', ModuloVerificacaoOrtografica);
 // const DefaultKeyboardModule = Quill.import('modules/keyboard');
 // const DefaultClipboardModule = Quill.import('modules/clipboard');
 const Delta = Quill.import('delta');
 const CLASS_BUTTON_ACEITAR_REVISAO = 'aceitar-revisao';
 const CLASS_BUTTON_REJEITAR_REVISAO = 'rejeitar-revisao';
+// --- HOTFIX: Para o Funcionamento da troca de orientação da nota de rodapé alteração do  patch em <wa-split-panel> para evitar "position=100" e loops ---
+const patchSplitPanelForLexml = (() => {
+    let patched = false;
+    return () => {
+        if (patched)
+            return;
+        patched = true;
+        customElements.whenDefined('wa-split-panel').then(() => {
+            const SplitCls = customElements.get('wa-split-panel');
+            if (!SplitCls || !SplitCls.prototype)
+                return;
+            const proto = SplitCls.prototype;
+            function clampToCssBounds(pct) {
+                if (!Number.isFinite(this.size) || this.size <= 0) {
+                    this.detectSize?.();
+                }
+                const cs = getComputedStyle(this);
+                const minStr = (cs.getPropertyValue('--min') || '0%').trim();
+                const maxStr = (cs.getPropertyValue('--max') || '100%').trim();
+                const toPct = (v) => {
+                    if (v.endsWith('%'))
+                        return parseFloat(v);
+                    const px = parseFloat(v);
+                    return this.size > 0 ? (px / this.size) * 100 : 0;
+                };
+                const minPct = toPct(minStr);
+                const maxPct = toPct(maxStr);
+                const lo = Math.min(minPct, maxPct);
+                const hi = Math.max(minPct, maxPct);
+                return Math.max(lo, Math.min(hi, pct));
+            }
+            const origHandleResize = proto.handleResize;
+            proto.handleResize = function (entries) {
+                try {
+                    const { width, height } = entries?.[0]?.contentRect || this.getBoundingClientRect();
+                    const nextSize = this.orientation === 'vertical' ? height : width;
+                    if (!Number.isFinite(nextSize) || nextSize <= 0)
+                        return;
+                    this.size = nextSize;
+                    if (this.primary) {
+                        if (!Number.isFinite(this.cachedPositionInPixels)) {
+                            const pct = Number.isFinite(this.position) ? this.position : 50;
+                            this.cachedPositionInPixels = this.percentageToPixels(pct);
+                        }
+                        this.position = this.pixelsToPercentage(this.cachedPositionInPixels);
+                        return;
+                    }
+                    if (!Number.isFinite(this.position)) {
+                        this.position = 50;
+                    }
+                }
+                catch {
+                    /* ignora */
+                }
+                return origHandleResize?.call(this, entries);
+            };
+            const origHandlePositionChange = proto.handlePositionChange;
+            proto.handlePositionChange = function () {
+                this.detectSize?.();
+                const clamped = clampToCssBounds.call(this, this.position);
+                if (clamped !== this.position) {
+                    this.position = clamped;
+                    return;
+                }
+                this.cachedPositionInPixels = this.percentageToPixels(this.position);
+                this.positionInPixels = this.cachedPositionInPixels;
+                return origHandlePositionChange?.call(this);
+            };
+            const origUpdated = proto.updated;
+            proto.updated = function (changed) {
+                const ret = origUpdated?.call(this, changed);
+                try {
+                    if (changed?.has?.('orientation')) {
+                        this.detectSize?.();
+                        this.position = clampToCssBounds.call(this, this.position ?? 80);
+                    }
+                }
+                catch {
+                    /* noop */
+                }
+                return ret;
+            };
+        });
+    };
+})();
+// --- /HOTFIX ---
 let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement {
+    get _orientation() {
+        return this.notasPosicao === 'lado' ? 'horizontal' : 'vertical';
+    }
+    get _posPercent() {
+        return this.notasPosicao === 'lado' ? 80 : 65;
+    }
+    get _dividerIcon() {
+        return this._orientation === 'horizontal'
+            ? 'grip-vertical'
+            : 'grip-horizontal';
+    }
+    get _styleSplit() {
+        const h = `calc(${this.height}px - var(--rte-toolbar-h, 55px))`;
+        const base = this._orientation === 'horizontal'
+            ? '--divider-width: 20px; --min: 50%; --max: 90%;'
+            : '--divider-width: 10px; --min: 50%; --max: 75%;';
+        return `${base} height:${h};`;
+    }
     showAlterarLarguraImagemModal(img, width) {
         this.alterarLarguraImagemModal.show(img, width);
     }
@@ -20219,9 +20892,6 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             }));
             this.onChange.notify(this.registroEvento);
         }, 1000);
-    }
-    update(changedProperties) {
-        super.update(changedProperties);
     }
     createRenderRoot() {
         return this;
@@ -20251,6 +20921,20 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             moduloRevisao.textoAntesRevisao = value ? this.texto : undefined;
         }
     }
+    get _trocaOrientacaoDesabilitada() {
+        return this._forcarLado || this._forcarAbaixo;
+    }
+    willUpdate(changed) {
+        if (changed.has('orientacaoNotaRodaPe')) {
+            const nova = this.orientacaoNotaRodaPe === 'lado' ? 'lado' : 'abaixo';
+            this._orientacaoPreferida = nova;
+            if (!this._forcarLado &&
+                !this._forcarAbaixo &&
+                nova !== this.notasPosicao) {
+                this.notasPosicao = nova;
+            }
+        }
+    }
     // labelAnexo = (): string => {
     //   const lengthAnexos = this.anexos?.length;
     //   return lengthAnexos === 1
@@ -20263,6 +20947,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         return html `
       ${quillSnowStyles} ${quillTableCss} ${editorStyles} ${editorTextoRicoCss}
       ${notaRodapeCss} ${verificacaoOrtograficaCss}
+
       <div class="panel-revisao">
         <lexml-ui-switch-revisao
           id="lexml-ui-switch-revisao-component-${this._uid}"
@@ -20298,11 +20983,39 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
           <wa-icon name="x" label="Rejeitar revisões"></wa-icon>
         </wa-button>
       </div>
-      <div
-        id="${this._containerId}"
-        class="editor-texto-rico"
-        @onTableInTable=${this.onTableInTable}
-      ></div>
+      <div>
+        <!-- Toolbar externa, passa "por cima" de texto + notas -->
+        <div id="rte-toolbar-${this._uid}" class="rte-toolbar"></div>
+        <wa-split-panel
+          .orientation=${this._orientation}
+          .position=${this._posPercent}
+          style=${this._styleSplit}
+          class=${'rte-split ' +
+            (!this.apresentarNotaRodape ? 'notas-desabilitadas' : '')}
+        >
+          <wa-icon
+            slot="divider"
+            name="${this._dividerIcon}"
+            variant="solid"
+          ></wa-icon>
+          <div slot="start" class="split-start">
+            <div class="editor-wrapper">
+              <div id="${this._containerId}" class="editor-texto-rico"></div>
+            </div>
+          </div>
+          <div slot="end" class="split-end">
+            <div class="panel-nota-rodape-container">
+              <panel-nota-rodape
+                class="panel-nota-rodape"
+                .notasRodape=${this.notasRodape}
+                .posicao=${this.notasPosicao}
+                .desabilitarTrocaOrientacao=${this._trocaOrientacaoDesabilitada}
+              ></panel-nota-rodape>
+            </div>
+          </div>
+        </wa-split-panel>
+      </div>
+
       <lexml-ui-alterar-largura-tabela-coluna-modal
         id="lexml-alterar-largura-tabela-modal"
         tipo="tabela"
@@ -20320,6 +21033,12 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         super();
         this._uid = crypto.randomUUID();
         this._containerId = `rte-${this._uid}`;
+        this.height = 500;
+        this.orientacaoNotaRodaPe = 'abaixo';
+        this.notasPosicao = 'abaixo';
+        this._forcarAbaixo = false;
+        this._forcarLado = false;
+        this._orientacaoPreferida = this.orientacaoNotaRodaPe ?? 'abaixo';
         this.texto = '';
         // @property({ type: Array }) anexos: Anexo[] = [];
         this.notasRodape = [];
@@ -20327,6 +21046,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         // @property({ type: Object }) lexmlEtaConfig: LexmlEmendaConfig = new LexmlEmendaConfig();
         this.tamanhoMaximoImagem = 2048; //2MB
         this.indHabilitarNotaRodape = true;
+        this.apresentarNotaRodape = true;
         this.modo = '';
         this.nomeUsuarioRevisao = 'Anônimo';
         /** Toolbar opcional: string com tokens separados por vírgula.
@@ -20343,11 +21063,18 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             console.log('Teste');
             alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.');
         };
+        this.enableAllTableItems = () => {
+            const toolbar = this.quill?.getModule('toolbar')
+                ?.container;
+            if (!toolbar)
+                return;
+            toolbar
+                .querySelectorAll('.ql-picker.ql-table .ql-picker-item')
+                .forEach(el => el.classList.add('enabled'));
+        };
         this.init = () => {
             const quillContainer = this.querySelector(`#${this._containerId}`);
             if (quillContainer) {
-                // Quill.register('modules/keyboard', DefaultKeyboardModule, true);
-                // Quill.register('modules/clipboard', DefaultClipboardModule, true);
                 Quill.register('modules/table', TableModule, true);
                 Quill.register('formats/estilo-texto', EstiloTextoClass, true);
                 Quill.register('formats/text-indent', NoIndentClass, true);
@@ -20367,6 +21094,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                         customFormatsOptions.push('nota-rodape', 'link');
                     }
                 }
+                const externalToolbar = this.querySelector(`#rte-toolbar-${this._uid}`);
                 this.quill = new Quill(quillContainer, {
                     formats: customFormatsOptions,
                     modules: {
@@ -20390,7 +21118,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                             tableModule: TableModule,
                             tableTrick: TableTrick,
                         },
-                        verificadorOrtografico: {
+                        verificacaoOrtografico: {
                             urlVerificadorOrtografico: 'https://verificador-ortografico.camara.leg.br/grammarcheck',
                             debounceTime: 500,
                             callbackRenderErrosOrtograficos: (erros) => {
@@ -20506,9 +21234,13 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.alterarLarguraImagemModal.callback = this.alterarLarguraDaImagem;
                 quillContainer.addEventListener('contextmenu', this.menuContextImagem);
                 quillContainer.addEventListener('click', this.onClick);
+                const tb = this.quill.getModule('toolbar').container;
+                externalToolbar.appendChild(tb);
+                this.enableAllTableItems();
                 const toolbar = this.quill.getModule('toolbar');
                 toolbar.addHandler('table', (value) => {
                     TableModule.configToolbar(this.quill, value);
+                    console.log('teste-toolbar');
                     if (value === 'change-width-col-modal') {
                         this.lastSelecion = this.quill?.getSelection();
                         const td = TableTrick.find_td_node(this.quill);
@@ -20520,12 +21252,15 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                         this.showAlterarLarguraTabelaModal(table.width);
                     }
                 });
-                this.quill.root.addEventListener(NOTA_RODAPE_CHANGE_EVENT, this.updateNotasRodape);
-                this.quill.root.addEventListener(NOTA_RODAPE_REMOVE_EVENT, this.updateNotasRodape);
+                this.addEventListener(NOTA_RODAPE_CHANGE_EVENT, this.updateNotasRodape);
+                this.addEventListener(NOTA_RODAPE_REMOVE_EVENT, this.updateNotasRodape);
+                this.addEventListener(NOTA_RODAPE_REMOVER, (evt) => this.removerNotaRodape(evt.detail.idNotaRodape));
+                this.addEventListener(NOTA_RODAPE_EDITAR, (evt) => this.editarNotaRodape(evt.detail.idNotaRodape));
+                this.addEventListener(NOTA_RODAPE_LOCALIZAR, (evt) => this.localizarNotaRodape(evt.detail.idNotaRodape));
+                this.addEventListener(NOTA_RODAPE_REMOVER_PULSAR, (evt) => this.removerPulsarNotaRodape(evt.detail.idNotaRodape));
                 // this.buildRevisoes();
                 QuillUtil.configurarAcoesLink(this.quill);
                 this.addEventListener('switch-revisao:change', (ev) => {
-                    console.log(11111, 'switch-revisao:change', ev.detail.checked);
                     this.updateRevisionStatus(ev.detail.checked);
                 });
             }
@@ -20602,9 +21337,12 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             blot && blot.format('width', `${valor}%`);
         };
         this.onSelectionChange = (range) => {
+            if (this.quill && range)
+                this.quill.getModule('toolbar').update(range);
             setTimeout(() => {
                 const format = range && this.quill?.getFormat(range);
                 this.highLightBotaoGerenciarTabela(format);
+                this.enableAllTableItems();
             }, 0);
         };
         this.highLightBotaoGerenciarTabela = (format) => {
@@ -20664,6 +21402,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.quill.setContents(this.quill.clipboard.convert(textoAjustado), 'silent');
             this.configAbrindoTexto(false);
             this.notasRodape = notasRodape;
+            this._atualizarVisibilidadeNotasRodape();
             setTimeout(() => {
                 this.quill.history.clear();
                 if (this.quill?.notasRodape?.associar) {
@@ -20704,7 +21443,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.alertaGlobalRevisao();
         };
         this.updateNotasRodape = () => {
-            this.notasRodape = this.quill.notasRodape.getNotasRodape();
+            this.notasRodape = this.quill.notasRodape?.getNotasRodape() || [];
+            this._atualizarVisibilidadeNotasRodape();
+        };
+        this.getNotasRodape = () => {
+            return this.notasRodape;
         };
         this.ajustaHtml = (html = '') => {
             let result = html
@@ -20799,6 +21542,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.atualizaQuantidadeRevisao = (quantidade) => {
             this._switchRevisaoEl?.atualizaQuantidadeRevisao(quantidade);
         };
+        patchSplitPanelForLexml();
         this.icons['undo'] = `<svg viewbox="0 0 18 18">
     <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
     <path class="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path>
@@ -20817,6 +21561,49 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
     firstUpdated() {
         this.init();
+        const sp = this.renderRoot?.querySelector('wa-split-panel');
+        if (sp) {
+            this._splitResizeObs = new ResizeObserver(entries => {
+                const rect = entries[0]?.contentRect ?? sp.getBoundingClientRect();
+                const w = rect.width;
+                const h = rect.height;
+                const forceBelow = w < 995;
+                const forceSide = h < 290;
+                const prevForcarAbaixo = this._forcarAbaixo;
+                const prevForcarLado = this._forcarLado;
+                this._forcarAbaixo = forceBelow;
+                this._forcarLado = forceSide;
+                const alvo = forceSide
+                    ? 'lado'
+                    : forceBelow
+                        ? 'abaixo'
+                        : this._orientacaoPreferida;
+                if (alvo !== this.notasPosicao) {
+                    this.notasPosicao = alvo;
+                    queueMicrotask(async () => {
+                        await this.updateComplete;
+                        const spAny = this.renderRoot?.querySelector('wa-split-panel');
+                        if (spAny)
+                            spAny.position = this._posPercent;
+                    });
+                }
+                if (prevForcarAbaixo !== this._forcarAbaixo ||
+                    prevForcarLado !== this._forcarLado) {
+                    this.requestUpdate();
+                }
+            });
+            this._splitResizeObs.observe(sp);
+        }
+        this.addEventListener('nota-rodape:mudar-posicao', async (ev) => {
+            if (this._forcarLado || this._forcarAbaixo)
+                return;
+            this.notasPosicao = ev?.detail?.posicao === 'abaixo' ? 'abaixo' : 'lado';
+            this._orientacaoPreferida = this.notasPosicao;
+            await this.updateComplete;
+            const spAny = this.renderRoot?.querySelector('wa-split-panel');
+            if (spAny)
+                spAny.position = this._posPercent;
+        });
         const switchEl = this.querySelector(`#lexml-ui-switch-revisao-component-${this._uid}`);
         if (switchEl) {
             this._switchRevisaoEl = switchEl;
@@ -20830,6 +21617,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.quill?.off('text-change', this.updateTexto);
         this.quill?.off('selection-change', this.onSelectionChange);
         super.disconnectedCallback();
+    }
+    _atualizarVisibilidadeNotasRodape() {
+        this.apresentarNotaRodape = this.notasRodape && this.notasRodape.length > 0;
     }
     alertaGlobalRevisao() {
         //TODOX ----
@@ -20862,21 +21652,52 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 }));
         }
     }
+    renumerarNotasRodape(numeroInicial = 1) {
+        this.quill?.notasRodape?.renumerarTodasNotas(numeroInicial);
+        this.updateNotasRodape();
+    }
     editarNotaRodape(idNotaRodape) {
         this.quill?.notasRodape?.editar(idNotaRodape);
     }
     removerNotaRodape(idNotaRodape) {
         this.quill?.notasRodape?.remover(idNotaRodape);
     }
+    removerPulsarNotaRodape(idNotaRodape) {
+        const notaRodapeElement = this.querySelector(`.ql-editor nota-rodape[id-nota-rodape="${idNotaRodape}"]`);
+        notaRodapeElement?.classList.remove('pulse');
+    }
+    localizarNotaRodape(idNotaRodape) {
+        const notaRodapeElement = this.querySelector(`.ql-editor nota-rodape[id-nota-rodape="${idNotaRodape}"]`);
+        notaRodapeElement &&
+            setTimeout(() => notaRodapeElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            }), 100);
+        const notasRodape = this.querySelectorAll('.ql-editor nota-rodape');
+        notasRodape.forEach((nr) => {
+            if (nr.attributes['id-nota-rodape'].value === idNotaRodape) {
+                nr?.classList.add('pulse');
+            }
+            else {
+                nr.classList.remove('pulse');
+            }
+        });
+    }
     reset() {
         this.setContent('');
     }
     parseToolbarTokens() {
         const raw = this.toolbar || this.getAttribute('toolbar') || '';
-        return raw
+        const tokens = raw
             .split(',')
             .map(s => s.trim().toLowerCase())
             .filter(Boolean);
+        if (raw.trim() !== '') {
+            if (!tokens.includes('notarodape')) {
+                this.apresentarNotaRodape = false;
+            }
+        }
+        return tokens;
     }
     buildToolbarContainer(tokens) {
         const map = {
@@ -20954,6 +21775,21 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
 };
 __decorate([
+    property({ type: Number })
+], EditorTextoRicoComponent.prototype, "height", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], EditorTextoRicoComponent.prototype, "orientacaoNotaRodaPe", void 0);
+__decorate([
+    state()
+], EditorTextoRicoComponent.prototype, "notasPosicao", void 0);
+__decorate([
+    state()
+], EditorTextoRicoComponent.prototype, "_forcarAbaixo", void 0);
+__decorate([
+    state()
+], EditorTextoRicoComponent.prototype, "_forcarLado", void 0);
+__decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "texto", void 0);
 __decorate([
@@ -20968,6 +21804,9 @@ __decorate([
 __decorate([
     property({ type: Boolean })
 ], EditorTextoRicoComponent.prototype, "indHabilitarNotaRodape", void 0);
+__decorate([
+    state()
+], EditorTextoRicoComponent.prototype, "apresentarNotaRodape", void 0);
 __decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "modo", void 0);
@@ -21453,5 +22292,5 @@ SwitchRevisaoComponent = __decorate([
 
 window.Quill = Quill;
 
-export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem, alertarInfo };
+export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, PanelNotaRodapeComponent, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem, alertarInfo };
 //# sourceMappingURL=index.js.map

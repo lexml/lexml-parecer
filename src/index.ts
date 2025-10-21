@@ -19,7 +19,6 @@ export { LexmlParecerMateria } from './components/materia/parecer-materia.compon
 export { LexmlParecerRelatorio } from './components/relatorio/parecer-relatorio.component.js';
 export { LexmlParecerAnalise } from './components/analise/parecer-analise.component.js';
 export { LexmlParecerVoto } from './components/voto/parecer-voto.component.js';
-export { EditorTextoTeste } from './components/editorTextoTeste/editor-texto-teste.component.js';
 export { LexmlParecerDataAutoriaImpressao } from './components/dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 export { LexmlParecerAvisos } from './components/avisos/parecer-avisos.component.js';
 export { LexmlParecerAutoriaComponent } from './components/autoria/parecer-autoria.component.js';

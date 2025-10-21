@@ -174,12 +174,6 @@ export class LexmlParecerMateria extends LitElement {
   render(): TemplateResult {
     return html`
       <style>
-        /* #ementaInput .ql-container .ql-editor {
-          min-height: 160px;
-          height: auto;
-          max-height: none;
-          overflow-y: visible;
-        }
         lexml-parecer-materia {
           display: block;
         }
@@ -222,21 +216,14 @@ export class LexmlParecerMateria extends LitElement {
         }
 
         wa-input::part(form-control-label),
-        wa-textarea::part(form-control-label),
+        ,
         wa-radio-group::part(form-control-label) {
           font-weight: 600;
           color: #374151;
         }
-
-        wa-input,
-        wa-textarea,
-        wa-radio-group {
-          width: 100%;
-        }
-
         lexml-ui-destino lexml-destino {
           max-width: 100vw !important;
-        } */
+        }
 
         fieldset {
           font-size: 14px;
@@ -259,17 +246,6 @@ export class LexmlParecerMateria extends LitElement {
           border: 1px solid var(--wa-color-gray-85);
           padding: 2px 5px;
           box-shadow: var(--wa-shadow-s);
-        }
-
-        .ementa-editor .ql-container {
-          height: calc(100% - 55px) !important;
-        }
-
-        .ementa-editor .ql-editor {
-          min-height: 220px !important;
-          max-height: 220px !important;
-          height: 100% !important;
-          overflow-y: auto;
         }
       </style>
       <div class="wa-grid">
@@ -303,10 +279,10 @@ export class LexmlParecerMateria extends LitElement {
         <lexml-ui-destino .comissoes=${this.comissoes}></lexml-ui-destino>
       </div>
       <div>
-        <label class="muted">Ementa</label>
+        <label>Ementa</label>
         <lexml-ui-editor-texto-rico
-          class="ementa-editor"
           .toolbar=${'italic'}
+          height="300"
         ></lexml-ui-editor-texto-rico>
       </div>
     `;

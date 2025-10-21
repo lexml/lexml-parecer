@@ -196,15 +196,6 @@ export class LexmlParecerVoto extends LitElement {
           margin-bottom: 2rem;
           justify-content: center;
         }
-        .voto-editor .ql-container {
-          height: calc(100% - 55px) !important;
-        }
-        .voto-editor .ql-editor {
-          min-height: 160px !important;
-          max-height: 160px !important;
-          height: 100% !important;
-          overflow-y: auto;
-        }
         .card-header .wa-grid {
           align-items: end;
         }
@@ -306,7 +297,8 @@ export class LexmlParecerVoto extends LitElement {
       <div class="wa-grid" style="--min-column-size: 16rem;">
         <div class="wa-span-grid">
           <lexml-ui-editor-texto-rico
-            class="voto-editor"
+            height="350"
+            orientacaoNotaRodaPe="abaixo"
             .texto=${item.texto ?? ''}
             @onchange=${(e: Event) => this.onEditorChange(idx, e)}
           ></lexml-ui-editor-texto-rico>

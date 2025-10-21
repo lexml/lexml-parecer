@@ -23,6 +23,8 @@ declare class LexmlUiCommons extends LitElement {
   private limparAlertasDemo;
   private comissoesTeste;
   render(): lit_html.TemplateResult<1>;
+  renumerarNotasRodape(): void;
+  firstUpdated(): void;
 }
 
 declare class ColegiadoApreciador {
@@ -494,11 +496,19 @@ type RemoveAlertFn = (id: string) => void;
 declare class EditorTextoRicoComponent extends LitElement {
   private _uid;
   private _containerId;
+  height: number;
+  orientacaoNotaRodaPe: 'lado' | 'abaixo';
+  private notasPosicao;
+  private _forcarAbaixo;
+  private _forcarLado;
+  private _orientacaoPreferida;
+  private _splitResizeObs?;
   texto: string;
   notasRodape: NotaRodape[];
   registroEvento: string;
   tamanhoMaximoImagem: number;
   indHabilitarNotaRodape: boolean;
+  private apresentarNotaRodape;
   modo: string;
   nomeUsuarioRevisao: string;
   /** Toolbar opcional: string com tokens separados por vírgula.
@@ -520,19 +530,25 @@ declare class EditorTextoRicoComponent extends LitElement {
   private alterarLarguraTabelaModal;
   private alterarLarguraImagemModal;
   private _switchRevisaoEl?;
+  private get _orientation();
+  private get _posPercent();
+  private get _dividerIcon();
+  private get _styleSplit();
   showAlterarLarguraImagemModal(img: any, width: string): void;
   private showAlterarLarguraColunaModal;
   private hideAlterarLarguraColunaModal;
   private showAlterarLarguraTabelaModal;
   private hideAlterarLarguraTabelaModal;
   private agendarEmissaoEventoOnChange;
-  update(changedProperties: PropertyValues): void;
   createRenderRoot(): LitElement;
   updateRevisionStatus(value: boolean): void;
+  private get _trocaOrientacaoDesabilitada();
+  willUpdate(changed: PropertyValues<this>): void;
   render(): TemplateResult;
   constructor();
   private timerAlerta?;
   private onTableInTable;
+  private enableAllTableItems;
   firstUpdated(): void;
   disconnectedCallback(): void;
   init: () => void;
@@ -554,12 +570,15 @@ declare class EditorTextoRicoComponent extends LitElement {
     seletor: string,
     title: string,
   ) => void;
+  private _atualizarVisibilidadeNotasRodape;
   setContent: (texto: string, notasRodape?: NotaRodape[]) => void;
   configAbrindoTexto: (valor: boolean) => void;
   updateApenasTexto: () => void;
   updateTexto: () => void;
   alertaGlobalRevisao(): void;
   updateNotasRodape: () => void;
+  getNotasRodape: () => NotaRodape[];
+  renumerarNotasRodape(numeroInicial?: number): void;
   ajustaHtml: (html?: string) => string;
   undo: () => any;
   redo: () => any;
@@ -576,6 +595,8 @@ declare class EditorTextoRicoComponent extends LitElement {
   private atualizaQuantidadeRevisao;
   editarNotaRodape(idNotaRodape: string): void;
   removerNotaRodape(idNotaRodape: string): void;
+  removerPulsarNotaRodape(idNotaRodape: any): void;
+  localizarNotaRodape(idNotaRodape: string): void;
   reset(): void;
   private parseToolbarTokens;
   private buildToolbarContainer;
@@ -663,6 +684,27 @@ declare function alertarInfo(
   },
 ): void;
 
+declare class PanelNotaRodapeComponent extends LitElement {
+  posicao: 'lado' | 'abaixo';
+  desabilitarTrocaOrientacao: boolean;
+  private mudarPosicao;
+  static styles?: lit.CSSResult | undefined;
+  notasRodape: NotaRodape[];
+  render(): TemplateResult;
+  renderNotasRodape(): TemplateResult;
+  selecionarNotaRodape(idNotaRodape: any): void;
+  removerPulsarNotaRodape(idNotaRodape: any): void;
+  editarNotaRodape(idNotaRodape: any): void;
+  removerNotaRodape(idNotaRodape: any): void;
+  localizarNotaRodape(idNotaRodape: any): void;
+  private emitirEvento;
+}
+declare global {
+  interface HTMLElementTagNameMap {
+    'panel-nota-rodape': PanelNotaRodapeComponent;
+  }
+}
+
 export {
   AlertasComponent,
   AlterarLarguraImagemModalComponent,
@@ -679,6 +721,7 @@ export {
   LexmlUiCommons,
   OpcoesImpressaoComponent,
   Option,
+  PanelNotaRodapeComponent,
   REGEX_ACCENTS,
   SwitchRevisaoComponent,
   TipoMensagem,
