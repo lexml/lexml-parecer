@@ -45,10 +45,10 @@ export class LexmlEtaParecer extends LitElement {
   private _dataAutiraImpressao?: LexmlParecerDataAutoriaImpressao;
 
   @query('wa-tab-panel[name="relatorio"] lexml-parecer-relatorio')
-  private _relatorio?: { getHtml: () => string };
+  private _relatorio?: { getTexto: () => string };
 
   @query('wa-tab-panel[name="analise"] lexml-parecer-analise')
-  private _analise?: { getHtml: () => string };
+  private _analise?: { getTexto: () => string };
 
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
@@ -57,8 +57,8 @@ export class LexmlEtaParecer extends LitElement {
     const materiaEl = this._materia;
     const dataAutiraImpressaoEl = this._dataAutiraImpressao;
     const votoEl = this._voto;
-    const relatorioHtml = this._relatorio?.getHtml() ?? '';
-    const analiseHtml = this._analise?.getHtml() ?? '';
+    const relatorioHtml = this._relatorio?.getTexto() ?? '';
+    const analiseHtml = this._analise?.getTexto() ?? '';
 
     if (!materiaEl) {
       console.warn('lexml-parecer-materia não encontrado.');

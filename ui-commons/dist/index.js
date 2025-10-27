@@ -1,3 +1,4 @@
+import { registerIconLibrary } from '@awesome.me/webawesome/dist/webawesome.js';
 import '@awesome.me/webawesome/dist/components/input/input.js';
 import { LitElement, html, css } from 'lit';
 import { query, state, customElement, property } from 'lit/decorators.js';
@@ -13998,41 +13999,87 @@ class Observable {
 }
 
 /* eslint-disable prettier/prettier */
-// import { SlMenuItem } from '@shoelace-style/shoelace';
 async function showMenuImagem(editorTextoRico, img, top, left) {
+    // limpa instância anterior
+    document.querySelector('#bg-wp-menu-img')?.parentElement?.remove();
     const content = document.createRange().createContextualFragment(`
     <div>
       <style>
-      #bg-wp-menu-img {
-        position:absolute; top:0; left:0; width:100%; height:100%; z-index:999;
-      }
-      #menu-img {
-        position:absolute; z-index:9999;
-      }
+        /* Overlay clicável para fechar */
+        #bg-wp-menu-img {
+          position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+          z-index: 999;
+        }
+        #menu-img {
+          position: absolute; z-index: 9999;
+          top: ${top}px; left: ${left}px;
+          min-width: 220px;
+          background: var(--wa-color-surface, #fff);
+          border: 1px solid var(--wa-color-border, #ddd);
+          box-shadow: 0 10px 30px rgba(0,0,0,.12);
+          padding: 4px;
+          font-family: inherit;
+        }
+        #menu-img .item {
+          display: flex; align-items: center; gap: .5rem;
+          width: 100%;
+          padding: .5rem .75rem;
+          border: 0; background: transparent;
+          text-align: left; border-radius: 8px;
+          cursor: pointer; user-select: none;
+          font: inherit;
+          color: black;
+        }
+        #menu-img .item:hover, #menu-img .item:focus {
+          background: var(--wa-color-surface-hover, #f6f6f6);
+          outline: none;
+        }
       </style>
+
       <div id="bg-wp-menu-img">
-        <wa-menu id="menu-img" style="top:${top}px;left:${left}px;">
-          <wa-menu-item id="item-menu-largura-img" value="alterar-largura-imagem">Alterar a largura da imagem</wa-menu-item>
-        </wa-menu>
+        <div id="menu-img" role="menu" tabindex="-1">
+          <button id="item-menu-largura-img" class="item" role="menuitem" type="button">
+            Alterar a largura da imagem
+          </button>
+        </div>
       </div>
     </div>
   `);
     const itemMenu = content.querySelector('#item-menu-largura-img');
     const bgWpMenuImagem = content.querySelector('#bg-wp-menu-img');
+    const menu = content.querySelector('#menu-img');
+    const close = () => bgWpMenuImagem.parentElement?.remove();
     itemMenu.onclick = () => {
         const width = img.getAttribute('width');
         editorTextoRico.showAlterarLarguraImagemModal(img, width);
+        close();
     };
-    bgWpMenuImagem.onclick = () => {
-        bgWpMenuImagem.parentElement?.remove();
+    // fecha ao clicar fora
+    bgWpMenuImagem.onclick = e => {
+        // evita que clique no menu feche imediatamente
+        if (!e.target.closest('#menu-img'))
+            close();
     };
-    await editorTextoRico.appendChild(content);
+    // fecha com ESC
+    const onKey = (ev) => {
+        if (ev.key === 'Escape')
+            close();
+    };
+    window.addEventListener('keydown', onKey, { once: true });
+    // injeta
+    editorTextoRico.appendChild(content);
+    menu?.focus();
 }
 
 const editorTextoRicoCss = html `
   <style>
     :host {
       --rte-toolbar-h: 55px;
+    }
+
+    img {
+      display: block;
+      margin: auto;
     }
 
     .rte-split {
@@ -14717,7 +14764,7 @@ const quillTableCss = html `<style>
 
 const Container$3 = Quill.import('blots/container');
 const Block$1 = Quill.import('blots/block');
-const BlockEmbed$1 = Quill.import('blots/block/embed');
+const BlockEmbed$2 = Quill.import('blots/block/embed');
 const Parchment$a = Quill.import('parchment');
 
 class ContainBlot extends Container$3 {
@@ -14737,13 +14784,13 @@ ContainBlot.blotName = 'contain';
 ContainBlot.tagName = 'contain';
 ContainBlot.scope = Parchment$a.Scope.BLOCK_BLOT;
 ContainBlot.defaultChild = 'block';
-ContainBlot.allowedChildren = [Block$1, BlockEmbed$1, Container$3];
+ContainBlot.allowedChildren = [Block$1, BlockEmbed$2, Container$3];
 
 // import Quill from 'quill';
 
 const Container$2 = Quill.import('blots/container');
 const Block = Quill.import('blots/block');
-const BlockEmbed = Quill.import('blots/block/embed');
+const BlockEmbed$1 = Quill.import('blots/block/embed');
 const Parchment$9 = Quill.import('parchment');
 
 class TableCell extends ContainBlot {
@@ -14848,7 +14895,7 @@ TableCell.blotName = 'td';
 TableCell.tagName = 'td';
 TableCell.className = 'td-q';
 TableCell.scope = Parchment$9.Scope.BLOCK_BLOT;
-TableCell.allowedChildren = [Block, BlockEmbed, Container$2];
+TableCell.allowedChildren = [Block, BlockEmbed$1, Container$2];
 
 // import Quill from 'quill';
 
@@ -20469,6 +20516,56 @@ class ModuloCustomKeyboard extends Keyboard {
     }
 }
 
+const BlockEmbed = Quill.import('blots/block/embed');
+const ATTRIBUTES = ['alt', 'height', 'width'];
+function sanitize(url, protocols) {
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    const protocol = anchor.href.slice(0, anchor.href.indexOf(':'));
+    return protocols.indexOf(protocol) > -1;
+}
+class ImageBlot extends BlockEmbed {
+    static create(value) {
+        const node = super.create(value);
+        if (typeof value === 'string') {
+            node.setAttribute('src', this.sanitize(value));
+        }
+        return node;
+    }
+    static formats(domNode) {
+        return ATTRIBUTES.reduce(function (formats, attribute) {
+            if (domNode.hasAttribute(attribute)) {
+                formats[attribute] = domNode.getAttribute(attribute);
+            }
+            return formats;
+        }, {});
+    }
+    static match(url) {
+        return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
+    }
+    static sanitize(url) {
+        return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
+    }
+    static value(domNode) {
+        return domNode.getAttribute('src');
+    }
+    format(name, value) {
+        if (ATTRIBUTES.indexOf(name) > -1) {
+            if (value) {
+                this.domNode.setAttribute(name, value);
+            }
+            else {
+                this.domNode.removeAttribute(name);
+            }
+        }
+        else {
+            super.format(name, value);
+        }
+    }
+}
+ImageBlot.blotName = 'image';
+ImageBlot.tagName = 'img';
+
 let PanelNotaRodapeComponent = class PanelNotaRodapeComponent extends LitElement {
     constructor() {
         super(...arguments);
@@ -20491,7 +20588,9 @@ let PanelNotaRodapeComponent = class PanelNotaRodapeComponent extends LitElement
         const indoPara = this.posicao === 'lado'
             ? 'Notas de rodapé para baixo'
             : 'Notas de rodapé para o lado';
-        const icon = this.posicao === 'lado' ? 'arrow-down' : 'arrow-right';
+        const icon = this.posicao === 'lado'
+            ? 'layout-sidebar-reverse-vertical'
+            : 'layout-sidebar-reverse';
         return html `
       <div class="notas-rodape">
         <div class="header-notas-rodape">
@@ -20506,6 +20605,7 @@ let PanelNotaRodapeComponent = class PanelNotaRodapeComponent extends LitElement
                   @click=${this.mudarPosicao}
                 >
                   <wa-icon
+                    library="icons-ui-commons"
                     name=${icon}
                     variant="solid"
                     label=${indoPara}
@@ -20755,6 +20855,7 @@ Quill.register('modules/aspasCurvas', ModuloAspasCurvas, true);
 Quill.register('modules/revisao', ModuloRevisao, true);
 Quill.register('modules/notaRodape', ModuloNotaRodape, true);
 Quill.register('modules/verificacaoOrtografico', ModuloVerificacaoOrtografica);
+Quill.register({ 'formats/image': ImageBlot }, true);
 // const DefaultKeyboardModule = Quill.import('modules/keyboard');
 // const DefaultClipboardModule = Quill.import('modules/clipboard');
 const Delta = Quill.import('delta');
@@ -21266,11 +21367,13 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             }
         };
         this.menuContextImagem = (ev) => {
-            const elemento = ev.target;
-            if (elemento.tagName === 'IMG') {
-                ev.preventDefault();
-                showMenuImagem(this, elemento, ev.pageY, ev.pageX);
-            }
+            const img = ev.target.closest('img');
+            if (!img)
+                return;
+            ev.preventDefault();
+            const x = ev.clientX;
+            const y = ev.clientY;
+            showMenuImagem(this, img, y, x);
         };
         this.onClick = (ev) => {
             const elemento = ev.target;
@@ -21957,9 +22060,37 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
         :host {
           font-family: var(--wa-font-sans);
         }
-        wa-input::part(base) {
+        .input-wrap {
+          position: relative;
+          display: inline-block;
+        }
+
+        .input-wrap wa-input::part(base) {
           width: 150px;
-          margin-top: 5px;
+          padding-right: 1.75rem;
+        }
+
+        .input-wrap .suffix {
+          position: absolute;
+          right: 0.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--wa-color-neutral-500);
+          font-weight: 500;
+          pointer-events: none; /* não intercepta clique/foco */
+        }
+
+        .input-wrap wa-input::part(base)::-webkit-outer-spin-button,
+        .input-wrap wa-input::part(base)::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .input-wrap wa-input::part(base)[type='number'] {
+          -moz-appearance: textfield;
+        }
+        .input-wrap {
+          position: relative;
+          display: inline-block;
         }
         wa-callout {
           margin-top: 20px;
@@ -21972,13 +22103,15 @@ let AlterarLarguraTabelaColunaModalComponent = class AlterarLarguraTabelaColunaM
         @wa-after-hide=${this.onAfterHide}
       >
         <label>Informe o percentual da largura da ${this.tipo}</label>
-        <wa-input
-          type="number"
-          .value=${this.valorLargura}
-          @input=${this.onInput}
-        >
-          <wa-icon name="percent" slot="suffix"></wa-icon>
-        </wa-input>
+
+        <div class="input-wrap">
+          <wa-input
+            type="number"
+            .value=${this.valorLargura}
+            @input=${this.onInput}
+          ></wa-input>
+          <span class="suffix">%</span>
+        </div>
 
         ${this.exibirAviso
             ? html `
@@ -22083,9 +22216,37 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
         :host {
           font-family: var(--wa-font-sans);
         }
-        wa-input::part(base) {
+        .input-wrap {
+          position: relative;
+          display: inline-block;
+        }
+
+        .input-wrap wa-input::part(base) {
           width: 150px;
-          margin-top: 5px;
+          padding-right: 1.75rem;
+        }
+
+        .input-wrap .suffix {
+          position: absolute;
+          right: 0.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--wa-color-neutral-500);
+          font-weight: 500;
+          pointer-events: none;
+        }
+
+        .input-wrap wa-input::part(base)::-webkit-outer-spin-button,
+        .input-wrap wa-input::part(base)::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .input-wrap wa-input::part(base)[type='number'] {
+          -moz-appearance: textfield;
+        }
+        .input-wrap {
+          position: relative;
+          display: inline-block;
         }
         wa-callout {
           margin-top: 20px;
@@ -22099,14 +22260,14 @@ let AlterarLarguraImagemModalComponent = class AlterarLarguraImagemModalComponen
       >
         <label>Informe o percentual da largura da Imagem</label>
 
-        <wa-input
-          type="number"
-          .value=${this.valorLargura}
-          @input=${this.onInput}
-          @keydown=${this.onKeyDown}
-        >
-          <wa-icon name="percent" slot="suffix"></wa-icon>
-        </wa-input>
+        <div class="input-wrap">
+          <wa-input
+            type="number"
+            .value=${this.valorLargura}
+            @input=${this.onInput}
+          ></wa-input>
+          <span class="suffix">%</span>
+        </div>
 
         ${this.exibirAviso
             ? html `
@@ -22290,6 +22451,16 @@ SwitchRevisaoComponent = __decorate([
     customElement('lexml-ui-switch-revisao')
 ], SwitchRevisaoComponent);
 
+const ICONS_LEXML_UI_COMMONS = '/assets/lexml-ui-commons/icons/';
+registerIconLibrary('icons-ui-commons', {
+    resolver: (name) => `${ICONS_LEXML_UI_COMMONS}${name}.svg`,
+    mutator: (svg) => {
+        if (!svg.getAttribute('fill'))
+            svg.setAttribute('fill', 'currentColor');
+        if (!svg.getAttribute('stroke'))
+            svg.setAttribute('stroke', 'currentColor');
+    },
+});
 window.Quill = Quill;
 
 export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, PanelNotaRodapeComponent, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem, alertarInfo };

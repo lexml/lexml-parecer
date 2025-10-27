@@ -1,3 +1,15 @@
+import { registerIconLibrary } from '@awesome.me/webawesome/dist/webawesome.js';
+
+const ICONS_LEXML_PARECER = '/assets/lexml-parcer/icons/';
+
+registerIconLibrary('icons-parecer', {
+  resolver: (name: string) => `${ICONS_LEXML_PARECER}${name}.svg`,
+  mutator: (svg: SVGElement) => {
+    if (!svg.getAttribute('fill')) svg.setAttribute('fill', 'currentColor');
+    if (!svg.getAttribute('stroke')) svg.setAttribute('stroke', 'currentColor');
+  },
+});
+
 import 'quill/dist/quill';
 (window as any).Quill = Quill;
 

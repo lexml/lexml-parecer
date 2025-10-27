@@ -74,7 +74,8 @@ export class LexmlParecerMateria extends LitElement {
 
   @query('#comissaoDesc') comissaoDescInput!: WithValueEl;
 
-  @query('#ementaInput') ementaInput!: WithValueEl & HTMLDivElement;
+  @query('lexml-ui-editor-texto-rico')
+  private _ementaEd?: { getTexto: () => string; texto?: string };
 
   @query('lexml-ui-destino')
   private _destino!: DestinoComponent;
@@ -83,7 +84,8 @@ export class LexmlParecerMateria extends LitElement {
     const materiaFinal = new Materia();
     materiaFinal.ano = this.ano;
     materiaFinal.materia = this._materiaSelecionada;
-    materiaFinal.ementa = (this.ementaInput as any)?.value ?? '';
+    const ementaHtml = this._ementaEd?.getTexto?.() ?? '';
+    materiaFinal.ementa = ementaHtml;
     materiaFinal.destino = this._destino.getDestino();
 
     return materiaFinal;
@@ -216,7 +218,6 @@ export class LexmlParecerMateria extends LitElement {
         }
 
         wa-input::part(form-control-label),
-        ,
         wa-radio-group::part(form-control-label) {
           font-weight: 600;
           color: #374151;

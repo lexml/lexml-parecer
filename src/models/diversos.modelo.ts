@@ -14,7 +14,7 @@ export class Parecer {
   ementa = '';
   colegiadoApreciador = new ColegiadoApreciador();
   materia = new ProposicaoReferenciada();
-  epigrafe = new Epigrafe();
+  epigrafe = '';
 
   relatorio = '';
   analise = '';
@@ -44,11 +44,6 @@ export class ProposicaoReferenciada {
   ano = '';
   ementa = '';
   identificacaoTexto = '';
-}
-
-export class Epigrafe {
-  texto = '';
-  complemento = '';
 }
 
 export class Parlamentar {

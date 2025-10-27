@@ -8,11 +8,11 @@ export class LexmlParecerRelatorio extends LitElement {
   }
 
   @query('lexml-ui-editor-texto-rico') private _ed!: HTMLElement & {
-    getHtml: () => string;
+    getTexto: () => string;
   };
 
-  public getHtml(): string {
-    return this._ed?.getHtml?.() ?? '';
+  public getTexto(): string {
+    return this._ed?.getTexto?.() ?? '';
   }
 
   render(): TemplateResult {
