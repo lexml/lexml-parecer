@@ -18,6 +18,14 @@ export class LexmlParecerAutoriaComponent extends LitElement {
     this.requestUpdate('parlamentares', old);
   }
 
+  public setAutoria(a?: AutoriaParecer): void {
+    const rel = a?.relator ? { ...a.relator } : undefined;
+    const pres = a?.presidente ? { ...a.presidente } : undefined;
+    this._autoriaParecerOriginal = a;
+    this._autoriaParecer = { relator: rel, presidente: pres };
+    this.requestUpdate();
+  }
+
   get parlamentares(): Parlamentar[] {
     return this._parlamentaresOpc;
   }
@@ -134,6 +142,7 @@ export class LexmlParecerAutoriaComponent extends LitElement {
           border: 1px solid var(--wa-color-gray-85);
           padding: 2px 5px;
           box-shadow: var(--wa-shadow-s);
+          color: #333;
         }
       </style>
       <fieldset>

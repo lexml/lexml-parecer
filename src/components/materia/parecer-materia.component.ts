@@ -1,6 +1,6 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query, state, property } from 'lit/decorators.js';
-import { Comissao, DestinoComponent, Option } from '@ui-commons';
+import { Comissao, Destino, DestinoComponent, Option } from '@ui-commons';
 import { ProposicaoReferenciada } from '../../models/diversos.modelo.js';
 import { Materia } from '../../models/materia.modelo.js';
 
@@ -75,7 +75,12 @@ export class LexmlParecerMateria extends LitElement {
   @query('#comissaoDesc') comissaoDescInput!: WithValueEl;
 
   @query('lexml-ui-editor-texto-rico')
-  private _ementaEd?: { getTexto: () => string; texto?: string };
+  private _ementaEd?: {
+    getTexto: () => string;
+    setContent?: (html: string, notas?: any[]) => void;
+    setTexto?: (html: string) => void; // se você adicionou esse atalho
+    texto?: string;
+  };
 
   @query('lexml-ui-destino')
   private _destino!: DestinoComponent;
@@ -87,8 +92,40 @@ export class LexmlParecerMateria extends LitElement {
     const ementaHtml = this._ementaEd?.getTexto?.() ?? '';
     materiaFinal.ementa = ementaHtml;
     materiaFinal.destino = this._destino.getDestino();
-
     return materiaFinal;
+  }
+
+  public async setMateria(materia: Materia, destino: Destino): Promise<void> {
+    if (!materia) return;
+
+    this.ano = Number(materia.ano ?? this.ano);
+    this._materiaSelecionada = materia.materia ?? new ProposicaoReferenciada();
+
+    await this.updateComplete;
+
+    // --- Ementa ---
+    if (this._ementaEd) {
+      if (typeof (this._ementaEd as any).setTexto === 'function') {
+        (this._ementaEd as any).setTexto(materia.ementa ?? '');
+      } else if (typeof (this._ementaEd as any).setContent === 'function') {
+        (this._ementaEd as any).setContent(materia.ementa ?? '', []);
+      } else {
+        (this._ementaEd as any).texto = materia.ementa ?? '';
+      }
+    }
+
+    // --- Destino ---
+    if (this._destino) {
+      if (typeof (this._destino as any).setDestino === 'function') {
+        (this._destino as any).setDestino(destino);
+      } else if (typeof (this._destino as any).setDestino === 'undefined') {
+        (this._destino as any).setDestino?.(destino);
+      } else {
+        (this._destino as any).destino = destino;
+      }
+    }
+
+    this.requestUpdate();
   }
 
   // static styles = css`
@@ -217,11 +254,6 @@ export class LexmlParecerMateria extends LitElement {
           margin-top: 0.25rem;
         }
 
-        wa-input::part(form-control-label),
-        wa-radio-group::part(form-control-label) {
-          font-weight: 600;
-          color: #374151;
-        }
         lexml-ui-destino lexml-destino {
           max-width: 100vw !important;
         }
@@ -240,18 +272,19 @@ export class LexmlParecerMateria extends LitElement {
           width: 100%;
         }
 
-        legend {
+        .legend-dados-materia {
           background-color: var(--wa-color-gray-90);
           font-weight: bold;
           border-radius: 5px;
           border: 1px solid var(--wa-color-gray-85);
           padding: 2px 5px;
           box-shadow: var(--wa-shadow-s);
+          color: #333;
         }
       </style>
       <div class="wa-grid">
         <fieldset>
-          <legend>Dados da Matéria</legend>
+          <legend class="legend-dados-materia">Dados da Matéria</legend>
           <wa-input
             id="anoInput"
             class="block"

@@ -3,10 +3,14 @@ import { customElement, state } from 'lit/decorators.js';
 import { ItemVoto } from '../../models/item-voto.modelo.js';
 import { Voto } from '../../models/voto.modelo.js';
 import { AnexoParecer } from '../../models/anexo.modelo.js';
-import { TipoDocumento } from '../../types/tipo-documento.js';
+import {
+  TipoDocumento,
+  TipoDocumentoLabel,
+} from '../../types/tipo-documento.js';
 import { alertarInfo } from '@ui-commons';
+import { NotaRodape } from 'src/models/diversos.modelo.js';
 
-type ItemVotoRuntime = ItemVoto & { _uid: string };
+type ItemVotoRuntime = ItemVoto & { _uid: string; notasRodape?: NotaRodape[] };
 
 type AnexoParecerRuntime = AnexoParecer & {
   arquivo?: File | null;
@@ -117,18 +121,136 @@ export class LexmlParecerVoto extends LitElement {
   }
 
   public getVoto(): Voto {
+    this.pullTiposFromDom();
     const voto: Voto = {
       itensVoto: this.sanitizeItens(),
     };
+    console.log(voto);
     return voto;
   }
 
-  public setVoto(voto: Voto) {
-    this.itens = (voto?.itensVoto ?? []).map((it, i) => ({
-      ...it,
-      posicao: i + 1,
-      _uid: this.uid(),
-    }));
+  public async setVoto(voto?: Voto | null): Promise<void> {
+    const orig = Array.isArray(voto?.itensVoto) ? voto!.itensVoto : [];
+
+    const ordenados = [...orig].sort((a, b) => {
+      const pa = Number.isFinite(a.posicao as number)
+        ? (a.posicao as number)
+        : Number.POSITIVE_INFINITY;
+      const pb = Number.isFinite(b.posicao as number)
+        ? (b.posicao as number)
+        : Number.POSITIVE_INFINITY;
+      return pa - pb;
+    });
+
+    const itensRuntime = ordenados.map((it, i) => {
+      const doc = it.documento
+        ? {
+            ...it.documento,
+            tipo: this.normalizeTipo((it.documento as any).tipo),
+          }
+        : undefined;
+
+      return {
+        ...it,
+        documento: doc,
+        posicao: i + 1,
+        _uid: this.uid(),
+        notasRodape: it.notasRodape ?? [],
+      };
+    });
+
+    this.itens = itensRuntime;
+    await this.updateComplete;
+    await this.syncSelectValues();
+    await this.syncTextEditorsContent();
+    for (let i = 0; i < this.itens.length; i++) {
+      const d: any = this.itens[i]?.documento;
+      if (d?.base64 && d?.nomeArquivo && !d?.arquivo) {
+        await this.setNativeFileInputFromModel(i);
+      }
+    }
+    this.emitChange();
+  }
+
+  public async setItensVoto(itens: ItemVoto[] = []): Promise<void> {
+    const ordenados = [...itens].sort((a, b) => {
+      const pa = Number.isFinite(a.posicao as number)
+        ? (a.posicao as number)
+        : Number.POSITIVE_INFINITY;
+      const pb = Number.isFinite(b.posicao as number)
+        ? (b.posicao as number)
+        : Number.POSITIVE_INFINITY;
+      return pa - pb;
+    });
+
+    this.itens = ordenados.map((it, i) => {
+      const doc = it.documento
+        ? {
+            ...it.documento,
+            tipo: this.normalizeTipo((it.documento as any).tipo),
+          }
+        : undefined;
+
+      return {
+        ...it,
+        documento: doc,
+        posicao: i + 1,
+        _uid: this.uid(),
+      };
+    });
+
+    await this.updateComplete;
+    await this.syncSelectValues();
+    await this.syncTextEditorsContent();
+    this.emitChange();
+  }
+
+  private async syncSelectValues() {
+    await this.updateComplete;
+    const cards = Array.from(
+      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
+    );
+
+    cards.forEach((card, index) => {
+      const item = this.itens[index];
+      const tipo = (item?.documento as any)?.tipo ?? '';
+      if (!tipo) return;
+
+      const sel = card.querySelector('wa-select') as any;
+      if (sel && sel.value !== tipo) {
+        sel.value = tipo;
+        sel.requestUpdate?.();
+      }
+    });
+  }
+
+  private async syncTextEditorsContent(): Promise<void> {
+    await this.updateComplete;
+    const editors = Array.from(
+      this.querySelectorAll<
+        HTMLElement & {
+          setContent?: (html: string, notas?: NotaRodape[]) => void;
+        }
+      >('lexml-ui-editor-texto-rico'),
+    );
+
+    // Mapeia apenas os itens de TEXTO na mesma ordem dos editors
+    let textIndex = 0;
+    for (let i = 0; i < this.itens.length; i++) {
+      const it = this.itens[i];
+      if (!it.documento) {
+        const ed = editors[textIndex++];
+        if (ed?.setContent) {
+          ed.setContent(it.texto ?? '', it.notasRodape ?? []);
+        }
+      }
+    }
+  }
+
+  public async clearVoto(): Promise<void> {
+    this.itens = [];
+    await this.updateComplete;
+    this.emitChange();
   }
 
   protected render(): TemplateResult {
@@ -317,19 +439,27 @@ export class LexmlParecerVoto extends LitElement {
             label="Tipo"
             placeholder="Selecione o tipo"
             .value=${(doc.tipo as TipoDocumento) ?? ''}
-            @change=${(e: Event) => this.onTipoChange(idx, e)}
             @wa-change=${(e: Event) => this.onTipoChange(idx, e)}
-            @wa-input=${(e: Event) => this.onTipoChange(idx, e)}
+            @change=${(e: Event) => this.onTipoChange(idx, e)}
           >
             <wa-option value="" label="Selecione…">Selecione…</wa-option>
-            <wa-option value=${TipoDocumento.SUBSTITUTIVO}>
-              ${TipoDocumento.SUBSTITUTIVO}
+            <wa-option
+              value=${TipoDocumento.SUBSTITUTIVO}
+              ?selected=${doc.tipo === TipoDocumento.SUBSTITUTIVO}
+            >
+              ${TipoDocumentoLabel[TipoDocumento.SUBSTITUTIVO]}
             </wa-option>
-            <wa-option value=${TipoDocumento.EMENDA}>
-              ${TipoDocumento.EMENDA}
+            <wa-option
+              value=${TipoDocumento.EMENDA}
+              ?selected=${doc.tipo === TipoDocumento.EMENDA}
+            >
+              ${TipoDocumentoLabel[TipoDocumento.EMENDA]}
             </wa-option>
-            <wa-option value=${TipoDocumento.OUTRO}>
-              ${TipoDocumento.OUTRO}
+            <wa-option
+              value=${TipoDocumento.OUTRO}
+              ?selected=${doc.tipo === TipoDocumento.OUTRO}
+            >
+              ${TipoDocumentoLabel[TipoDocumento.OUTRO]}
             </wa-option>
           </wa-select>
         </div>
@@ -402,6 +532,53 @@ export class LexmlParecerVoto extends LitElement {
     `;
   }
 
+  private guessMime(name: string): string {
+    const n = (name || '').toLowerCase();
+    if (n.endsWith('.pdf')) return 'application/pdf';
+    if (n.endsWith('.docx'))
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    return 'application/octet-stream';
+  }
+
+  /** Converte base64 -> Blob com o mime informado. */
+  private base64ToBlob(base64: string, mime: string): Blob {
+    const byteStr = atob(base64);
+    const len = byteStr.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) bytes[i] = byteStr.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  }
+
+  private async setNativeFileInputFromModel(idx: number): Promise<void> {
+    await this.updateComplete;
+
+    const cards = Array.from(
+      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
+    );
+    const card = cards[idx];
+    if (!card) return;
+
+    const input = card.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement | null;
+    if (!input) return;
+
+    const item = this.itens[idx];
+    const doc: any = item?.documento;
+    if (!doc || !doc.base64 || !doc.nomeArquivo || doc.arquivo) return;
+
+    const mime = this.guessMime(String(doc.nomeArquivo));
+    const blob = this.base64ToBlob(String(doc.base64), mime);
+    const file = new File([blob], String(doc.nomeArquivo), { type: mime });
+
+    // Mantém também no runtime (opcional, ajuda em view/download)
+    doc.arquivo = file;
+
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+  }
+
   private onEditorChange(idx: number, e: Event) {
     const ed = (e.target as any) ?? (e.currentTarget as any);
 
@@ -412,7 +589,15 @@ export class LexmlParecerVoto extends LitElement {
           ? ed.getTexto()
           : (ed?.texto ?? '');
 
-    this.updateTexto(idx, String(html ?? ''));
+    const notas: NotaRodape[] =
+      typeof ed?.getNotasRodape === 'function'
+        ? (ed.getNotasRodape() ?? [])
+        : [];
+
+    const arr = [...this.itens];
+    arr[idx] = { ...arr[idx], texto: String(html ?? ''), notasRodape: notas };
+    this.itens = arr;
+    this.emitChange();
   }
 
   private view(idx: number) {
@@ -482,7 +667,12 @@ export class LexmlParecerVoto extends LitElement {
   private addTexto = () => {
     this.itens = [
       ...this.itens,
-      { _uid: this.uid(), texto: '', posicao: this.itens.length + 1 },
+      {
+        _uid: this.uid(),
+        texto: '',
+        notasRodape: [],
+        posicao: this.itens.length + 1,
+      },
     ];
     this.emitChange();
   };
@@ -514,18 +704,68 @@ export class LexmlParecerVoto extends LitElement {
     this.emitChange();
   }
 
+  private pullTiposFromDom(): void {
+    const cards = Array.from(
+      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
+    );
+
+    const arr = [...this.itens];
+    cards.forEach((card, index) => {
+      const sel = card.querySelector('wa-select') as any;
+      if (!sel) return;
+
+      const raw =
+        sel?.value ??
+        sel?.getAttribute?.('value') ??
+        (sel as any)?.selected?.value ??
+        '';
+
+      const up = String(raw).trim().toUpperCase();
+      if (!up) return;
+
+      if (Object.values(TipoDocumento).includes(up as TipoDocumento)) {
+        const cur = arr[index];
+        if (cur?.documento) {
+          (cur.documento as any).tipo = up as TipoDocumento;
+        }
+      }
+    });
+
+    this.itens = arr;
+  }
+
   private onTipoChange(idx: number, e: Event) {
     const anyEvt = e as any;
-    const target = (e.target as any) ?? anyEvt.currentTarget;
+    if (!anyEvt?.isTrusted) return;
+
+    let sel: any = anyEvt.currentTarget;
+    if (!sel || sel.tagName?.toLowerCase() !== 'wa-select') {
+      const maybe = (anyEvt.target as HTMLElement)?.closest?.('wa-select');
+      if (maybe) sel = maybe;
+    }
 
     const raw =
-      anyEvt?.detail?.value ??
-      target?.value ??
-      (typeof target?.getAttribute === 'function'
-        ? target.getAttribute('value')
-        : '');
-    const value = (raw ?? '').toString();
-    this.updateDocField(idx, 'tipo', value as TipoDocumento);
+      sel?.value ?? anyEvt?.detail?.value ?? sel?.getAttribute?.('value') ?? '';
+
+    const up = String(raw).trim().toUpperCase();
+    if (!up) return;
+
+    const valid = Object.values(TipoDocumento).includes(up as TipoDocumento);
+    if (!valid) return;
+
+    const atual = this.itens[idx]?.documento as any;
+    if (atual?.tipo === up) return;
+
+    this.updateDocField(idx, 'tipo', up as TipoDocumento);
+  }
+
+  private normalizeTipo(value: unknown): TipoDocumento | undefined {
+    const up = String(value ?? '')
+      .trim()
+      .toUpperCase();
+    return Object.values(TipoDocumento).includes(up as TipoDocumento)
+      ? (up as TipoDocumento)
+      : undefined;
   }
 
   private updateDocField(
@@ -590,20 +830,23 @@ export class LexmlParecerVoto extends LitElement {
 
   private sanitizeItens(): ItemVoto[] {
     return this.itens.map(it => {
-      const { ...rest } = it;
+      const rest = { ...(it as any) };
       delete (rest as any)._uid;
 
-      const doc = (rest.documento ?? {}) as AnexoParecerRuntime;
-      const persistente: AnexoParecer = {
-        tipo: doc.tipo,
-        nomeArquivo: doc.nomeArquivo ?? '',
-        base64: doc.base64 ?? '',
-      };
+      const docRt = (rest.documento ?? null) as AnexoParecerRuntime | null;
+      const persistente: AnexoParecer | undefined = docRt
+        ? {
+            tipo: docRt.tipo,
+            nomeArquivo: docRt.nomeArquivo ?? '',
+            base64: docRt.base64 ?? '',
+          }
+        : undefined;
 
       return {
         ...rest,
-        documento: rest.documento ? persistente : undefined,
-      };
+        documento: persistente,
+        notasRodape: rest.notasRodape ?? [],
+      } as ItemVoto;
     });
   }
 

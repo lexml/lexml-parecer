@@ -1,9 +1,19 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import '../../src/index.js';
-import { Parecer, ProposicaoReferenciada } from 'src/models/diversos.modelo.js';
+import {
+  AutoriaParecer,
+  ColegiadoApreciador,
+  OpcoesImpressao,
+  Parecer,
+  ProposicaoReferenciada,
+} from '../../src/models/diversos.modelo.js';
 import { LexmlEtaParecer } from '../../src/components/parecer/lexml-eta-parecer.component.js';
 import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
+import { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
+import { Voto } from '../../src/models/voto.modelo.js';
+import { Comissao, Destino } from '@ui-commons';
+import { TipoDocumento } from '../../src/types/tipo-documento.js';
 
 @customElement('demo-view')
 export class DemoView extends LitElement {
@@ -347,6 +357,128 @@ export class DemoView extends LitElement {
     }
   };
 
+  executar(): void {
+    const parecerEl = this._parecer;
+    if (!parecerEl) {
+      console.warn('lexml-eta-parecer não encontrado.');
+      return;
+    }
+    const params = new LexmlEtaParecerParametrosEdicao();
+    const parecer = new Parecer();
+
+    // Metadados básicos
+    parecer.aplicacao = 'lexeditweb';
+    parecer.versaoAplicacao = '1.0.0';
+    parecer.metadados = {
+      ambiente: 'DEV',
+      origem: 'Teste manual',
+    } as any;
+
+    const materia = new ProposicaoReferenciada();
+    materia.urn = 'urn:lex:br:senado:projeto.lei;123;2025';
+    materia.identificacaoTexto = 'PL 123/2025 (Senado Federal)';
+    parecer.materia = materia;
+
+    const destino = new Destino();
+    destino.colegiadoApreciador = 'Comissão';
+    destino.comissao = {
+      siglaCasaLegislativa: 'SF',
+      sigla: 'CAE',
+      nome: 'Comissão de Assuntos Econômicos',
+    } as Comissao;
+    parecer.destino = destino;
+    parecer.ano = new Date(2022, 0, 1).getFullYear();
+    parecer.data = new Date(Date.UTC(2002, 0, 1)).toISOString().slice(0, 10);
+    parecer.local = 'Brasília — DF';
+    parecer.epigrafe = 'PARECER Nº 12, DE 2025 — CAE';
+    parecer.ementa =
+      'Altera a Lei nº 9.000/1995 para atualizar regras sobre incentivos fiscais ao setor tecnológico.';
+    parecer.relatorio = `
+      <p>Trata-se<nota-rodape class="nota-rodape" contenteditable="false" id-nota-rodape="nr1762440815918" texto="&amp;lt;p&amp;gt;Nota de rodape 1&amp;lt;/p&amp;gt;" numero="1">1</nota-rodape> de proposição que visa modernizar o marco regulatório de incentivos fiscais
+      ao setor de tecnologia, com o objetivo de aumentar a competitividade e fomentar a inovação
+      no país. Foram recebidas contribuições da sociedade civil e do setor produtivo.</p>
+      <p>Em audiência pública realizada nesta Comissão, especialistas apresentaram dados sobre
+      os impactos econômicos da medida, notadamente sobre emprego e arrecadação.</p>
+    `.trim();
+    parecer.analise = `
+      <p>Do ponto de vista orçamentário, a proposição observa o art. 113 do ADCT,
+      acompanhada de estimativa de impacto e compensação correspondente.</p>
+      <p>Juridicamente, não se vislumbram vícios de constitucionalidade ou antinomias
+      com a legislação em vigor. A técnica legislativa atende às exigências da LC 95/1998.</p>
+    `.trim();
+
+    const voto = new Voto();
+    voto.itensVoto = [
+      {
+        posicao: 1,
+        texto: `
+          <p>Diante do exposto, o voto é pela <strong>aprovação</strong> do Projeto de Lei nº 123, de 2025.</p>
+          <p><em>Conclusão:</em> Pela aprovação do Projeto de Lei nº 123, de 2025, na forma do texto original.</p>
+        `.trim(),
+      },
+      {
+        posicao: 3,
+        texto: `
+          <p>Pela aprovação do Projeto de Lei nº 123, de 2025, na forma do texto original.</p>
+        `.trim(),
+      },
+      {
+        posicao: 2,
+        documento: {
+          tipo: TipoDocumento.SUBSTITUTIVO,
+          nomeArquivo: 'parecer-anexo.pdf',
+          base64: '',
+        },
+      },
+    ];
+    parecer.voto = voto;
+
+    // Colegiado apreciador (preencha os campos que existirem no seu modelo)
+    const colegiado = new ColegiadoApreciador() as any;
+    colegiado.sigla = 'CAE';
+    colegiado.nome = 'Comissão de Assuntos Econômicos';
+    parecer.colegiadoApreciador = colegiado;
+
+    // Autoria (mantenho o default caso seu modelo crie a estrutura sozinho)
+    const autoria = new AutoriaParecer() as any;
+    autoria.relator = {
+      identificacao: 'SF001',
+      nome: 'Rodrigo Pacheco',
+      sexo: 'M',
+      siglaPartido: 'PSD',
+      siglaUF: 'MG',
+      siglaCasaLegislativa: 'SF',
+      cargo: 'Senador',
+    };
+    autoria.presidente = {
+      identificacao: 'SF001',
+      nome: 'Rodrigo Pacheco',
+      sexo: 'M',
+      siglaPartido: 'PSD',
+      siglaUF: 'MG',
+      siglaCasaLegislativa: 'SF',
+      cargo: 'Senador',
+    };
+    parecer.autoria = autoria;
+
+    // Opções de impressão (caso seu template FO as utilize)
+    const op = new OpcoesImpressao() as any;
+    op.imprimirBrasao = true;
+    op.textoCabecalho = 'Senado Federal — Comissão de Assuntos Econômicos';
+    op.imprimirSumario = false;
+    op.tamanhoFonte = 14;
+    parecer.opcoesImpressao = op;
+
+    // Pendências que o editor pode exibir ao usuário (opcional)
+    parecer.pendenciasPreenchimento = [];
+
+    // Finaliza
+    params.parecer = parecer;
+    console.log('params');
+    console.log(params);
+    parecerEl.inicializarEdicao(params);
+  }
+
   render(): TemplateResult {
     return html`
       <style>
@@ -394,6 +526,7 @@ export class DemoView extends LitElement {
             value="gerar Objeto Parecer (Console)"
             @click=${this.getObjetoParecer}
           />
+          <input type="button" value="Ok" @click=${this.executar} />
         </div>
       </div>
       <div class="nome-proposicao">TESTE</div>

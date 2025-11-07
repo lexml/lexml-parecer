@@ -1,4 +1,5 @@
 import { AnexoParecer } from './anexo.modelo.js';
+import { NotaRodape } from './diversos.modelo.js';
 
 export class ItemVoto {
   texto?: string;
@@ -6,4 +7,6 @@ export class ItemVoto {
   documento?: AnexoParecer;
 
   posicao?: number;
+
+  notasRodape?: NotaRodape[];
 }

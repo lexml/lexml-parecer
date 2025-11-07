@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-use-before-define */
+import { Destino } from '@ui-commons';
 import { Voto } from './voto.modelo.js';
 
 export class Parecer {
@@ -21,6 +22,8 @@ export class Parecer {
   voto: Voto = new Voto();
 
   local = ''; // Calculado a partir do destino (Colegiado Apreciador)
+
+  destino: Destino = new Destino();
 
   data?: string | null = new Date().toISOString().replace(/T.*/, ''); // formato “YYYY-MM-DD”
 

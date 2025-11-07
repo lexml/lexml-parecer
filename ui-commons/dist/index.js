@@ -12452,6 +12452,65 @@ let DestinoComponent = class DestinoComponent extends LitElement {
         }
         return d;
     }
+    async setDestino(destino) {
+        if (!destino) {
+            this._colegiadoApreciador = new ColegiadoApreciador();
+            this._colegiadoApreciador.tipoColegiado = 'Plenário';
+            this.tipoColegiadoPlenario = true;
+            this._autocomplete && (this._autocomplete.value = '');
+            this._comissaoSelecionada = null;
+            this.removerAlertaErroComissao();
+            this.requestUpdate();
+            return;
+        }
+        this._colegiadoApreciador.tipoColegiado =
+            destino.colegiadoApreciador ?? 'Plenário';
+        this.tipoColegiadoPlenario =
+            this._colegiadoApreciador.tipoColegiado === 'Plenário';
+        if (this.tipoColegiadoPlenario) {
+            this.ajustarTipoColegiadoPlenario();
+            this.requestUpdate();
+            return;
+        }
+        const siglaAlvo = destino.comissao?.sigla ?? '';
+        if (!siglaAlvo) {
+            this._colegiadoApreciador.siglaComissao = '';
+            this._autocomplete && (this._autocomplete.value = '');
+            this.criarAlertaErroComissao();
+            this.requestUpdate();
+            return;
+        }
+        if (!this._comissoes?.length) {
+            this._destinoPendente = destino;
+            this.requestUpdate();
+            return;
+        }
+        this._aplicarComissaoPorSigla(siglaAlvo);
+        this.requestUpdate();
+    }
+    _aplicarDestinoPendenteSeHouver() {
+        if (!this._destinoPendente)
+            return;
+        const d = this._destinoPendente;
+        this._destinoPendente = undefined;
+        this.setDestino(d);
+    }
+    _aplicarComissaoPorSigla(sigla) {
+        const item = this._comissoes.find(c => c.sigla === sigla);
+        if (!item) {
+            this._colegiadoApreciador.siglaComissao = '';
+            this._autocomplete && (this._autocomplete.value = '');
+            this.criarAlertaErroComissao();
+            return;
+        }
+        this._comissaoSelecionada = item;
+        this._colegiadoApreciador.siglaCasaLegislativa = item.siglaCasaLegislativa;
+        this._colegiadoApreciador.siglaComissao = item.sigla;
+        const opt = this._comissoesOptions.find(o => o.value === item.sigla) ??
+            new Option(item.sigla, `${item.sigla} - ${item.nome}`);
+        this._autocomplete && (this._autocomplete.value = opt.description);
+        this.removerAlertaErroComissao();
+    }
     get proposicao() {
         return this._proposicao;
     }
@@ -12462,6 +12521,7 @@ let DestinoComponent = class DestinoComponent extends LitElement {
             this._comissoesOptions = this.comissoes.map(comissao => new Option(comissao.sigla, `${comissao.sigla} - ${comissao.nome}`));
             this.ajustarValorAutocomplete();
             this.requestUpdate();
+            this._aplicarDestinoPendenteSeHouver();
         }
         if (typeof value === 'undefined') {
             this.isPlenario = true;
@@ -12780,8 +12840,8 @@ let Data = class Data extends LitElement {
     }
     updated() {
         this.inputData.value =
-            this.data ||
-                this.inputData.value ||
+            this.data ??
+                this.inputData.value ??
                 new Date().toISOString().replace(/T.+$/, '');
         if (!this.data && !this.optionNaoInformarData.checked) {
             this.optionNaoInformarData.checked = true;
@@ -12953,6 +13013,10 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
         this._opcoesImpressao = value ? value : new OpcoesImpressao();
         this.requestUpdate();
     }
+    setOpcoesImpressao(o) {
+        this._opcoesImpressao = o ?? new OpcoesImpressao();
+        this.requestUpdate();
+    }
     get opcoesImpressao() {
         return this._opcoesImpressao;
     }
@@ -13037,7 +13101,7 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
             id="select-tamanho-fonte"
             label="Tamanho da letra"
             size="small"
-            value=${this._opcoesImpressao?.tamanhoFonte}
+            value=${String(this._opcoesImpressao?.tamanhoFonte ?? 14)}
           >
             <wa-option value="14">14</wa-option>
             <wa-option value="16">16</wa-option>
@@ -13061,19 +13125,23 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
     _atualizarTextoCabecalho(ev) {
         this._opcoesImpressao.textoCabecalho = ev.target.value;
         this.requestUpdate();
+        this.agendarEmissaoEventoOnChange('textoCabecalho');
     }
     _atualizarImprimirBrasao(ev) {
         this._opcoesImpressao.imprimirBrasao = ev.target.checked;
         this.requestUpdate();
+        this.agendarEmissaoEventoOnChange('imprimirBrasao');
     }
     _atualizarTamanhoFonte(ev) {
         const valorFonte = parseInt(ev.currentTarget.value);
         this._opcoesImpressao.tamanhoFonte = valorFonte;
         this.requestUpdate();
+        this.agendarEmissaoEventoOnChange('tamanhoFonte');
     }
     _atualizarReduzirEspacoEntreLinhas(ev) {
         this._opcoesImpressao.reduzirEspacoEntreLinhas = ev.target.checked;
         this.requestUpdate();
+        this.agendarEmissaoEventoOnChange('reduzirEspacoEntreLinhas');
     }
     agendarEmissaoEventoOnChange(origemEvento) {
         clearInterval(this.timerEmitirEventoOnChange);
@@ -20948,6 +21016,32 @@ const patchSplitPanelForLexml = (() => {
 })();
 // --- /HOTFIX ---
 let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement {
+    setTexto(html) {
+        const textoHtml = html ?? '';
+        const hasNotaRodape = /<\s*nota-rodape\b/i.test(textoHtml);
+        if (hasNotaRodape) {
+            this.apresentarNotaRodape = true;
+        }
+        this.setContent(html ?? '', this.notasRodape ?? []);
+        queueMicrotask(() => {
+            const notas = this.quill?.notasRodape?.getNotasRodape
+                ? this.quill.notasRodape.getNotasRodape() || []
+                : [];
+            if (hasNotaRodape && notas.length > 0) {
+                this.notasRodape = notas;
+                this._atualizarVisibilidadeNotasRodape();
+                this.requestUpdate();
+            }
+        });
+    }
+    setNotasRodape(notas = []) {
+        const textoHtml = this.texto ?? '';
+        const hasNotaRodape = /<\s*nota-rodape\b/i.test(textoHtml);
+        if (hasNotaRodape) {
+            this.apresentarNotaRodape = true;
+        }
+        this.setContent(this.texto ?? '', notas);
+    }
     get _orientation() {
         return this.notasPosicao === 'lado' ? 'horizontal' : 'vertical';
     }
@@ -21497,6 +21591,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 .replace(/align-justify/g, 'ql-align-justify')
                 .replace(/align-center/g, 'ql-align-center')
                 .replace(/align-right/g, 'ql-align-right');
+            const hasNotaRodape = /<\s*nota-rodape\b/i.test(textoAjustado);
+            if (hasNotaRodape) {
+                this.apresentarNotaRodape = true;
+            }
             this.quill.history.clear(); // Não remover: isso é um workaround para o bug que ocorre ao limpar conteúdo depois de alguma inserção de tabela
             if (this.quill?.revisao) {
                 this.quill.revisao.modo = this.modo;
@@ -21510,6 +21608,14 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.quill.history.clear();
                 if (this.quill?.notasRodape?.associar) {
                     this.quill.notasRodape.associar(notasRodape);
+                }
+                if (hasNotaRodape && (!notasRodape || notasRodape.length === 0)) {
+                    const detectadas = this.quill?.notasRodape?.getNotasRodape?.() || [];
+                    if (detectadas.length > 0) {
+                        this.notasRodape = detectadas;
+                        this._atualizarVisibilidadeNotasRodape();
+                        this.requestUpdate();
+                    }
                 }
             }, 100); // A linha anterior gera um history, então é necessário limpar novamente.
             if (!textoAjustado)
@@ -21719,6 +21825,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     disconnectedCallback() {
         this.quill?.off('text-change', this.updateTexto);
         this.quill?.off('selection-change', this.onSelectionChange);
+        this._splitResizeObs?.disconnect();
         super.disconnectedCallback();
     }
     _atualizarVisibilidadeNotasRodape() {
@@ -22451,9 +22558,13 @@ SwitchRevisaoComponent = __decorate([
     customElement('lexml-ui-switch-revisao')
 ], SwitchRevisaoComponent);
 
-const ICONS_LEXML_UI_COMMONS = '/assets/lexml-ui-commons/icons/';
+function withBase(path) {
+    const base = (document.querySelector('base')?.getAttribute('href') || '/').replace(/\/+$/, '');
+    const p = path.replace(/^\/+/, '');
+    return `${base}/${p}`;
+}
 registerIconLibrary('icons-ui-commons', {
-    resolver: (name) => `${ICONS_LEXML_UI_COMMONS}${name}.svg`,
+    resolver: (name) => withBase(`assets/lexml-ui-commons/icons/${name}.svg`),
     mutator: (svg) => {
         if (!svg.getAttribute('fill'))
             svg.setAttribute('fill', 'currentColor');

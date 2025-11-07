@@ -97,9 +97,13 @@ declare class DestinoComponent extends LitElement {
   addAlert?: AddAlertFn$1;
   removeAlert?: RemoveAlertFn$2;
   criticalType: string;
+  private _destinoPendente?;
   set proposicao(value: RefProposicaoEmendada);
   constructor();
   getDestino(): Destino;
+  setDestino(destino?: Destino): Promise<void>;
+  private _aplicarDestinoPendenteSeHouver;
+  private _aplicarComissaoPorSigla;
   get proposicao(): RefProposicaoEmendada;
   private _comissoes;
   set comissoes(value: Comissao[]);
@@ -160,6 +164,7 @@ declare class OpcoesImpressaoComponent extends LitElement {
   };
   private _opcoesImpressao;
   set opcoesImpressao(value: OpcoesImpressao);
+  setOpcoesImpressao(o?: OpcoesImpressao): void;
   get opcoesImpressao(): OpcoesImpressao;
   getOpcoesImpressao(): OpcoesImpressao;
   private timerEmitirEventoOnChange;
@@ -530,6 +535,8 @@ declare class EditorTextoRicoComponent extends LitElement {
   private alterarLarguraTabelaModal;
   private alterarLarguraImagemModal;
   private _switchRevisaoEl?;
+  setTexto(html: string): void;
+  setNotasRodape(notas?: NotaRodape[]): void;
   private get _orientation();
   private get _posPercent();
   private get _dividerIcon();

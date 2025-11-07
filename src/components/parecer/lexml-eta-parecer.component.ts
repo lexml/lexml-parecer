@@ -3,11 +3,13 @@ import { customElement, state, query, property } from 'lit/decorators.js';
 import { Comissao } from '@ui-commons';
 import {
   AutoriaParecer,
+  NotaRodape,
   OpcoesImpressao,
   Parecer,
   Parlamentar,
   ProposicaoReferenciada,
 } from '../../models/diversos.modelo.js';
+import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-parametro-edicao.model.js';
 import { LexmlParecerMateria } from '../materia/parecer-materia.component.js';
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
@@ -42,7 +44,7 @@ export class LexmlEtaParecer extends LitElement {
   @query(
     'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autoria-impressao',
   )
-  private _dataAutiraImpressao?: LexmlParecerDataAutoriaImpressao;
+  private _dataAutoriaImpressao?: LexmlParecerDataAutoriaImpressao;
 
   @query('wa-tab-panel[name="relatorio"] lexml-parecer-relatorio')
   private _relatorio?: { getTexto: () => string };
@@ -53,9 +55,63 @@ export class LexmlEtaParecer extends LitElement {
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
 
+  async inicializarEdicao(params: LexmlEtaParecerParametrosEdicao) {
+    if (params.parecer) {
+      this.setParecer(params.parecer);
+    }
+  }
+
+  private async setParecer(parecer: Parecer): Promise<void> {
+    if (!parecer) return;
+    this.parecer = {
+      ...parecer,
+      dataUltimaModificacao:
+        parecer.dataUltimaModificacao ?? new Date().toISOString(),
+    };
+
+    const materiaParaComponente: Materia = {
+      materia: this.parecer.materia,
+      ano: this.parecer.ano,
+      ementa: this.parecer.ementa,
+      destino: this.parecer.destino,
+    } as Materia;
+
+    const materiaEl: any = this._materia;
+    materiaEl?.setMateria?.(materiaParaComponente, parecer.destino);
+    materiaEl &&
+      !materiaEl.setMateria &&
+      (materiaEl.materia = materiaParaComponente);
+
+    // ---------- Data, Autoria e Impressão ----------
+    const dai = this._dataAutoriaImpressao as any;
+    await dai?.setDataAutoriaImpressao?.(
+      this.parecer.data ?? null,
+      this.parecer.autoria,
+      this.parecer.opcoesImpressao,
+    );
+
+    // ---------- Relatório ----------
+    const rel: any = this._relatorio;
+    rel?.setTexto?.(this.parecer.relatorio ?? '');
+    rel && !rel.setTexto && (rel.texto = this.parecer.relatorio ?? '');
+
+    // ---------- Análise (respeita disableAnalise) ----------
+    if (!this.disableAnalise) {
+      const ana: any = this._analise;
+      ana?.setTexto?.(this.parecer.analise ?? '');
+      ana && !ana.setTexto && (ana.texto = this.parecer.analise ?? '');
+    }
+
+    // ---------- Voto ----------
+    const votoEl = this._voto as any;
+    await votoEl?.setVoto?.(this.parecer.voto ?? { itensVoto: [] });
+
+    this.requestUpdate();
+  }
+
   public getParecer(): Parecer {
     const materiaEl = this._materia;
-    const dataAutiraImpressaoEl = this._dataAutiraImpressao;
+    const dataAutiraImpressaoEl = this._dataAutoriaImpressao;
     const votoEl = this._voto;
     const relatorioHtml = this._relatorio?.getTexto() ?? '';
     const analiseHtml = this._analise?.getTexto() ?? '';
@@ -80,21 +136,36 @@ export class LexmlEtaParecer extends LitElement {
     const autoriaParecer: AutoriaParecer =
       dataAutiraImpressaoEl.getAutoriaParecer();
     const voto: Voto = votoEl.getVoto();
-
-    console.log('---DESTINO---');
-    console.log(materia.destino);
+    const notasRelatorio: NotaRodape[] =
+      (this._relatorio as any)?.getNotasRodape?.() ?? [];
+    const notasAnalise: NotaRodape[] =
+      (this._analise as any)?.getNotasRodape?.() ?? [];
+    const notasVoto: NotaRodape[] = (voto?.itensVoto ?? []).flatMap(
+      iv => iv?.notasRodape ?? [],
+    );
+    const notasRodape: NotaRodape[] = [
+      ...notasRelatorio,
+      ...notasAnalise,
+      ...notasVoto,
+    ];
     this.parecer = {
       ...this.parecer,
       dataUltimaModificacao: new Date().toISOString(),
       materia: { ...materia.materia },
       ano: materia.ano,
       ementa: materia.ementa,
+      destino: materia.destino,
       opcoesImpressao: { ...opcoesImpressao },
       data,
       autoria: { ...autoriaParecer },
       relatorio: relatorioHtml,
       analise: analiseHtml,
       voto,
+      notasRodape: notasRodape,
+      local:
+        materia.destino.colegiadoApreciador === 'Plenário'
+          ? 'Sala das Sessões'
+          : 'Sala da Comissão',
     };
     return this.parecer;
   }

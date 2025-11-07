@@ -5,7 +5,7 @@ import {
   AutoriaParecer,
   OpcoesImpressao,
   Parlamentar,
-} from 'src/models/diversos.modelo.js';
+} from '../../../src/models/diversos.modelo.js';
 import { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.component.js';
 
 @customElement('lexml-parecer-data-autoria-impressao')
@@ -19,6 +19,40 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
   private _parecerAutoria!: LexmlParecerAutoriaComponent;
 
   @property({ type: Array }) parlamentares: Parlamentar[] = [];
+
+  @state() private _dataValor: string | null = new Date()
+    .toISOString()
+    .slice(0, 10);
+  @state() private _opcoesValor: OpcoesImpressao = new OpcoesImpressao();
+
+  public async setData(d?: string | null): Promise<void> {
+    this._dataValor = d ?? null;
+    await this.updateComplete;
+    this._data?.dispatchEvent(new Event('input', { bubbles: true } as any));
+  }
+
+  public async setOpcoesImpressao(o?: OpcoesImpressao): Promise<void> {
+    this._opcoesValor = o ?? new OpcoesImpressao();
+    await this.updateComplete;
+  }
+
+  public async setAutoria(a?: AutoriaParecer): Promise<void> {
+    this._autoria = {
+      relator: a?.relator ? { ...a.relator } : undefined,
+      presidente: a?.presidente ? { ...a.presidente } : undefined,
+    };
+    await this.updateComplete;
+  }
+
+  public async setDataAutoriaImpressao(
+    data?: string | null,
+    autoria?: AutoriaParecer,
+    opcoes?: OpcoesImpressao,
+  ): Promise<void> {
+    await this.setData(data ?? null);
+    await this.setAutoria(autoria);
+    await this.setOpcoesImpressao(opcoes);
+  }
 
   public getData(): string | null {
     return this._data.getData();
@@ -46,7 +80,7 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
   render(): TemplateResult {
     return html`
       <div>
-        <lexml-ui-data></lexml-ui-data>
+        <lexml-ui-data .data=${this._dataValor ?? ''}></lexml-ui-data>
         <br />
         <lexml-parecer-autoria
           .parlamentares=${this.parlamentares}
@@ -55,7 +89,9 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
         >
         </lexml-parecer-autoria>
         <br />
-        <lexml-ui-opcoes-impressao></lexml-ui-opcoes-impressao>
+        <lexml-ui-opcoes-impressao
+          .opcoesImpressao=${this._opcoesValor}
+        ></lexml-ui-opcoes-impressao>
       </div>
     `;
   }
