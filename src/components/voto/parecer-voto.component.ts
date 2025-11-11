@@ -1,5 +1,6 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { repeat } from 'lit/directives/repeat.js';
 import { ItemVoto } from '../../models/item-voto.modelo.js';
 import { Voto } from '../../models/voto.modelo.js';
 import { AnexoParecer } from '../../models/anexo.modelo.js';
@@ -44,10 +45,51 @@ export class LexmlParecerVoto extends LitElement {
     if (this._nrScheduled) return;
     this._nrScheduled = true;
 
-    queueMicrotask(() => {
+    queueMicrotask(async () => {
       this._nrScheduled = false;
       this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
+      await Promise.resolve();
+      await new Promise(requestAnimationFrame);
+      await this._syncModeloComEditors();
     });
+  }
+  private async _syncModeloComEditors(): Promise<void> {
+    await this.updateComplete;
+
+    const editors = Array.from(
+      this.querySelectorAll<
+        HTMLElement & {
+          getHtml?: () => string;
+          getTexto?: () => string;
+          getNotasRodape?: () => NotaRodape[];
+          texto?: string;
+        }
+      >('lexml-ui-editor-texto-rico'),
+    );
+
+    const arr = [...this.itens];
+    let textIndex = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+      const it = arr[i];
+      if (!it.documento) {
+        const ed = editors[textIndex++];
+        if (ed) {
+          const html =
+            typeof ed.getHtml === 'function'
+              ? ed.getHtml()
+              : typeof ed.getTexto === 'function'
+                ? ed.getTexto()
+                : (ed.texto ?? '');
+
+          const notas = ed.getNotasRodape?.() ?? [];
+          arr[i] = { ...it, texto: String(html ?? ''), notasRodape: notas };
+        }
+      }
+    }
+
+    this.itens = arr;
+    this.emitChange();
   }
 
   private _renumerarNotasEncadeadas(base: number): void {
@@ -411,7 +453,11 @@ export class LexmlParecerVoto extends LitElement {
       </style>
       ${this.itens.length === 0
         ? html`<div class="muted">Nenhum voto adicionado ainda.</div>`
-        : this.itens.map((item, idx) => this.renderItem(item, idx))}
+        : repeat(
+            this.itens,
+            it => it._uid,
+            (item, idx) => this.renderItem(item, idx),
+          )}
       <div class="toolbar">
         <wa-button size="small" @click=${this.addDocumento}
           >Importar anexo</wa-button
@@ -440,7 +486,7 @@ export class LexmlParecerVoto extends LitElement {
                 appearance="outlined"
                 pill
                 size="small"
-                @click=${() => this.move(idx, -1)}
+                @click=${(e: Event) => this.moveByEvent(e, -1)}
               >
                 <wa-icon
                   name="arrow-up"
@@ -453,7 +499,7 @@ export class LexmlParecerVoto extends LitElement {
                 appearance="outlined"
                 pill
                 size="small"
-                @click=${() => this.move(idx, 1)}
+                @click=${(e: Event) => this.moveByEvent(e, 1)}
               >
                 <wa-icon
                   name="arrow-down"
@@ -466,7 +512,7 @@ export class LexmlParecerVoto extends LitElement {
                 pill
                 size="small"
                 variant="danger"
-                @click=${() => this.removeItem(idx)}
+                @click=${(e: Event) => this.removeByEvent(e)}
               >
                 <wa-icon
                   name="trash"
@@ -479,12 +525,12 @@ export class LexmlParecerVoto extends LitElement {
         </div>
         ${item.documento
           ? this.renderDocumento(item, idx)
-          : this.renderTexto(item, idx)}
+          : this.renderTexto(item)}
       </wa-card>
     `;
   }
 
-  private renderTexto(item: ItemVoto, idx: number): TemplateResult {
+  private renderTexto(item: ItemVoto): TemplateResult {
     return html`
       <div class="wa-grid" style="--min-column-size: 16rem;">
         <div class="wa-span-grid">
@@ -492,7 +538,7 @@ export class LexmlParecerVoto extends LitElement {
             height="350"
             orientacaoNotaRodaPe="abaixo"
             .texto=${item.texto ?? ''}
-            @onchange=${(e: Event) => this.onEditorChange(idx, e)}
+            @onchange=${(e: Event) => this.onEditorChangeByEvent(e)}
           ></lexml-ui-editor-texto-rico>
         </div>
       </div>
@@ -671,6 +717,12 @@ export class LexmlParecerVoto extends LitElement {
     this.scheduleRenumerarDentroDoVoto();
   }
 
+  private onEditorChangeByEvent(e: Event) {
+    const idx = this.findIdxFromEvent(e);
+    if (idx < 0) return;
+    this.onEditorChange(idx, e);
+  }
+
   private view(idx: number) {
     const doc = this.itens[idx].documento as AnexoParecerRuntime | undefined;
     if (!doc) return;
@@ -768,8 +820,30 @@ export class LexmlParecerVoto extends LitElement {
       arr.splice(to, 0, item);
       this.itens = arr.map((it, i) => ({ ...it, posicao: i + 1 }));
       this.emitChange();
-      this.scheduleRenumerarDentroDoVoto();
     });
+
+    await this.updateComplete;
+    this.scheduleRenumerarDentroDoVoto();
+  }
+
+  private findIdxFromEvent(e: Event): number {
+    const card = (e.currentTarget as HTMLElement)?.closest(
+      'wa-card.card-header',
+    ) as HTMLElement | null;
+    const uid = card?.dataset.uid;
+    return uid ? this.itens.findIndex(it => it._uid === uid) : -1;
+  }
+
+  private async moveByEvent(e: Event, delta: number) {
+    const idx = this.findIdxFromEvent(e);
+    if (idx < 0) return;
+    await this.move(idx, delta);
+  }
+
+  private removeByEvent(e: Event) {
+    const idx = this.findIdxFromEvent(e);
+    if (idx < 0) return;
+    this.removeItem(idx);
   }
 
   private updateTexto(idx: number, value: string) {
