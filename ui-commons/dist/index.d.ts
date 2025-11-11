@@ -501,6 +501,14 @@ type RemoveAlertFn = (id: string) => void;
 declare class EditorTextoRicoComponent extends LitElement {
   private _uid;
   private _containerId;
+  notaRodapeInicio: number;
+  private _nrScheduled;
+  private scheduleRenumerarNotas;
+  /** Retorna as notas já sincronizadas (força renumeração e coleta imediata). */
+  getNotasRodape(): NotaRodape[];
+  private _collectNotasFromDom;
+  setNotaRodapeInicio(n: number): void;
+  getQuantidadeNotasRodape(): number;
   height: number;
   orientacaoNotaRodaPe: 'lado' | 'abaixo';
   private notasPosicao;
@@ -584,8 +592,6 @@ declare class EditorTextoRicoComponent extends LitElement {
   updateTexto: () => void;
   alertaGlobalRevisao(): void;
   updateNotasRodape: () => void;
-  getNotasRodape: () => NotaRodape[];
-  renumerarNotasRodape(numeroInicial?: number): void;
   ajustaHtml: (html?: string) => string;
   undo: () => any;
   redo: () => any;

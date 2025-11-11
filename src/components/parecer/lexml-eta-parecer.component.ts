@@ -61,6 +61,47 @@ export class LexmlEtaParecer extends LitElement {
     }
   }
 
+  private _nrGlobalScheduled = false;
+  private _scheduleRenumGlobal = (): void => {
+    if (this._nrGlobalScheduled) return;
+    this._nrGlobalScheduled = true;
+    queueMicrotask(async () => {
+      this._nrGlobalScheduled = false;
+      await this.renumerarNotasGlobal();
+    });
+  };
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('nota-rodape:change', this._onNrEvt as any);
+    this.addEventListener('nota-rodape:remove', this._onNrEvt as any);
+  }
+  private _onNrEvt = () => this._scheduleRenumGlobal();
+
+  disconnectedCallback(): void {
+    this.removeEventListener('nota-rodape:change', this._onNrEvt as any);
+    this.removeEventListener('nota-rodape:remove', this._onNrEvt as any);
+    super.disconnectedCallback();
+  }
+
+  private renumerarNotasGlobal = async (): Promise<void> => {
+    const rel: any = this._relatorio;
+    const ana: any = this._analise;
+    const votoEl: any = this._voto;
+
+    rel?.setNotaRodapeInicio?.(1);
+    const qtdRel = rel?.getQuantidadeNotasRodape?.() ?? 0;
+
+    let qtdAna = 0;
+    if (!this.disableAnalise && ana) {
+      ana?.setNotaRodapeInicio?.(1 + qtdRel);
+      qtdAna = ana?.getQuantidadeNotasRodape?.() ?? 0;
+    }
+    if (votoEl?.setNotaRodapeInicio) {
+      votoEl.setNotaRodapeInicio(1 + qtdRel + qtdAna);
+    }
+  };
+
   private async setParecer(parecer: Parecer): Promise<void> {
     if (!parecer) return;
     this.parecer = {
@@ -107,6 +148,7 @@ export class LexmlEtaParecer extends LitElement {
     await votoEl?.setVoto?.(this.parecer.voto ?? { itensVoto: [] });
 
     this.requestUpdate();
+    this._scheduleRenumGlobal();
   }
 
   public getParecer(): Parecer {
@@ -135,19 +177,24 @@ export class LexmlEtaParecer extends LitElement {
     const data: string | null = dataAutiraImpressaoEl.getData();
     const autoriaParecer: AutoriaParecer =
       dataAutiraImpressaoEl.getAutoriaParecer();
-    const voto: Voto = votoEl.getVoto();
+    const voto: Voto = (this._voto as any)?.getVoto?.() ?? { itensVoto: [] };
+
     const notasRelatorio: NotaRodape[] =
       (this._relatorio as any)?.getNotasRodape?.() ?? [];
+
     const notasAnalise: NotaRodape[] =
       (this._analise as any)?.getNotasRodape?.() ?? [];
+
     const notasVoto: NotaRodape[] = (voto?.itensVoto ?? []).flatMap(
       iv => iv?.notasRodape ?? [],
     );
+
     const notasRodape: NotaRodape[] = [
       ...notasRelatorio,
       ...notasAnalise,
       ...notasVoto,
     ];
+
     this.parecer = {
       ...this.parecer,
       dataUltimaModificacao: new Date().toISOString(),

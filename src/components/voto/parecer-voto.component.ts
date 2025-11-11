@@ -37,6 +37,72 @@ export class LexmlParecerVoto extends LitElement {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ]);
 
+  @state() private _nrScheduled = false;
+  @state() private notaRodapeInicioVoto = 1;
+
+  private scheduleRenumerarDentroDoVoto(): void {
+    if (this._nrScheduled) return;
+    this._nrScheduled = true;
+
+    queueMicrotask(() => {
+      this._nrScheduled = false;
+      this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
+    });
+  }
+
+  private _renumerarNotasEncadeadas(base: number): void {
+    const editors = Array.from(
+      this.querySelectorAll<HTMLElement>('lexml-ui-editor-texto-rico'),
+    ) as any[];
+
+    let corrente = base;
+    for (const ed of editors) {
+      ed?.setNotaRodapeInicio?.(corrente);
+      const qtd = ed?.getQuantidadeNotasRodape?.() ?? 0;
+      corrente += qtd;
+    }
+  }
+
+  public flushNotasRodape(): void {
+    const editors = Array.from(
+      this.querySelectorAll<
+        HTMLElement & { getNotasRodape?: () => NotaRodape[] }
+      >('lexml-ui-editor-texto-rico'),
+    );
+
+    let textIndex = 0;
+    const arr = [...this.itens];
+
+    for (let i = 0; i < arr.length; i++) {
+      const it = arr[i];
+      if (!it.documento) {
+        const ed = editors[textIndex++];
+        if (ed) {
+          const notas = ed.getNotasRodape?.() ?? [];
+          arr[i] = { ...it, notasRodape: notas };
+        }
+      }
+    }
+    this.itens = arr;
+    this.emitChange();
+  }
+
+  public setNotaRodapeInicio(base: number): void {
+    const inicio = Number.isFinite(base) && base > 0 ? Math.floor(base) : 1;
+    this.notaRodapeInicioVoto = inicio;
+    this.scheduleRenumerarDentroDoVoto();
+  }
+
+  public getQuantidadeNotasRodape(): number {
+    const editors = Array.from(
+      this.querySelectorAll<HTMLElement>('lexml-ui-editor-texto-rico'),
+    ) as any[];
+    return editors.reduce(
+      (sum, ed) => sum + (ed?.getQuantidadeNotasRodape?.() ?? 0),
+      0,
+    );
+  }
+
   private static readonly ALLOWED_EXTS = new Set(['.pdf', '.docx']);
 
   private isAllowedFile(file: File): boolean {
@@ -121,6 +187,7 @@ export class LexmlParecerVoto extends LitElement {
   }
 
   public getVoto(): Voto {
+    this.flushNotasRodape();
     this.pullTiposFromDom();
     const voto: Voto = {
       itensVoto: this.sanitizeItens(),
@@ -153,7 +220,9 @@ export class LexmlParecerVoto extends LitElement {
       return {
         ...it,
         documento: doc,
-        posicao: i + 1,
+        posicao: Number.isFinite(it.posicao as number)
+          ? (it.posicao as number)
+          : i + 1,
         _uid: this.uid(),
         notasRodape: it.notasRodape ?? [],
       };
@@ -170,6 +239,7 @@ export class LexmlParecerVoto extends LitElement {
       }
     }
     this.emitChange();
+    this.scheduleRenumerarDentroDoVoto();
   }
 
   public async setItensVoto(itens: ItemVoto[] = []): Promise<void> {
@@ -203,6 +273,7 @@ export class LexmlParecerVoto extends LitElement {
     await this.syncSelectValues();
     await this.syncTextEditorsContent();
     this.emitChange();
+    this.scheduleRenumerarDentroDoVoto();
   }
 
   private async syncSelectValues() {
@@ -234,7 +305,6 @@ export class LexmlParecerVoto extends LitElement {
       >('lexml-ui-editor-texto-rico'),
     );
 
-    // Mapeia apenas os itens de TEXTO na mesma ordem dos editors
     let textIndex = 0;
     for (let i = 0; i < this.itens.length; i++) {
       const it = this.itens[i];
@@ -598,6 +668,7 @@ export class LexmlParecerVoto extends LitElement {
     arr[idx] = { ...arr[idx], texto: String(html ?? ''), notasRodape: notas };
     this.itens = arr;
     this.emitChange();
+    this.scheduleRenumerarDentroDoVoto();
   }
 
   private view(idx: number) {
@@ -662,6 +733,7 @@ export class LexmlParecerVoto extends LitElement {
       },
     ];
     this.emitChange();
+    this.scheduleRenumerarDentroDoVoto();
   };
 
   private addTexto = () => {
@@ -675,6 +747,7 @@ export class LexmlParecerVoto extends LitElement {
       },
     ];
     this.emitChange();
+    this.scheduleRenumerarDentroDoVoto();
   };
 
   private removeItem(idx: number) {
@@ -682,6 +755,7 @@ export class LexmlParecerVoto extends LitElement {
       .filter((_, i) => i !== idx)
       .map((it, i) => ({ ...it, posicao: i + 1 }));
     this.emitChange();
+    this.scheduleRenumerarDentroDoVoto();
   }
 
   private async move(idx: number, delta: number) {
@@ -694,6 +768,7 @@ export class LexmlParecerVoto extends LitElement {
       arr.splice(to, 0, item);
       this.itens = arr.map((it, i) => ({ ...it, posicao: i + 1 }));
       this.emitChange();
+      this.scheduleRenumerarDentroDoVoto();
     });
   }
 
@@ -829,7 +904,7 @@ export class LexmlParecerVoto extends LitElement {
   }
 
   private sanitizeItens(): ItemVoto[] {
-    return this.itens.map(it => {
+    const purificados = this.itens.map(it => {
       const rest = { ...(it as any) };
       delete (rest as any)._uid;
 
@@ -847,6 +922,16 @@ export class LexmlParecerVoto extends LitElement {
         documento: persistente,
         notasRodape: rest.notasRodape ?? [],
       } as ItemVoto;
+    });
+
+    return purificados.sort((a, b) => {
+      const pa = Number.isFinite(a.posicao as number)
+        ? (a.posicao as number)
+        : Number.MAX_SAFE_INTEGER;
+      const pb = Number.isFinite(b.posicao as number)
+        ? (b.posicao as number)
+        : Number.MAX_SAFE_INTEGER;
+      return pa - pb;
     });
   }
 

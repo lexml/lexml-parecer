@@ -250,8 +250,8 @@ export class LexmlParecerMateria extends LitElement {
           grid-column: 1 / -1;
         }
 
-        .block {
-          margin-top: 0.25rem;
+        wa-input.block::part(form-control-label) {
+          margin-block-end: 0 !important;
         }
 
         lexml-ui-destino lexml-destino {

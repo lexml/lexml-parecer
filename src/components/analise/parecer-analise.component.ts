@@ -16,10 +16,6 @@ export class LexmlParecerAnalise extends LitElement {
     getNotasRodape?: () => NotaRodape[];
   };
 
-  public getNotasRodape(): NotaRodape[] {
-    return this._ed?.getNotasRodape?.() ?? [];
-  }
-
   public getTexto(): string {
     return this._ed?.getTexto?.() ?? '';
   }
@@ -33,6 +29,10 @@ export class LexmlParecerAnalise extends LitElement {
     }
   }
 
+  public getNotasRodape(): NotaRodape[] {
+    return this._ed?.getNotasRodape?.() ?? [];
+  }
+
   public setNotasRodape(notas: NotaRodape[] = []): void {
     if (!this._ed) return;
     if (typeof this._ed.setNotasRodape === 'function') {
@@ -40,6 +40,14 @@ export class LexmlParecerAnalise extends LitElement {
     } else if (typeof this._ed.setContent === 'function') {
       this._ed.setContent(this.getTexto(), notas);
     }
+  }
+
+  public setNotaRodapeInicio(n: number): void {
+    (this._ed as any)?.setNotaRodapeInicio?.(n);
+  }
+
+  public getQuantidadeNotasRodape(): number {
+    return (this._ed as any)?.getQuantidadeNotasRodape?.() ?? 0;
   }
 
   render(): TemplateResult {

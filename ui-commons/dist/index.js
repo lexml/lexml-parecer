@@ -12572,7 +12572,7 @@ let DestinoComponent = class DestinoComponent extends LitElement {
           background-color: var(--wa-color-gray-95);
           box-shadow: var(--wa-shadow-m);
           flex-wrap: wrap;
-          padding: 20px 20px;
+          padding: 21px 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
         }
@@ -12634,18 +12634,6 @@ let DestinoComponent = class DestinoComponent extends LitElement {
               value="Comissão"
               ?disabled=${this.isMPV || this.isPlenario}
               >Comissão</wa-radio
-            >
-
-            <wa-radio
-              name="tipoColegiado"
-              @click=${() => this.updateTipoColegiado('Plenário via Comissão')}
-              @wa-change=${(evt) => evt.target?.checked &&
-            this.updateTipoColegiado('Plenário via Comissão')}
-              ?checked=${this._colegiadoApreciador?.tipoColegiado ===
-            'Plenário via Comissão'}
-              value="Plenário via Comissão"
-              ?disabled=${this.isMPV || this.isPlenario}
-              >Plenário via Comissão</wa-radio
             >
           </wa-radio-group>
         </div>
@@ -21016,6 +21004,78 @@ const patchSplitPanelForLexml = (() => {
 })();
 // --- /HOTFIX ---
 let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement {
+    scheduleRenumerarNotas() {
+        if (this._nrScheduled)
+            return;
+        this._nrScheduled = true;
+        queueMicrotask(() => {
+            this._nrScheduled = false;
+            if (!this.quill || !this.quill.notasRodape)
+                return;
+            this.quill.notasRodape.renumerarTodasNotas(this.notaRodapeInicio);
+            const notas = this.quill.notasRodape.getNotasRodape?.() ? this.quill.notasRodape.getNotasRodape() : [];
+            const mudouQtd = (this.notasRodape?.length ?? 0) !== (notas?.length ?? 0);
+            this.notasRodape = notas ?? [];
+            const antes = this.apresentarNotaRodape;
+            this._atualizarVisibilidadeNotasRodape();
+            this.updateApenasTexto();
+            if (this.apresentarNotaRodape !== antes || mudouQtd) {
+                this.requestUpdate();
+            }
+        });
+    }
+    /** Retorna as notas já sincronizadas (força renumeração e coleta imediata). */
+    getNotasRodape() {
+        try {
+            if (this.quill?.notasRodape?.renumerarTodasNotas) {
+                this.quill.notasRodape.renumerarTodasNotas(this.notaRodapeInicio);
+            }
+        }
+        catch { /* erro */ }
+        let notas = (this.quill?.notasRodape?.getNotasRodape?.() ?? []);
+        if (!Array.isArray(notas) || notas.length === 0) {
+            notas = this._collectNotasFromDom();
+        }
+        this.notasRodape = notas ?? [];
+        this._atualizarVisibilidadeNotasRodape();
+        return this.notasRodape;
+    }
+    _collectNotasFromDom() {
+        const root = this || null;
+        const editor = root?.querySelector?.('.ql-editor');
+        if (!editor)
+            return [];
+        const decode = (htmlEsc) => {
+            const t = document.createElement('textarea');
+            t.innerHTML = htmlEsc || '';
+            return t.value || '';
+        };
+        const arr = [];
+        editor.querySelectorAll('nota-rodape').forEach((el) => {
+            const id = el.getAttribute('id-nota-rodape') ?? '';
+            const numAttr = el.getAttribute('numero');
+            const numero = (numAttr && Number(numAttr)) ||
+                Number((el.textContent || '').trim()) ||
+                0;
+            const textoAttr = el.getAttribute('texto') || '';
+            const texto = decode(textoAttr);
+            arr.push({
+                id,
+                idNotaRodape: id,
+                numero,
+                texto,
+            });
+        });
+        return arr;
+    }
+    setNotaRodapeInicio(n) {
+        const novo = Number.isFinite(n) && n > 0 ? Math.floor(n) : 1;
+        this.notaRodapeInicio = novo;
+        this.scheduleRenumerarNotas();
+    }
+    getQuantidadeNotasRodape() {
+        return (this.notasRodape ?? []).length;
+    }
     setTexto(html) {
         const textoHtml = html ?? '';
         const hasNotaRodape = /<\s*nota-rodape\b/i.test(textoHtml);
@@ -21129,6 +21189,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.notasPosicao = nova;
             }
         }
+        if (changed.has('notaRodapeInicio')) {
+            this.scheduleRenumerarNotas();
+        }
     }
     // labelAnexo = (): string => {
     //   const lengthAnexos = this.anexos?.length;
@@ -21228,6 +21291,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         super();
         this._uid = crypto.randomUUID();
         this._containerId = `rte-${this._uid}`;
+        this.notaRodapeInicio = 1;
+        this._nrScheduled = false;
         this.height = 500;
         this.orientacaoNotaRodaPe = 'abaixo';
         this.notasPosicao = 'abaixo';
@@ -21447,8 +21512,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                         this.showAlterarLarguraTabelaModal(table.width);
                     }
                 });
-                this.addEventListener(NOTA_RODAPE_CHANGE_EVENT, this.updateNotasRodape);
-                this.addEventListener(NOTA_RODAPE_REMOVE_EVENT, this.updateNotasRodape);
+                this.addEventListener(NOTA_RODAPE_CHANGE_EVENT, () => this.scheduleRenumerarNotas());
+                this.addEventListener(NOTA_RODAPE_REMOVE_EVENT, () => this.scheduleRenumerarNotas());
                 this.addEventListener(NOTA_RODAPE_REMOVER, (evt) => this.removerNotaRodape(evt.detail.idNotaRodape));
                 this.addEventListener(NOTA_RODAPE_EDITAR, (evt) => this.editarNotaRodape(evt.detail.idNotaRodape));
                 this.addEventListener(NOTA_RODAPE_LOCALIZAR, (evt) => this.localizarNotaRodape(evt.detail.idNotaRodape));
@@ -21586,6 +21651,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             if (!this.quill || !this.quill.root) {
                 return;
             }
+            this.scheduleRenumerarNotas();
             this.texto = texto;
             const textoAjustado = (texto || '')
                 .replace(/align-justify/g, 'ql-align-justify')
@@ -21652,11 +21718,19 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.alertaGlobalRevisao();
         };
         this.updateNotasRodape = () => {
-            this.notasRodape = this.quill.notasRodape?.getNotasRodape() || [];
+            if (!this.quill || !this.quill.notasRodape)
+                return;
+            const notas = this.quill.notasRodape.getNotasRodape
+                ? this.quill.notasRodape.getNotasRodape() || []
+                : [];
+            const antes = this.apresentarNotaRodape;
+            const qtdAntes = this.notasRodape?.length ?? 0;
+            this.notasRodape = notas;
             this._atualizarVisibilidadeNotasRodape();
-        };
-        this.getNotasRodape = () => {
-            return this.notasRodape;
+            // só re-render se necessário
+            if (this.apresentarNotaRodape !== antes || (this.notasRodape?.length ?? 0) !== qtdAntes) {
+                this.requestUpdate();
+            }
         };
         this.ajustaHtml = (html = '') => {
             let result = html
@@ -21832,7 +21906,6 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.apresentarNotaRodape = this.notasRodape && this.notasRodape.length > 0;
     }
     alertaGlobalRevisao() {
-        //TODOX ----
         const id = 'alerta-global-revisao';
         const total = this.getQuantidadeDeRevisoes();
         if (total > 0) {
@@ -21861,10 +21934,6 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                     detail: { id },
                 }));
         }
-    }
-    renumerarNotasRodape(numeroInicial = 1) {
-        this.quill?.notasRodape?.renumerarTodasNotas(numeroInicial);
-        this.updateNotasRodape();
     }
     editarNotaRodape(idNotaRodape) {
         this.quill?.notasRodape?.editar(idNotaRodape);
@@ -21984,6 +22053,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         return Array.from(set);
     }
 };
+__decorate([
+    property({ type: Number, attribute: 'nota-rodape-inicio' })
+], EditorTextoRicoComponent.prototype, "notaRodapeInicio", void 0);
 __decorate([
     property({ type: Number })
 ], EditorTextoRicoComponent.prototype, "height", void 0);

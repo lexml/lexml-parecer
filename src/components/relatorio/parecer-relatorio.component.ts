@@ -19,9 +19,6 @@ export class LexmlParecerRelatorio extends LitElement {
   public getTexto(): string {
     return this._ed?.getTexto?.() ?? '';
   }
-  public getNotasRodape(): NotaRodape[] {
-    return this._ed?.getNotasRodape?.() ?? [];
-  }
 
   public setTexto(html: string = ''): void {
     if (!this._ed) return;
@@ -32,6 +29,10 @@ export class LexmlParecerRelatorio extends LitElement {
     }
   }
 
+  public getNotasRodape(): NotaRodape[] {
+    return this._ed?.getNotasRodape?.() ?? [];
+  }
+
   public setNotasRodape(notas: NotaRodape[] = []): void {
     if (!this._ed) return;
     if (typeof this._ed.setNotasRodape === 'function') {
@@ -39,6 +40,14 @@ export class LexmlParecerRelatorio extends LitElement {
     } else if (typeof this._ed.setContent === 'function') {
       this._ed.setContent(this.getTexto(), notas);
     }
+  }
+
+  public setNotaRodapeInicio(n: number): void {
+    (this._ed as any)?.setNotaRodapeInicio?.(n);
+  }
+
+  public getQuantidadeNotasRodape(): number {
+    return (this._ed as any)?.getQuantidadeNotasRodape?.() ?? 0;
   }
 
   render(): TemplateResult {
