@@ -11923,6 +11923,7 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
           placeholder=${this.placeholder}
           ?disabled=${this.disabled}
           ?readonly=${this.readonly}
+          autocomplete="off"
         ></wa-input>
       </slot>
 
@@ -16839,27 +16840,6 @@ class QuillUtil {
         };
     }
 }
-const isIgnored = (quill, index, length) => quill.getContents(index, length).ops.some((op) => op.attributes?.ignore);
-const addBindingOnTop = (quill, key, context, handler) => {
-    quill.keyboard.addBinding(key, context, handler);
-    const _key = Object.keys(quill.keyboard.bindings)
-        .map(k => quill.keyboard.bindings[k])
-        .flat()
-        .find(binding => binding.handler === handler && binding.key === key)?.key;
-    if (!_key)
-        return;
-    const newBinding = (quill.keyboard.bindings[_key] || []).pop();
-    newBinding && quill.keyboard.bindings[_key].unshift(newBinding);
-};
-const addMultipleBindingsOnTop = (quill, keys, context, handler) => {
-    keys.forEach(key => addBindingOnTop(quill, key, context, handler));
-};
-class Range {
-    constructor(index, length) {
-        this.index = index;
-        this.length = length ?? 0;
-    }
-}
 
 function toPx(v) {
     if (v === null)
@@ -19957,6 +19937,31 @@ function mostrarToolTipVerificacaoOrtografica(elMisspell, erro) {
     tooltip
         .querySelector('#button-fechar-erro-ortografico')
         .addEventListener('click', () => limpaTooltip());
+    tooltip
+        .querySelector('#button-ignorar-erro-ortografico')
+        .addEventListener('click', () => {
+        const customEvent = new CustomEvent('verificacao-ortografica:ignorar', {
+            bubbles: true,
+            detail: {
+                erro,
+            },
+        });
+        elMisspell.dispatchEvent(customEvent);
+        limpaTooltip();
+    });
+    // 'Ignorar todos' button
+    tooltip
+        .querySelector('#button-ignorar-todos-erro-ortografico')
+        .addEventListener('click', () => {
+        const customEvent = new CustomEvent('verificacao-ortografica:ignorar-todos', {
+            bubbles: true,
+            detail: {
+                erro,
+            },
+        });
+        elMisspell.dispatchEvent(customEvent);
+        limpaTooltip();
+    });
     ajustaPosicaoTooltip(tooltip, elMisspell);
     const closeTooltip = (e) => {
         if (e.type === 'click' && !isClickDentroDaTooltip(e.target)) {
@@ -20017,9 +20022,10 @@ function buildTooltipHtml(erro) {
           background-color: #eee;
           cursor: pointer;
           padding: 0;
-          width: 24px;
+
           height: 24px;
           color: black;
+          padding: 10px;
         }
         .tooltip-erro-ortografico__actions svg {
           fill: currentColor;
@@ -20073,6 +20079,10 @@ function buildTooltipHtml(erro) {
           max-height: 200px;
           overflow-y: auto;
         }
+
+        .tooltip-erro-ortografico__actions button.padding-0 {
+          padding: 0;
+        }
       </style>
       <div class="tooltip-erro-ortografico__container" role="tooltip">
         <div class="tooltip-erro-ortografico__header">
@@ -20083,7 +20093,9 @@ function buildTooltipHtml(erro) {
           ${buildListaSugestoes(erro)}
         </div>
         <div class="tooltip-erro-ortografico__actions">
-          <button id="button-fechar-erro-ortografico" aria-label="Fechar" title="Fechar">
+          <button id="button-ignorar-erro-ortografico" aria-label="Ignorar" title="Ignorar">Ignorar</button>
+          <button id="button-ignorar-todos-erro-ortografico" aria-label="Ignorar todas" title="Ignorar todas">Ignorar todas</button>
+          <button id="button-fechar-erro-ortografico" class="padding-0" aria-label="Fechar" title="Fechar">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
             </svg>
@@ -20097,7 +20109,7 @@ function buildTooltipHtml(erro) {
 const buildListaSugestoes = (erro) => {
     return `
     <ul class="tooltip-lista-sugestoes">
-      ${erro.suggestions.map(buildItemSugestao).join('\n')}
+      ${erro.suggestions?.map(buildItemSugestao).join('\n') || ''}
     </ul>
   `;
 };
@@ -20126,22 +20138,14 @@ const ajustaPosicaoTooltip = (tooltip, button) => {
 };
 
 /* eslint-disable prettier/prettier */
-// import Quill, { Module, Range } from 'quill';
-// import Inline from 'quill/blots/inline';
 const Module = Quill.import('core/module');
 const Inline = Quill.import('blots/inline');
-// const Range = Quill.import('core/selection').Range;
 class Utils {
     static debounce(fn, delay) {
         let timeoutID;
         return function () {
             clearTimeout(timeoutID);
-            // const args = arguments;
-            // const that = this;
-            timeoutID = window.setTimeout(() => {
-                // fn.apply(that, args);
-                fn();
-            }, delay);
+            timeoutID = window.setTimeout(() => fn(), delay);
         };
     }
 }
@@ -20201,7 +20205,11 @@ const defaultOptions = {
                 return [];
             }
             const json = await response.json();
-            return json.map((it) => ({ ...it, uuid: generateUUID() }));
+            return json.map((it) => ({
+                ...it,
+                uuid: generateUUID(),
+                ignore: false,
+            }));
         }
         catch (error) {
             console.log('Erro ao chamar o verificador ortográfico', error);
@@ -20211,14 +20219,23 @@ const defaultOptions = {
     callbackRenderErrosOrtograficos: function () { },
 };
 class IgnoreBlot extends Inline {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static create(_value) {
+        const node = super.create();
+        return node;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static formats(_node) {
+        return true;
+    }
 }
 IgnoreBlot.blotName = 'ignore';
 IgnoreBlot.className = 'ql-ignore';
-IgnoreBlot.tagName = 'ignore';
-class MisspelledBlot extends Inline {
+IgnoreBlot.tagName = 'span';
+class MisspellBlot extends Inline {
     static create(value) {
         const node = super.create();
-        MisspelledBlot.updateAttributes(node, value);
+        MisspellBlot.updateAttributes(node, value);
         return node;
     }
     static updateAttributes(node, value) {
@@ -20235,7 +20252,7 @@ class MisspelledBlot extends Inline {
     }
     static format(node, value) {
         if (value) {
-            MisspelledBlot.updateAttributes(node, value);
+            MisspellBlot.updateAttributes(node, value);
         }
     }
     static formats(node) {
@@ -20250,9 +20267,9 @@ class MisspelledBlot extends Inline {
         };
     }
 }
-MisspelledBlot.blotName = 'misspelled';
-MisspelledBlot.className = 'ql-misspelled';
-MisspelledBlot.tagName = 'misspelled';
+MisspellBlot.blotName = 'misspell';
+MisspellBlot.className = 'ql-misspell';
+MisspellBlot.tagName = 'span';
 class EditorCustomEventErrosOrtograficos extends CustomEvent {
     constructor(detalhes) {
         super('editor:erros-ortograficos', {
@@ -20263,26 +20280,18 @@ class EditorCustomEventErrosOrtograficos extends CustomEvent {
 }
 class ModuloVerificacaoOrtografica extends Module {
     static register() {
-        Quill.register(MisspelledBlot, true);
+        Quill.register(MisspellBlot, true);
         Quill.register(IgnoreBlot, true);
     }
     constructor(quill, options) {
         super(quill, options);
-        this.lastResponses = [];
+        this.erros = [];
+        this.termosIgnorados = [];
+        this.errosIgnorados = [];
         if (!options)
             return;
         this.quill = quill;
         this.options = { ...defaultOptions, ...options };
-        // this.quill.root.addEventListener("input", this.checkSpelling.bind(this));
-        addBindingOnTop(this.quill, 'Backspace', undefined, (range) => {
-            if (!range.index && !range.length)
-                return true;
-            const index = range.length ? range.index : range.index - 1;
-            const length = range.length || 1;
-            return this.removeIgnoreFormatting(new Range(index, length));
-        });
-        addMultipleBindingsOnTop(this.quill, ['Delete', 'Enter'], undefined, this.removeIgnoreFormatting);
-        addMultipleBindingsOnTop(this.quill, ['x', 'v', 'X', 'V'], { ctrlKey: true }, this.removeIgnoreFormatting);
         if (this.options.debounceTime) {
             this.quill.on('text-change', Utils.debounce(this.checkSpelling.bind(this), this.options.debounceTime));
         }
@@ -20292,121 +20301,179 @@ class ModuloVerificacaoOrtografica extends Module {
         this.quill.root.setAttribute('spellcheck', 'false');
         this.quill.root.addEventListener('click', this.tratarClick.bind(this));
         this.quill.root.addEventListener('verificacao-ortografica:corrigir', this.corrigirErroOrtografico.bind(this));
+        this.quill.root.addEventListener('verificacao-ortografica:ignorar', this.ignorarErroOrtografico.bind(this));
+        this.quill.root.addEventListener('verificacao-ortografica:ignorar-todos', this.ignorarTodos.bind(this));
     }
     tratarClick(event) {
         const elMisspell = this.getErroOrtograficoMaisProximo(event.target);
         if (!elMisspell)
             return;
         const uuid = elMisspell.getAttribute('data-uuid');
-        const erro = this.lastResponses.find((err) => err.uuid === uuid);
+        const erro = this.erros.find((err) => err.uuid === uuid);
         erro && mostrarToolTipVerificacaoOrtografica(elMisspell, erro);
     }
     corrigirErroOrtografico(event) {
         const { erro, sugestaoSelecionada } = event.detail;
-        const el = this.quill.root.querySelector(`misspelled[data-uuid="${erro.uuid}"]`);
+        const el = this.quill.root.querySelector(`.ql-misspell[data-uuid="${erro.uuid}"]`);
         if (el) {
             el.innerText = sugestaoSelecionada;
         }
     }
-    getErroOrtograficoMaisProximo(elemento) {
-        return elemento?.closest(MisspelledBlot.tagName);
+    ignorarErroOrtografico(event) {
+        this.processing = true;
+        const { erro } = event.detail;
+        const el = this.quill.root.querySelector(`.ql-misspell[data-uuid="${erro.uuid}"]`);
+        if (!el)
+            return;
+        this.aplicarFormatoIgnore(el);
+        this.errosIgnorados = this.findErrosOrtograficosIgnoradosFromBlots();
+        // setTimeout(() => {
+        // }, 0);
+        this.processing = false;
     }
-    removeIgnoreFormatting(range) {
-        let { index, length } = range;
-        // expande seleção para remover formatação de ignore, pegando início e fim da palavra
-        while (index > 0 && isIgnored(this.quill, index - 1, 1)) {
-            index--;
+    ignorarTodos(event) {
+        this.processing = true;
+        const { erro } = event.detail || {};
+        if (!erro?.word)
+            return;
+        const termoLower = erro.word.toLowerCase();
+        const nodes = Array.from(this.quill.root.querySelectorAll('.ql-misspell'));
+        nodes.forEach(domNode => {
+            const texto = domNode.innerText || '';
+            if (texto.toLowerCase() === termoLower) {
+                this.aplicarFormatoIgnore(domNode);
+            }
+        });
+        this.termosIgnorados.push(termoLower);
+        this.errosIgnorados = this.findErrosOrtograficosIgnoradosFromBlots();
+        // setTimeout(() => {
+        // }, 0);
+        this.processing = false;
+    }
+    aplicarFormatoIgnore(domNode) {
+        const blot = Quill.find(domNode);
+        const offset = blot.offset(this.quill.scroll);
+        const length = blot.length();
+        try {
+            this.quill.formatText(offset, length, { misspell: false }, 'user');
+            this.quill.formatText(offset, length, { ignore: true }, 'user');
         }
-        const totalLength = this.quill.getLength();
-        while (index + length < totalLength &&
-            isIgnored(this.quill, index + length, 1)) {
-            length++;
+        catch {
+            // ---
         }
-        this.quill.formatText(index, length, { ignore: false }, 'user');
-        return true;
+    }
+    findErrosOrtograficosIgnoradosFromBlots() {
+        return Array.from(this.quill.root.querySelectorAll('span.ql-ignore')).map((domNode) => {
+            const blot = Quill.find(domNode);
+            return {
+                length: blot.length(),
+                offset: blot.offset(this.quill.scroll),
+                word: domNode.innerText,
+            };
+        });
+    }
+    getErroOrtograficoMaisProximo(elemento) {
+        return elemento?.closest(MisspellBlot.tagName);
+    }
+    sincronizarListaDeErrosIgnorados() {
+        // É preciso remover da lista de errosIgnorados (da classe) os erros que não aparecem na lista "errosIgnoradosFromBlots"
+        // Isso porque pode existir blot ignorado que não está na lista (ocorre quando o usuário edita uma área com texto ignorado)
+        const errosIgnoradosFromBlots = this.findErrosOrtograficosIgnoradosFromBlots();
+        this.errosIgnorados = this.errosIgnorados.filter(erroIgnorado => errosIgnoradosFromBlots.some(erroBlot => erroBlot.word === erroIgnorado.word &&
+            erroBlot.offset === erroIgnorado.offset &&
+            erroBlot.length === erroIgnorado.length));
     }
     async checkSpelling() {
-        if (!this.options.enabled) {
+        if (!this.options.enabled || this.processing) {
             return;
         }
         const text = this.quill.getText();
-        const numErrosAntigos = this.lastResponses?.length;
+        const range = this.quill.getSelection();
+        this.sincronizarListaDeErrosIgnorados();
         if (this.options.callBackVerificadorOrtografico) {
-            this.lastResponses =
-                await this.options.callBackVerificadorOrtografico(text);
+            this.erros = await this.options.callBackVerificadorOrtografico(text);
         }
-        if (!this.lastResponses?.length) {
-            if (numErrosAntigos) {
-                this.limparFormatacoesDeErros(text);
-                if (this.options.callbackRenderErrosOrtograficos) {
-                    this.options.callbackRenderErrosOrtograficos([]);
-                }
-            }
-            return;
-        }
-        this.lastResponses = this.removerErrosIgnorados(this.lastResponses);
-        this.formatarErrosOrtograficos(text, this.lastResponses);
+        // Separa erros que ainda não estejam formatados como ignorados, mas o termo está na lista "termosIgnorados"
+        const novosIgnore = this.erros.filter(e => !this.isErroInErrosIgnorados(e) &&
+            this.isTermoInTermosIgnorados(e.word));
+        this.errosIgnorados.push(...novosIgnore);
+        this.errosIgnorados = this.errosIgnorados.sort((e1, e2) => e1.offset - e2.offset);
+        this.erros = this.erros.filter(e => !this.isErroInErrosIgnorados(e) &&
+            !this.isTermoInTermosIgnorados(e.word));
+        this.formatarErrosOrtograficos(text, this.erros);
+        this.formatarErrosIgnorados(text, this.errosIgnorados);
         if (this.options.callbackRenderErrosOrtograficos) {
-            this.options.callbackRenderErrosOrtograficos(this.lastResponses);
+            this.options.callbackRenderErrosOrtograficos(this.erros, this.errosIgnorados);
+        }
+        // Restaura a seleção do usuário após a verificação ortográfica
+        if (range) {
+            this.quill.setSelection(range.index, range.length, 'silent');
         }
     }
-    removerErrosIgnorados(erros) {
-        return erros.filter(erro => !isIgnored(this.quill, erro.offset, erro.length));
+    isErroInErrosIgnorados(erro, errosIgnorados = this.errosIgnorados) {
+        return errosIgnorados.some(ei => ei.word === erro.word &&
+            ei.offset === erro.offset &&
+            ei.length === erro.length);
     }
-    limparFormatacoesDeErros(text = '') {
-        this.quill.focus();
-        // this.quill.formatText(0, text.length, formatName, false, 'silent');
-        try {
-            this.quill.formatText(0, text.length - 1, { misspelled: false, ignore: false }, 'silent');
-        }
-        catch {
-            /* empty */
-        }
-        try {
-            this.quill.formatText(0, text.length, { misspelled: false, ignore: false }, 'silent');
-        }
-        catch {
-            /* empty */
-        }
+    isTermoInTermosIgnorados(termo) {
+        const termoLower = termo.toLowerCase();
+        return this.termosIgnorados.includes(termoLower);
     }
     formatarErrosOrtograficos(text, erros) {
-        const formatName = 'misspelled';
-        this.limparFormatacoesDeErros(text);
-        erros.forEach(response => {
+        this.formatar(text, erros, 'misspell', 'ignore');
+    }
+    formatarErrosIgnorados(text, erros) {
+        this.formatar(text, erros, 'ignore', 'misspell');
+    }
+    limparFormatacoesDeErros(text = '', formato) {
+        this.quill.focus();
+        try {
+            this.quill.formatText(0, text.length - 1, { [formato]: false }, 'silent');
+        }
+        catch {
+            // --
+        }
+        try {
+            this.quill.formatText(0, text.length, { [formato]: false }, 'silent');
+        }
+        catch {
+            // --
+        }
+    }
+    formatar(text, erros, formatName, reverseFormatName) {
+        this.limparFormatacoesDeErros(text, formatName);
+        erros.forEach(erro => {
             try {
-                this.quill.formatText(response.offset, response.length, formatName, response, 'silent');
+                this.quill.formatText(erro.offset, erro.length, { [reverseFormatName]: false }, 'silent');
+                this.quill.formatText(erro.offset, erro.length, formatName, erro, 'silent');
             }
             catch (error) {
-                // empty
+                // --
             }
         });
-    }
-    ignorarErro(erro) {
-        this.quill.formatText(erro.offset, erro.length, { misspelled: false, ignore: true }, 'user');
-        console.log('Ignorando erro', erro);
     }
 }
 
 const verificacaoOrtograficaCss = html `
   <style>
     .ql-ignore {
-      border: 1px solid #aaa;
+      /* border: 1px solid #aaa; */
     }
 
-    .ql-misspelled[data-rule-id='MORFOLOGIK_RULE_PT_BR'] {
+    .ql-misspell[data-rule-id='MORFOLOGIK_RULE_PT_BR'] {
       text-decoration: underline wavy red;
     }
 
-    .ql-misspelled:not([data-rule-id='MORFOLOGIK_RULE_PT_BR']) {
+    .ql-misspell:not([data-rule-id='MORFOLOGIK_RULE_PT_BR']) {
       text-decoration: underline wavy orange;
     }
 
-    .ql-misspelled[data-rule-id='MORFOLOGIK_RULE_PT_BR']:hover {
+    .ql-misspell[data-rule-id='MORFOLOGIK_RULE_PT_BR']:hover {
       cursor: pointer;
       background-color: #ffe5e5;
     }
 
-    .ql-misspelled:not([data-rule-id='MORFOLOGIK_RULE_PT_BR']):hover {
+    .ql-misspell:not([data-rule-id='MORFOLOGIK_RULE_PT_BR']):hover {
       cursor: pointer;
       background-color: peachpuff;
     }
@@ -20414,8 +20481,6 @@ const verificacaoOrtograficaCss = html `
 `;
 
 /* eslint-disable prettier/prettier */
-// Este módulo substitui o módulo Clipboard padrão do Quill para tratar cenários de colagem
-// em que há formatações de revisão (blots <del>) ou de correção ortográfica (misspelled, ignore).
 const Clipboard = Quill.import('modules/clipboard');
 const Delta$1 = Quill.import('delta');
 const DOM_KEY = '__ql-matcher';
@@ -21013,7 +21078,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             if (!this.quill || !this.quill.notasRodape)
                 return;
             this.quill.notasRodape.renumerarTodasNotas(this.notaRodapeInicio);
-            const notas = this.quill.notasRodape.getNotasRodape?.() ? this.quill.notasRodape.getNotasRodape() : [];
+            const notas = this.quill.notasRodape.getNotasRodape?.()
+                ? this.quill.notasRodape.getNotasRodape()
+                : [];
             const mudouQtd = (this.notasRodape?.length ?? 0) !== (notas?.length ?? 0);
             this.notasRodape = notas ?? [];
             const antes = this.apresentarNotaRodape;
@@ -21031,8 +21098,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.quill.notasRodape.renumerarTodasNotas(this.notaRodapeInicio);
             }
         }
-        catch { /* erro */ }
-        let notas = (this.quill?.notasRodape?.getNotasRodape?.() ?? []);
+        catch {
+            /* erro */
+        }
+        let notas = (this.quill?.notasRodape?.getNotasRodape?.() ??
+            []);
         if (!Array.isArray(notas) || notas.length === 0) {
             notas = this._collectNotasFromDom();
         }
@@ -21381,10 +21451,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                         verificacaoOrtografico: {
                             urlVerificadorOrtografico: 'https://verificador-ortografico.camara.leg.br/grammarcheck',
                             debounceTime: 500,
-                            callbackRenderErrosOrtograficos: (erros) => {
+                            callbackRenderErrosOrtograficos: (erros, errosIgnorados) => {
                                 // const codItemReferencia = +(this.quill?.root.getAttribute('data-cod-item-referencia') ?? 0);
                                 const evt = new EditorCustomEventErrosOrtograficos({
                                     erros,
+                                    errosIgnorados,
                                     codItemReferencia: 0,
                                 });
                                 this.quill?.root.dispatchEvent(evt);
@@ -21728,7 +21799,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.notasRodape = notas;
             this._atualizarVisibilidadeNotasRodape();
             // só re-render se necessário
-            if (this.apresentarNotaRodape !== antes || (this.notasRodape?.length ?? 0) !== qtdAntes) {
+            if (this.apresentarNotaRodape !== antes ||
+                (this.notasRodape?.length ?? 0) !== qtdAntes) {
                 this.requestUpdate();
             }
         };
@@ -21777,7 +21849,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             return true;
         };
         this.getTexto = () => {
-            return this.texto;
+            // retornar texto sem tag <span class="misspell" ...>
+            return this.texto.replace(/<span class="misspell"[^>]*>(.*?)<\/span>/g, '$1');
         };
         this.getNomeSwitch = () => `chk-em-revisao-texto-livre-${this._uid}`;
         this.getNomeBadge = () => `badge-marca-alteracao-texto-livre-${this._uid}`;
@@ -22138,7 +22211,8 @@ const formatsOptions = [
     'width',
     'added',
     'removed',
-    'misspelled',
+    'misspell',
+    'ignore',
 ];
 const toolbarOptions = [
     [{ estilo: [false, 'ementa', 'norma-alterada'] }],
