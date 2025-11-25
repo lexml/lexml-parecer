@@ -1,15 +1,19 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { ItemVoto } from '../../models/item-voto.modelo.js';
-import { Voto } from '../../models/voto.modelo.js';
-import { AnexoParecer } from '../../models/anexo.modelo.js';
+import { ItemVoto } from '../../models/item-voto.model.js';
+import { Voto } from '../../models/voto.model.js';
+import { AnexoParecer } from '../../models/anexo.model.js';
 import {
   TipoDocumento,
   TipoDocumentoLabel,
 } from '../../types/tipo-documento.js';
-import { alertarInfo } from '@ui-commons';
-import { NotaRodape } from 'src/models/diversos.modelo.js';
+import { alertarInfo, Usuario } from '@ui-commons';
+import { NotaRodape } from '../../models/diversos.model.js';
+import {
+  RevisaoTextoItemVoto,
+  RevisaoVoto,
+} from '../../models/revisao.model.js';
 
 type ItemVotoRuntime = ItemVoto & { _uid: string; notasRodape?: NotaRodape[] };
 
@@ -38,10 +42,22 @@ export class LexmlParecerVoto extends LitElement {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ]);
 
+  private _isReordering = false;
+
+  private _setSuspendNotas(n: boolean) {
+    const editors = this._getTextEditors();
+    for (const ed of editors) {
+      if (!ed) continue;
+      if (typeof ed.suspendNotasRodape === 'function') ed.suspendNotasRodape(n);
+      else (ed as any).suspendNotas = n;
+    }
+  }
+
   @state() private _nrScheduled = false;
   @state() private notaRodapeInicioVoto = 1;
 
   private scheduleRenumerarDentroDoVoto(): void {
+    if (this._isReordering) return;
     if (this._nrScheduled) return;
     this._nrScheduled = true;
 
@@ -145,6 +161,170 @@ export class LexmlParecerVoto extends LitElement {
     );
   }
 
+  private _getTextEditors(): Array<any> {
+    const editors = Array.from(
+      this.querySelectorAll<HTMLElement>('lexml-ui-editor-texto-rico'),
+    ) as any[];
+    return editors;
+  }
+  private _usuarioRevisao?: Usuario;
+  private _applyUsuarioTries = 0;
+
+  public setUsuarioRevisaoVoto(usuario: Usuario): void {
+    this._usuarioRevisao = usuario;
+    this._applyUsuarioToEditors();
+  }
+
+  private _applyUsuarioToEditors(): void {
+    if (!this._usuarioRevisao) return;
+
+    const editors = this._getTextEditors();
+    let appliedToAll = true;
+
+    for (const ed of editors) {
+      if (!ed) continue;
+
+      if (typeof ed.setUsuarioRevisao === 'function') {
+        ed.setUsuarioRevisao(this._usuarioRevisao);
+        continue;
+      }
+
+      if (!(ed as any)?.quill?.revisao) {
+        appliedToAll = false;
+        continue;
+      }
+
+      (ed as any).quill.revisao.usuario =
+        this._usuarioRevisao?.nome || 'Anônimo';
+      (ed as any).quill.revisao.usuarioId = this._usuarioRevisao?.id;
+      (ed as any).quill.revisao.usuarioSigla = this._usuarioRevisao?.sigla;
+      (ed as any).quill.revisao.usuarioObj = this._usuarioRevisao;
+    }
+
+    if (!appliedToAll && this._applyUsuarioTries < 20) {
+      this._applyUsuarioTries++;
+      setTimeout(() => this._applyUsuarioToEditors(), 50);
+    } else if (appliedToAll) {
+      this._applyUsuarioTries = 0;
+    }
+  }
+
+  public setEmRevisaoVoto(on: boolean): void {
+    const editors = this._getTextEditors();
+    for (const ed of editors) {
+      if (!ed) continue;
+      if (typeof ed.updateRevisionStatus === 'function') {
+        ed.updateRevisionStatus(!!on);
+      } else if (ed.quill?.revisao) {
+        ed.quill.revisao.emRevisao = !!on;
+        if (on) {
+          const txtAtual =
+            (typeof ed.getTexto === 'function' ? ed.getTexto() : ed.texto) ??
+            '';
+          ed.quill.revisao.textoAntesRevisao = txtAtual;
+        }
+      }
+    }
+  }
+
+  public aceitarTodasRevisoesVoto(): void {
+    const editors = this._getTextEditors();
+    for (const ed of editors) {
+      if (!ed) continue;
+      if (typeof ed.aceitarRevisoes === 'function') ed.aceitarRevisoes();
+      else ed.quill?.revisao?.revisarTodos?.(true);
+    }
+  }
+
+  public rejeitarTodasRevisoesVoto(): void {
+    const editors = this._getTextEditors();
+    for (const ed of editors) {
+      if (!ed) continue;
+      if (typeof ed.rejeitarRevisoes === 'function') ed.rejeitarRevisoes();
+      else ed.quill?.revisao?.revisarTodos?.(false);
+    }
+  }
+  public getQuantidadeRevisoesVoto(): number {
+    const editors = this._getTextEditors();
+    let total = 0;
+    for (const ed of editors) {
+      const q =
+        typeof ed.getQuantidadeDeRevisoes === 'function'
+          ? (ed.getQuantidadeDeRevisoes() ?? 0)
+          : (ed.quill?.revisao?.quantidade ?? 0);
+      total += Number(q) || 0;
+    }
+    return total;
+  }
+
+  public getRevisoesVoto(): RevisaoVoto | null {
+    const total = this.getQuantidadeRevisoesVoto();
+    if (total <= 0) return null;
+
+    const itensTexto: RevisaoTextoItemVoto[] = [];
+    const editors = this._getTextEditors();
+    let textIndex = 0;
+
+    for (const it of this.itens) {
+      if (it.documento) continue;
+      const pos = it.posicao ?? textIndex + 1;
+      const ed = editors[textIndex++];
+      if (!ed) continue;
+
+      const revisoesEd =
+        typeof ed.getRevisoes === 'function' ? (ed.getRevisoes() ?? []) : [];
+
+      for (const r of revisoesEd) {
+        const usuario = r?.usuario;
+
+        itensTexto.push(
+          new RevisaoTextoItemVoto(
+            usuario,
+            r?.dataHora ?? new Date().toISOString(),
+            `Item de voto na posição ${pos} alterado`,
+            pos,
+          ),
+        );
+      }
+    }
+
+    if (itensTexto.length === 0) return null;
+
+    const usuarioCabecalho = new Usuario('', '', '');
+
+    return new RevisaoVoto(
+      usuarioCabecalho,
+      new Date().toISOString(),
+      `Voto alterado`,
+      itensTexto,
+    );
+  }
+  private async _ensureRevisionOnEditorsWithMarks(): Promise<void> {
+    await this.updateComplete;
+    const editors = this._getTextEditors();
+    for (const ed of editors) {
+      try {
+        const qtd =
+          typeof ed.getRevisoes === 'function'
+            ? (ed.getRevisoes()?.length ?? 0)
+            : (ed.querySelector?.('.added, .removed')?.length ?? 0);
+
+        if (qtd > 0) {
+          if (typeof ed.updateRevisionStatus === 'function') {
+            ed.updateRevisionStatus(true);
+          } else if (ed.quill?.revisao) {
+            ed.quill.revisao.emRevisao = true;
+          }
+          const sw = ed.querySelector?.('lexml-ui-switch-revisao') as any;
+          sw?.setChecked?.(true);
+        }
+      } catch {
+        /*
+         */
+      }
+    }
+  }
+
   private static readonly ALLOWED_EXTS = new Set(['.pdf', '.docx']);
 
   private isAllowedFile(file: File): boolean {
@@ -239,6 +419,7 @@ export class LexmlParecerVoto extends LitElement {
   }
 
   public async setVoto(voto?: Voto | null): Promise<void> {
+    this._applyUsuarioTries = 0;
     const orig = Array.isArray(voto?.itensVoto) ? voto!.itensVoto : [];
 
     const ordenados = [...orig].sort((a, b) => {
@@ -282,6 +463,8 @@ export class LexmlParecerVoto extends LitElement {
     }
     this.emitChange();
     this.scheduleRenumerarDentroDoVoto();
+    this._applyUsuarioToEditors();
+    await this._ensureRevisionOnEditorsWithMarks();
   }
 
   public async setItensVoto(itens: ItemVoto[] = []): Promise<void> {
@@ -316,6 +499,7 @@ export class LexmlParecerVoto extends LitElement {
     await this.syncTextEditorsContent();
     this.emitChange();
     this.scheduleRenumerarDentroDoVoto();
+    await this._ensureRevisionOnEditorsWithMarks();
   }
 
   private async syncSelectValues() {
@@ -357,6 +541,7 @@ export class LexmlParecerVoto extends LitElement {
         }
       }
     }
+    this._applyUsuarioToEditors();
   }
 
   public async clearVoto(): Promise<void> {
@@ -392,8 +577,10 @@ export class LexmlParecerVoto extends LitElement {
           border-radius: var(--wa-border-radius-s);
         }
         wa-card.card-header {
-          will-change: transform;
           transition: box-shadow 0.2s ease;
+        }
+        .reorder-anim {
+          will-change: transform;
         }
         .caret {
           transition: transform 0.16s ease;
@@ -687,7 +874,6 @@ export class LexmlParecerVoto extends LitElement {
     const blob = this.base64ToBlob(String(doc.base64), mime);
     const file = new File([blob], String(doc.nomeArquivo), { type: mime });
 
-    // Mantém também no runtime (opcional, ajuda em view/download)
     doc.arquivo = file;
 
     const dt = new DataTransfer();
@@ -800,6 +986,10 @@ export class LexmlParecerVoto extends LitElement {
     ];
     this.emitChange();
     this.scheduleRenumerarDentroDoVoto();
+    queueMicrotask(async () => {
+      await this.updateComplete;
+      this._applyUsuarioToEditors();
+    });
   };
 
   private removeItem(idx: number) {
@@ -814,6 +1004,9 @@ export class LexmlParecerVoto extends LitElement {
     const to = idx + delta;
     if (to < 0 || to >= this.itens.length) return;
 
+    this._isReordering = true;
+    this._setSuspendNotas(true);
+
     await this.animateReorder(() => {
       const arr = [...this.itens];
       const [item] = arr.splice(idx, 1);
@@ -823,6 +1016,15 @@ export class LexmlParecerVoto extends LitElement {
     });
 
     await this.updateComplete;
+
+    this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
+    await new Promise(requestAnimationFrame);
+    await this._syncModeloComEditors();
+
+    this._setSuspendNotas(false);
+    this._isReordering = false;
+
+    this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
     this.scheduleRenumerarDentroDoVoto();
   }
 
@@ -1038,29 +1240,29 @@ export class LexmlParecerVoto extends LitElement {
       this.querySelectorAll<HTMLElement>('wa-card.card-header'),
     );
     const first = new Map<string, DOMRect>();
-    cards.forEach(el => {
-      const uid = el.dataset.uid!;
-      first.set(uid, el.getBoundingClientRect());
-    });
+    cards.forEach(el => first.set(el.dataset.uid!, el.getBoundingClientRect()));
 
     reorderFn();
-
     await this.updateComplete;
 
     const afterCards = Array.from(
       this.querySelectorAll<HTMLElement>('wa-card.card-header'),
     );
+    const animations: Animation[] = [];
+
     afterCards.forEach(el => {
       const uid = el.dataset.uid!;
       const last = el.getBoundingClientRect();
       const prev = first.get(uid);
       if (!prev) return;
 
-      const dx = prev.left - last.left;
-      const dy = prev.top - last.top;
+      const dx = Math.round(prev.left - last.left);
+      const dy = Math.round(prev.top - last.top);
       if (dx === 0 && dy === 0) return;
 
-      el.animate(
+      el.classList.add('reorder-anim');
+
+      const anim = el.animate(
         [
           {
             transform: `translate(${dx}px, ${dy}px)`,
@@ -1068,12 +1270,39 @@ export class LexmlParecerVoto extends LitElement {
           },
           { transform: 'translate(0, 0)', boxShadow: 'var(--wa-shadow-m)' },
         ],
-        { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' },
+        {
+          duration: 220,
+          easing: 'cubic-bezier(.2,.8,.2,1)',
+          fill: 'none',
+        },
       );
+
+      anim.addEventListener('finish', () => {
+        try {
+          (el as HTMLElement).style.transform = 'none';
+        } catch {
+          /*
+           */
+        }
+        el.classList.remove('reorder-anim');
+      });
+
+      animations.push(anim);
     });
+
+    await Promise.allSettled(animations.map(a => a.finished.catch(() => {})));
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback?.();
+    this.addEventListener('rte:ready', this._onEditorReady as any);
   }
 
   disconnectedCallback(): void {
+    this.removeEventListener('rte:ready', this._onEditorReady as any);
     super.disconnectedCallback?.();
   }
+  private _onEditorReady = () => {
+    this._applyUsuarioToEditors();
+  };
 }

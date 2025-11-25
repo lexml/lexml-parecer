@@ -5,7 +5,7 @@ import {
   AutoriaParecer,
   OpcoesImpressao,
   Parlamentar,
-} from '../../../src/models/diversos.modelo.js';
+} from '../../models/diversos.model.js';
 import { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.component.js';
 
 @customElement('lexml-parecer-data-autoria-impressao')

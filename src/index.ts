@@ -27,7 +27,7 @@ import '@awesome.me/webawesome/dist/components/badge/badge.js';
 import '@awesome.me/webawesome/dist/components/card/card.js';
 
 export { LexmlEtaParecer } from './components/parecer/lexml-eta-parecer.component.js';
-export { LexmlParecerMateria } from './components/materia/parecer-materia.component.js';
+export { LexmlParecerEmenta } from './components/ementa/parecer-ementa.component.js';
 export { LexmlParecerRelatorio } from './components/relatorio/parecer-relatorio.component.js';
 export { LexmlParecerAnalise } from './components/analise/parecer-analise.component.js';
 export { LexmlParecerVoto } from './components/voto/parecer-voto.component.js';
@@ -35,3 +35,5 @@ export { LexmlParecerDataAutoriaImpressao } from './components/dataAuroriaImpres
 export { LexmlParecerAvisos } from './components/avisos/parecer-avisos.component.js';
 export { LexmlParecerAutoriaComponent } from './components/autoria/parecer-autoria.component.js';
 export { LexmlParecerConfig } from './config/lexml-parecer-config.js';
+export { Usuario, Comissao, Destino } from '@ui-commons';
+export { Parecer, ProposicaoReferenciada } from './models/diversos.model.js';

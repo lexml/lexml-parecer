@@ -2,7 +2,7 @@ import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { REGEX_ACCENTS } from '@ui-commons';
 
-import { Parlamentar, AutoriaParecer } from '../../models/diversos.modelo.js';
+import { Parlamentar, AutoriaParecer } from '../../models/diversos.model.js';
 
 @customElement('lexml-parecer-autoria')
 export class LexmlParecerAutoriaComponent extends LitElement {

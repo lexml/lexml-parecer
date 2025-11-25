@@ -1,21 +1,18 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
-import { Comissao } from '@ui-commons';
+import { Revisao, Usuario, alertarInfo } from '@ui-commons';
 import {
   AutoriaParecer,
   NotaRodape,
   OpcoesImpressao,
   Parecer,
   Parlamentar,
-  ProposicaoReferenciada,
-} from '../../models/diversos.modelo.js';
+} from '../../models/diversos.model.js';
 import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-parametro-edicao.model.js';
-import { LexmlParecerMateria } from '../materia/parecer-materia.component.js';
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
-import { Voto } from '../../models/voto.modelo.js';
+import { Voto } from '../../models/voto.model.js';
 import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
-import { Materia } from '../../models/materia.modelo.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
@@ -29,22 +26,15 @@ export class LexmlEtaParecer extends LitElement {
 
   @state() private _parlamentares: Parlamentar[] = [];
 
-  @state() private _comissoes: Comissao[] = [];
-
-  @state() private disableAnalise: boolean = false;
-
-  @property({ attribute: false })
-  buscarMateriasFunction?: (termo: string) => Promise<ProposicaoReferenciada[]>;
-
   @state() private parecer: Parecer = new Parecer();
-
-  @query('wa-tab-panel[name="materia"] lexml-parecer-materia')
-  private _materia?: LexmlParecerMateria;
 
   @query(
     'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autoria-impressao',
   )
   private _dataAutoriaImpressao?: LexmlParecerDataAutoriaImpressao;
+
+  @query('wa-tab-panel[name="ementa"] lexml-parecer-ementa')
+  private _ementa?: { getTexto: () => string };
 
   @query('wa-tab-panel[name="relatorio"] lexml-parecer-relatorio')
   private _relatorio?: { getTexto: () => string };
@@ -54,6 +44,106 @@ export class LexmlEtaParecer extends LitElement {
 
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
+
+  private get isCamara(): boolean {
+    return this.parecer?.siglaCasaLegislativa === 'CD';
+  }
+
+  public setUsuario(usuario: Usuario): void {
+    (this._relatorio as any)?.setUsuarioRevisao?.(usuario);
+    (this._analise as any)?.setUsuarioRevisao?.(usuario);
+    (this._voto as any)?.setUsuarioRevisaoVoto?.(usuario);
+    (this._ementa as any)?.setUsuarioRevisao?.(usuario);
+  }
+
+  public setEmRevisaoGlobal(value: boolean): void {
+    (this._relatorio as any)?.setEmRevisao?.(value);
+    (this._analise as any)?.setEmRevisao?.(value);
+    (this._voto as any)?.setEmRevisaoVoto?.(value);
+    (this._ementa as any)?.setEmRevisao?.(value);
+  }
+
+  private _queryAllSwitches(): any {
+    return Array.from(
+      this.renderRoot?.querySelectorAll('lexml-ui-switch-revisao') ?? [],
+    );
+  }
+
+  private _syncAllSwitches(checked: boolean) {
+    this._queryAllSwitches().forEach((sw: any) =>
+      (sw as any).setChecked?.(checked),
+    );
+  }
+
+  private _revisoesPendentesTotal(): number {
+    const e = (this._ementa as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const r = (this._relatorio as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const a = (this._analise as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const v = (this._voto as any)?.getQuantidadeRevisoesVoto?.() ?? 0;
+    return e + r + a + v;
+  }
+
+  private _onSwitchIntent = (ev: CustomEvent<{ checked: boolean }>) => {
+    const quererAtivar = !!ev.detail?.checked;
+    if (quererAtivar) {
+      this.setEmRevisaoGlobal?.(true);
+      this._syncAllSwitches(true);
+      return;
+    }
+    if (this._revisoesPendentesTotal() > 0) {
+      alertarInfo?.(this._msgBloqueioDesativar());
+      this.setEmRevisaoGlobal?.(true);
+      this._syncAllSwitches(true);
+      return;
+    }
+    this.setEmRevisaoGlobal?.(false);
+    this._syncAllSwitches(false);
+  };
+
+  private _revisoesPendentesPorAba() {
+    const e = (this._ementa as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const r = (this._relatorio as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const a = (this._analise as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const v = (this._voto as any)?.getQuantidadeRevisoesVoto?.() ?? 0;
+    return { e, r, a, v, total: e + r + a + v };
+  }
+
+  private _msgBloqueioDesativar(): string {
+    const { e, r, a, v } = this._revisoesPendentesPorAba();
+    const abas: string[] = [];
+    if (e > 0) abas.push('Ementa');
+    if (r > 0) abas.push('Relatório');
+    if (a > 0) abas.push('Análise');
+    if (v > 0) abas.push('Voto');
+
+    if (abas.length <= 1) {
+      return `É necessário resolver todas as marcas de revisão da aba ${abas[0] ?? 'Relatório'} para desativar o modo de controle de alterações`;
+    }
+    const lista = abas.slice(0, -1).join(', ') + ' e ' + abas[abas.length - 1];
+    return `É necessário resolver todas as marcas de revisão das abas ${lista} para desativar o modo de controle de alterações`;
+  }
+
+  public aceitarTodasRevisoes(): void {
+    (this._ementa as any)?.aceitarTodasRevisoes?.();
+    (this._relatorio as any)?.aceitarTodasRevisoes?.();
+    (this._analise as any)?.aceitarTodasRevisoes?.();
+    (this._voto as any)?.aceitarTodasRevisoesVoto?.();
+  }
+
+  public rejeitarTodasRevisoes(): void {
+    (this._ementa as any)?.rejeitarTodasRevisoes?.();
+    (this._relatorio as any)?.rejeitarTodasRevisoes?.();
+    (this._analise as any)?.rejeitarTodasRevisoes?.();
+    (this._voto as any)?.rejeitarTodasRevisoesVoto?.();
+  }
+
+  public getContagemRevisoes(): number {
+    const r = (this._relatorio as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const a = (this._analise as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const e = (this._ementa as any)?.getQuantidadeRevisoes?.() ?? 0;
+    const v = (this._voto as any)?.getQuantidadeRevisoesVoto?.() ?? 0;
+    return r + a + e + v;
+  }
 
   async inicializarEdicao(params: LexmlEtaParecerParametrosEdicao) {
     if (params.parecer) {
@@ -71,16 +161,76 @@ export class LexmlEtaParecer extends LitElement {
     });
   };
 
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.addEventListener('nota-rodape:change', this._onNrEvt as any);
-    this.addEventListener('nota-rodape:remove', this._onNrEvt as any);
+  private _onRevisionCount = () => {
+    const total = this.getContagemRevisoes();
+    this.dispatchEvent(
+      new CustomEvent('parecer:revision-total', {
+        bubbles: true,
+        composed: true,
+        detail: { total },
+      }),
+    );
+  };
+  private _onRevisionChange = () => {
+    const isEmeEmRev = !!(this._ementa as any)?.isEmRevisao?.();
+    const isRelEmRev = !!(this._relatorio as any)?.isEmRevisao?.();
+    const isAnaEmRev = (this._analise as any)?.isEmRevisao?.();
+    const isVotoEmRev = !!(this._voto as any)?.isEmRevisao?.();
+    const emRevisaoGlobal =
+      isEmeEmRev || isRelEmRev || isAnaEmRev || isVotoEmRev;
+
+    this.dispatchEvent(
+      new CustomEvent('parecer:revision-change', {
+        bubbles: true,
+        composed: true,
+        detail: { emRevisao: emRevisaoGlobal },
+      }),
+    );
+  };
+
+  private async _ensureRevisionModeIfNeeded(source?: Parecer): Promise<void> {
+    const hasFromPayload = !!(source?.revisoes && source.revisoes.length > 0);
+    const anyFromEditors = this.getContagemRevisoes() > 0;
+
+    if (hasFromPayload || anyFromEditors) {
+      this.setEmRevisaoGlobal?.(true);
+      this._syncAllSwitches(true);
+      this.dispatchEvent(
+        new CustomEvent('parecer:revision-change', {
+          bubbles: true,
+          composed: true,
+          detail: { emRevisao: true },
+        }),
+      );
+    }
   }
+
   private _onNrEvt = () => this._scheduleRenumGlobal();
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('switch-revisao:intent', this._onSwitchIntent as any);
+    this.addEventListener('nota-rodape:change', this._onNrEvt as any);
+    this.addEventListener('nota-rodape:remove', this._onNrEvt as any);
+    this.addEventListener('rte:revision-count', this._onRevisionCount as any);
+    this.addEventListener('rte:revision-change', this._onRevisionChange as any);
+  }
+
   disconnectedCallback(): void {
+    this.removeEventListener(
+      'switch-revisao:intent',
+      this._onSwitchIntent as any,
+    );
     this.removeEventListener('nota-rodape:change', this._onNrEvt as any);
     this.removeEventListener('nota-rodape:remove', this._onNrEvt as any);
+    this.removeEventListener(
+      'rte:revision-count',
+      this._onRevisionCount as any,
+    );
+    this.removeEventListener(
+      'rte:revision-change',
+      this._onRevisionChange as any,
+    );
     super.disconnectedCallback();
   }
 
@@ -93,10 +243,9 @@ export class LexmlEtaParecer extends LitElement {
     const qtdRel = rel?.getQuantidadeNotasRodape?.() ?? 0;
 
     let qtdAna = 0;
-    if (!this.disableAnalise && ana) {
-      ana?.setNotaRodapeInicio?.(1 + qtdRel);
-      qtdAna = ana?.getQuantidadeNotasRodape?.() ?? 0;
-    }
+    ana?.setNotaRodapeInicio?.(1 + qtdRel);
+    qtdAna = ana?.getQuantidadeNotasRodape?.() ?? 0;
+
     if (votoEl?.setNotaRodapeInicio) {
       votoEl.setNotaRodapeInicio(1 + qtdRel + qtdAna);
     }
@@ -110,19 +259,6 @@ export class LexmlEtaParecer extends LitElement {
         parecer.dataUltimaModificacao ?? new Date().toISOString(),
     };
 
-    const materiaParaComponente: Materia = {
-      materia: this.parecer.materia,
-      ano: this.parecer.ano,
-      ementa: this.parecer.ementa,
-      destino: this.parecer.destino,
-    } as Materia;
-
-    const materiaEl: any = this._materia;
-    materiaEl?.setMateria?.(materiaParaComponente, parecer.destino);
-    materiaEl &&
-      !materiaEl.setMateria &&
-      (materiaEl.materia = materiaParaComponente);
-
     // ---------- Data, Autoria e Impressão ----------
     const dai = this._dataAutoriaImpressao as any;
     await dai?.setDataAutoriaImpressao?.(
@@ -131,17 +267,20 @@ export class LexmlEtaParecer extends LitElement {
       this.parecer.opcoesImpressao,
     );
 
+    // ---------- Ementa ----------
+    const eme: any = this._ementa;
+    eme?.setTexto?.(this.parecer.ementa ?? '');
+    eme && !eme.setTexto && (eme.texto = this.parecer.ementa ?? '');
+
     // ---------- Relatório ----------
     const rel: any = this._relatorio;
     rel?.setTexto?.(this.parecer.relatorio ?? '');
     rel && !rel.setTexto && (rel.texto = this.parecer.relatorio ?? '');
 
     // ---------- Análise (respeita disableAnalise) ----------
-    if (!this.disableAnalise) {
-      const ana: any = this._analise;
-      ana?.setTexto?.(this.parecer.analise ?? '');
-      ana && !ana.setTexto && (ana.texto = this.parecer.analise ?? '');
-    }
+    const ana: any = this._analise;
+    ana?.setTexto?.(this.parecer.analise ?? '');
+    ana && !ana.setTexto && (ana.texto = this.parecer.analise ?? '');
 
     // ---------- Voto ----------
     const votoEl = this._voto as any;
@@ -149,17 +288,30 @@ export class LexmlEtaParecer extends LitElement {
 
     this.requestUpdate();
     this._scheduleRenumGlobal();
+    //Para setar todos os itens em modo de revisão
+    await Promise.all(
+      [
+        (this._ementa as any)?.updateComplete,
+        (this._relatorio as any)?.updateComplete,
+        (this._analise as any)?.updateComplete,
+        (this._voto as any)?.updateComplete,
+      ].filter(Boolean),
+    );
+    await 0;
+    await this._ensureRevisionModeIfNeeded(this.parecer);
+    //
   }
 
   public getParecer(): Parecer {
-    const materiaEl = this._materia;
+    const ementaEl = this._ementa;
     const dataAutiraImpressaoEl = this._dataAutoriaImpressao;
     const votoEl = this._voto;
+    const ementaHtml = this._ementa?.getTexto() ?? '';
     const relatorioHtml = this._relatorio?.getTexto() ?? '';
     const analiseHtml = this._analise?.getTexto() ?? '';
 
-    if (!materiaEl) {
-      console.warn('lexml-parecer-materia não encontrado.');
+    if (!ementaEl) {
+      console.warn('lexml-parecer-ementa não encontrado.');
       return new Parecer();
     }
     if (!dataAutiraImpressaoEl) {
@@ -170,8 +322,6 @@ export class LexmlEtaParecer extends LitElement {
       console.warn('lexml-parecer-voto não encontrado.');
       return new Parecer();
     }
-
-    const materia: Materia = materiaEl.getMateria();
     const opcoesImpressao: OpcoesImpressao =
       dataAutiraImpressaoEl.getOpcoesImpressao();
     const data: string | null = dataAutiraImpressaoEl.getData();
@@ -195,13 +345,22 @@ export class LexmlEtaParecer extends LitElement {
       ...notasVoto,
     ];
 
+    const revisoesEme = (this._ementa as any)?.getRevisoes?.() ?? [];
+    const revisoesRel = (this._relatorio as any)?.getRevisoes?.() ?? [];
+    const revisoesAna = (this._analise as any)?.getRevisoes?.() ?? [];
+    const revisaoVoto = (this._voto as any)?.getRevisoesVoto?.() ?? null;
+
+    const revisoes: Revisao[] = [
+      ...revisoesEme,
+      ...revisoesRel,
+      ...revisoesAna,
+      ...(revisaoVoto ? [revisaoVoto] : []),
+    ];
+
     this.parecer = {
       ...this.parecer,
       dataUltimaModificacao: new Date().toISOString(),
-      materia: { ...materia.materia },
-      ano: materia.ano,
-      ementa: materia.ementa,
-      destino: materia.destino,
+      ementa: ementaHtml,
       opcoesImpressao: { ...opcoesImpressao },
       data,
       autoria: { ...autoriaParecer },
@@ -209,10 +368,12 @@ export class LexmlEtaParecer extends LitElement {
       analise: analiseHtml,
       voto,
       notasRodape: notasRodape,
+      revisoes: revisoes,
       local:
-        materia.destino.colegiadoApreciador === 'Plenário'
+        this.parecer.destino.colegiadoApreciador === 'Plenário'
           ? 'Sala das Sessões'
           : 'Sala da Comissão',
+      epigrafe: 'PARECER Nº         ',
     };
     return this.parecer;
   }
@@ -220,10 +381,6 @@ export class LexmlEtaParecer extends LitElement {
   willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
       this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
-      this._comissoes = this.lexmlParecerConfig.comissoes ?? [];
-      this.buscarMateriasFunction =
-        this.lexmlParecerConfig.buscarMateriasFunction;
-      this.disableAnalise = this.lexmlParecerConfig.disableAnalise ?? true;
     }
   }
 
@@ -246,12 +403,16 @@ export class LexmlEtaParecer extends LitElement {
         }
       </style>
       <wa-tab-group>
-        <wa-tab slot="nav" panel="materia">Matéria</wa-tab>
+        ${!this.isCamara
+          ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
+          : null}
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
-        ${!this.disableAnalise
-          ? html`<wa-tab slot="nav" panel="analise">Análise</wa-tab>`
-          : html``}
-        <wa-tab slot="nav" panel="voto">Voto</wa-tab>
+        <wa-tab slot="nav" panel="analise">
+          ${this.isCamara ? 'Voto' : 'Análise'}
+        </wa-tab>
+        <wa-tab slot="nav" panel="voto">
+          ${this.isCamara ? 'Conclusão do Voto' : 'Voto'}
+        </wa-tab>
         <wa-tab slot="nav" panel="dataAutoriaImpressao"
           >Data, Autoria e Impressão</wa-tab
         >
@@ -273,22 +434,15 @@ export class LexmlEtaParecer extends LitElement {
           </div>
         </wa-tab>
 
-        <wa-tab-panel name="materia" class="overflow-hidden">
-          <lexml-parecer-materia
-            .comissoes=${this._comissoes}
-            .buscarMateriasFunction=${this.buscarMateriasFunction}
-          ></lexml-parecer-materia>
+        <wa-tab-panel name="ementa" class="overflow-hidden">
+          <lexml-parecer-ementa></lexml-parecer-ementa>
         </wa-tab-panel>
         <wa-tab-panel name="relatorio" class="overflow-hidden">
           <lexml-parecer-relatorio></lexml-parecer-relatorio>
         </wa-tab-panel>
-        ${!this.disableAnalise
-          ? html`
-              <wa-tab-panel name="analise" class="overflow-hidden">
-                <lexml-parecer-analise></lexml-parecer-analise>
-              </wa-tab-panel>
-            `
-          : html``}
+        <wa-tab-panel name="analise" class="overflow-hidden">
+          <lexml-parecer-analise></lexml-parecer-analise>
+        </wa-tab-panel>
         <wa-tab-panel name="voto" class="overflow-hidden">
           <lexml-parecer-voto></lexml-parecer-voto>
         </wa-tab-panel>
