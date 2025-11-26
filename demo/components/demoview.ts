@@ -3,17 +3,20 @@ import { customElement, query } from 'lit/decorators.js';
 import '../../src/index.js';
 import {
   AutoriaParecer,
-  ColegiadoApreciador,
   OpcoesImpressao,
   Parecer,
   ProposicaoReferenciada,
-} from '../../src/models/diversos.modelo.js';
+} from '../../src/models/diversos.model.js';
 import { LexmlEtaParecer } from '../../src/components/parecer/lexml-eta-parecer.component.js';
 import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
 import { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
-import { Voto } from '../../src/models/voto.modelo.js';
-import { Comissao, Destino } from '@ui-commons';
+import { Voto } from '../../src/models/voto.model.js';
+import { Comissao, Destino, Revisao, Usuario } from '@ui-commons';
 import { TipoDocumento } from '../../src/types/tipo-documento.js';
+import {
+  RevisaoRelatorio,
+  RevisaoTextoItemVoto,
+} from 'src/models/revisao.model.js';
 
 @customElement('demo-view')
 export class DemoView extends LitElement {
@@ -326,7 +329,6 @@ export class DemoView extends LitElement {
         },
       ],
       buscarMateriasFunction: this.buscarMateriasApi,
-      disableAnalise: false,
     };
   }
 
@@ -373,7 +375,36 @@ export class DemoView extends LitElement {
       ambiente: 'DEV',
       origem: 'Teste manual',
     } as any;
-
+    const usuario: Usuario = {
+      nome: 'usuario.teste',
+      id: 'id-usuario',
+      sigla: 'R',
+    } as Usuario;
+    const revisaoRelatorio = {
+      type: 'RevisaoRelatorio',
+      id: '',
+      usuario,
+      dataHora: '2025-11-13T19:43:31.400Z',
+      descricao: 'Relatorio Alterado',
+    } as RevisaoRelatorio;
+    const revisaoVoto = {
+      type: 'RevisaoVoto',
+      id: '',
+      usuario,
+      dataHora: '2025-11-13T19:43:31.400Z',
+      descricao: 'Relatorio Alterado',
+      itensTexto: [
+        {
+          type: 'RevisaoTextoItemVoto',
+          id: '',
+          usuario,
+          dataHora: '2025-11-13T19:43:31.400Z',
+          descricao: 'Relatorio Alterado',
+          posicao: 1,
+        },
+      ] as RevisaoTextoItemVoto[],
+    } as RevisaoRelatorio;
+    parecer.revisoes = [revisaoRelatorio, revisaoVoto] as Revisao[];
     const materia = new ProposicaoReferenciada();
     materia.urn = 'urn:lex:br:senado:projeto.lei;123;2025';
     materia.identificacaoTexto = 'PL 123/2025 (Senado Federal)';
@@ -394,7 +425,7 @@ export class DemoView extends LitElement {
     parecer.ementa =
       'Altera a Lei nº 9.000/1995 para atualizar regras sobre incentivos fiscais ao setor tecnológico.';
     parecer.relatorio = `
-      <p>Trata-se<nota-rodape class="nota-rodape" contenteditable="false" id-nota-rodape="nr1762440815918" texto="&amp;lt;p&amp;gt;Nota de rodape 1&amp;lt;/p&amp;gt;" numero="1">1</nota-rodape> de proposição que visa modernizar o marco regulatório de incentivos fiscais
+      <p><ins usuario="usuario.teste" date="2025-11-13 16:32:00 " title="Revisão de ruan.oliveira em 13/11/2025 16:32" id-revisao="94b0de23-5c17-4272-a79b-aac56c070a1d">vvv</ins>Trata-se<nota-rodape class="nota-rodape" contenteditable="false" id-nota-rodape="nr1762440815918" texto="&amp;lt;p&amp;gt;Nota de rodape 1&amp;lt;/p&amp;gt;" numero="1">1</nota-rodape> de proposição que visa modernizar o marco regulatório de incentivos fiscais
       ao setor de tecnologia, com o objetivo de aumentar a competitividade e fomentar a inovação
       no país. Foram recebidas contribuições da sociedade civil e do setor produtivo.</p>
       <p>Em audiência pública realizada nesta Comissão, especialistas apresentaram dados sobre
@@ -412,7 +443,7 @@ export class DemoView extends LitElement {
       {
         posicao: 1,
         texto: `
-          <p>Diante do exposto, o voto é pela <strong>aprovação</strong> do Projeto de Lei nº 123, de 2025.</p>
+          <p><ins usuario="Anônimo" date="2025-11-14 13:37:00 " title="Revisão de Anônimo em 14/11/2025 13:37" id-revisao="0f475636-a37a-4f1f-b526-d9acd27e5cc5">A</ins>Diante do exposto, o voto é pela <strong>aprovação</strong> do Projeto de Lei nº 123, de 2025.</p>
           <p><em>Conclusão:</em> Pela aprovação do Projeto de Lei nº 123, de 2025, na forma do texto original.</p>
         `.trim(),
       },
@@ -432,12 +463,6 @@ export class DemoView extends LitElement {
       },
     ];
     parecer.voto = voto;
-
-    // Colegiado apreciador (preencha os campos que existirem no seu modelo)
-    const colegiado = new ColegiadoApreciador() as any;
-    colegiado.sigla = 'CAE';
-    colegiado.nome = 'Comissão de Assuntos Econômicos';
-    parecer.colegiadoApreciador = colegiado;
 
     // Autoria (mantenho o default caso seu modelo crie a estrutura sozinho)
     const autoria = new AutoriaParecer() as any;

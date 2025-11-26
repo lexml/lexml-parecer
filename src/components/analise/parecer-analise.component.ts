@@ -1,6 +1,8 @@
+import { Usuario } from '@ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
-import { NotaRodape } from 'src/models/diversos.modelo.js';
+import { NotaRodape } from '../../models/diversos.model.js';
+import { RevisaoAnalise } from '../../models/revisao.model.js';
 
 @customElement('lexml-parecer-analise')
 export class LexmlParecerAnalise extends LitElement {
@@ -50,9 +52,44 @@ export class LexmlParecerAnalise extends LitElement {
     return (this._ed as any)?.getQuantidadeNotasRodape?.() ?? 0;
   }
 
+  public setUsuarioRevisao(usuario: Usuario) {
+    (this._ed as any)?.setUsuarioRevisao(usuario);
+  }
+
+  public setEmRevisao(value: boolean) {
+    (this._ed as any)?.updateRevisionStatus?.(!!value);
+  }
+
+  public aceitarTodasRevisoes() {
+    (this._ed as any)?.aceitarRevisoes?.();
+  }
+
+  public rejeitarTodasRevisoes() {
+    (this._ed as any)?.rejeitarRevisoes?.();
+  }
+
+  public getQuantidadeRevisoes(): number {
+    return (this._ed as any)?.getQuantidadeDeRevisoes?.() ?? 0;
+  }
+
+  public isEmRevisao(): boolean {
+    return !!(this._ed as any)?.quill?.revisao?.emRevisao;
+  }
+  public getRevisoes(): RevisaoAnalise[] {
+    const base = (this._ed as any)?.getRevisoes?.() ?? [];
+    return base.map(
+      (r: any) =>
+        new RevisaoAnalise(
+          new Usuario(r.usuario?.nome, r.usuario?.id, r.usuario?.sigla),
+          r.dataHora,
+          'Análise alterada',
+        ),
+    );
+  }
+
   render(): TemplateResult {
     return html`<lexml-ui-editor-texto-rico
-      height="600"
+      height="590"
       orientacaoNotaRodaPe="abaixo"
     ></lexml-ui-editor-texto-rico>`;
   }

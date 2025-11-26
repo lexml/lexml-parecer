@@ -11705,20 +11705,23 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
 
         <h2>Teste EditorTextoRicoComponent</h2>
         <div class="teste">
-          <lexml-ui-editor-texto-rico height=400 orientacaoNotaRodaPe=abaixo ></lexml-ui-editor-texto-rico>
+          <lexml-ui-editor-texto-rico
+            height="400"
+            orientacaoNotaRodaPe="abaixo"
+          ></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <lexml-ui-editor-texto-rico
-            .toolbar=${'italic'}
-          ></lexml-ui-editor-texto-rico>
-        <!-- <div class="area-texto">
+          .toolbar=${'italic'}
+        ></lexml-ui-editor-texto-rico>
+        <div class="area-texto">
           <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <br />
         <br />
-          
-
+        <br />
+        <br />
         <br />
         <br />
         <br />
@@ -11771,7 +11774,6 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
         }}
           ></lexml-ui-alertas>
         </div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     `;
     }
@@ -12795,17 +12797,42 @@ class Comissao {
     }
 }
 
+class Revisao {
+    constructor(usuario, dataHora, descricao) {
+        this.id = ''; // generateUUID();
+        this.usuario = usuario;
+        this.dataHora = dataHora;
+        this.descricao = descricao;
+    }
+}
+class RevisaoTextoLivre extends Revisao {
+    constructor(usuario, dataHora, descricao) {
+        super(usuario, dataHora, descricao);
+        this.type = 'RevisaoTextoLivre';
+    }
+}
+
+class Usuario {
+    constructor(nome, id, sigla) {
+        this.nome = 'Anônimo';
+        this.nome = nome || 'Anônimo';
+        this.id = id;
+        this.sigla = sigla;
+    }
+}
+
 let Data = class Data extends LitElement {
     constructor() {
         super(...arguments);
+        this.informarData = true;
         this.data = new Date().toISOString().slice(0, 10);
         this.timerOnChange = 0;
     }
     getData() {
-        if (this.optionNaoInformarData?.checked || !this.data) {
+        if (!this.informarData) {
             return null;
         }
-        return this.data;
+        return this.data || null;
     }
     firstUpdated() {
         setTimeout(() => {
@@ -12819,21 +12846,24 @@ let Data = class Data extends LitElement {
                 console.error('FALHA: A label interna do wa-input.');
             }
         }, 100);
+        this.informarData = !!this.data;
     }
     selecionarRadioData() {
-        const radio = this.shadowRoot?.querySelector('#radio-data-option');
-        if (radio && !radio.checked) {
-            radio.checked = true;
-            this.setDate();
+        this.informarData = true;
+        if (!this.data) {
+            this.data = new Date().toISOString().slice(0, 10);
         }
+        this.requestUpdate();
+        this.updateComplete.then(() => {
+            this.inputData?.focus();
+        });
     }
     updated() {
-        this.inputData.value =
-            this.data ??
-                this.inputData.value ??
-                new Date().toISOString().replace(/T.+$/, '');
-        if (!this.data && !this.optionNaoInformarData.checked) {
-            this.optionNaoInformarData.checked = true;
+        if (this.inputData) {
+            this.inputData.value =
+                this.data ??
+                    this.inputData.value ??
+                    new Date().toISOString().replace(/T.+$/, '');
         }
     }
     render() {
@@ -12902,8 +12932,6 @@ let Data = class Data extends LitElement {
         .label-on-left wa-input::part(label) {
           cursor: pointer;
         }
-        @media (max-width: 480px) {
-        }
       </style>
       <fieldset class="lexml-data">
         <legend>Data</legend>
@@ -12911,46 +12939,62 @@ let Data = class Data extends LitElement {
           id="data-component"
           orientation="horizontal"
           size="medium"
-          .value=${this.data ? '2' : '1'}
+          .value=${this.informarData ? '2' : '1'}
         >
           <wa-radio
             id="radio-data-option"
             name="data"
             value="2"
-            @click=${this.setDate}
+            @click=${this.onClickData}
           >
             <div class="label-on-left">
               <wa-input
                 id="input-data"
                 label="Data"
                 type="date"
-                ?disabled=${!this.data}
+                ?disabled=${!this.informarData}
+                .value=${this.data}
                 @input=${this.setDate}
               >
               </wa-input>
             </div>
           </wa-radio>
-          <wa-radio name="data" id="no-date" value="1" @click=${this.resetDate}>
+
+          <wa-radio
+            name="data"
+            id="no-date"
+            value="1"
+            @click=${this.onClickNaoInformar}
+          >
             Não informar
           </wa-radio>
         </wa-radio-group>
       </fieldset>
     `;
     }
-    resetDate() {
-        const original = this.data;
-        this.data = '';
-        if (original !== this.data) {
+    onClickNaoInformar() {
+        const originalInformarData = this.informarData;
+        this.informarData = false;
+        if (originalInformarData !== this.informarData) {
             this.agendarEmissaoEventoOnChange();
         }
     }
-    setDate() {
-        if (this.inputData) {
-            const original = this.data;
-            this.data = this.inputData.value;
-            if (original !== this.data) {
-                this.agendarEmissaoEventoOnChange();
-            }
+    onClickData() {
+        const originalInformarData = this.informarData;
+        this.informarData = true;
+        if (!this.data) {
+            this.data = new Date().toISOString().slice(0, 10);
+        }
+        if (originalInformarData !== this.informarData) {
+            this.agendarEmissaoEventoOnChange();
+        }
+    }
+    setDate(e) {
+        const target = e.target;
+        const original = this.data;
+        this.data = target?.value ?? this.data;
+        if (original !== this.data) {
+            this.agendarEmissaoEventoOnChange();
         }
     }
     agendarEmissaoEventoOnChange() {
@@ -12974,8 +13018,8 @@ __decorate([
     query('#data-component')
 ], Data.prototype, "group", void 0);
 __decorate([
-    query('#no-date')
-], Data.prototype, "optionNaoInformarData", void 0);
+    state()
+], Data.prototype, "informarData", void 0);
 __decorate([
     property({ type: String })
 ], Data.prototype, "data", void 0);
@@ -13250,7 +13294,7 @@ let AlertasComponent = class AlertasComponent extends LitElement {
       <style>
         wa-callout {
           box-shadow: var(--wa-shadow-l);
-          margin: 20px;
+          margin-bottom: 20px;
         }
         .field__alert {
           display: flex;
@@ -13292,7 +13336,7 @@ let AlertasComponent = class AlertasComponent extends LitElement {
               `
             : html `<wa-callout
                 variant="${mapTipoMensagem[alerta.tipo].variant}"
-                appearance="outlined"
+                appearance="outlined filled"
               >
                 ${this.getAlertIcon(alerta.tipo)}${alerta.mensagem}
               </wa-callout> `}`)}
@@ -21069,7 +21113,12 @@ const patchSplitPanelForLexml = (() => {
 })();
 // --- /HOTFIX ---
 let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement {
+    suspendNotasRodape(on) {
+        this.suspendNotas = !!on;
+    }
     scheduleRenumerarNotas() {
+        if (this.suspendNotas)
+            return;
         if (this._nrScheduled)
             return;
         this._nrScheduled = true;
@@ -21091,8 +21140,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             }
         });
     }
-    /** Retorna as notas já sincronizadas (força renumeração e coleta imediata). */
     getNotasRodape() {
+        if (this.suspendNotas)
+            return this.notasRodape ?? [];
         try {
             if (this.quill?.notasRodape?.renumerarTodasNotas) {
                 this.quill.notasRodape.renumerarTodasNotas(this.notaRodapeInicio);
@@ -21145,6 +21195,49 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
     getQuantidadeNotasRodape() {
         return (this.notasRodape ?? []).length;
+    }
+    setUsuarioRevisao(usuario) {
+        this.usuarioRevisao = usuario;
+        this.nomeUsuarioRevisao = usuario?.nome ?? 'Anônimo';
+        const r = this.quill?.revisao;
+        if (r) {
+            r.usuario = usuario?.nome ?? 'Anônimo';
+            r.usuarioId = usuario?.id;
+            r.usuarioSigla = usuario?.sigla;
+            r.usuarioObj = usuario;
+        }
+        else {
+            queueMicrotask(() => {
+                const rr = this.quill?.revisao;
+                if (rr) {
+                    rr.usuario = usuario?.nome ?? 'Anônimo';
+                    rr.usuarioId = usuario?.id;
+                    rr.usuarioSigla = usuario?.sigla;
+                    rr.usuarioObj = usuario;
+                }
+            });
+        }
+    }
+    getRevisoes() {
+        const q = this.quill;
+        const qtdModulo = q?.revisao?.getQuantidadeRevisoes?.() ?? 0;
+        const root = q?.root ?? null;
+        const qtdDom = root?.querySelectorAll?.('.added, .removed')?.length ?? 0;
+        const qtd = Math.max(qtdModulo, qtdDom);
+        if (qtd <= 0)
+            return [];
+        const uObj = q?.revisao?.usuarioObj ?? this.usuarioRevisao;
+        const usuario = uObj ??
+            new Usuario(q?.revisao?.usuario || this.nomeUsuarioRevisao || 'Anônimo', q?.revisao?.usuarioId, q?.revisao?.usuarioSigla);
+        const textoAntes = q?.revisao?.textoAntesRevisao;
+        return [
+            {
+                usuario,
+                dataHora: new Date().toISOString(),
+                descricao: `Total de marcas: ${qtd}`,
+                textoAntes,
+            },
+        ];
     }
     setTexto(html) {
         const textoHtml = html ?? '';
@@ -21245,6 +21338,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             moduloRevisao.emRevisao = value;
             moduloRevisao.textoAntesRevisao = value ? this.texto : undefined;
         }
+        this.dispatchEvent(new CustomEvent('rte:revision-change', {
+            bubbles: true,
+            composed: true,
+            detail: { emRevisao: !!moduloRevisao?.emRevisao },
+        }));
     }
     get _trocaOrientacaoDesabilitada() {
         return this._forcarLado || this._forcarAbaixo;
@@ -21361,8 +21459,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         super();
         this._uid = crypto.randomUUID();
         this._containerId = `rte-${this._uid}`;
+        this.suspendNotas = false;
         this.notaRodapeInicio = 1;
         this._nrScheduled = false;
+        this.nomeUsuarioRevisao = 'Anônimo';
         this.height = 500;
         this.orientacaoNotaRodaPe = 'abaixo';
         this.notasPosicao = 'abaixo';
@@ -21378,7 +21478,6 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.indHabilitarNotaRodape = true;
         this.apresentarNotaRodape = true;
         this.modo = '';
-        this.nomeUsuarioRevisao = 'Anônimo';
         /** Toolbar opcional: string com tokens separados por vírgula.
          * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
          *         clean, align, textindent, marginbottom, image, link, notarodape, table.
@@ -21595,6 +21694,17 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                     this.updateRevisionStatus(ev.detail.checked);
                 });
             }
+            try {
+                if (this.usuarioRevisao)
+                    this.setUsuarioRevisao(this.usuarioRevisao);
+            }
+            finally {
+                this.dispatchEvent(new CustomEvent('rte:ready', {
+                    bubbles: true,
+                    composed: true,
+                    detail: { uid: this._uid },
+                }));
+            }
         };
         this.menuContextImagem = (ev) => {
             const img = ev.target.closest('img');
@@ -21755,6 +21865,20 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                     }
                 }
             }, 100); // A linha anterior gera um history, então é necessário limpar novamente.
+            setTimeout(() => {
+                try {
+                    const temRev = (this.quill?.revisao?.getQuantidadeRevisoes?.() ?? 0) > 0 ||
+                        (this.quill?.root?.querySelectorAll?.('.added, .removed')?.length ??
+                            0) > 0;
+                    if (temRev && !this.quill?.revisao?.emRevisao) {
+                        this.updateRevisionStatus(true);
+                        this._switchRevisaoEl?.setChecked?.(true);
+                    }
+                }
+                catch {
+                    /* noop */
+                }
+            }, 0);
             if (!textoAjustado)
                 this.quill.format('align', 'justify');
             this.atualizaStatusElementosRevisao();
@@ -21768,8 +21892,22 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             const emRevisao = q?.revisao?.emRevisao ?? false;
             if (!valor) {
                 if (this.getQuantidadeDeRevisoes() > 0 && !emRevisao) {
-                    if (this._switchRevisaoEl) {
-                        this._switchRevisaoEl.ativarDesativarMarcaDeRevisao();
+                    const temRevisao = this.getQuantidadeDeRevisoes() > 0;
+                    if (temRevisao && !emRevisao) {
+                        this.updateRevisionStatus(true);
+                        if (this._switchRevisaoEl?.setChecked) {
+                            this._switchRevisaoEl.setChecked(true);
+                        }
+                        else if (this._switchRevisaoEl) {
+                            this._switchRevisaoEl.checked = true;
+                            this._switchRevisaoEl.setAttribute?.('checked', '');
+                            this._switchRevisaoEl.requestUpdate?.();
+                            this._switchRevisaoEl?.dispatchEvent?.(new CustomEvent('switch-revisao:change', {
+                                bubbles: true,
+                                composed: true,
+                                detail: { checked: true },
+                            }));
+                        }
                         setTimeout(() => this.alertaGlobalRevisao(), 0);
                     }
                 }
@@ -21798,10 +21936,14 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             const qtdAntes = this.notasRodape?.length ?? 0;
             this.notasRodape = notas;
             this._atualizarVisibilidadeNotasRodape();
-            // só re-render se necessário
             if (this.apresentarNotaRodape !== antes ||
                 (this.notasRodape?.length ?? 0) !== qtdAntes) {
                 this.requestUpdate();
+                this.dispatchEvent(new CustomEvent('rte:notas-change', {
+                    bubbles: true,
+                    composed: true,
+                    detail: { notas: this.notasRodape.slice() },
+                }));
             }
         };
         this.ajustaHtml = (html = '') => {
@@ -21859,15 +22001,41 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         };
         this.aceitarRevisoes = () => {
             this.quill?.revisao?.revisarTodos(true);
-            // this.setTextoAntesRevisao(undefined);
             this.atualizaStatusElementosRevisao();
-            // this.removeRevisoes();
+            this.dispatchEvent(new CustomEvent('rte:revision-change', {
+                bubbles: true,
+                composed: true,
+                detail: { emRevisao: !!this.quill?.revisao?.emRevisao },
+            }));
+            this.dispatchEvent(new CustomEvent('rte:revision-count', {
+                bubbles: true,
+                composed: true,
+                detail: { total: this.getQuantidadeDeRevisoes() },
+            }));
+            this.dispatchEvent(new CustomEvent('rte:notas-change', {
+                bubbles: true,
+                composed: true,
+                detail: { notas: this.notasRodape.slice() },
+            }));
         };
         this.rejeitarRevisoes = () => {
             this.quill?.revisao?.revisarTodos(false);
-            // this.setTextoAntesRevisao(undefined);
             this.atualizaStatusElementosRevisao();
-            // this.removeRevisoes();
+            this.dispatchEvent(new CustomEvent('rte:revision-change', {
+                bubbles: true,
+                composed: true,
+                detail: { emRevisao: !!this.quill?.revisao?.emRevisao },
+            }));
+            this.dispatchEvent(new CustomEvent('rte:revision-count', {
+                bubbles: true,
+                composed: true,
+                detail: { total: this.getQuantidadeDeRevisoes() },
+            }));
+            this.dispatchEvent(new CustomEvent('rte:notas-change', {
+                bubbles: true,
+                composed: true,
+                detail: { notas: this.notasRodape.slice() },
+            }));
         };
         this.atualizaStatusElementosRevisao = (immediate = true) => {
             const fnUpdate = () => {
@@ -21875,6 +22043,12 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.desabilitaBtn(quantidade === 0, CLASS_BUTTON_REJEITAR_REVISAO);
                 this.desabilitaBtn(quantidade === 0, CLASS_BUTTON_ACEITAR_REVISAO);
                 this.atualizaQuantidadeRevisao(quantidade);
+                this.onRevisionCountChange?.(quantidade);
+                this.dispatchEvent(new CustomEvent('rte:revision-count', {
+                    bubbles: true,
+                    composed: true,
+                    detail: { total: quantidade },
+                }));
             };
             if (immediate) {
                 fnUpdate();
@@ -22127,8 +22301,17 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
 };
 __decorate([
+    property({ type: Boolean })
+], EditorTextoRicoComponent.prototype, "suspendNotas", void 0);
+__decorate([
     property({ type: Number, attribute: 'nota-rodape-inicio' })
 ], EditorTextoRicoComponent.prototype, "notaRodapeInicio", void 0);
+__decorate([
+    property({ attribute: false })
+], EditorTextoRicoComponent.prototype, "usuarioRevisao", void 0);
+__decorate([
+    property({ type: String })
+], EditorTextoRicoComponent.prototype, "nomeUsuarioRevisao", void 0);
 __decorate([
     property({ type: Number })
 ], EditorTextoRicoComponent.prototype, "height", void 0);
@@ -22165,9 +22348,6 @@ __decorate([
 __decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "modo", void 0);
-__decorate([
-    property({ type: String })
-], EditorTextoRicoComponent.prototype, "nomeUsuarioRevisao", void 0);
 __decorate([
     property({ type: String, attribute: 'toolbar' })
 ], EditorTextoRicoComponent.prototype, "toolbar", void 0);
@@ -22564,6 +22744,9 @@ AlterarLarguraImagemModalComponent = __decorate([
 // import { alertarInfo } from '../../redux/elemento/util/alertaUtil';
 // import { Modo } from '../../model/modo.model';
 let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
+    get _input() {
+        return this.renderRoot?.querySelector('input[type="checkbox"]');
+    }
     // onChange: Observable<string> = new Observable<string>();
     update(changedProperties) {
         super.update(changedProperties);
@@ -22614,7 +22797,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           background-color: #eee;
           cursor: pointer;
         }
-        [id^='chk-em-revisao-'] {
+        wa-switch {
           border: 1px solid #ccc !important;
           padding: 5px 10px !important;
           border-radius: 20px !important;
@@ -22623,7 +22806,7 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           font-weight: bold;
           background-color: #eee;
         }
-        [id^='chk-em-revisao-'][checked] {
+        wa-switch[checked] {
           background-color: var(--wa-color-blue-100);
         }
         .revisao-container {
@@ -22645,8 +22828,9 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
         <wa-switch
           id="${this.nomeSwitch}"
           size="small"
+          ?checked=${this.checked}
           @input=${() => console.log(11111, 'input')}
-          @change=${() => this.ativarDesativarMarcaDeRevisao()}
+          @change=${(ev) => this.onToggle(ev)}
         >
           <span>Marcas de revisão</span>
           <wa-badge
@@ -22664,28 +22848,41 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
         this.quantidadeRevisao = 0;
         this.nomeSwitch = '';
         this.nomeBadgeQuantidadeRevisao = '';
-        // @property({ type: Boolean, reflect: true })
-        // checkedRevisao = false;
+        this.checked = false;
+        this._programmatic = false;
         this.modo = '';
         this.atualizaQuantidadeRevisao = (quantidade) => {
             this.quantidadeRevisao = quantidade;
         };
     }
-    ativarDesativarMarcaDeRevisao() {
-        const switchElement = document.getElementById(this.nomeSwitch);
-        const checked = switchElement?.checked;
-        if (!checked && this.quantidadeRevisao > 0) {
-            switchElement.checked = true;
-            switchElement.setAttribute('checked', '');
-            // alertarInfo('Desative as marcas de revisão somente após aceitar ou rejeitar todas as alterações.');
-            console.log(11111, 'Desative as marcas de revisão somente após aceitar ou rejeitar todas as alterações.');
-            return;
-        }
-        this.dispatchEvent(new CustomEvent('switch-revisao:change', {
+    onToggle(ev) {
+        const target = ev.currentTarget;
+        const next = !!target?.checked;
+        ev.stopImmediatePropagation?.();
+        ev.stopPropagation();
+        ev.preventDefault();
+        this.dispatchEvent(new CustomEvent('switch-revisao:intent', {
             bubbles: true,
-            detail: { checked },
+            composed: true,
+            detail: { checked: next },
         }));
-        // this.checkedSwitchMarcaAlteracao(checked);
+        queueMicrotask(() => {
+            if (target) {
+                target.checked = this.checked;
+                target.requestUpdate?.();
+            }
+        });
+    }
+    setChecked(value) {
+        this._programmatic = true;
+        this.checked = !!value;
+        const sw = this.querySelector(`#${this.nomeSwitch}`);
+        if (sw) {
+            sw.checked = this.checked;
+            sw.requestUpdate?.();
+        }
+        this.requestUpdate();
+        this._programmatic = false;
     }
 };
 __decorate([
@@ -22697,6 +22894,9 @@ __decorate([
 __decorate([
     property({ type: String })
 ], SwitchRevisaoComponent.prototype, "nomeBadgeQuantidadeRevisao", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true })
+], SwitchRevisaoComponent.prototype, "checked", void 0);
 __decorate([
     property({ type: String })
 ], SwitchRevisaoComponent.prototype, "modo", void 0);
@@ -22720,5 +22920,5 @@ registerIconLibrary('icons-ui-commons', {
 });
 window.Quill = Quill;
 
-export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, PanelNotaRodapeComponent, REGEX_ACCENTS, SwitchRevisaoComponent, TipoMensagem, alertarInfo };
+export { AlertasComponent, AlterarLarguraImagemModalComponent, AlterarLarguraTabelaColunaModalComponent, AutoFix, Autocomplete, AutocompleteAsync, Comissao, Data, Destino, DestinoComponent, EditorTextoRicoComponent, LexmlAutocompleteUniversal, LexmlUiCommons, OpcoesImpressaoComponent, Option, PanelNotaRodapeComponent, REGEX_ACCENTS, Revisao, RevisaoTextoLivre, SwitchRevisaoComponent, TipoMensagem, Usuario, alertarInfo };
 //# sourceMappingURL=index.js.map

@@ -1,47 +1,17 @@
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-import { TipoMensagem, Alerta } from '@ui-commons';
+import { customElement, state, property } from 'lit/decorators.js';
+import { Alerta } from '@ui-commons';
 
 @customElement('lexml-parecer-avisos')
 export class LexmlParecerAvisos extends LitElement {
-  // ******************************************* Itens para o Teste do Alert
-  @state() private _tipoIdx = 0;
+  @property({ type: Array }) alertas: Alerta[] = [];
 
-  // Recebe o total via seletorHost (o lexml-ui-alertas seta isso)
   @state() totalAlertas = 0;
-
-  // Demo local de alertas (substitui Redux neste teste)
-  @state() private alertasDemo: Alerta[] = [
-    {
-      id: 'a1',
-      tipo: TipoMensagem.INFO,
-      mensagem: 'Bem-vindo! Este é um alerta informativo.',
-      podeFechar: true,
-    },
-    {
-      id: 'a2',
-      tipo: TipoMensagem.WARNING,
-      mensagem: 'Atenção: verifique os dados preenchidos.',
-      podeFechar: true,
-    },
-    {
-      id: 'a3',
-      tipo: TipoMensagem.SUCCESS,
-      mensagem: 'Operação concluída com sucesso.',
-      podeFechar: true,
-    },
-    {
-      id: 'a4',
-      tipo: TipoMensagem.ERROR,
-      mensagem: 'Alerta: erro ao processar a solicitação.',
-      podeFechar: true,
-    },
-  ];
 
   private _notifyParentTotal() {
     this.dispatchEvent(
       new CustomEvent('parecer-total-alertas', {
-        detail: { total: this.totalAlertas },
+        detail: { total: this.alertas.length },
         bubbles: true,
         composed: true,
       }),
@@ -49,102 +19,49 @@ export class LexmlParecerAvisos extends LitElement {
   }
 
   protected firstUpdated(): void {
-    this.totalAlertas = this.alertasDemo.length;
+    this.totalAlertas = this.alertas.length;
     this._notifyParentTotal();
   }
 
-  private gerarId(): string {
-    // pega o MAIOR número já usado no id (ex.: a1, a2, a10) e soma +1
-    const maxNum = this.alertasDemo.reduce((max, a) => {
-      const m = /(\d+)$/.exec(a.id); // pega os dígitos no final
-      const n = m ? parseInt(m[1], 10) : 0;
-      return n > max ? n : max;
-    }, 0);
-    return `a${maxNum + 1}`;
+  protected updated(changed: Map<string, unknown>): void {
+    if (changed.has('alertas')) {
+      this.totalAlertas = this.alertas.length;
+      this._notifyParentTotal();
+    }
   }
 
-  // 2) ADICIONE um helper para garantir unicidade na lista atual:
-
-  private readonly tiposCiclo: TipoMensagem[] = [
-    TipoMensagem.INFO,
-    TipoMensagem.WARNING,
-    TipoMensagem.ERROR,
-    TipoMensagem.CRITICAL,
-    TipoMensagem.SUCCESS,
-  ];
-
-  private readonly labelTipo: Record<TipoMensagem, string> = {
-    [TipoMensagem.INFO]: 'INFO',
-    [TipoMensagem.WARNING]: 'WARNING',
-    [TipoMensagem.ERROR]: 'ERROR',
-    [TipoMensagem.CRITICAL]: 'CRITICAL',
-    [TipoMensagem.SUCCESS]: 'SUCCESS',
+  private removerAlerta = (id: string): void => {
+    this.dispatchEvent(
+      new CustomEvent('parecer-remover-alerta', {
+        detail: { id },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   };
 
-  private adicionarAlertaDemo = (): void => {
-    const tipo = this.tiposCiclo[this._tipoIdx];
-    this._tipoIdx = (this._tipoIdx + 1) % this.tiposCiclo.length;
-
-    const agora = new Date().toLocaleTimeString();
-    const novo: Alerta = {
-      id: this.gerarId(),
-      tipo,
-      mensagem: `[${this.labelTipo[tipo]}] Alerta criado As disparidades são ainda maiores quando se avalia as diferentes regiões do Brasil: no Norte, a média de investimento anual é de R$ 66,52 por habitante e, no Nordeste, de R$ 87,21 — muito abaixo dos R$ 171,49 registrados para o Sudeste. Os dados são do Sistema Nacional de Informações em Saneamento Básico (Sinisa – 2023) Fonte: Agência Senado ${agora}.`,
-      podeFechar: true,
-    };
-
-    this.alertasDemo = [novo, ...this.alertasDemo];
-    this.totalAlertas = this.alertasDemo.length;
-    this._notifyParentTotal();
+  private limparAlertas = (): void => {
+    this.dispatchEvent(
+      new CustomEvent('parecer-limpar-alertas', {
+        bubbles: true,
+        composed: true,
+      }),
+    );
   };
-
-  private removerAlertaDemo = (id: string): void => {
-    this.alertasDemo = this.alertasDemo.filter(a => a.id !== id);
-    this.totalAlertas = this.alertasDemo.length;
-    this._notifyParentTotal();
-  };
-
-  private limparAlertasDemo = (): void => {
-    this.alertasDemo = [];
-    this.totalAlertas = 0;
-    this._notifyParentTotal();
-  };
-  // ******************************************* Fim dos Itens para o Teste do Alert
 
   render(): TemplateResult {
     return html` <style>
-        lexml-parecer-avisos {
-          display: block;
-        }
-        .linha {
-          display: flex;
-          align-items: center;
-          background-color: #fafafa;
-          border: 6px solid #038d15;
-          gap: 8px;
-        }
-        .caixa {
-          padding: 12px 0;
+        .main-avisos {
+          padding-right: 10px;
+          padding-left: 10px;
         }
       </style>
-      <!-- Este é um comentário em HTML 
-      <div class="linha">
-        <h2 style="margin: 0">
-          Item apenas para testes e validar funcionalidade
-        </h2>
-        <div id="contadorAvisos">
-          <wa-badge attention="none">${this.totalAlertas}</wa-badge>
-        </div>
-        <button @click=${this.adicionarAlertaDemo}>Adicionar alerta</button>
-        <button @click=${this.limparAlertasDemo}>Limpar alertas</button>
-      </div>
-      -->
 
-      <div class="caixa">
+      <div class="main-avisos">
         <lexml-ui-alertas
-          .alertas=${this.alertasDemo}
-          .removeAlert=${(id: string): void => this.removerAlertaDemo(id)}
-          .clearAlerts=${(): void => this.limparAlertasDemo()}
+          .alertas=${this.alertas}
+          .removeAlert=${(id: string): void => this.removerAlerta(id)}
+          .clearAlerts=${(): void => this.limparAlertas()}
           .seletorHost=${'lexml-ui-commons'}
           .seletorBadge=${'#contadorAvisos wa-badge'}
           @alertas:alterados=${(

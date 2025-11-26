@@ -1,6 +1,6 @@
 import { Destino } from '@ui-commons';
 import { getAnoAtual } from '../util/date-util.js';
-import { ProposicaoReferenciada } from './diversos.modelo.js';
+import { ProposicaoReferenciada } from './diversos.model.js';
 
 export class Materia {
   ano: number = getAnoAtual();

@@ -2,10 +2,10 @@ import { Usuario } from '@ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import { NotaRodape } from '../../models/diversos.model.js';
-import { RevisaoRelatorio } from '../../models/revisao.model.js';
+import { RevisaoEmenta } from '../../models/revisao.model.js';
 
-@customElement('lexml-parecer-relatorio')
-export class LexmlParecerRelatorio extends LitElement {
+@customElement('lexml-parecer-ementa')
+export class LexmlParecerEmenta extends LitElement {
   createRenderRoot(): LitElement {
     return this;
   }
@@ -75,23 +75,23 @@ export class LexmlParecerRelatorio extends LitElement {
   public isEmRevisao(): boolean {
     return !!(this._ed as any)?.quill?.revisao?.emRevisao;
   }
-
-  public getRevisoes(): RevisaoRelatorio[] {
+  public getRevisoes(): RevisaoEmenta[] {
     const base = (this._ed as any)?.getRevisoes?.() ?? [];
     return base.map(
       (r: any) =>
-        new RevisaoRelatorio(
+        new RevisaoEmenta(
           new Usuario(r.usuario?.nome, r.usuario?.id, r.usuario?.sigla),
           r.dataHora,
-          'Relatório alterado',
+          'Ementa alterada',
         ),
     );
   }
 
   render(): TemplateResult {
     return html`<lexml-ui-editor-texto-rico
-      height="590"
+      height="600"
       orientacaoNotaRodaPe="abaixo"
+      .toolbar=${'italic'}
     ></lexml-ui-editor-texto-rico>`;
   }
 }

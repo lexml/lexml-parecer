@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-use-before-define */
-import { Destino } from '@ui-commons';
-import { Voto } from './voto.modelo.js';
+import { Destino, Revisao } from '@ui-commons';
+import { Voto } from './voto.model.js';
 
 export class Parecer {
   dataUltimaModificacao = new Date().toISOString();
@@ -13,7 +13,6 @@ export class Parecer {
 
   ano = new Date().getFullYear();
   ementa = '';
-  colegiadoApreciador = new ColegiadoApreciador();
   materia = new ProposicaoReferenciada();
   epigrafe = '';
 
@@ -21,7 +20,7 @@ export class Parecer {
   analise = '';
   voto: Voto = new Voto();
 
-  local = ''; // Calculado a partir do destino (Colegiado Apreciador)
+  local = '';
 
   destino: Destino = new Destino();
 
@@ -34,6 +33,8 @@ export class Parecer {
   revisoes: Revisao[] = [];
 
   notasRodape: NotaRodape[] = [];
+
+  siglaCasaLegislativa: 'SF' | 'CD' | 'CN' = 'CN';
 }
 
 export type Metadados = {
@@ -66,73 +67,12 @@ export class OpcoesImpressao {
   tamanhoFonte = 14;
 }
 
-export class Usuario {
-  nome = 'Anônimo';
-  id: any;
-  sigla?: string;
-
-  constructor(nome?: string, id?: any, sigla?: string) {
-    this.nome = nome || 'Anônimo';
-    this.id = id;
-    this.sigla = sigla;
-  }
-}
-
-export class ColegiadoApreciador {
-  siglaCasaLegislativa?: 'CN' | 'SF' | 'CD' = 'CN';
-  tipoColegiado: 'Plenário' | 'Comissão' | 'Plenário via Comissão' = 'Plenário';
-  siglaComissao?: string;
-}
-
 export class AutoriaParecer {
   relator?: Parlamentar;
   presidente?: Parlamentar;
 }
 
 // ********************************************************************************************
-
-export abstract class Revisao {
-  abstract type: string; // Necessário para identificação da classe no Java
-  id: string;
-  usuario: Usuario;
-  dataHora: string;
-  descricao?: string;
-
-  constructor(usuario: Usuario, dataHora: string, descricao?: string) {
-    this.id = ''; // generateUUID();
-    this.usuario = usuario;
-    this.dataHora = dataHora;
-    this.descricao = descricao;
-  }
-}
-
-export class RevisaoTextoLivre extends Revisao {
-  type = 'RevisaoTextoLivre';
-  textoAntes?: string;
-
-  constructor(
-    usuario: Usuario,
-    dataHora: string,
-    descricao: string,
-    textoAntes: string,
-  ) {
-    super(usuario, dataHora, descricao);
-    this.textoAntes = textoAntes;
-  }
-}
-
-// PARECER
-export class RevisaoRelatorio extends RevisaoTextoLivre {
-  type = 'RevisaoRelatorio';
-}
-
-export class RevisaoAnalise extends RevisaoTextoLivre {
-  type = 'RevisaoAnalise';
-}
-
-export class RevisaoVoto extends Revisao {
-  type = 'RevisaoVoto';
-}
 
 class NotaRodape {
   id: string;

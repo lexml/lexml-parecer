@@ -1,4 +1,4 @@
-import { Parecer } from './diversos.modelo.js';
+import { Parecer } from './diversos.model.js';
 
 export class LexmlEtaParecerParametrosEdicao {
   parecer?: Parecer;

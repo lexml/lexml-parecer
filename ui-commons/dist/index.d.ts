@@ -129,17 +129,41 @@ declare global {
   }
 }
 
+declare class Usuario {
+  nome: string;
+  id: any;
+  sigla?: string;
+  constructor(nome?: string, id?: any, sigla?: string);
+}
+
+declare abstract class Revisao {
+  abstract type: string;
+  id: string;
+  usuario: Usuario;
+  dataHora: string;
+  descricao?: string;
+  constructor(usuario: Usuario, dataHora: string, descricao?: string);
+}
+declare class RevisaoTextoLivre extends Revisao {
+  type: string;
+  constructor(usuario: Usuario, dataHora: string, descricao: string);
+}
+
 declare class Data extends LitElement {
-  inputData: HTMLInputElement;
+  inputData: HTMLElement & {
+    value: string;
+    focus: () => void;
+  };
   private group;
-  optionNaoInformarData: any;
+  private informarData;
   data: string;
   getData(): string | null;
   firstUpdated(): void;
   private selecionarRadioData;
   updated(): void;
   render(): TemplateResult;
-  private resetDate;
+  private onClickNaoInformar;
+  private onClickData;
   private setDate;
   private timerOnChange;
   private agendarEmissaoEventoOnChange;
@@ -501,14 +525,24 @@ type RemoveAlertFn = (id: string) => void;
 declare class EditorTextoRicoComponent extends LitElement {
   private _uid;
   private _containerId;
+  suspendNotas: boolean;
+  suspendNotasRodape(on: boolean): void;
   notaRodapeInicio: number;
   private _nrScheduled;
   private scheduleRenumerarNotas;
-  /** Retorna as notas já sincronizadas (força renumeração e coleta imediata). */
   getNotasRodape(): NotaRodape[];
   private _collectNotasFromDom;
   setNotaRodapeInicio(n: number): void;
   getQuantidadeNotasRodape(): number;
+  usuarioRevisao?: Usuario;
+  nomeUsuarioRevisao: string;
+  setUsuarioRevisao(usuario: Usuario): void;
+  getRevisoes(): Array<{
+    usuario: Usuario;
+    dataHora: string;
+    descricao: string;
+    textoAntes?: string;
+  }>;
   height: number;
   orientacaoNotaRodaPe: 'lado' | 'abaixo';
   private notasPosicao;
@@ -523,7 +557,6 @@ declare class EditorTextoRicoComponent extends LitElement {
   indHabilitarNotaRodape: boolean;
   private apresentarNotaRodape;
   modo: string;
-  nomeUsuarioRevisao: string;
   /** Toolbar opcional: string com tokens separados por vírgula.
    * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
    *         clean, align, textindent, marginbottom, image, link, notarodape, table.
@@ -666,13 +699,17 @@ declare class SwitchRevisaoComponent extends LitElement {
   quantidadeRevisao: number;
   nomeSwitch: string;
   nomeBadgeQuantidadeRevisao: string;
+  checked: boolean;
+  private _programmatic;
   modo: string;
+  private get _input();
   update(changedProperties: PropertyValues): void;
   createRenderRoot(): LitElement;
   render(): TemplateResult;
   constructor();
   atualizaQuantidadeRevisao: (quantidade: number) => void;
-  ativarDesativarMarcaDeRevisao(): boolean | void;
+  private onToggle;
+  setChecked(value: boolean): void;
 }
 
 declare const REGEX_ACCENTS: RegExp;
@@ -736,8 +773,11 @@ export {
   Option,
   PanelNotaRodapeComponent,
   REGEX_ACCENTS,
+  Revisao,
+  RevisaoTextoLivre,
   SwitchRevisaoComponent,
   TipoMensagem,
+  Usuario,
   alertarInfo,
 };
 export type { Alerta, Mensagem, MensagemErro };
