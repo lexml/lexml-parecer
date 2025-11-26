@@ -90,7 +90,7 @@ export class LexmlParecerRelatorio extends LitElement {
 
   render(): TemplateResult {
     return html`<lexml-ui-editor-texto-rico
-      height="600"
+      height="590"
       orientacaoNotaRodaPe="abaixo"
     ></lexml-ui-editor-texto-rico>`;
   }

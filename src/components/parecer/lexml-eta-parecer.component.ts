@@ -1,6 +1,12 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
-import { Revisao, Usuario, alertarInfo } from '@ui-commons';
+import {
+  Revisao,
+  Usuario,
+  alertarInfo,
+  TipoMensagem,
+  Alerta,
+} from '@ui-commons';
 import {
   AutoriaParecer,
   NotaRodape,
@@ -28,6 +34,10 @@ export class LexmlEtaParecer extends LitElement {
 
   @state() private parecer: Parecer = new Parecer();
 
+  @state() private _alertas: Alerta[] = [];
+
+  @state() private _pendenciasPreenchimento: string[] = [];
+
   @query(
     'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autoria-impressao',
   )
@@ -44,6 +54,141 @@ export class LexmlEtaParecer extends LitElement {
 
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
+
+  private _isHtmlVazio(html?: string | null): boolean {
+    if (!html) return true;
+
+    const cleaned = html
+      .replace(/<p[^>]*><br\s*\/?><\/p>/gi, ' ')
+      .replace(/<br\s*\/?>/gi, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/<\/?[^>]+(>|$)/g, ' ')
+      .trim();
+
+    return cleaned.length === 0;
+  }
+
+  private _recalcularAlertas = (): void => {
+    const alertas: Alerta[] = [];
+
+    // --- EMENTA (só quando NÃO for Câmara) ---
+    if (!this.isCamara) {
+      const ementaHtml = this._ementa?.getTexto?.() ?? '';
+
+      if (this._isHtmlVazio(ementaHtml)) {
+        alertas.push({
+          id: 'ementa-nao-preenchida',
+          tipo: TipoMensagem.ERROR,
+          mensagem: 'Texto da ementa não preenchido.',
+          podeFechar: false,
+        });
+      }
+    }
+
+    // --- RELATÓRIO (sempre) ---
+    const relatorioHtml = this._relatorio?.getTexto?.() ?? '';
+    if (this._isHtmlVazio(relatorioHtml)) {
+      alertas.push({
+        id: 'relatorio-nao-preenchido',
+        tipo: TipoMensagem.ERROR,
+        mensagem: 'Texto do relatório não preenchido.',
+        podeFechar: false,
+      });
+    }
+
+    // --- ANÁLISE / VOTO (aba "analise") ---
+    const analiseHtml = this._analise?.getTexto?.() ?? '';
+    if (this._isHtmlVazio(analiseHtml)) {
+      alertas.push({
+        id: 'analise-ou-voto-nao-preenchido',
+        tipo: TipoMensagem.ERROR,
+        mensagem: this.isCamara
+          ? 'Texto do voto não preenchido.'
+          : 'Texto da análise não preenchido.',
+        podeFechar: false,
+      });
+    }
+
+    // --- VOTO / CONCLUSÃO DO VOTO (aba "voto") ---
+    const votoObj: Voto =
+      (this._voto as any)?.getVoto?.() ?? ({ itensVoto: [] } as Voto);
+
+    const temItensVoto =
+      Array.isArray((votoObj as any).itensVoto) &&
+      (votoObj as any).itensVoto.length > 0;
+
+    if (!temItensVoto) {
+      alertas.push({
+        id: 'voto-nao-preenchido',
+        tipo: TipoMensagem.ERROR,
+        mensagem: this.isCamara
+          ? 'Conclusão do voto não preenchida.'
+          : 'Voto não preenchido.',
+        podeFechar: false,
+      });
+    }
+
+    // --- RELATOR / PRESIDENTE (AutoriaParecer) ---
+    let autoriaParecer: AutoriaParecer | undefined;
+
+    try {
+      const dai: any = this._dataAutoriaImpressao;
+      if (dai && typeof dai.getAutoriaParecer === 'function') {
+        // Quando o componente de Data/Autoria já estiver pronto
+        autoriaParecer = dai.getAutoriaParecer();
+      } else {
+        // Fallback: usa o objeto Parecer atual
+        autoriaParecer = this.parecer?.autoria;
+      }
+    } catch (e) {
+      // Qualquer erro, ainda assim não quebra os outros alertas
+      autoriaParecer = this.parecer?.autoria;
+    }
+
+    if (!autoriaParecer?.relator) {
+      alertas.push({
+        id: 'relator-nao-informado',
+        tipo: TipoMensagem.ERROR,
+        mensagem: 'Relator não informado.',
+        podeFechar: false,
+      });
+    }
+
+    if (!autoriaParecer?.presidente) {
+      alertas.push({
+        id: 'presidente-nao-informado',
+        tipo: TipoMensagem.ERROR,
+        mensagem: 'Presidente não informado.',
+        podeFechar: false,
+      });
+    }
+
+    this._alertas = alertas;
+    this.totalAlertas = alertas.length;
+    this._pendenciasPreenchimento = alertas.map(a => a.mensagem);
+  };
+
+  protected firstUpdated(): void {
+    this._recalcularAlertas();
+  }
+
+  private _onRteChange = (_ev: Event): void => {
+    _ev;
+    this._recalcularAlertas();
+  };
+
+  private _onRemoverAlerta = (e: CustomEvent<{ id: string }>): void => {
+    const id = e.detail?.id;
+    if (!id) return;
+
+    this._alertas = this._alertas.filter(a => a.id !== id);
+    this.totalAlertas = this._alertas.length;
+  };
+
+  private _onLimparAlertas = (): void => {
+    this._alertas = [];
+    this.totalAlertas = 0;
+  };
 
   private get isCamara(): boolean {
     return this.parecer?.siglaCasaLegislativa === 'CD';
@@ -214,6 +359,7 @@ export class LexmlEtaParecer extends LitElement {
     this.addEventListener('nota-rodape:remove', this._onNrEvt as any);
     this.addEventListener('rte:revision-count', this._onRevisionCount as any);
     this.addEventListener('rte:revision-change', this._onRevisionChange as any);
+    this.addEventListener('onchange', this._onRteChange as any);
   }
 
   disconnectedCallback(): void {
@@ -231,6 +377,7 @@ export class LexmlEtaParecer extends LitElement {
       'rte:revision-change',
       this._onRevisionChange as any,
     );
+    this.removeEventListener('onchange', this._onRteChange as any);
     super.disconnectedCallback();
   }
 
@@ -299,7 +446,8 @@ export class LexmlEtaParecer extends LitElement {
     );
     await 0;
     await this._ensureRevisionModeIfNeeded(this.parecer);
-    //
+
+    this._recalcularAlertas();
   }
 
   public getParecer(): Parecer {
@@ -374,6 +522,7 @@ export class LexmlEtaParecer extends LitElement {
           ? 'Sala das Sessões'
           : 'Sala da Comissão',
       epigrafe: 'PARECER Nº         ',
+      pendenciasPreenchimento: [...this._pendenciasPreenchimento],
     };
     return this.parecer;
   }
@@ -390,6 +539,10 @@ export class LexmlEtaParecer extends LitElement {
         lexml-eta-parecer {
           display: block;
           color: var(--lexml-eta-parecer-text-color, #000);
+        }
+        lexml-eta-parecer wa-tab-panel::part(base) {
+          padding-top: 1rem;
+          padding-bottom: 0px;
         }
         .badge-pulse {
           margin-left: 7px;
@@ -453,9 +606,12 @@ export class LexmlEtaParecer extends LitElement {
         </wa-tab-panel>
         <wa-tab-panel name="avisos" class="overflow-hidden">
           <lexml-parecer-avisos
+            .alertas=${this._alertas}
             @parecer-total-alertas=${(e: CustomEvent<{ total: number }>) => {
               this.totalAlertas = e.detail.total;
             }}
+            @parecer-remover-alerta=${this._onRemoverAlerta}
+            @parecer-limpar-alertas=${this._onLimparAlertas}
           ></lexml-parecer-avisos>
         </wa-tab-panel>
       </wa-tab-group>

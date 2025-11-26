@@ -79,7 +79,13 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <div>
+      <style>
+        .main-data-autoria-impressao {
+          padding-right: 10px;
+          padding-left: 10px;
+        }
+      </style>
+      <div class="main-data-autoria-impressao">
         <lexml-ui-data .data=${this._dataValor ?? ''}></lexml-ui-data>
         <br />
         <lexml-parecer-autoria

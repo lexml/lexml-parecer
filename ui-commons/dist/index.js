@@ -11705,20 +11705,23 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
 
         <h2>Teste EditorTextoRicoComponent</h2>
         <div class="teste">
-          <lexml-ui-editor-texto-rico height=400 orientacaoNotaRodaPe=abaixo ></lexml-ui-editor-texto-rico>
+          <lexml-ui-editor-texto-rico
+            height="400"
+            orientacaoNotaRodaPe="abaixo"
+          ></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <lexml-ui-editor-texto-rico
-            .toolbar=${'italic'}
-          ></lexml-ui-editor-texto-rico>
-        <!-- <div class="area-texto">
+          .toolbar=${'italic'}
+        ></lexml-ui-editor-texto-rico>
+        <div class="area-texto">
           <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <br />
         <br />
-          
-
+        <br />
+        <br />
         <br />
         <br />
         <br />
@@ -11771,7 +11774,6 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
         }}
           ></lexml-ui-alertas>
         </div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     `;
     }
@@ -12822,14 +12824,15 @@ class Usuario {
 let Data = class Data extends LitElement {
     constructor() {
         super(...arguments);
+        this.informarData = true;
         this.data = new Date().toISOString().slice(0, 10);
         this.timerOnChange = 0;
     }
     getData() {
-        if (this.optionNaoInformarData?.checked || !this.data) {
+        if (!this.informarData) {
             return null;
         }
-        return this.data;
+        return this.data || null;
     }
     firstUpdated() {
         setTimeout(() => {
@@ -12843,21 +12846,24 @@ let Data = class Data extends LitElement {
                 console.error('FALHA: A label interna do wa-input.');
             }
         }, 100);
+        this.informarData = !!this.data;
     }
     selecionarRadioData() {
-        const radio = this.shadowRoot?.querySelector('#radio-data-option');
-        if (radio && !radio.checked) {
-            radio.checked = true;
-            this.setDate();
+        this.informarData = true;
+        if (!this.data) {
+            this.data = new Date().toISOString().slice(0, 10);
         }
+        this.requestUpdate();
+        this.updateComplete.then(() => {
+            this.inputData?.focus();
+        });
     }
     updated() {
-        this.inputData.value =
-            this.data ??
-                this.inputData.value ??
-                new Date().toISOString().replace(/T.+$/, '');
-        if (!this.data && !this.optionNaoInformarData.checked) {
-            this.optionNaoInformarData.checked = true;
+        if (this.inputData) {
+            this.inputData.value =
+                this.data ??
+                    this.inputData.value ??
+                    new Date().toISOString().replace(/T.+$/, '');
         }
     }
     render() {
@@ -12926,8 +12932,6 @@ let Data = class Data extends LitElement {
         .label-on-left wa-input::part(label) {
           cursor: pointer;
         }
-        @media (max-width: 480px) {
-        }
       </style>
       <fieldset class="lexml-data">
         <legend>Data</legend>
@@ -12935,46 +12939,62 @@ let Data = class Data extends LitElement {
           id="data-component"
           orientation="horizontal"
           size="medium"
-          .value=${this.data ? '2' : '1'}
+          .value=${this.informarData ? '2' : '1'}
         >
           <wa-radio
             id="radio-data-option"
             name="data"
             value="2"
-            @click=${this.setDate}
+            @click=${this.onClickData}
           >
             <div class="label-on-left">
               <wa-input
                 id="input-data"
                 label="Data"
                 type="date"
-                ?disabled=${!this.data}
+                ?disabled=${!this.informarData}
+                .value=${this.data}
                 @input=${this.setDate}
               >
               </wa-input>
             </div>
           </wa-radio>
-          <wa-radio name="data" id="no-date" value="1" @click=${this.resetDate}>
+
+          <wa-radio
+            name="data"
+            id="no-date"
+            value="1"
+            @click=${this.onClickNaoInformar}
+          >
             Não informar
           </wa-radio>
         </wa-radio-group>
       </fieldset>
     `;
     }
-    resetDate() {
-        const original = this.data;
-        this.data = '';
-        if (original !== this.data) {
+    onClickNaoInformar() {
+        const originalInformarData = this.informarData;
+        this.informarData = false;
+        if (originalInformarData !== this.informarData) {
             this.agendarEmissaoEventoOnChange();
         }
     }
-    setDate() {
-        if (this.inputData) {
-            const original = this.data;
-            this.data = this.inputData.value;
-            if (original !== this.data) {
-                this.agendarEmissaoEventoOnChange();
-            }
+    onClickData() {
+        const originalInformarData = this.informarData;
+        this.informarData = true;
+        if (!this.data) {
+            this.data = new Date().toISOString().slice(0, 10);
+        }
+        if (originalInformarData !== this.informarData) {
+            this.agendarEmissaoEventoOnChange();
+        }
+    }
+    setDate(e) {
+        const target = e.target;
+        const original = this.data;
+        this.data = target?.value ?? this.data;
+        if (original !== this.data) {
+            this.agendarEmissaoEventoOnChange();
         }
     }
     agendarEmissaoEventoOnChange() {
@@ -12998,8 +13018,8 @@ __decorate([
     query('#data-component')
 ], Data.prototype, "group", void 0);
 __decorate([
-    query('#no-date')
-], Data.prototype, "optionNaoInformarData", void 0);
+    state()
+], Data.prototype, "informarData", void 0);
 __decorate([
     property({ type: String })
 ], Data.prototype, "data", void 0);
@@ -13274,7 +13294,7 @@ let AlertasComponent = class AlertasComponent extends LitElement {
       <style>
         wa-callout {
           box-shadow: var(--wa-shadow-l);
-          margin: 20px;
+          margin-bottom: 20px;
         }
         .field__alert {
           display: flex;
@@ -13316,7 +13336,7 @@ let AlertasComponent = class AlertasComponent extends LitElement {
               `
             : html `<wa-callout
                 variant="${mapTipoMensagem[alerta.tipo].variant}"
-                appearance="outlined"
+                appearance="outlined filled"
               >
                 ${this.getAlertIcon(alerta.tipo)}${alerta.mensagem}
               </wa-callout> `}`)}
@@ -21319,8 +21339,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             moduloRevisao.textoAntesRevisao = value ? this.texto : undefined;
         }
         this.dispatchEvent(new CustomEvent('rte:revision-change', {
-            bubbles: true, composed: true,
-            detail: { emRevisao: !!moduloRevisao?.emRevisao }
+            bubbles: true,
+            composed: true,
+            detail: { emRevisao: !!moduloRevisao?.emRevisao },
         }));
     }
     get _trocaOrientacaoDesabilitada() {
@@ -21681,7 +21702,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.dispatchEvent(new CustomEvent('rte:ready', {
                     bubbles: true,
                     composed: true,
-                    detail: { uid: this._uid }
+                    detail: { uid: this._uid },
                 }));
             }
         };
@@ -21847,7 +21868,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             setTimeout(() => {
                 try {
                     const temRev = (this.quill?.revisao?.getQuantidadeRevisoes?.() ?? 0) > 0 ||
-                        (this.quill?.root?.querySelectorAll?.('.added, .removed')?.length ?? 0) > 0;
+                        (this.quill?.root?.querySelectorAll?.('.added, .removed')?.length ??
+                            0) > 0;
                     if (temRev && !this.quill?.revisao?.emRevisao) {
                         this.updateRevisionStatus(true);
                         this._switchRevisaoEl?.setChecked?.(true);
@@ -21918,7 +21940,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 (this.notasRodape?.length ?? 0) !== qtdAntes) {
                 this.requestUpdate();
                 this.dispatchEvent(new CustomEvent('rte:notas-change', {
-                    bubbles: true, composed: true, detail: { notas: this.notasRodape.slice() }
+                    bubbles: true,
+                    composed: true,
+                    detail: { notas: this.notasRodape.slice() },
                 }));
             }
         };
@@ -21981,17 +22005,17 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.dispatchEvent(new CustomEvent('rte:revision-change', {
                 bubbles: true,
                 composed: true,
-                detail: { emRevisao: !!this.quill?.revisao?.emRevisao }
+                detail: { emRevisao: !!this.quill?.revisao?.emRevisao },
             }));
             this.dispatchEvent(new CustomEvent('rte:revision-count', {
                 bubbles: true,
                 composed: true,
-                detail: { total: this.getQuantidadeDeRevisoes() }
+                detail: { total: this.getQuantidadeDeRevisoes() },
             }));
             this.dispatchEvent(new CustomEvent('rte:notas-change', {
                 bubbles: true,
                 composed: true,
-                detail: { notas: this.notasRodape.slice() }
+                detail: { notas: this.notasRodape.slice() },
             }));
         };
         this.rejeitarRevisoes = () => {
@@ -22000,17 +22024,17 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             this.dispatchEvent(new CustomEvent('rte:revision-change', {
                 bubbles: true,
                 composed: true,
-                detail: { emRevisao: !!this.quill?.revisao?.emRevisao }
+                detail: { emRevisao: !!this.quill?.revisao?.emRevisao },
             }));
             this.dispatchEvent(new CustomEvent('rte:revision-count', {
                 bubbles: true,
                 composed: true,
-                detail: { total: this.getQuantidadeDeRevisoes() }
+                detail: { total: this.getQuantidadeDeRevisoes() },
             }));
             this.dispatchEvent(new CustomEvent('rte:notas-change', {
                 bubbles: true,
                 composed: true,
-                detail: { notas: this.notasRodape.slice() }
+                detail: { notas: this.notasRodape.slice() },
             }));
         };
         this.atualizaStatusElementosRevisao = (immediate = true) => {
@@ -22021,7 +22045,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.atualizaQuantidadeRevisao(quantidade);
                 this.onRevisionCountChange?.(quantidade);
                 this.dispatchEvent(new CustomEvent('rte:revision-count', {
-                    bubbles: true, composed: true, detail: { total: quantidade }
+                    bubbles: true,
+                    composed: true,
+                    detail: { total: quantidade },
                 }));
             };
             if (immediate) {
@@ -22836,7 +22862,9 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
         ev.stopPropagation();
         ev.preventDefault();
         this.dispatchEvent(new CustomEvent('switch-revisao:intent', {
-            bubbles: true, composed: true, detail: { checked: next }
+            bubbles: true,
+            composed: true,
+            detail: { checked: next },
         }));
         queueMicrotask(() => {
             if (target) {

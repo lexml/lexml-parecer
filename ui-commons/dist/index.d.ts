@@ -150,16 +150,20 @@ declare class RevisaoTextoLivre extends Revisao {
 }
 
 declare class Data extends LitElement {
-  inputData: HTMLInputElement;
+  inputData: HTMLElement & {
+    value: string;
+    focus: () => void;
+  };
   private group;
-  optionNaoInformarData: any;
+  private informarData;
   data: string;
   getData(): string | null;
   firstUpdated(): void;
   private selecionarRadioData;
   updated(): void;
   render(): TemplateResult;
-  private resetDate;
+  private onClickNaoInformar;
+  private onClickData;
   private setDate;
   private timerOnChange;
   private agendarEmissaoEventoOnChange;
