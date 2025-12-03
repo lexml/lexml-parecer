@@ -35,6 +35,10 @@ export class Parecer {
   notasRodape: NotaRodape[] = [];
 
   siglaCasaLegislativa: 'SF' | 'CD' | 'CN' = 'CN';
+
+  tituloSecao2 = '';
+
+  tituloSecao3 = '';
 }
 
 export type Metadados = {

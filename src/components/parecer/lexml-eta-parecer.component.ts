@@ -55,6 +55,10 @@ export class LexmlEtaParecer extends LitElement {
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
 
+  private _aplicarTitulosSecoes(): void {
+    this.parecer.tituloSecao2 = this.isCamara ? 'Voto' : 'Análise';
+    this.parecer.tituloSecao3 = this.isCamara ? 'Conclusão do Voto' : 'Voto';
+  }
   private _isHtmlVazio(html?: string | null): boolean {
     if (!html) return true;
 
@@ -169,6 +173,7 @@ export class LexmlEtaParecer extends LitElement {
   };
 
   protected firstUpdated(): void {
+    this._aplicarTitulosSecoes();
     this._recalcularAlertas();
   }
 
@@ -291,6 +296,7 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   async inicializarEdicao(params: LexmlEtaParecerParametrosEdicao) {
+    await this.updateComplete;
     if (params.parecer) {
       this.setParecer(params.parecer);
     }
@@ -448,6 +454,7 @@ export class LexmlEtaParecer extends LitElement {
     await this._ensureRevisionModeIfNeeded(this.parecer);
 
     this._recalcularAlertas();
+    this._aplicarTitulosSecoes();
   }
 
   public getParecer(): Parecer {
@@ -561,11 +568,9 @@ export class LexmlEtaParecer extends LitElement {
           : null}
         <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
         <wa-tab slot="nav" panel="analise">
-          ${this.isCamara ? 'Voto' : 'Análise'}
+          ${this.parecer.tituloSecao2}
         </wa-tab>
-        <wa-tab slot="nav" panel="voto">
-          ${this.isCamara ? 'Conclusão do Voto' : 'Voto'}
-        </wa-tab>
+        <wa-tab slot="nav" panel="voto">${this.parecer.tituloSecao3}</wa-tab>
         <wa-tab slot="nav" panel="dataAutoriaImpressao"
           >Data, Autoria e Impressão</wa-tab
         >

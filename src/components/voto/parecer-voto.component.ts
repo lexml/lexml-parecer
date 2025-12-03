@@ -414,7 +414,6 @@ export class LexmlParecerVoto extends LitElement {
     const voto: Voto = {
       itensVoto: this.sanitizeItens(),
     };
-    console.log(voto);
     return voto;
   }
 
