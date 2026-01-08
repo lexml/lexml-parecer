@@ -17,7 +17,6 @@ import {
 import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-parametro-edicao.model.js';
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
-import { Voto } from '../../models/voto.model.js';
 import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
 
 @customElement('lexml-eta-parecer')
@@ -26,11 +25,13 @@ export class LexmlEtaParecer extends LitElement {
     return this;
   }
 
+  @state() private urlAnexo: string = '';
+
+  @state() private _parlamentares: Parlamentar[] = [];
+
   @property({ type: Number }) totalAlertas = 0;
 
   @property({ type: Object }) lexmlParecerConfig?: Partial<LexmlParecerConfig>;
-
-  @state() private _parlamentares: Parlamentar[] = [];
 
   @state() private parecer: Parecer = new Parecer();
 
@@ -114,14 +115,11 @@ export class LexmlEtaParecer extends LitElement {
     }
 
     // --- VOTO / CONCLUSÃO DO VOTO (aba "voto") ---
-    const votoObj: Voto =
-      (this._voto as any)?.getVoto?.() ?? ({ itensVoto: [] } as Voto);
+    const votoTexto = (this._voto as any)?.getTextoVoto?.() ?? '';
 
-    const temItensVoto =
-      Array.isArray((votoObj as any).itensVoto) &&
-      (votoObj as any).itensVoto.length > 0;
+    const votoVazio = this._isHtmlVazio(votoTexto);
 
-    if (!temItensVoto) {
+    if (votoVazio) {
       alertas.push({
         id: 'voto-nao-preenchido',
         tipo: TipoMensagem.ERROR,
@@ -436,8 +434,9 @@ export class LexmlEtaParecer extends LitElement {
     ana && !ana.setTexto && (ana.texto = this.parecer.analise ?? '');
 
     // ---------- Voto ----------
-    const votoEl = this._voto as any;
-    await votoEl?.setVoto?.(this.parecer.voto ?? { itensVoto: [] });
+    const voto: any = this._voto;
+    voto?.setTextoVoto?.(this.parecer.voto ?? '');
+    voto?.setAnexos?.(this.parecer.anexos ?? []);
 
     this.requestUpdate();
     this._scheduleRenumGlobal();
@@ -482,7 +481,8 @@ export class LexmlEtaParecer extends LitElement {
     const data: string | null = dataAutiraImpressaoEl.getData();
     const autoriaParecer: AutoriaParecer =
       dataAutiraImpressaoEl.getAutoriaParecer();
-    const voto: Voto = (this._voto as any)?.getVoto?.() ?? { itensVoto: [] };
+    const votoTexto = (this._voto as any)?.getTextoVoto?.() ?? '';
+    const anexos = (this._voto as any)?.getAnexos?.() ?? [];
 
     const notasRelatorio: NotaRodape[] =
       (this._relatorio as any)?.getNotasRodape?.() ?? [];
@@ -490,9 +490,8 @@ export class LexmlEtaParecer extends LitElement {
     const notasAnalise: NotaRodape[] =
       (this._analise as any)?.getNotasRodape?.() ?? [];
 
-    const notasVoto: NotaRodape[] = (voto?.itensVoto ?? []).flatMap(
-      iv => iv?.notasRodape ?? [],
-    );
+    const notasVoto: NotaRodape[] =
+      (this._voto as any)?.getNotasRodape?.() ?? [];
 
     const notasRodape: NotaRodape[] = [
       ...notasRelatorio,
@@ -503,13 +502,13 @@ export class LexmlEtaParecer extends LitElement {
     const revisoesEme = (this._ementa as any)?.getRevisoes?.() ?? [];
     const revisoesRel = (this._relatorio as any)?.getRevisoes?.() ?? [];
     const revisoesAna = (this._analise as any)?.getRevisoes?.() ?? [];
-    const revisaoVoto = (this._voto as any)?.getRevisoesVoto?.() ?? null;
+    const revisoesVoto = (this._voto as any)?.getRevisoes?.() ?? [];
 
     const revisoes: Revisao[] = [
       ...revisoesEme,
       ...revisoesRel,
       ...revisoesAna,
-      ...(revisaoVoto ? [revisaoVoto] : []),
+      ...revisoesVoto,
     ];
 
     this.parecer = {
@@ -521,7 +520,8 @@ export class LexmlEtaParecer extends LitElement {
       autoria: { ...autoriaParecer },
       relatorio: relatorioHtml,
       analise: analiseHtml,
-      voto,
+      voto: votoTexto,
+      anexos,
       notasRodape: notasRodape,
       revisoes: revisoes,
       local:
@@ -537,6 +537,9 @@ export class LexmlEtaParecer extends LitElement {
   willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
       this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
+    }
+    if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
+      this.urlAnexo = this.lexmlParecerConfig.urlAnexo ?? '';
     }
   }
 
@@ -602,7 +605,7 @@ export class LexmlEtaParecer extends LitElement {
           <lexml-parecer-analise></lexml-parecer-analise>
         </wa-tab-panel>
         <wa-tab-panel name="voto" class="overflow-hidden">
-          <lexml-parecer-voto></lexml-parecer-voto>
+          <lexml-parecer-voto .urlAnexo=${this.urlAnexo}></lexml-parecer-voto>
         </wa-tab-panel>
         <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
           <lexml-parecer-data-autoria-impressao

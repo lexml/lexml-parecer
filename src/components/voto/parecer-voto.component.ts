@@ -1,33 +1,70 @@
 import { LitElement, html, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, state, query, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { ItemVoto } from '../../models/item-voto.model.js';
-import { Voto } from '../../models/voto.model.js';
-import { AnexoParecer } from '../../models/anexo.model.js';
+import { AnexoParecer, MimeType } from '../../models/anexo-parecer.model.js';
 import {
   TipoDocumento,
   TipoDocumentoLabel,
 } from '../../types/tipo-documento.js';
 import { alertarInfo, Usuario } from '@ui-commons';
 import { NotaRodape } from '../../models/diversos.model.js';
-import {
-  RevisaoTextoItemVoto,
-  RevisaoVoto,
-} from '../../models/revisao.model.js';
-
-type ItemVotoRuntime = ItemVoto & { _uid: string; notasRodape?: NotaRodape[] };
+import { RevisaoVoto } from '../../models/revisao.model.js';
 
 type AnexoParecerRuntime = AnexoParecer & {
-  arquivo?: File | null;
-  url?: string | null;
+  _uid: string;
 };
+
+type DialogMode = 'new' | 'replace';
 @customElement('lexml-parecer-voto')
 export class LexmlParecerVoto extends LitElement {
   createRenderRoot(): LitElement {
     return this;
   }
+  @property({ type: String }) urlAnexo: string = '';
 
-  @state() private itens: ItemVotoRuntime[] = [];
+  @query('lexml-ui-editor-texto-rico')
+  private _ed!: HTMLElement & {
+    getTexto?: () => string;
+    setTexto?: (html: string) => void;
+    setNotasRodape?: (notas: NotaRodape[]) => void;
+    setContent?: (html: string, notas?: NotaRodape[]) => void;
+    getNotasRodape?: () => NotaRodape[];
+    setNotaRodapeInicio?: (n: number) => void;
+    getQuantidadeNotasRodape?: () => number;
+    setUsuarioRevisao?: (u: Usuario) => void;
+    updateRevisionStatus?: (on: boolean) => void;
+    aceitarRevisoes?: () => void;
+    rejeitarRevisoes?: () => void;
+    getQuantidadeDeRevisoes?: () => number;
+    getRevisoes?: () => any[];
+    quill?: any;
+  };
+
+  @query('#dlgImportAnexo')
+  private _dlg!: any;
+
+  @query('#dlgFileInput')
+  private _dlgFileInput!: HTMLInputElement;
+
+  private pickDialogFile = () => {
+    this._dlgFileInput?.click();
+  };
+
+  @state() private _textoVoto = '';
+
+  @state() private anexos: AnexoParecerRuntime[] = [];
+  @state() private uploading = false;
+
+  // ---------- estado do modal ----------
+  @state() private dialogOpen = false;
+  @state() private dialogMode: DialogMode = 'new';
+  @state() private dialogIdx: number = -1;
+
+  @state() private dialogTipo: TipoDocumento | '' = '';
+  @state() private dialogNomeDocumento: string = '';
+  @state() private dialogFile: File | null = null;
+
+  @state() private dialogFileKey = 0;
 
   private uid(): string {
     try {
@@ -42,290 +79,172 @@ export class LexmlParecerVoto extends LitElement {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ]);
 
-  private _isReordering = false;
+  private static readonly ALLOWED_EXTS = new Set(['.pdf', '.docx']);
 
-  private _setSuspendNotas(n: boolean) {
-    const editors = this._getTextEditors();
-    for (const ed of editors) {
-      if (!ed) continue;
-      if (typeof ed.suspendNotasRodape === 'function') ed.suspendNotasRodape(n);
-      else (ed as any).suspendNotas = n;
+  public getTextoVoto(): string {
+    if (this._ed?.getTexto) {
+      return this._ed.getTexto() ?? '';
+    }
+    return this._textoVoto ?? '';
+  }
+
+  public setTextoVoto(html: string = ''): void {
+    this._textoVoto = html ?? '';
+    if (!this._ed) return;
+
+    if (typeof this._ed.setTexto === 'function') {
+      this._ed.setTexto(html);
+    } else if (typeof this._ed.setContent === 'function') {
+      this._ed.setContent(html, this.getNotasRodape());
     }
   }
 
-  @state() private _nrScheduled = false;
-  @state() private notaRodapeInicioVoto = 1;
-
-  private scheduleRenumerarDentroDoVoto(): void {
-    if (this._isReordering) return;
-    if (this._nrScheduled) return;
-    this._nrScheduled = true;
-
-    queueMicrotask(async () => {
-      this._nrScheduled = false;
-      this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
-      await Promise.resolve();
-      await new Promise(requestAnimationFrame);
-      await this._syncModeloComEditors();
-    });
-  }
-  private async _syncModeloComEditors(): Promise<void> {
-    await this.updateComplete;
-
-    const editors = Array.from(
-      this.querySelectorAll<
-        HTMLElement & {
-          getHtml?: () => string;
-          getTexto?: () => string;
-          getNotasRodape?: () => NotaRodape[];
-          texto?: string;
-        }
-      >('lexml-ui-editor-texto-rico'),
-    );
-
-    const arr = [...this.itens];
-    let textIndex = 0;
-
-    for (let i = 0; i < arr.length; i++) {
-      const it = arr[i];
-      if (!it.documento) {
-        const ed = editors[textIndex++];
-        if (ed) {
-          const html =
-            typeof ed.getHtml === 'function'
-              ? ed.getHtml()
-              : typeof ed.getTexto === 'function'
-                ? ed.getTexto()
-                : (ed.texto ?? '');
-
-          const notas = ed.getNotasRodape?.() ?? [];
-          arr[i] = { ...it, texto: String(html ?? ''), notasRodape: notas };
-        }
-      }
-    }
-
-    this.itens = arr;
+  private _onTextoChange = () => {
+    this._textoVoto = this.getTextoVoto();
     this.emitChange();
+  };
+
+  public getNotasRodape(): NotaRodape[] {
+    return this._ed?.getNotasRodape?.() ?? [];
   }
 
-  private _renumerarNotasEncadeadas(base: number): void {
-    const editors = Array.from(
-      this.querySelectorAll<HTMLElement>('lexml-ui-editor-texto-rico'),
-    ) as any[];
-
-    let corrente = base;
-    for (const ed of editors) {
-      ed?.setNotaRodapeInicio?.(corrente);
-      const qtd = ed?.getQuantidadeNotasRodape?.() ?? 0;
-      corrente += qtd;
+  public setNotasRodape(notas: NotaRodape[] = []): void {
+    if (!this._ed) return;
+    if (typeof this._ed.setNotasRodape === 'function') {
+      this._ed.setNotasRodape(notas);
+    } else if (typeof this._ed.setContent === 'function') {
+      this._ed.setContent(this.getTextoVoto(), notas);
     }
-  }
-
-  public flushNotasRodape(): void {
-    const editors = Array.from(
-      this.querySelectorAll<
-        HTMLElement & { getNotasRodape?: () => NotaRodape[] }
-      >('lexml-ui-editor-texto-rico'),
-    );
-
-    let textIndex = 0;
-    const arr = [...this.itens];
-
-    for (let i = 0; i < arr.length; i++) {
-      const it = arr[i];
-      if (!it.documento) {
-        const ed = editors[textIndex++];
-        if (ed) {
-          const notas = ed.getNotasRodape?.() ?? [];
-          arr[i] = { ...it, notasRodape: notas };
-        }
-      }
-    }
-    this.itens = arr;
-    this.emitChange();
   }
 
   public setNotaRodapeInicio(base: number): void {
-    const inicio = Number.isFinite(base) && base > 0 ? Math.floor(base) : 1;
-    this.notaRodapeInicioVoto = inicio;
-    this.scheduleRenumerarDentroDoVoto();
+    const n = Number.isFinite(base) && base > 0 ? Math.floor(base) : 1;
+    this._ed?.setNotaRodapeInicio?.(n);
   }
 
   public getQuantidadeNotasRodape(): number {
-    const editors = Array.from(
-      this.querySelectorAll<HTMLElement>('lexml-ui-editor-texto-rico'),
-    ) as any[];
-    return editors.reduce(
-      (sum, ed) => sum + (ed?.getQuantidadeNotasRodape?.() ?? 0),
-      0,
-    );
+    return this._ed?.getQuantidadeNotasRodape?.() ?? 0;
   }
 
-  private _getTextEditors(): Array<any> {
-    const editors = Array.from(
-      this.querySelectorAll<HTMLElement>('lexml-ui-editor-texto-rico'),
-    ) as any[];
-    return editors;
-  }
   private _usuarioRevisao?: Usuario;
   private _applyUsuarioTries = 0;
 
   public setUsuarioRevisaoVoto(usuario: Usuario): void {
     this._usuarioRevisao = usuario;
-    this._applyUsuarioToEditors();
+    this._applyUsuarioToEditor();
   }
 
-  private _applyUsuarioToEditors(): void {
-    if (!this._usuarioRevisao) return;
+  private _applyUsuarioToEditor(): void {
+    if (!this._usuarioRevisao || !this._ed) return;
 
-    const editors = this._getTextEditors();
-    let appliedToAll = true;
-
-    for (const ed of editors) {
-      if (!ed) continue;
-
-      if (typeof ed.setUsuarioRevisao === 'function') {
-        ed.setUsuarioRevisao(this._usuarioRevisao);
-        continue;
-      }
-
-      if (!(ed as any)?.quill?.revisao) {
-        appliedToAll = false;
-        continue;
-      }
-
-      (ed as any).quill.revisao.usuario =
-        this._usuarioRevisao?.nome || 'Anônimo';
-      (ed as any).quill.revisao.usuarioId = this._usuarioRevisao?.id;
-      (ed as any).quill.revisao.usuarioSigla = this._usuarioRevisao?.sigla;
-      (ed as any).quill.revisao.usuarioObj = this._usuarioRevisao;
+    const ed: any = this._ed;
+    if (typeof ed.setUsuarioRevisao === 'function') {
+      ed.setUsuarioRevisao(this._usuarioRevisao);
+      return;
     }
 
-    if (!appliedToAll && this._applyUsuarioTries < 20) {
-      this._applyUsuarioTries++;
-      setTimeout(() => this._applyUsuarioToEditors(), 50);
-    } else if (appliedToAll) {
-      this._applyUsuarioTries = 0;
+    if (!ed.quill?.revisao) {
+      if (this._applyUsuarioTries < 20) {
+        this._applyUsuarioTries++;
+        setTimeout(() => this._applyUsuarioToEditor(), 50);
+      }
+      return;
     }
+
+    ed.quill.revisao.usuario = this._usuarioRevisao?.nome || 'Anônimo';
+    ed.quill.revisao.usuarioId = this._usuarioRevisao?.id;
+    ed.quill.revisao.usuarioSigla = this._usuarioRevisao?.sigla;
+    ed.quill.revisao.usuarioObj = this._usuarioRevisao;
+    this._applyUsuarioTries = 0;
   }
 
   public setEmRevisaoVoto(on: boolean): void {
-    const editors = this._getTextEditors();
-    for (const ed of editors) {
-      if (!ed) continue;
-      if (typeof ed.updateRevisionStatus === 'function') {
-        ed.updateRevisionStatus(!!on);
-      } else if (ed.quill?.revisao) {
-        ed.quill.revisao.emRevisao = !!on;
-        if (on) {
-          const txtAtual =
-            (typeof ed.getTexto === 'function' ? ed.getTexto() : ed.texto) ??
-            '';
-          ed.quill.revisao.textoAntesRevisao = txtAtual;
-        }
+    const ed: any = this._ed;
+    if (!ed) return;
+
+    if (typeof ed.updateRevisionStatus === 'function') {
+      ed.updateRevisionStatus(!!on);
+      return;
+    }
+
+    if (ed.quill?.revisao) {
+      ed.quill.revisao.emRevisao = !!on;
+      if (on) {
+        const txtAtual =
+          (typeof ed.getTexto === 'function' ? ed.getTexto() : ed.texto) ?? '';
+        ed.quill.revisao.textoAntesRevisao = txtAtual;
       }
     }
   }
 
   public aceitarTodasRevisoesVoto(): void {
-    const editors = this._getTextEditors();
-    for (const ed of editors) {
-      if (!ed) continue;
-      if (typeof ed.aceitarRevisoes === 'function') ed.aceitarRevisoes();
-      else ed.quill?.revisao?.revisarTodos?.(true);
+    const ed: any = this._ed;
+    if (!ed) return;
+
+    if (typeof ed.aceitarRevisoes === 'function') {
+      ed.aceitarRevisoes();
+    } else {
+      ed.quill?.revisao?.revisarTodos?.(true);
     }
   }
 
   public rejeitarTodasRevisoesVoto(): void {
-    const editors = this._getTextEditors();
-    for (const ed of editors) {
-      if (!ed) continue;
-      if (typeof ed.rejeitarRevisoes === 'function') ed.rejeitarRevisoes();
-      else ed.quill?.revisao?.revisarTodos?.(false);
+    const ed: any = this._ed;
+    if (!ed) return;
+
+    if (typeof ed.rejeitarRevisoes === 'function') {
+      ed.rejeitarRevisoes();
+    } else {
+      ed.quill?.revisao?.revisarTodos?.(false);
     }
   }
+
   public getQuantidadeRevisoesVoto(): number {
-    const editors = this._getTextEditors();
-    let total = 0;
-    for (const ed of editors) {
-      const q =
-        typeof ed.getQuantidadeDeRevisoes === 'function'
-          ? (ed.getQuantidadeDeRevisoes() ?? 0)
-          : (ed.quill?.revisao?.quantidade ?? 0);
-      total += Number(q) || 0;
+    const ed: any = this._ed;
+    if (!ed) return 0;
+
+    if (typeof ed.getQuantidadeDeRevisoes === 'function') {
+      return ed.getQuantidadeDeRevisoes() ?? 0;
     }
-    return total;
+    return ed.quill?.revisao?.quantidade ?? 0;
   }
 
-  public getRevisoesVoto(): RevisaoVoto | null {
-    const total = this.getQuantidadeRevisoesVoto();
-    if (total <= 0) return null;
-
-    const itensTexto: RevisaoTextoItemVoto[] = [];
-    const editors = this._getTextEditors();
-    let textIndex = 0;
-
-    for (const it of this.itens) {
-      if (it.documento) continue;
-      const pos = it.posicao ?? textIndex + 1;
-      const ed = editors[textIndex++];
-      if (!ed) continue;
-
-      const revisoesEd =
-        typeof ed.getRevisoes === 'function' ? (ed.getRevisoes() ?? []) : [];
-
-      for (const r of revisoesEd) {
-        const usuario = r?.usuario;
-
-        itensTexto.push(
-          new RevisaoTextoItemVoto(
-            usuario,
-            r?.dataHora ?? new Date().toISOString(),
-            `Item de voto na posição ${pos} alterado`,
-            pos,
-          ),
-        );
-      }
-    }
-
-    if (itensTexto.length === 0) return null;
-
-    const usuarioCabecalho = new Usuario('', '', '');
-
-    return new RevisaoVoto(
-      usuarioCabecalho,
-      new Date().toISOString(),
-      `Voto alterado`,
-      itensTexto,
+  public getRevisoes(): RevisaoVoto[] {
+    const base = (this._ed as any)?.getRevisoes?.() ?? [];
+    return base.map(
+      (r: any) =>
+        new RevisaoVoto(
+          new Usuario(r.usuario?.nome, r.usuario?.id, r.usuario?.sigla),
+          r.dataHora,
+          'Voto alterado',
+        ),
     );
   }
-  private async _ensureRevisionOnEditorsWithMarks(): Promise<void> {
-    await this.updateComplete;
-    const editors = this._getTextEditors();
-    for (const ed of editors) {
-      try {
-        const qtd =
-          typeof ed.getRevisoes === 'function'
-            ? (ed.getRevisoes()?.length ?? 0)
-            : (ed.querySelector?.('.added, .removed')?.length ?? 0);
 
-        if (qtd > 0) {
-          if (typeof ed.updateRevisionStatus === 'function') {
-            ed.updateRevisionStatus(true);
-          } else if (ed.quill?.revisao) {
-            ed.quill.revisao.emRevisao = true;
-          }
-          const sw = ed.querySelector?.('lexml-ui-switch-revisao') as any;
-          sw?.setChecked?.(true);
-        }
-      } catch {
-        /*
-         */
-      }
-    }
+  public isEmRevisao(): boolean {
+    return !!(this._ed as any)?.quill?.revisao?.emRevisao;
   }
 
-  private static readonly ALLOWED_EXTS = new Set(['.pdf', '.docx']);
+  public getAnexos(): AnexoParecer[] {
+    return this.anexos.map(a => ({
+      nomeArquivo: a.nomeArquivo ?? '',
+      nomeDocumento: (a.nomeDocumento ?? a.nomeArquivo ?? '').trim(),
+      idArquivo: a.idArquivo ?? '',
+      tipo: a.tipo,
+      mimeType: a.mimeType,
+    }));
+  }
+
+  public async setAnexos(anexos?: AnexoParecer[] | null): Promise<void> {
+    const orig = Array.isArray(anexos) ? anexos : [];
+    this.anexos = orig.map(a => ({
+      ...a,
+      nomeDocumento: (a as any).nomeDocumento ?? a.nomeArquivo ?? '',
+      _uid: this.uid(),
+    }));
+    await this.updateComplete;
+    this.emitChange();
+  }
 
   private isAllowedFile(file: File): boolean {
     const hasGoodMime =
@@ -339,692 +258,28 @@ export class LexmlParecerVoto extends LitElement {
     return hasGoodMime || hasGoodExt;
   }
 
-  private async onFilePicked(idx: number, e: InputEvent): Promise<void> {
-    const input = e.target as HTMLInputElement;
-    const file = input.files?.[0] ?? null;
-
-    const arr = [...this.itens];
-    const atual = arr[idx];
-    const docAntigo = atual.documento as AnexoParecerRuntime | undefined;
-
-    if (!file) {
-      const novoDocVazio: AnexoParecerRuntime = {
-        ...(docAntigo ?? {}),
-        nomeArquivo: docAntigo?.nomeArquivo ?? '',
-        base64: '',
-        arquivo: null,
-        url: null,
-      };
-      arr[idx] = { ...atual, documento: novoDocVazio };
-      this.itens = arr;
-      this.emitChange();
-      return;
-    }
-
-    if (!this.isAllowedFile(file)) {
-      input.value = '';
-      const novoDocVazio: AnexoParecerRuntime = {
-        ...(docAntigo ?? {}),
-        nomeArquivo: docAntigo?.nomeArquivo ?? '',
-        base64: '',
-        arquivo: null,
-        url: null,
-      };
-      arr[idx] = { ...atual, documento: novoDocVazio };
-      this.itens = arr;
-      this.emitChange();
-
-      this.dispatchEvent(
-        new CustomEvent('file-invalid', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            reason: 'INVALID_TYPE',
-            allowed: ['PDF', 'DOCX'],
-            fileName: file.name,
-            fileType: file.type || 'unknown',
-          },
-        }),
-      );
-      alertarInfo('Arquivo inválido. Envie apenas PDF ou DOCX.');
-      return;
-    }
-
-    const base64 = await this.fileToBase64(file);
-
-    const novoDoc: AnexoParecerRuntime = {
-      ...(docAntigo ?? {}),
-      nomeArquivo:
-        docAntigo?.nomeArquivo && docAntigo.nomeArquivo.trim() !== ''
-          ? docAntigo.nomeArquivo
-          : file.name,
-      base64,
-      arquivo: file,
-      url: null,
-    };
-
-    arr[idx] = { ...atual, documento: novoDoc };
-    this.itens = arr;
-    this.emitChange();
-  }
-
-  public getVoto(): Voto {
-    this.flushNotasRodape();
-    this.pullTiposFromDom();
-    const voto: Voto = {
-      itensVoto: this.sanitizeItens(),
-    };
-    return voto;
-  }
-
-  public async setVoto(voto?: Voto | null): Promise<void> {
-    this._applyUsuarioTries = 0;
-    const orig = Array.isArray(voto?.itensVoto) ? voto!.itensVoto : [];
-
-    const ordenados = [...orig].sort((a, b) => {
-      const pa = Number.isFinite(a.posicao as number)
-        ? (a.posicao as number)
-        : Number.POSITIVE_INFINITY;
-      const pb = Number.isFinite(b.posicao as number)
-        ? (b.posicao as number)
-        : Number.POSITIVE_INFINITY;
-      return pa - pb;
-    });
-
-    const itensRuntime = ordenados.map((it, i) => {
-      const doc = it.documento
-        ? {
-            ...it.documento,
-            tipo: this.normalizeTipo((it.documento as any).tipo),
-          }
-        : undefined;
-
-      return {
-        ...it,
-        documento: doc,
-        posicao: Number.isFinite(it.posicao as number)
-          ? (it.posicao as number)
-          : i + 1,
-        _uid: this.uid(),
-        notasRodape: it.notasRodape ?? [],
-      };
-    });
-
-    this.itens = itensRuntime;
-    await this.updateComplete;
-    await this.syncSelectValues();
-    await this.syncTextEditorsContent();
-    for (let i = 0; i < this.itens.length; i++) {
-      const d: any = this.itens[i]?.documento;
-      if (d?.base64 && d?.nomeArquivo && !d?.arquivo) {
-        await this.setNativeFileInputFromModel(i);
-      }
-    }
-    this.emitChange();
-    this.scheduleRenumerarDentroDoVoto();
-    this._applyUsuarioToEditors();
-    await this._ensureRevisionOnEditorsWithMarks();
-  }
-
-  public async setItensVoto(itens: ItemVoto[] = []): Promise<void> {
-    const ordenados = [...itens].sort((a, b) => {
-      const pa = Number.isFinite(a.posicao as number)
-        ? (a.posicao as number)
-        : Number.POSITIVE_INFINITY;
-      const pb = Number.isFinite(b.posicao as number)
-        ? (b.posicao as number)
-        : Number.POSITIVE_INFINITY;
-      return pa - pb;
-    });
-
-    this.itens = ordenados.map((it, i) => {
-      const doc = it.documento
-        ? {
-            ...it.documento,
-            tipo: this.normalizeTipo((it.documento as any).tipo),
-          }
-        : undefined;
-
-      return {
-        ...it,
-        documento: doc,
-        posicao: i + 1,
-        _uid: this.uid(),
-      };
-    });
-
-    await this.updateComplete;
-    await this.syncSelectValues();
-    await this.syncTextEditorsContent();
-    this.emitChange();
-    this.scheduleRenumerarDentroDoVoto();
-    await this._ensureRevisionOnEditorsWithMarks();
-  }
-
-  private async syncSelectValues() {
-    await this.updateComplete;
-    const cards = Array.from(
-      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
-    );
-
-    cards.forEach((card, index) => {
-      const item = this.itens[index];
-      const tipo = (item?.documento as any)?.tipo ?? '';
-      if (!tipo) return;
-
-      const sel = card.querySelector('wa-select') as any;
-      if (sel && sel.value !== tipo) {
-        sel.value = tipo;
-        sel.requestUpdate?.();
-      }
-    });
-  }
-
-  private async syncTextEditorsContent(): Promise<void> {
-    await this.updateComplete;
-    const editors = Array.from(
-      this.querySelectorAll<
-        HTMLElement & {
-          setContent?: (html: string, notas?: NotaRodape[]) => void;
-        }
-      >('lexml-ui-editor-texto-rico'),
-    );
-
-    let textIndex = 0;
-    for (let i = 0; i < this.itens.length; i++) {
-      const it = this.itens[i];
-      if (!it.documento) {
-        const ed = editors[textIndex++];
-        if (ed?.setContent) {
-          ed.setContent(it.texto ?? '', it.notasRodape ?? []);
-        }
-      }
-    }
-    this._applyUsuarioToEditors();
-  }
-
-  public async clearVoto(): Promise<void> {
-    this.itens = [];
-    await this.updateComplete;
-    this.emitChange();
-  }
-
-  protected render(): TemplateResult {
-    return html`
-      <style>
-        .toolbar {
-          display: flex;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-          margin-top: 1rem;
-          justify-content: center;
-        }
-        button {
-          border: 1px solid #d0d7de;
-          background: #fff;
-          padding: 0.5rem 0.75rem;
-          border-radius: 0.5rem;
-          cursor: pointer;
-        }
-        button:hover {
-          background: #f6f8fa;
-        }
-        wa-card {
-          margin-bottom: 0.75rem;
-          box-shadow: var(--wa-shadow-m);
-          border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
-          border-radius: var(--wa-border-radius-s);
-        }
-        wa-card.card-header {
-          transition: box-shadow 0.2s ease;
-        }
-        .reorder-anim {
-          will-change: transform;
-        }
-        .caret {
-          transition: transform 0.16s ease;
-        }
-        .meta {
-          color: #6b7280;
-          font-size: 0.9em;
-        }
-        .chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.35rem;
-          font-size: 0.85em;
-          padding: 0.2rem 0.5rem;
-          border: 1px solid #e5e7eb;
-          border-radius: 999px;
-          background: #f9fafb;
-        }
-        .filed-header {
-          display: flex;
-          justify-content: space-between;
-        }
-        .item-actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-        .file-actions {
-          display: inline-flex;
-          gap: 0.5rem;
-        }
-        .muted {
-          display: flex;
-          color: #9ca3af;
-          margin-bottom: 2rem;
-          justify-content: center;
-        }
-        .card-header .wa-grid {
-          align-items: end;
-        }
-        .field-file {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .input-file {
-          width: 100%;
-          margin-right: 0.5em;
-          border-color: var(--wa-form-control-border-color);
-          border-radius: var(--wa-form-control-border-radius);
-          border-style: var(--wa-form-control-border-style);
-          border-width: var(--wa-form-control-border-width);
-          color: var(--wa-form-control-value-color);
-        }
-        .input-file input {
-          width: 100%;
-        }
-      </style>
-      ${this.itens.length === 0
-        ? html`<div class="muted">Nenhum voto adicionado ainda.</div>`
-        : repeat(
-            this.itens,
-            it => it._uid,
-            (item, idx) => this.renderItem(item, idx),
-          )}
-      <div class="toolbar">
-        <wa-button size="small" @click=${this.addDocumento}
-          >Importar anexo</wa-button
-        >
-        <wa-button size="small" variant="brand" @click=${this.addTexto}
-          >Adicionar texto</wa-button
-        >
-      </div>
-    `;
-  }
-
-  private renderItem(item: ItemVotoRuntime, idx: number): TemplateResult {
-    const header = item.documento ? 'Anexo' : 'Texto';
-
-    return html`
-      <wa-card with-header class="card-header" data-uid=${item._uid}>
-        <div slot="header" class="filed-header">
-          <div>
-            <span class="chip">#${item.posicao}</span>
-            <span>— ${header}</span>
-          </div>
-          <div class="item-actions">
-            <div class="item-actions">
-              <wa-button
-                title="Mover para cima"
-                appearance="outlined"
-                pill
-                size="small"
-                @click=${(e: Event) => this.moveByEvent(e, -1)}
-              >
-                <wa-icon
-                  name="arrow-up"
-                  variant="solid"
-                  label="Mover para cima"
-                ></wa-icon>
-              </wa-button>
-              <wa-button
-                title="Mover para baixo"
-                appearance="outlined"
-                pill
-                size="small"
-                @click=${(e: Event) => this.moveByEvent(e, 1)}
-              >
-                <wa-icon
-                  name="arrow-down"
-                  variant="solid"
-                  label="Mover para baixo"
-                ></wa-icon>
-              </wa-button>
-              <wa-button
-                title="Excluir item"
-                pill
-                size="small"
-                variant="danger"
-                @click=${(e: Event) => this.removeByEvent(e)}
-              >
-                <wa-icon
-                  name="trash"
-                  variant="solid"
-                  label="Excluir item"
-                ></wa-icon>
-              </wa-button>
-            </div>
-          </div>
-        </div>
-        ${item.documento
-          ? this.renderDocumento(item, idx)
-          : this.renderTexto(item)}
-      </wa-card>
-    `;
-  }
-
-  private renderTexto(item: ItemVoto): TemplateResult {
-    return html`
-      <div class="wa-grid" style="--min-column-size: 16rem;">
-        <div class="wa-span-grid">
-          <lexml-ui-editor-texto-rico
-            height="350"
-            orientacaoNotaRodaPe="abaixo"
-            .texto=${item.texto ?? ''}
-            @onchange=${(e: Event) => this.onEditorChangeByEvent(e)}
-          ></lexml-ui-editor-texto-rico>
-        </div>
-      </div>
-    `;
-  }
-
-  private renderDocumento(item: ItemVoto, idx: number): TemplateResult {
-    const doc = item.documento!;
-    const hasFile = Boolean(doc?.base64 && doc.base64.trim() !== '');
-    return html`
-      <div class="wa-grid" style="--min-column-size: 48rem;">
-        <div>
-          <wa-select
-            label="Tipo"
-            placeholder="Selecione o tipo"
-            .value=${(doc.tipo as TipoDocumento) ?? ''}
-            @wa-change=${(e: Event) => this.onTipoChange(idx, e)}
-            @change=${(e: Event) => this.onTipoChange(idx, e)}
-          >
-            <wa-option value="" label="Selecione…">Selecione…</wa-option>
-            <wa-option
-              value=${TipoDocumento.SUBSTITUTIVO}
-              ?selected=${doc.tipo === TipoDocumento.SUBSTITUTIVO}
-            >
-              ${TipoDocumentoLabel[TipoDocumento.SUBSTITUTIVO]}
-            </wa-option>
-            <wa-option
-              value=${TipoDocumento.EMENDA}
-              ?selected=${doc.tipo === TipoDocumento.EMENDA}
-            >
-              ${TipoDocumentoLabel[TipoDocumento.EMENDA]}
-            </wa-option>
-            <wa-option
-              value=${TipoDocumento.OUTRO}
-              ?selected=${doc.tipo === TipoDocumento.OUTRO}
-            >
-              ${TipoDocumentoLabel[TipoDocumento.OUTRO]}
-            </wa-option>
-          </wa-select>
-        </div>
-        <div>
-          <div>
-            <wa-input
-              label="Nome"
-              type="text"
-              .value=${doc.nomeArquivo ?? ''}
-              placeholder="Nome do documento"
-              @wa-input=${(e: CustomEvent) =>
-                this.updateDocField(
-                  idx,
-                  'nomeArquivo',
-                  (e.target as any).value,
-                )}
-              @input=${(e: Event) =>
-                this.updateDocField(
-                  idx,
-                  'nomeArquivo',
-                  (e.target as HTMLInputElement).value,
-                )}
-            ></wa-input>
-          </div>
-        </div>
-        <div>
-          <div><label>Arquivo</label></div>
-          <div class="field-file">
-            <div class="input-file">
-              <input
-                type="file"
-                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                @change=${(e: Event) => this.onFilePicked(idx, e as InputEvent)}
-              />
-            </div>
-            <div class="file-actions">
-              <wa-button
-                title="Visualizar Documento"
-                appearance="outlined"
-                pill
-                ?disabled=${!hasFile}
-                size="small"
-                @click=${() => this.view(idx)}
-              >
-                <wa-icon
-                  name="eye"
-                  variant="solid"
-                  label="Visualizar Documento"
-                ></wa-icon>
-              </wa-button>
-              <wa-button
-                title="Baixar Documento"
-                appearance="outlined"
-                pill
-                ?disabled=${!hasFile}
-                size="small"
-                variant="brand"
-                @click=${() => this.download(idx)}
-              >
-                <wa-icon
-                  name="download"
-                  variant="solid"
-                  label="Baixar Documento"
-                ></wa-icon>
-              </wa-button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  private guessMime(name: string): string {
+  private guessMime(name: string): MimeType {
     const n = (name || '').toLowerCase();
-    if (n.endsWith('.pdf')) return 'application/pdf';
-    if (n.endsWith('.docx'))
-      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    return 'application/octet-stream';
+    if (n.endsWith('.pdf')) return MimeType.PDF;
+    if (n.endsWith('.docx')) return MimeType.DOCX;
+    return MimeType.PDF;
   }
 
-  /** Converte base64 -> Blob com o mime informado. */
-  private base64ToBlob(base64: string, mime: string): Blob {
-    const byteStr = atob(base64);
-    const len = byteStr.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) bytes[i] = byteStr.charCodeAt(i);
-    return new Blob([bytes], { type: mime });
-  }
+  private async removeItem(idx: number) {
+    const item = this.anexos[idx];
+    if (!item) return;
 
-  private async setNativeFileInputFromModel(idx: number): Promise<void> {
-    await this.updateComplete;
+    try {
+      if (item.idArquivo) {
+        await this.deleteAnexoOnServer(item.idArquivo);
+      }
 
-    const cards = Array.from(
-      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
-    );
-    const card = cards[idx];
-    if (!card) return;
-
-    const input = card.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement | null;
-    if (!input) return;
-
-    const item = this.itens[idx];
-    const doc: any = item?.documento;
-    if (!doc || !doc.base64 || !doc.nomeArquivo || doc.arquivo) return;
-
-    const mime = this.guessMime(String(doc.nomeArquivo));
-    const blob = this.base64ToBlob(String(doc.base64), mime);
-    const file = new File([blob], String(doc.nomeArquivo), { type: mime });
-
-    doc.arquivo = file;
-
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    input.files = dt.files;
-  }
-
-  private onEditorChange(idx: number, e: Event) {
-    const ed = (e.target as any) ?? (e.currentTarget as any);
-
-    const html =
-      typeof ed?.getHtml === 'function'
-        ? ed.getHtml()
-        : typeof ed?.getTexto === 'function'
-          ? ed.getTexto()
-          : (ed?.texto ?? '');
-
-    const notas: NotaRodape[] =
-      typeof ed?.getNotasRodape === 'function'
-        ? (ed.getNotasRodape() ?? [])
-        : [];
-
-    const arr = [...this.itens];
-    arr[idx] = { ...arr[idx], texto: String(html ?? ''), notasRodape: notas };
-    this.itens = arr;
-    this.emitChange();
-    this.scheduleRenumerarDentroDoVoto();
-  }
-
-  private onEditorChangeByEvent(e: Event) {
-    const idx = this.findIdxFromEvent(e);
-    if (idx < 0) return;
-    this.onEditorChange(idx, e);
-  }
-
-  private view(idx: number) {
-    const doc = this.itens[idx].documento as AnexoParecerRuntime | undefined;
-    if (!doc) return;
-
-    const name = (doc.nomeArquivo ?? '').toLowerCase();
-
-    const isDocx =
-      name.endsWith('.docx') ||
-      doc.arquivo?.type ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-
-    if (isDocx) {
-      alertarInfo('Visualização de DOCX ainda não suportada.');
-      return;
-    }
-
-    const isPdf =
-      name.endsWith('.pdf') || doc.arquivo?.type === 'application/pdf';
-
-    if (!isPdf) {
-      alertarInfo('Visualização disponível apenas para PDFs.');
-      return;
-    }
-
-    let blob: Blob | null = null;
-    if (doc.arquivo) {
-      blob = doc.arquivo;
-    } else if (doc.base64) {
-      const byteCharacters = atob(doc.base64);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++)
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      const byteArray = new Uint8Array(byteNumbers);
-      blob = new Blob([byteArray], { type: 'application/pdf' });
-    }
-
-    if (!blob) {
-      alertarInfo('Arquivo não disponível para visualização.');
-      return;
-    }
-
-    const tempUrl = URL.createObjectURL(blob);
-    window.open(tempUrl, '_blank', 'noopener');
-    setTimeout(() => URL.revokeObjectURL(tempUrl), 60_000);
-  }
-
-  private addDocumento = () => {
-    this.itens = [
-      ...this.itens,
-      {
-        _uid: this.uid(),
-        documento: {
-          tipo: undefined,
-          nomeArquivo: '',
-          base64: '',
-          arquivo: null,
-          url: null,
-        } as AnexoParecerRuntime,
-        posicao: this.itens.length + 1,
-      },
-    ];
-    this.emitChange();
-    this.scheduleRenumerarDentroDoVoto();
-  };
-
-  private addTexto = () => {
-    this.itens = [
-      ...this.itens,
-      {
-        _uid: this.uid(),
-        texto: '',
-        notasRodape: [],
-        posicao: this.itens.length + 1,
-      },
-    ];
-    this.emitChange();
-    this.scheduleRenumerarDentroDoVoto();
-    queueMicrotask(async () => {
-      await this.updateComplete;
-      this._applyUsuarioToEditors();
-    });
-  };
-
-  private removeItem(idx: number) {
-    this.itens = this.itens
-      .filter((_, i) => i !== idx)
-      .map((it, i) => ({ ...it, posicao: i + 1 }));
-    this.emitChange();
-    this.scheduleRenumerarDentroDoVoto();
-  }
-
-  private async move(idx: number, delta: number) {
-    const to = idx + delta;
-    if (to < 0 || to >= this.itens.length) return;
-
-    this._isReordering = true;
-    this._setSuspendNotas(true);
-
-    await this.animateReorder(() => {
-      const arr = [...this.itens];
-      const [item] = arr.splice(idx, 1);
-      arr.splice(to, 0, item);
-      this.itens = arr.map((it, i) => ({ ...it, posicao: i + 1 }));
+      this.anexos = this.anexos.filter((_, i) => i !== idx);
       this.emitChange();
-    });
-
-    await this.updateComplete;
-
-    this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
-    await new Promise(requestAnimationFrame);
-    await this._syncModeloComEditors();
-
-    this._setSuspendNotas(false);
-    this._isReordering = false;
-
-    this._renumerarNotasEncadeadas(this.notaRodapeInicioVoto);
-    this.scheduleRenumerarDentroDoVoto();
+    } catch (err) {
+      console.error('[lexml-parecer-voto] Erro ao excluir anexo:', err);
+      alertarInfo('Não foi possível excluir o anexo. Tente novamente.');
+    }
   }
 
   private findIdxFromEvent(e: Event): number {
@@ -1032,13 +287,7 @@ export class LexmlParecerVoto extends LitElement {
       'wa-card.card-header',
     ) as HTMLElement | null;
     const uid = card?.dataset.uid;
-    return uid ? this.itens.findIndex(it => it._uid === uid) : -1;
-  }
-
-  private async moveByEvent(e: Event, delta: number) {
-    const idx = this.findIdxFromEvent(e);
-    if (idx < 0) return;
-    await this.move(idx, delta);
+    return uid ? this.anexos.findIndex(it => it._uid === uid) : -1;
   }
 
   private removeByEvent(e: Event) {
@@ -1047,192 +296,76 @@ export class LexmlParecerVoto extends LitElement {
     this.removeItem(idx);
   }
 
-  private updateTexto(idx: number, value: string) {
-    const arr = [...this.itens];
-    arr[idx] = { ...arr[idx], texto: value };
-    this.itens = arr;
-    this.emitChange();
-  }
+  private async move(idx: number, delta: number) {
+    const to = idx + delta;
+    if (to < 0 || to >= this.anexos.length) return;
 
-  private pullTiposFromDom(): void {
-    const cards = Array.from(
-      this.querySelectorAll<HTMLElement>('wa-card.card-header'),
-    );
-
-    const arr = [...this.itens];
-    cards.forEach((card, index) => {
-      const sel = card.querySelector('wa-select') as any;
-      if (!sel) return;
-
-      const raw =
-        sel?.value ??
-        sel?.getAttribute?.('value') ??
-        (sel as any)?.selected?.value ??
-        '';
-
-      const up = String(raw).trim().toUpperCase();
-      if (!up) return;
-
-      if (Object.values(TipoDocumento).includes(up as TipoDocumento)) {
-        const cur = arr[index];
-        if (cur?.documento) {
-          (cur.documento as any).tipo = up as TipoDocumento;
-        }
-      }
+    await this.animateReorder(() => {
+      const arr = [...this.anexos];
+      const [item] = arr.splice(idx, 1);
+      arr.splice(to, 0, item);
+      this.anexos = arr;
+      this.emitChange();
     });
-
-    this.itens = arr;
   }
 
-  private onTipoChange(idx: number, e: Event) {
-    const anyEvt = e as any;
-    if (!anyEvt?.isTrusted) return;
-
-    let sel: any = anyEvt.currentTarget;
-    if (!sel || sel.tagName?.toLowerCase() !== 'wa-select') {
-      const maybe = (anyEvt.target as HTMLElement)?.closest?.('wa-select');
-      if (maybe) sel = maybe;
-    }
-
-    const raw =
-      sel?.value ?? anyEvt?.detail?.value ?? sel?.getAttribute?.('value') ?? '';
-
-    const up = String(raw).trim().toUpperCase();
-    if (!up) return;
-
-    const valid = Object.values(TipoDocumento).includes(up as TipoDocumento);
-    if (!valid) return;
-
-    const atual = this.itens[idx]?.documento as any;
-    if (atual?.tipo === up) return;
-
-    this.updateDocField(idx, 'tipo', up as TipoDocumento);
-  }
-
-  private normalizeTipo(value: unknown): TipoDocumento | undefined {
-    const up = String(value ?? '')
-      .trim()
-      .toUpperCase();
-    return Object.values(TipoDocumento).includes(up as TipoDocumento)
-      ? (up as TipoDocumento)
-      : undefined;
+  private async moveByEvent(e: Event, delta: number) {
+    const idx = this.findIdxFromEvent(e);
+    if (idx < 0) return;
+    await this.move(idx, delta);
   }
 
   private updateDocField(
     idx: number,
     field: keyof AnexoParecer,
-    value: string | TipoDocumento,
+    value: string | TipoDocumento | MimeType,
   ) {
-    const arr = [...this.itens];
+    const arr = [...this.anexos];
     const atual = arr[idx];
-    const doc = {
-      ...(atual.documento ?? {}),
+    arr[idx] = {
+      ...atual,
       [field]: value,
     } as AnexoParecerRuntime;
-    arr[idx] = { ...atual, documento: doc };
-    this.itens = arr;
+    this.anexos = arr;
     this.emitChange();
   }
 
-  private download(idx: number) {
-    const doc = this.itens[idx].documento as AnexoParecerRuntime | undefined;
-    if (!doc) return;
-
-    const name = doc.nomeArquivo || 'documento';
-    let mime = 'application/pdf';
-    if (
-      name.toLowerCase().endsWith('.docx') ||
-      doc.arquivo?.type ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ) {
-      mime =
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    }
-
-    let blob: Blob | null = null;
-    if (doc.arquivo) {
-      const blobFromFile = doc.arquivo;
-      blob =
-        blobFromFile.type === mime
-          ? blobFromFile
-          : new Blob([blobFromFile], { type: mime });
-    } else if (doc.base64) {
-      const byteCharacters = atob(doc.base64);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++)
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      const byteArray = new Uint8Array(byteNumbers);
-      blob = new Blob([byteArray], { type: mime });
-    }
-
-    if (!blob) {
-      alertarInfo('Arquivo não disponível para download.');
+  private async view(idx: number) {
+    const doc = this.anexos[idx];
+    if (!doc?.idArquivo) {
+      alertarInfo('Nenhum arquivo anexado ainda.');
       return;
     }
 
-    const tempUrl = URL.createObjectURL(blob);
+    if (doc.mimeType !== MimeType.PDF) {
+      alertarInfo('Visualização disponível apenas para PDFs.');
+      return;
+    }
+
+    const { blob } = await this.getAnexoBlob(doc.idArquivo);
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank', 'noopener');
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  }
+
+  private async download(idx: number) {
+    const doc = this.anexos[idx];
+    if (!doc?.idArquivo) {
+      alertarInfo('Nenhum arquivo anexado ainda.');
+      return;
+    }
+
+    const { blob } = await this.getAnexoBlob(doc.idArquivo);
+
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = tempUrl;
-    a.download = name;
+    a.href = url;
+    a.download = doc.nomeArquivo || doc.idArquivo;
     a.click();
-    URL.revokeObjectURL(tempUrl);
+    URL.revokeObjectURL(url);
   }
 
-  private sanitizeItens(): ItemVoto[] {
-    const purificados = this.itens.map(it => {
-      const rest = { ...(it as any) };
-      delete (rest as any)._uid;
-
-      const docRt = (rest.documento ?? null) as AnexoParecerRuntime | null;
-      const persistente: AnexoParecer | undefined = docRt
-        ? {
-            tipo: docRt.tipo,
-            nomeArquivo: docRt.nomeArquivo ?? '',
-            base64: docRt.base64 ?? '',
-          }
-        : undefined;
-
-      return {
-        ...rest,
-        documento: persistente,
-        notasRodape: rest.notasRodape ?? [],
-      } as ItemVoto;
-    });
-
-    return purificados.sort((a, b) => {
-      const pa = Number.isFinite(a.posicao as number)
-        ? (a.posicao as number)
-        : Number.MAX_SAFE_INTEGER;
-      const pb = Number.isFinite(b.posicao as number)
-        ? (b.posicao as number)
-        : Number.MAX_SAFE_INTEGER;
-      return pa - pb;
-    });
-  }
-
-  private emitChange() {
-    const detail: Voto = { itensVoto: this.sanitizeItens() };
-    this.dispatchEvent(
-      new CustomEvent<Voto>('voto-change', {
-        detail,
-        bubbles: true,
-        composed: true,
-      }),
-    );
-  }
-
-  private fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const fr = new FileReader();
-      fr.onload = () => {
-        const res = String(fr.result ?? '');
-        const comma = res.indexOf(',');
-        resolve(comma >= 0 ? res.slice(comma + 1) : res);
-      };
-      fr.onerror = () => reject(fr.error);
-      fr.readAsDataURL(file);
-    });
-  }
+  // ---------- ANIMAÇÕES  ----------
 
   private async animateReorder(reorderFn: () => void) {
     const cards = Array.from(
@@ -1280,8 +413,7 @@ export class LexmlParecerVoto extends LitElement {
         try {
           (el as HTMLElement).style.transform = 'none';
         } catch {
-          /*
-           */
+          console.log('erro ao gerar animação do itens de anexo');
         }
         el.classList.remove('reorder-anim');
       });
@@ -1290,6 +422,57 @@ export class LexmlParecerVoto extends LitElement {
     });
 
     await Promise.allSettled(animations.map(a => a.finished.catch(() => {})));
+  }
+
+  private getScrollContainer(): HTMLElement | Window {
+    return this.findScrollContainer(this);
+  }
+
+  private findScrollContainer(start: HTMLElement | null): HTMLElement | Window {
+    let el = start;
+
+    while (el) {
+      const st = getComputedStyle(el);
+      const oy = st.overflowY;
+
+      const isScrollable =
+        (oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight;
+
+      if (isScrollable) return el;
+
+      el = el.parentElement;
+    }
+
+    return window;
+  }
+
+  private async scrollToBottom(): Promise<void> {
+    await this.updateComplete;
+    await new Promise<void>(r => requestAnimationFrame(() => r()));
+
+    const sc = this.getScrollContainer();
+
+    if (sc === window) {
+      const doc = document.documentElement;
+      window.scrollTo({ top: doc.scrollHeight, behavior: 'smooth' });
+    } else {
+      const el = sc as HTMLElement;
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    }
+  }
+  // ---------- EMISSÃO DE EVENTO ----------
+
+  private emitChange() {
+    this.dispatchEvent(
+      new CustomEvent('voto-change', {
+        detail: {
+          texto: this.getTextoVoto(),
+          anexos: this.getAnexos(),
+        },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 
   connectedCallback(): void {
@@ -1301,7 +484,671 @@ export class LexmlParecerVoto extends LitElement {
     this.removeEventListener('rte:ready', this._onEditorReady as any);
     super.disconnectedCallback?.();
   }
+
   private _onEditorReady = () => {
-    this._applyUsuarioToEditors();
+    this._applyUsuarioToEditor();
+    if (this._textoVoto) {
+      this.setTextoVoto(this._textoVoto);
+    }
   };
+
+  private async uploadAnexoToServer(file: File): Promise<string> {
+    const endpoint = `${this.urlAnexo}`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text().catch(() => '');
+      console.error(
+        '[lexml-parecer-voto] Falha ao enviar anexo para o servidor:',
+        resp.status,
+        txt,
+      );
+      throw new Error('Falha ao enviar anexo para o servidor.');
+    }
+
+    const idArquivo = (await resp.text())?.trim();
+    if (!idArquivo) {
+      throw new Error(
+        'Servidor não retornou um idArquivo válido para o anexo.',
+      );
+    }
+
+    return idArquivo;
+  }
+
+  private async deleteAnexoOnServer(idArquivo: string): Promise<void> {
+    if (!idArquivo) {
+      return;
+    }
+
+    const endpoint = `${this.urlAnexo}${encodeURIComponent(idArquivo)}`;
+
+    const resp = await fetch(endpoint, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text().catch(() => '');
+      console.error(
+        '[lexml-parecer-voto] Falha ao excluir anexo no servidor:',
+        resp.status,
+        txt,
+      );
+      throw new Error('Falha ao excluir anexo no servidor.');
+    }
+  }
+
+  private async getAnexoBlob(
+    idArquivo: string,
+  ): Promise<{ blob: Blob; contentType: string | null }> {
+    const endpoint = `${this.urlAnexo}${encodeURIComponent(idArquivo)}`;
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers: { Accept: '*/*' },
+    });
+
+    if (!res.ok) {
+      const msg = await res.text().catch(() => '');
+      throw new Error(msg || `Falha ao buscar anexo (${res.status})`);
+    }
+
+    return {
+      blob: await res.blob(),
+      contentType: res.headers.get('content-type'),
+    };
+  }
+
+  // ---------- MODAL FLOW ----------
+
+  private openNewDialog = () => {
+    this.dialogMode = 'new';
+    this.dialogIdx = -1;
+
+    this.dialogTipo = '';
+    this.dialogNomeDocumento = '';
+    this.dialogFile = null;
+
+    this.dialogFileKey++;
+    this.dialogOpen = true;
+
+    queueMicrotask(() => this._dlg?.show?.());
+  };
+
+  private openReplaceDialog = (idx: number) => {
+    const item = this.anexos[idx];
+    if (!item) return;
+
+    this.dialogMode = 'replace';
+    this.dialogIdx = idx;
+
+    this.dialogTipo = (item.tipo ?? '') as any;
+    this.dialogNomeDocumento = (
+      item.nomeDocumento ??
+      item.nomeArquivo ??
+      ''
+    ).trim();
+    this.dialogFile = null;
+    this.dialogFileKey++;
+    this.dialogOpen = true;
+
+    queueMicrotask(() => this._dlg?.show?.());
+  };
+
+  private closeDialog = () => {
+    this.dialogOpen = false;
+    this.dialogFile = null;
+    this.dialogFileKey++;
+  };
+
+  private onDialogTipoChange = (e: any) => {
+    const value = String(e.detail?.value ?? e.target?.value ?? '').trim();
+    this.dialogTipo =
+      value && Object.values(TipoDocumento).includes(value as any)
+        ? (value as TipoDocumento)
+        : '';
+  };
+
+  private onDialogNomeInput = (e: Event) => {
+    const v =
+      (e.target as any)?.value ?? (e.target as HTMLInputElement)?.value ?? '';
+    this.dialogNomeDocumento = String(v);
+  };
+
+  private onDialogFilePicked = (e: Event) => {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    input.value = '';
+
+    if (!file) {
+      this.dialogFile = null;
+      return;
+    }
+
+    if (!this.isAllowedFile(file)) {
+      this.dialogFile = null;
+      alertarInfo('Arquivo inválido. Envie apenas PDF ou DOCX.');
+      return;
+    }
+
+    this.dialogFile = file;
+
+    if (!this.dialogNomeDocumento?.trim()) {
+      this.dialogNomeDocumento = this.fileBaseName(file.name);
+    }
+  };
+
+  private canConfirmDialog(): boolean {
+    if (this.uploading) return false;
+    if (!this.dialogFile) return false;
+    if (!this.dialogTipo) return false;
+    return true;
+  }
+
+  private async confirmDialogImport(): Promise<void> {
+    if (!this.canConfirmDialog()) return;
+
+    const file = this.dialogFile!;
+    const tipo = this.dialogTipo as TipoDocumento;
+    const mime = this.guessMime(file.name);
+
+    const excludeUid =
+      this.dialogMode === 'replace'
+        ? this.anexos[this.dialogIdx]?._uid
+        : undefined;
+
+    const uniqueNomeArquivo = this.makeUniqueNomeArquivo(file.name, excludeUid);
+
+    const originalBase = this.fileBaseName(file.name);
+    let nomeDocumento = (
+      this.dialogNomeDocumento?.trim() ||
+      originalBase ||
+      file.name
+    ).trim();
+
+    if (
+      !this.dialogNomeDocumento?.trim() ||
+      this.dialogNomeDocumento.trim() === originalBase
+    ) {
+      nomeDocumento = (
+        this.fileBaseName(uniqueNomeArquivo) || nomeDocumento
+      ).trim();
+    }
+
+    this.uploading = true;
+
+    try {
+      const newIdArquivo = await this.uploadAnexoToServer(file);
+
+      if (this.dialogMode === 'new') {
+        const novo: AnexoParecerRuntime = {
+          _uid: this.uid(),
+          idArquivo: newIdArquivo,
+          mimeType: mime,
+          tipo,
+          nomeArquivo: uniqueNomeArquivo,
+          nomeDocumento,
+        };
+
+        this.anexos = [...this.anexos, novo];
+        this.emitChange();
+        this.closeDialog();
+        queueMicrotask(() => this.scrollToBottom());
+        return;
+      }
+
+      // replace
+      const idx = this.dialogIdx;
+      const atual = this.anexos[idx];
+      if (!atual) {
+        this.closeDialog();
+        return;
+      }
+
+      const oldIdArquivo = atual.idArquivo ?? '';
+
+      const arr = [...this.anexos];
+      arr[idx] = {
+        ...atual,
+        idArquivo: newIdArquivo,
+        mimeType: mime,
+        nomeArquivo: uniqueNomeArquivo,
+        nomeDocumento,
+        tipo: atual.tipo ?? tipo,
+      };
+
+      this.anexos = arr;
+      this.emitChange();
+      this.closeDialog();
+
+      if (oldIdArquivo && oldIdArquivo !== newIdArquivo) {
+        await this.deleteAnexoOnServer(oldIdArquivo);
+      }
+    } catch (err) {
+      console.error('[lexml-parecer-voto] Erro ao enviar anexo:', err);
+      alertarInfo('Erro ao enviar anexo. Tente novamente mais tarde.');
+    } finally {
+      this.uploading = false;
+      this.dialogFile = null;
+      this.dialogFileKey++;
+    }
+  }
+
+  private onDialogHide = (event: any) => {
+    if (event.target !== this._dlg) return;
+
+    this.dialogOpen = false;
+    this.dialogFile = null;
+    this.dialogFileKey++;
+  };
+
+  private normalizeName(n: string): string {
+    return (n ?? '').trim().toLowerCase();
+  }
+
+  private splitFileName(name: string): { base: string; ext: string } {
+    const onlyName = (name ?? '').split(/[\\/]/).pop() ?? '';
+    const dot = onlyName.lastIndexOf('.');
+    if (dot > 0) {
+      return { base: onlyName.slice(0, dot), ext: onlyName.slice(dot) };
+    }
+    return { base: onlyName, ext: '' };
+  }
+
+  private isNomeArquivoTaken(nome: string, excludeUid?: string): boolean {
+    const key = this.normalizeName(nome);
+    if (!key) return false;
+
+    return this.anexos.some(a => {
+      if (excludeUid && a._uid === excludeUid) return false;
+      return this.normalizeName(a.nomeArquivo ?? '') === key;
+    });
+  }
+
+  private makeUniqueNomeArquivo(original: string, excludeUid?: string): string {
+    const clean = (original ?? '').trim() || 'anexo';
+    if (!this.isNomeArquivoTaken(clean, excludeUid)) return clean;
+
+    const { base, ext } = this.splitFileName(clean);
+
+    for (let i = 1; i < 1000; i++) {
+      const candidate = `${base} (${i})${ext}`;
+      if (!this.isNomeArquivoTaken(candidate, excludeUid)) return candidate;
+    }
+    return `${base} (${Date.now()})${ext}`;
+  }
+
+  private fileBaseName(name: string): string {
+    const onlyName = (name ?? '').split(/[\\/]/).pop() ?? '';
+    const dot = onlyName.lastIndexOf('.');
+    return dot > 0 ? onlyName.slice(0, dot) : onlyName;
+  }
+
+  protected render(): TemplateResult {
+    return html`
+      <style>
+        .toolbar {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+          margin-top: 16px;
+          margin-bottom: 50px;
+          justify-content: center;
+        }
+        .field-texto-voto {
+          margin-bottom: 8px;
+        }
+        wa-card {
+          margin-bottom: 0.75rem;
+          box-shadow: var(--wa-shadow-m);
+          border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
+          border-radius: var(--wa-border-radius-s);
+        }
+        wa-card.card-header {
+          transition: box-shadow 0.2s ease;
+        }
+        .reorder-anim {
+          will-change: transform;
+        }
+        .filed-header {
+          display: flex;
+          justify-content: space-between;
+        }
+        .item-actions {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .muted {
+          display: flex;
+          color: #9ca3af;
+          margin: 2rem 0 1rem 0;
+          justify-content: center;
+        }
+        .chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.85em;
+          padding: 0.2rem 0.5rem;
+          border: 1px solid #e5e7eb;
+          border-radius: 999px;
+          background: #f9fafb;
+        }
+        .input-file {
+          width: 100%;
+          margin-right: 0.5em;
+          border-color: var(--wa-form-control-border-color);
+          border-radius: var(--wa-form-control-border-radius);
+          border-style: var(--wa-form-control-border-style);
+          border-width: var(--wa-form-control-border-width);
+          color: var(--wa-form-control-value-color);
+        }
+        .input-file input {
+          width: 100%;
+        }
+        .dlg-grid {
+          display: grid;
+          gap: 0.75rem;
+        }
+        .dlg-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 0.5rem;
+          margin-top: 0.75rem;
+        }
+        .dlg-file-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .dlg-file-name {
+          flex: 1;
+        }
+      </style>
+
+      <div class="wa-grid field-texto-voto" style="--min-column-size: 16rem;">
+        <div class="wa-span-grid">
+          <lexml-ui-editor-texto-rico
+            height="320"
+            orientacaoNotaRodaPe="abaixo"
+            @onchange=${this._onTextoChange}
+          ></lexml-ui-editor-texto-rico>
+        </div>
+      </div>
+
+      <!-- LISTA DE ANEXOS -->
+      ${this.anexos.length === 0
+        ? html`<div class="muted">Nenhum anexo adicionado ainda.</div>`
+        : repeat(
+            this.anexos,
+            it => it._uid,
+            (item, idx) => this.renderAnexo(item, idx),
+          )}
+
+      <div class="toolbar">
+        <wa-button size="small" @click=${this.openNewDialog}>
+          Importar anexo
+        </wa-button>
+      </div>
+      <wa-dialog
+        id="dlgImportAnexo"
+        label=${this.dialogMode === 'new'
+          ? 'Importar anexo'
+          : 'Importar documento'}
+        .open=${this.dialogOpen}
+        @wa-hide=${this.onDialogHide}
+      >
+        <div class="dlg-grid">
+          <wa-select
+            label="Tipo"
+            placeholder="Selecione o tipo"
+            .value=${String(this.dialogTipo ?? '')}
+            ?disabled=${this.dialogMode === 'replace'}
+            @wa-change=${this.onDialogTipoChange}
+            @change=${this.onDialogTipoChange}
+          >
+            <wa-option value="">Selecione…</wa-option>
+
+            <wa-option
+              value=${TipoDocumento.SUBSTITUTIVO}
+              ?selected=${this.dialogTipo === TipoDocumento.SUBSTITUTIVO}
+            >
+              ${TipoDocumentoLabel[TipoDocumento.SUBSTITUTIVO]}
+            </wa-option>
+
+            <wa-option
+              value=${TipoDocumento.EMENDA}
+              ?selected=${this.dialogTipo === TipoDocumento.EMENDA}
+            >
+              ${TipoDocumentoLabel[TipoDocumento.EMENDA]}
+            </wa-option>
+
+            <wa-option
+              value=${TipoDocumento.OUTRO}
+              ?selected=${this.dialogTipo === TipoDocumento.OUTRO}
+            >
+              ${TipoDocumentoLabel[TipoDocumento.OUTRO]}
+            </wa-option>
+          </wa-select>
+          <div>
+            <div><label>Arquivo</label></div>
+
+            <div class="dlg-file-row">
+              <wa-button appearance="outlined" @click=${this.pickDialogFile}>
+                Escolher Arquivo
+              </wa-button>
+
+              <wa-input
+                class="dlg-file-name"
+                disabled
+                placeholder="Nenhum arquivo escolhido"
+                .value=${this.dialogFile?.name ?? ''}
+              ></wa-input>
+
+              <input
+                id="dlgFileInput"
+                type="file"
+                style="display:none"
+                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                @change=${(e: Event) => this.onDialogFilePicked(e as any)}
+              />
+            </div>
+          </div>
+
+          <wa-input
+            label="Nome"
+            type="text"
+            .value=${this.dialogNomeDocumento ?? ''}
+            placeholder="Nome do documento"
+            @wa-input=${this.onDialogNomeInput}
+            @input=${this.onDialogNomeInput}
+          ></wa-input>
+
+          <div class="dlg-actions">
+            <wa-button
+              appearance="outlined"
+              @click=${this.closeDialog}
+              ?disabled=${this.uploading}
+            >
+              Cancelar
+            </wa-button>
+
+            <wa-button
+              variant="brand"
+              @click=${this.confirmDialogImport}
+              ?disabled=${!this.canConfirmDialog()}
+            >
+              ${this.uploading ? 'Importando...' : 'Importar'}
+            </wa-button>
+          </div>
+        </div>
+      </wa-dialog>
+    `;
+  }
+
+  private renderAnexo(item: AnexoParecerRuntime, idx: number): TemplateResult {
+    const hasFile = !!item.idArquivo;
+    const canPreview = item.mimeType === MimeType.PDF;
+
+    const viewTitle = canPreview
+      ? 'Visualizar Documento'
+      : 'Não é possível visualizar .docx';
+
+    return html`
+      <wa-card with-header class="card-header" data-uid=${item._uid}>
+        <div slot="header" class="filed-header">
+          <div>
+            <span class="chip">Anexo</span>
+            <span>—</span>
+            ${item.nomeArquivo
+              ? html`<span class="sub">${item.nomeArquivo}</span>`
+              : html``}
+          </div>
+
+          <div class="item-actions">
+            <wa-button
+              title=${viewTitle}
+              appearance="outlined"
+              pill
+              size="small"
+              variant="brand"
+              ?disabled=${!hasFile || !canPreview}
+              @click=${() => this.view(idx)}
+            >
+              <wa-icon
+                name="eye"
+                variant="solid"
+                label="Visualizar Documento"
+              ></wa-icon>
+            </wa-button>
+
+            <wa-button
+              title="Baixar documento"
+              appearance="outlined"
+              pill
+              size="small"
+              variant="success"
+              ?disabled=${!hasFile}
+              @click=${() => this.download(idx)}
+            >
+              <wa-icon
+                name="download"
+                variant="solid"
+                label="Baixar documento"
+              ></wa-icon>
+            </wa-button>
+
+            <wa-button
+              title="Mover para cima"
+              appearance="outlined"
+              pill
+              size="small"
+              @click=${(e: Event) => this.moveByEvent(e, -1)}
+            >
+              <wa-icon
+                name="arrow-up"
+                variant="solid"
+                label="Mover para cima"
+              ></wa-icon>
+            </wa-button>
+
+            <wa-button
+              title="Mover para baixo"
+              appearance="outlined"
+              pill
+              size="small"
+              @click=${(e: Event) => this.moveByEvent(e, 1)}
+            >
+              <wa-icon
+                name="arrow-down"
+                variant="solid"
+                label="Mover para baixo"
+              ></wa-icon>
+            </wa-button>
+
+            <wa-button
+              title="Excluir anexo"
+              pill
+              size="small"
+              variant="danger"
+              @click=${(e: Event) => this.removeByEvent(e)}
+            >
+              <wa-icon
+                name="trash"
+                variant="solid"
+                label="Excluir anexo"
+              ></wa-icon>
+            </wa-button>
+          </div>
+        </div>
+
+        <div class="wa-grid" style="--min-column-size: 48rem;">
+          <div>
+            <wa-select
+              label="Tipo"
+              .value=${String((item.tipo as any) ?? '')}
+              disabled
+            >
+              <wa-option value="">Selecione…</wa-option>
+
+              <wa-option
+                value=${TipoDocumento.SUBSTITUTIVO}
+                ?selected=${item.tipo === TipoDocumento.SUBSTITUTIVO}
+              >
+                ${TipoDocumentoLabel[TipoDocumento.SUBSTITUTIVO]}
+              </wa-option>
+
+              <wa-option
+                value=${TipoDocumento.EMENDA}
+                ?selected=${item.tipo === TipoDocumento.EMENDA}
+              >
+                ${TipoDocumentoLabel[TipoDocumento.EMENDA]}
+              </wa-option>
+
+              <wa-option
+                value=${TipoDocumento.OUTRO}
+                ?selected=${item.tipo === TipoDocumento.OUTRO}
+              >
+                ${TipoDocumentoLabel[TipoDocumento.OUTRO]}
+              </wa-option>
+            </wa-select>
+          </div>
+
+          <div>
+            <wa-input
+              label="Nome"
+              type="text"
+              .value=${item.nomeDocumento ?? ''}
+              placeholder="Nome do documento"
+              @wa-input=${(e: CustomEvent) =>
+                this.updateDocField(
+                  idx,
+                  'nomeDocumento',
+                  (e.target as any).value,
+                )}
+              @input=${(e: Event) =>
+                this.updateDocField(
+                  idx,
+                  'nomeDocumento',
+                  (e.target as HTMLInputElement).value,
+                )}
+            ></wa-input>
+          </div>
+        </div>
+      </wa-card>
+    `;
+  }
 }

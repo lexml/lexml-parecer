@@ -1,4 +1,4 @@
-import { Revisao, RevisaoTextoLivre, Usuario } from '@ui-commons';
+import { RevisaoTextoLivre, Usuario } from '@ui-commons';
 
 export class RevisaoRelatorio extends RevisaoTextoLivre {
   type = 'RevisaoRelatorio';
@@ -12,6 +12,10 @@ export class RevisaoEmenta extends RevisaoTextoLivre {
   type = 'RevisaoEmenta';
 }
 
+export class RevisaoVoto extends RevisaoTextoLivre {
+  type = 'RevisaoVoto';
+}
+
 export class RevisaoTextoItemVoto extends RevisaoTextoLivre {
   type = 'RevisaoTextoItemVoto';
   posicao: number;
@@ -23,20 +27,5 @@ export class RevisaoTextoItemVoto extends RevisaoTextoLivre {
   ) {
     super(usuario, dataHora, descricao);
     this.posicao = posicao;
-  }
-}
-
-export class RevisaoVoto extends Revisao {
-  type = 'RevisaoVoto';
-  itensTexto: RevisaoTextoItemVoto[];
-
-  constructor(
-    usuario: Usuario,
-    dataHora: string,
-    descricao: string,
-    itensTexto: RevisaoTextoItemVoto[],
-  ) {
-    super(usuario, dataHora, descricao);
-    this.itensTexto = itensTexto;
   }
 }

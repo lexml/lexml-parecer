@@ -10,13 +10,16 @@ import {
 import { LexmlEtaParecer } from '../../src/components/parecer/lexml-eta-parecer.component.js';
 import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
 import { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
-import { Voto } from '../../src/models/voto.model.js';
 import { Comissao, Destino, Revisao, Usuario } from '@ui-commons';
 import { TipoDocumento } from '../../src/types/tipo-documento.js';
 import {
   RevisaoRelatorio,
-  RevisaoTextoItemVoto,
-} from 'src/models/revisao.model.js';
+  RevisaoVoto,
+} from '../../src/models/revisao.model.js';
+import {
+  AnexoParecer,
+  MimeType,
+} from '../../src/models/anexo-parecer.model.js';
 
 @customElement('demo-view')
 export class DemoView extends LitElement {
@@ -31,83 +34,6 @@ export class DemoView extends LitElement {
   constructor() {
     super();
     this.parecerConfig = {
-      comissoes: [
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CCDD',
-          nome: 'Comissão de Comunicação e Direito Digital',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CSP',
-          nome: 'Comissão de Segurança Pública',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CDD',
-          nome: 'Comissão de Defesa da Democracia',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CEsp',
-          nome: 'Comissão de Esporte',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CTFC',
-          nome: 'Comissão de Transparência, Governança, Fiscalização e Controle e Defesa do Consumidor',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CRA',
-          nome: 'Comissão de Agricultura e Reforma Agrária',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CDR',
-          nome: 'Comissão de Desenvolvimento Regional e Turismo',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CCT',
-          nome: 'Comissão de Ciência, Tecnologia, Inovação e Informática',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CMA',
-          nome: 'Comissão de Meio Ambiente',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CI',
-          nome: 'Comissão de Serviços de Infraestrutura',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CRE',
-          nome: 'Comissão de Relações Exteriores e Defesa Nacional',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CE',
-          nome: 'Comissão de Educação e Cultura',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CAS',
-          nome: 'Comissão de Assuntos Sociais',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CCJ',
-          nome: 'Comissão de Constituição, Justiça e Cidadania',
-        },
-        {
-          siglaCasaLegislativa: 'SF',
-          sigla: 'CAE',
-          nome: 'Comissão de Assuntos Econômicos',
-        },
-      ],
       parlamentares: [
         {
           identificacao: 'SF001',
@@ -328,7 +254,6 @@ export class DemoView extends LitElement {
           cargo: 'Deputado',
         },
       ],
-      buscarMateriasFunction: this.buscarMateriasApi,
     };
   }
 
@@ -341,22 +266,6 @@ export class DemoView extends LitElement {
     const ObjetoParecer: Parecer = parecerEl.getParecer();
     console.log('--------------------- [PARECER] ---------------------');
     console.log(ObjetoParecer);
-  };
-
-  private buscarMateriasApi = async (
-    termo: string,
-  ): Promise<ProposicaoReferenciada[]> => {
-    try {
-      const response = await fetch(`/api/materias?q=${termo}`);
-      if (!response.ok) {
-        throw new Error(`Erro na API: ${response.statusText}`);
-      }
-      const resultados: ProposicaoReferenciada[] = await response.json();
-      return resultados;
-    } catch (error) {
-      console.error('Falha ao buscar matérias na API:', error);
-      return [];
-    }
   };
 
   executar(): void {
@@ -387,23 +296,11 @@ export class DemoView extends LitElement {
       dataHora: '2025-11-13T19:43:31.400Z',
       descricao: 'Relatorio Alterado',
     } as RevisaoRelatorio;
-    const revisaoVoto = {
-      type: 'RevisaoVoto',
-      id: '',
+    const revisaoVoto = new RevisaoVoto(
       usuario,
-      dataHora: '2025-11-13T19:43:31.400Z',
-      descricao: 'Relatorio Alterado',
-      itensTexto: [
-        {
-          type: 'RevisaoTextoItemVoto',
-          id: '',
-          usuario,
-          dataHora: '2025-11-13T19:43:31.400Z',
-          descricao: 'Relatorio Alterado',
-          posicao: 1,
-        },
-      ] as RevisaoTextoItemVoto[],
-    } as RevisaoRelatorio;
+      '2025-11-13T19:43:31.400Z',
+      'Voto alterado',
+    ) as RevisaoVoto;
     parecer.revisoes = [revisaoRelatorio, revisaoVoto] as Revisao[];
     const materia = new ProposicaoReferenciada();
     materia.urn = 'urn:lex:br:senado:projeto.lei;123;2025';
@@ -438,32 +335,29 @@ export class DemoView extends LitElement {
       com a legislação em vigor. A técnica legislativa atende às exigências da LC 95/1998.</p>
     `.trim();
 
-    const voto = new Voto();
-    voto.itensVoto = [
-      {
-        posicao: 1,
-        texto: `
-          <p><ins usuario="Anônimo" date="2025-11-14 13:37:00 " title="Revisão de Anônimo em 14/11/2025 13:37" id-revisao="0f475636-a37a-4f1f-b526-d9acd27e5cc5">A</ins>Diante do exposto, o voto é pela <strong>aprovação</strong> do Projeto de Lei nº 123, de 2025.</p>
-          <p><em>Conclusão:</em> Pela aprovação do Projeto de Lei nº 123, de 2025, na forma do texto original.</p>
-        `.trim(),
-      },
-      {
-        posicao: 3,
-        texto: `
-          <p>Pela aprovação do Projeto de Lei nº 123, de 2025, na forma do texto original.</p>
-        `.trim(),
-      },
-      {
-        posicao: 2,
-        documento: {
-          tipo: TipoDocumento.SUBSTITUTIVO,
-          nomeArquivo: 'parecer-anexo.pdf',
-          base64: '',
-        },
-      },
-    ];
-    parecer.voto = voto;
+    parecer.voto = `
+      <p>
+        <ins usuario="usuario.teste" date="2025-11-13 16:32:00 " title="Revisão de ruan.oliveira em 13/11/2025 16:32" id-revisao="94b0de23-5c17-4272-a79b-aac56c070a1d">TESTE</ins> Diante do exposto, o voto é pela <strong>aprovação</strong> do Projeto de Lei nº 123, de 2025.
+      </p>
+      <p>
+        <em>Conclusão:</em> Pela aprovação do Projeto de Lei nº 123, de 2025, na forma do texto original.
+      </p>
+    `.trim();
 
+    parecer.anexos = [
+      {
+        idArquivo: 'ARQ_SUB_001',
+        nomeArquivo: 'Substitutivo - PL 123/2025.pdf',
+        tipo: TipoDocumento.SUBSTITUTIVO,
+        mimeType: MimeType.PDF,
+      } as AnexoParecer,
+      {
+        idArquivo: 'ARQ_EME_001',
+        nomeArquivo: 'Emenda nº 1 - PL 123/2025.pdf',
+        tipo: TipoDocumento.EMENDA,
+        mimeType: MimeType.PDF,
+      } as AnexoParecer,
+    ];
     // Autoria (mantenho o default caso seu modelo crie a estrutura sozinho)
     const autoria = new AutoriaParecer() as any;
     autoria.relator = {

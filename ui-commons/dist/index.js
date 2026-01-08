@@ -11507,15 +11507,6 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
                 console.warn('lexml-ui-opcoes-impressao não encontrado');
                 return;
             }
-            const destino = this._destinoEl.getDestino();
-            console.log('--------------------- [Destino] ---------------------');
-            console.log(destino);
-            const data = this._dataEl.getData();
-            console.log('--------------------- [Data] ---------------------');
-            console.log(data);
-            const opcoesImpressao = this._opcoesImpressaoEl.getOpcoesImpressao();
-            console.log('--------------------- [OpcoesImpressao] ---------------------');
-            console.log(opcoesImpressao);
         };
         // *********************************************
         // ******************************************* Itens para o Teste do Autocomplete
@@ -18875,7 +18866,6 @@ class NotaRodapeModal {
     }
     shouldClose() {
         const texto = this.quill.root.innerHTML;
-        console.log(texto, this.textoInicialNotaRodape);
         if (texto !== this.textoInicialNotaRodape) {
             return confirm('Tem certeza que deseja fechar? As alterações não salvas serão perdidas.');
         }
@@ -21489,7 +21479,6 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.icons = Quill.import('ui/icons');
         this.onTableInTable = () => {
             clearTimeout(this.timerAlerta);
-            console.log('Teste');
             alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.');
         };
         this.enableAllTableItems = () => {
@@ -22829,7 +22818,6 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           id="${this.nomeSwitch}"
           size="small"
           ?checked=${this.checked}
-          @input=${() => console.log(11111, 'input')}
           @change=${(ev) => this.onToggle(ev)}
         >
           <span>Marcas de revisão</span>
