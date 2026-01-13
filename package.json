@@ -54,6 +54,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.48.1",
     "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-lit-css": "^6.0.0",
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3"

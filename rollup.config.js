@@ -5,6 +5,7 @@ import typescript from '@rollup/plugin-typescript';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import alias from '@rollup/plugin-alias';
+import litCss from 'rollup-plugin-lit-css';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +21,7 @@ const basePlugins = [
   }),
   nodeResolve({ browser: true, preferBuiltins: false, exportConditions: ['browser','module','import','default'] }),
   typescript({ tsconfig: 'tsconfig.json', sourceMap: true }),
+  litCss({ include: ['**/*.css'], uglify: true }),
 ];
 
 
@@ -46,7 +48,7 @@ const configTsMin = {
     inlineDynamicImports: true,
 	},
 	plugins: [
-		...basePlugins, 
+		...basePlugins,
     terser({
 			format: {
 				comments: false

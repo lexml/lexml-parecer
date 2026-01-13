@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult } from 'lit';
+import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import {
   Revisao,
@@ -18,6 +18,8 @@ import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
 import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
+import waReset from '@awesome.me/webawesome/dist/styles/webawesome.css';
+import waTheme from '@awesome.me/webawesome/dist/styles/themes/shoelace.css';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
@@ -542,6 +544,16 @@ export class LexmlEtaParecer extends LitElement {
       this.urlAnexo = this.lexmlParecerConfig.urlAnexo ?? '';
     }
   }
+
+  static styles = [
+    waReset,
+    waTheme,
+    css`
+      :host {
+        display: block;
+      }
+    `,
+  ];
 
   render(): TemplateResult {
     return html`
