@@ -1,4 +1,4 @@
-import { css, html, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import {
   Revisao,
@@ -18,8 +18,8 @@ import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
 import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
-import waReset from '@awesome.me/webawesome/dist/styles/webawesome.css';
-import waTheme from '@awesome.me/webawesome/dist/styles/themes/shoelace.css';
+import { waResetString } from '../../assets/css/webawesome.js';
+import { waThemeString } from '../../assets/css/shoelace.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
@@ -545,19 +545,15 @@ export class LexmlEtaParecer extends LitElement {
     }
   }
 
-  static styles = [
-    waReset,
-    waTheme,
-    css`
-      :host {
-        display: block;
-      }
-    `,
-  ];
-
   render(): TemplateResult {
     return html`
       <style>
+        ${waResetString} ${waThemeString} :host {
+          --wa-color-primary-600: #ff0000 !important; /* Vermelho para testar */
+          --wa-color-primary-500: #ff0000 !important;
+          display: block;
+        }
+
         lexml-eta-parecer {
           display: block;
           color: var(--lexml-eta-parecer-text-color, #000);
@@ -577,64 +573,67 @@ export class LexmlEtaParecer extends LitElement {
           display: flex;
         }
       </style>
-      <wa-tab-group>
-        ${!this.isCamara
-          ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
-          : null}
-        <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
-        <wa-tab slot="nav" panel="analise">
-          ${this.parecer.tituloSecao2}
-        </wa-tab>
-        <wa-tab slot="nav" panel="voto">${this.parecer.tituloSecao3}</wa-tab>
-        <wa-tab slot="nav" panel="dataAutoriaImpressao"
-          >Data, Autoria e Impressão</wa-tab
-        >
-        <wa-tab slot="nav" panel="avisos">
-          Avisos
-          <div class="badge-pulse" id="contadorAvisos">
-            ${this.totalAlertas > 0
-              ? html`
-                  <wa-badge
-                    class="badge-alertas"
-                    variant="danger"
-                    attention="pulse"
-                    pill
-                  >
-                    ${this.totalAlertas}
-                  </wa-badge>
-                `
-              : ''}
-          </div>
-        </wa-tab>
 
-        <wa-tab-panel name="ementa" class="overflow-hidden">
-          <lexml-parecer-ementa></lexml-parecer-ementa>
-        </wa-tab-panel>
-        <wa-tab-panel name="relatorio" class="overflow-hidden">
-          <lexml-parecer-relatorio></lexml-parecer-relatorio>
-        </wa-tab-panel>
-        <wa-tab-panel name="analise" class="overflow-hidden">
-          <lexml-parecer-analise></lexml-parecer-analise>
-        </wa-tab-panel>
-        <wa-tab-panel name="voto" class="overflow-hidden">
-          <lexml-parecer-voto .urlAnexo=${this.urlAnexo}></lexml-parecer-voto>
-        </wa-tab-panel>
-        <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
-          <lexml-parecer-data-autoria-impressao
-            .parlamentares=${this._parlamentares}
-          ></lexml-parecer-data-autoria-impressao>
-        </wa-tab-panel>
-        <wa-tab-panel name="avisos" class="overflow-hidden">
-          <lexml-parecer-avisos
-            .alertas=${this._alertas}
-            @parecer-total-alertas=${(e: CustomEvent<{ total: number }>) => {
-              this.totalAlertas = e.detail.total;
-            }}
-            @parecer-remover-alerta=${this._onRemoverAlerta}
-            @parecer-limpar-alertas=${this._onLimparAlertas}
-          ></lexml-parecer-avisos>
-        </wa-tab-panel>
-      </wa-tab-group>
+      <div class="wa-scope">
+        <wa-tab-group>
+          ${!this.isCamara
+            ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
+            : null}
+          <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
+          <wa-tab slot="nav" panel="analise">
+            ${this.parecer.tituloSecao2}
+          </wa-tab>
+          <wa-tab slot="nav" panel="voto">${this.parecer.tituloSecao3}</wa-tab>
+          <wa-tab slot="nav" panel="dataAutoriaImpressao"
+            >Data, Autoria e Impressão</wa-tab
+          >
+          <wa-tab slot="nav" panel="avisos">
+            Avisos
+            <div class="badge-pulse" id="contadorAvisos">
+              ${this.totalAlertas > 0
+                ? html`
+                    <wa-badge
+                      class="badge-alertas"
+                      variant="danger"
+                      attention="pulse"
+                      pill
+                    >
+                      ${this.totalAlertas}
+                    </wa-badge>
+                  `
+                : ''}
+            </div>
+          </wa-tab>
+
+          <wa-tab-panel name="ementa" class="overflow-hidden">
+            <lexml-parecer-ementa></lexml-parecer-ementa>
+          </wa-tab-panel>
+          <wa-tab-panel name="relatorio" class="overflow-hidden">
+            <lexml-parecer-relatorio></lexml-parecer-relatorio>
+          </wa-tab-panel>
+          <wa-tab-panel name="analise" class="overflow-hidden">
+            <lexml-parecer-analise></lexml-parecer-analise>
+          </wa-tab-panel>
+          <wa-tab-panel name="voto" class="overflow-hidden">
+            <lexml-parecer-voto .urlAnexo=${this.urlAnexo}></lexml-parecer-voto>
+          </wa-tab-panel>
+          <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
+            <lexml-parecer-data-autoria-impressao
+              .parlamentares=${this._parlamentares}
+            ></lexml-parecer-data-autoria-impressao>
+          </wa-tab-panel>
+          <wa-tab-panel name="avisos" class="overflow-hidden">
+            <lexml-parecer-avisos
+              .alertas=${this._alertas}
+              @parecer-total-alertas=${(e: CustomEvent<{ total: number }>) => {
+                this.totalAlertas = e.detail.total;
+              }}
+              @parecer-remover-alerta=${this._onRemoverAlerta}
+              @parecer-limpar-alertas=${this._onLimparAlertas}
+            ></lexml-parecer-avisos>
+          </wa-tab-panel>
+        </wa-tab-group>
+      </div>
     `;
   }
 }
