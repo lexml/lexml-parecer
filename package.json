@@ -10,8 +10,8 @@
   "browser": "dist/src/index.min.js",
   "scripts": {
     "analyze": "cem analyze --litelement",
-    "start": "rimraf dist && tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
-    "build": "rimraf dist && rollup -c",
+    "start": "rimraf dist && npm run generate:styles && tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
+    "build": "rimraf dist && npm run generate:styles && rollup -c",
     "build:watch": "rollup -c --watch",
     "build:tsc": "tsc && npm run analyze -- --exclude dist",
     "prepublish": "npm run build && npm run analyze -- --exclude dist",
@@ -19,7 +19,8 @@
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "prepare": "husky",
     "test": "tsc && wtr --coverage",
-    "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\""
+    "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
+    "generate:styles": "node build-styles.cjs"
   },
   "dependencies": {
     "@awesome.me/webawesome": "^3.0.0-beta.4",

@@ -1,1945 +1,18 @@
-export const waResetString = `
+/* eslint-disable no-useless-escape */
+/**
+ * ARQUIVO GERADO AUTOMATICAMENTE via build-styles.cjs
+ * NÃO EDITE MANUALMENTE.
+ */
+
+// 1. O TEMA (shoelace)
+export const waThemeString = `
 
 @layer wa-native, wa-utilities, wa-color-palette, wa-color-variant, wa-theme, wa-theme-dimension, wa-theme-overrides;
-/* Cascade layers */
 /* Order of precedence for all cascade layers in Web Awesome */
-/* Native styles */
-/* Required utilities */
-@layer wa-utilities {
-  .wa-scope .wa-size-s {
-    font-size: var(--wa-font-size-s);
-  }
-
-  .wa-scope .wa-size-m {
-    font-size: var(--wa-font-size-m);
-  }
-
-  .wa-scope .wa-size-l {
-    font-size: var(--wa-font-size-l);
-  }
-}
-@layer wa-utilities {
-  :where(.wa-scope),
-  .wa-scope .wa-neutral {
-    --wa-color-fill-loud: var(--wa-color-neutral-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-neutral-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-neutral-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-neutral-border-loud);
-    --wa-color-border-normal: var(--wa-color-neutral-border-normal);
-    --wa-color-border-quiet: var(--wa-color-neutral-border-quiet);
-    --wa-color-on-loud: var(--wa-color-neutral-on-loud);
-    --wa-color-on-normal: var(--wa-color-neutral-on-normal);
-    --wa-color-on-quiet: var(--wa-color-neutral-on-quiet);
-  }
-
-  .wa-scope .wa-brand {
-    --wa-color-fill-loud: var(--wa-color-brand-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-brand-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-brand-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-brand-border-loud);
-    --wa-color-border-normal: var(--wa-color-brand-border-normal);
-    --wa-color-border-quiet: var(--wa-color-brand-border-quiet);
-    --wa-color-on-loud: var(--wa-color-brand-on-loud);
-    --wa-color-on-normal: var(--wa-color-brand-on-normal);
-    --wa-color-on-quiet: var(--wa-color-brand-on-quiet);
-  }
-
-  .wa-scope .wa-success {
-    --wa-color-fill-loud: var(--wa-color-success-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-success-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-success-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-success-border-loud);
-    --wa-color-border-normal: var(--wa-color-success-border-normal);
-    --wa-color-border-quiet: var(--wa-color-success-border-quiet);
-    --wa-color-on-loud: var(--wa-color-success-on-loud);
-    --wa-color-on-normal: var(--wa-color-success-on-normal);
-    --wa-color-on-quiet: var(--wa-color-success-on-quiet);
-  }
-
-  .wa-scope .wa-warning {
-    --wa-color-fill-loud: var(--wa-color-warning-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-warning-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-warning-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-warning-border-loud);
-    --wa-color-border-normal: var(--wa-color-warning-border-normal);
-    --wa-color-border-quiet: var(--wa-color-warning-border-quiet);
-    --wa-color-on-loud: var(--wa-color-warning-on-loud);
-    --wa-color-on-normal: var(--wa-color-warning-on-normal);
-    --wa-color-on-quiet: var(--wa-color-warning-on-quiet);
-  }
-
-  .wa-scope .wa-danger {
-    --wa-color-fill-loud: var(--wa-color-danger-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-danger-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-danger-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-danger-border-loud);
-    --wa-color-border-normal: var(--wa-color-danger-border-normal);
-    --wa-color-border-quiet: var(--wa-color-danger-border-quiet);
-    --wa-color-on-loud: var(--wa-color-danger-on-loud);
-    --wa-color-on-normal: var(--wa-color-danger-on-normal);
-    --wa-color-on-quiet: var(--wa-color-danger-on-quiet);
-  }
-}
-@layer wa-native {
-  /* #region General ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-
-    tab-size: 4;
-
-    background-color: var(--wa-color-surface-default);
-  }
-
-  .wa-scope *,
-  .wa-scope *::before,
-  .wa-scope *::after {
-    box-sizing: inherit;
-  }
-
-  .wa-scope {
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-
-    color: var(--wa-color-text-normal);
-    font-family: var(--wa-font-family-body);
-    font-size: var(--wa-font-size-m);
-    font-weight: var(--wa-font-weight-body);
-    line-height: var(--wa-line-height-normal);
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    text-size-adjust: none;
-    -moz-text-size-adjust: none;
-    -webkit-text-size-adjust: none;
-  }
-  /* #endregion */
-
-  /* #region Content Flow ~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope address,
-  .wa-scope audio,
-  .wa-scope blockquote,
-  .wa-scope dd,
-  .wa-scope details,
-  .wa-scope dl,
-  .wa-scope fieldset,
-  .wa-scope figure,
-  .wa-scope h1,
-  .wa-scope h2,
-  .wa-scope h3,
-  .wa-scope h4,
-  .wa-scope h5,
-  .wa-scope h6,
-  .wa-scope hr,
-  .wa-scope iframe,
-  .wa-scope ol,
-  .wa-scope p,
-  .wa-scope pre,
-  .wa-scope table,
-  .wa-scope ul,
-  .wa-scope video {
-    margin: 0;
-
-    .wa-scope &:has(+ *) {
-      margin-block-end: var(--wa-content-spacing);
-    }
-  }
-  /* #endregion */
-
-  /* #region Block Text ~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope h1,
-  .wa-scope h2,
-  .wa-scope h3,
-  .wa-scope h4,
-  .wa-scope h5,
-  .wa-scope h6 {
-    font-family: var(--wa-font-family-heading);
-    font-weight: var(--wa-font-weight-heading);
-    line-height: var(--wa-line-height-condensed);
-    text-wrap: balance;
-  }
-
-  .wa-scope h1 {
-    font-size: var(--wa-font-size-3xl);
-  }
-
-  .wa-scope h2 {
-    font-size: var(--wa-font-size-2xl);
-  }
-
-  .wa-scope h3 {
-    font-size: var(--wa-font-size-xl);
-  }
-
-  .wa-scope h4 {
-    font-size: var(--wa-font-size-l);
-  }
-
-  .wa-scope h5 {
-    font-size: var(--wa-font-size-m);
-  }
-
-  .wa-scope h6 {
-    font-size: var(--wa-font-size-s);
-  }
-
-  .wa-scope p {
-    text-wrap: pretty;
-  }
-
-  .wa-scope blockquote {
-    padding: var(--wa-space-xl);
-
-    font-family: var(--wa-font-family-longform);
-    font-size: var(--wa-font-size-l);
-
-    border-inline-start: var(--wa-border-style) var(--wa-border-width-l) var(--wa-color-neutral-border-quiet);
-  }
-
-  .wa-scope hr {
-    margin: var(--wa-content-spacing) 0;
-
-    border: none;
-    border-bottom: solid var(--wa-border-width-s) var(--wa-color-surface-border);
-  }
-  /* #endregion */
-
-  /* #region Lists ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope ul,
-  .wa-scope ol {
-    padding: 0;
-  }
-
-  .wa-scope li > ul,
-  .wa-scope li > ol {
-    margin-inline-start: 0.25em;
-  }
-
-  .wa-scope ul {
-    list-style: disc;
-  }
-
-  .wa-scope li {
-    margin-inline-start: 1.125em;
-    padding: 0;
-  }
-
-  .wa-scope dt {
-    font-weight: var(--wa-font-weight-bold);
-  }
-  /* #endregion */
-
-  /* #region Inline Text ~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope strong,
-  .wa-scope b {
-    font-weight: var(--wa-font-weight-bold);
-  }
-
-  .wa-scope em,
-  .wa-scope i {
-    font-style: italic;
-  }
-
-  .wa-scope u {
-    text-decoration-line: underline;
-    text-decoration-thickness: 0.09375em;
-    text-underline-offset: 0.125em;
-  }
-
-  .wa-scope s {
-    text-decoration-line: line-through;
-    text-decoration-thickness: 0.09375em;
-  }
-
-  .wa-scope ins {
-    text-decoration-color: var(--wa-color-success-on-quiet);
-    text-decoration-line: underline;
-    text-decoration-thickness: 0.09375em;
-    text-underline-offset: 0.125em;
-  }
-
-  .wa-scope del {
-    color: color-mix(in oklab, currentColor, transparent 10%);
-    text-decoration-color: var(--wa-color-danger-on-quiet);
-    text-decoration-line: line-through;
-    text-decoration-thickness: 0.09375em;
-  }
-
-  .wa-scope mark {
-    padding: 0.125em 0.25em;
-
-    color: var(--wa-color-warning-on-quiet);
-
-    background-color: var(--wa-color-warning-fill-quiet);
-    border-radius: var(--wa-border-radius-s);
-  }
-
-  .wa-scope small {
-    font-size: var(--wa-font-size-smaller);
-  }
-
-  .wa-scope sub,
-  .wa-scope sup {
-    font-size: var(--wa-font-size-smaller);
-    line-height: 0;
-  }
-
-  .wa-scope sub {
-    vertical-align: sub;
-  }
-
-  .wa-scope sup {
-    vertical-align: super;
-  }
-
-  .wa-scope abbr[title] {
-    text-decoration-line: underline;
-    text-decoration-style: dotted;
-    text-decoration-thickness: 0.09375em;
-    text-underline-offset: 0.125em;
-
-    cursor: help;
-  }
-
-  .wa-scope kbd {
-    padding: 0.125em 0.25em;
-
-    font-family: var(--wa-font-family-code);
-    font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-code);
-
-    border: solid var(--wa-border-width-s) color-mix(in oklab, currentColor, transparent 50%);
-    border-radius: var(--wa-border-radius-s);
-    box-shadow: 0 0.125em 0 0 color-mix(in oklab, currentColor, transparent 50%);
-
-    .wa-scope wa-icon {
-      vertical-align: -2px;
-    }
-  }
-  /* #endregion */
-
-  /* #region Links ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope a {
-    color: var(--wa-color-text-link);
-    text-decoration: var(--wa-link-decoration-default);
-    -webkit-text-decoration: var(--wa-link-decoration-default);
-    text-decoration-thickness: 0.09375em;
-    text-underline-offset: 0.125em;
-  }
-
-  .wa-scope *:is([appearance~='accent'], .wa-accent) {
-    .wa-scope a,
-    .wa-scope a:hover {
-      color: currentColor;
-    }
-  }
-
-  .wa-scope a:hover {
-    color: color-mix(in oklab, var(--wa-color-text-link), var(--wa-color-mix-hover));
-    text-decoration: var(--wa-link-decoration-hover);
-    -webkit-text-decoration: var(--wa-link-decoration-hover);
-  }
-
-  .wa-scope a:focus,
-  .wa-scope button:focus {
-    outline: none;
-  }
-
-  .wa-scope a:focus-visible,
-  .wa-scope button:focus-visible {
-    outline: var(--wa-focus-ring);
-    outline-offset: var(--wa-focus-ring-offset);
-  }
-  /* #endregion */
-
-  /* #region Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope code,
-  .wa-scope samp,
-  .wa-scope var {
-    padding: 0.125em 0.25em;
-
-    font-family: var(--wa-font-family-code);
-    font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-code);
-
-    background-color: var(--wa-color-overlay-inline);
-    border-radius: var(--wa-border-radius-s);
-  }
-
-  .wa-scope pre {
-    padding: var(--wa-space-m);
-
-    font-family: var(--wa-font-family-code);
-    font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-code);
-    white-space: pre;
-
-    background-color: var(--wa-color-overlay-inline);
-    border-radius: var(--wa-border-radius-m);
-
-    /* Remove overlapping styles for child code elements */
-    .wa-scope & code,
-    .wa-scope & samp,
-    .wa-scope & var {
-      padding: 0;
-
-      font-size: 1em;
-
-      background-color: transparent;
-    }
-
-    /* Print styles */
-    @media print {
-      background: none;
-      border: solid var(--wa-border-width-s) var(--wa-color-surface-border);
-    }
-  }
-  /* #endregion */
-
-  /* #region Media ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope img,
-  .wa-scope svg,
-  .wa-scope picture,
-  .wa-scope video {
-    max-width: 100%;
-    height: auto;
-
-    border-radius: var(--wa-border-radius-m);
-  }
-
-  .wa-scope embed,
-  .wa-scope iframe,
-  .wa-scope object {
-    max-width: 100%;
-  }
-
-  .wa-scope iframe {
-    border: none;
-  }
-  /* #endregion */
-
-  /* #region Tables ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope table {
-    width: 100%;
-
-    border: none;
-    border-collapse: collapse;
-  }
-
-  .wa-scope caption {
-    color: var(--wa-color-text-quiet);
-    font-size: var(--wa-font-size-smaller);
-
-    .wa-scope &:has(+ *) {
-      margin-block-end: 0.75em;
-    }
-  }
-
-  .wa-scope tbody {
-    .wa-scope tr {
-      border-top: solid var(--wa-border-width-s) var(--wa-color-border-quiet);
-
-      .wa-scope :where(table.wa-zebra-rows) &:nth-child(odd) {
-        background-color: color-mix(in oklab, var(--wa-color-fill-quiet) 60%, transparent);
-      }
-
-      .wa-scope :where(table.wa-hover-rows) & {
-        @media (hover: hover) {
-          .wa-scope &:hover {
-            background-color: var(--wa-color-fill-quiet);
-
-            .wa-scope &,
-            .wa-scope + tr {
-              border-top-color: var(--wa-color-border-normal);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .wa-scope td,
-  .wa-scope th {
-    padding: 0.75em;
-
-    text-align: start;
-    vertical-align: top;
-  }
-
-  .wa-scope th {
-    padding-block: 0.75em;
-
-    font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-bold);
-  }
-  /* #endregion */
-
-  /* #region Details ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope details {
-    padding: 0;
-
-    background-color: var(--wa-color-surface-default);
-    border: var(--wa-panel-border-width) var(--wa-color-surface-border) var(--wa-panel-border-style);
-    border-radius: var(--wa-panel-border-radius);
-
-    overflow-anchor: none;
-
-    .wa-scope summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: var(--wa-space-m);
-
-      border-radius: calc(var(--wa-panel-border-radius) - var(--wa-panel-border-width));
-
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-
-      .wa-scope > * {
-        margin: 0;
-      }
-
-      .wa-scope &:focus {
-        outline: none;
-      }
-
-      .wa-scope &:focus-visible {
-        outline: var(--wa-focus-ring);
-        outline-offset: calc(var(--wa-panel-border-width) + var(--wa-focus-ring-offset));
-      }
-    }
-
-    .wa-scope &[open] {
-      padding: 0 var(--wa-space-m) var(--wa-space-m) var(--wa-space-m);
-
-      .wa-scope summary {
-        margin-inline: calc(-1 * var(--wa-space-m));
-
-        border-end-start-radius: 0;
-        border-end-end-radius: 0;
-      }
-    }
-
-    /* Print styles */
-    @media print {
-      background: none;
-      border: solid var(--wa-border-width-s) var(--wa-color-surface-border);
-
-      .wa-scope summary {
-        list-style: none;
-      }
-    }
-  }
-
-  /* Replace the summary marker */
-  .wa-scope details summary {
-    .wa-scope &::marker,
-    .wa-scope &::-webkit-details-marker {
-      display: none;
-    }
-
-    .wa-scope &::after {
-      content: '';
-      background-color: var(--wa-color-text-quiet);
-      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>')
-        center no-repeat;
-      width: 1rem;
-      height: 1rem;
-      rotate: 0deg;
-    }
-
-    .wa-scope &:dir(rtl)::after {
-      rotate: 180deg;
-    }
-  }
-
-  .wa-scope details[open] summary::after {
-    rotate: 90deg;
-  }
-  /* #endregion */
-
-  /* #region Dialogs ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope dialog {
-    flex-direction: column;
-    align-items: start;
-
-    width: 32rem;
-    max-width: calc(100% - var(--wa-space-l));
-    padding: var(--wa-space-l);
-
-    background-color: var(--wa-color-surface-raised);
-    border-radius: var(--wa-panel-border-radius);
-    border: none;
-    box-shadow: var(--wa-shadow-l);
-
-    transition: var(--wa-transition-slow, 200ms) var(--wa-transition-easing);
-
-    /* Center the dialog */
-    margin: auto;
-    inset: 0;
-
-    .wa-scope &[open] {
-      display: flex;
-    }
-
-    .wa-scope &:focus {
-      outline: none;
-    }
-  }
-
-  .wa-scope dialog::backdrop {
-    background-color: var(--wa-color-overlay-modal, rgb(0 0 0 / 0.25));
-  }
-  /* #endregion */
-
-  /* #region Form Labels ~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope label {
-    display: inline-block;
-    position: relative;
-
-    color: var(--wa-form-control-label-color);
-    font-weight: var(--wa-form-control-label-font-weight);
-    line-height: var(--wa-form-control-label-line-height);
-
-    .wa-scope &:has(
-        input:not(
-            [type='button'],
-            [type='checkbox'],
-            [type='color'],
-            [type='file'],
-            [type='hidden'],
-            [type='image'],
-            [type='radio'],
-            [type='reset'],
-            [type='submit']
-          ),
-        textarea,
-        select
-      ) {
-      width: 100%;
-    }
-
-    .wa-scope & + :is(input:not([type='checkbox'], [type='radio']), textarea, select), .wa-scope & > :is(input:not([type='checkbox'], [type='radio']), textarea, select) {
-      margin-block-start: 0.5em;
-    }
-  }
-  /* #endregion */
-
-  /* #region Fieldsets ~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope fieldset {
-    padding: var(--wa-space-l);
-    padding-block-start: calc(var(--wa-space-l) - 0.5em);
-
-    border: solid 1px var(--wa-color-surface-border);
-    border-radius: var(--wa-border-radius-m);
-  }
-
-  .wa-scope legend {
-    padding: 0;
-    padding-inline: var(--wa-space-xs);
-
-    font-weight: var(--wa-form-control-label-font-weight);
-  }
-  /* #endregion */
-
-  /* #region Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope button,
-  .wa-scope input[type='button'],
-  .wa-scope input[type='reset'],
-  .wa-scope input[type='submit'],
-  .wa-scope input[type='file'] {
-    /* We allow modifier classes on <input type="file">,
-     * but these selectors ensure the styles only apply to
-     * the file selector button in the user agent's shadow root */
-    .wa-scope &:not(input[type='file']),
-    .wa-scope &::file-selector-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      height: var(--wa-form-control-height);
-      padding: 0 var(--wa-form-control-padding-inline);
-
-      font-family: inherit;
-      font-size: var(--wa-form-control-value-font-size);
-      font-weight: var(--wa-font-weight-action);
-      line-height: calc(var(--wa-form-control-height) - var(--border-width) * 2);
-      text-decoration: none;
-      vertical-align: middle;
-      white-space: nowrap;
-
-      border-style: var(--wa-border-style);
-      border-width: max(1px, var(--wa-form-control-border-width));
-      border-radius: var(--wa-form-control-border-radius);
-
-      transition-property: background, border, box-shadow, color;
-      transition-duration: var(--wa-transition-fast);
-      transition-timing-function: var(--wa-transition-easing);
-
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    /* Default styles for standard buttons */
-    .wa-scope :where(&:not(input[type='file'])) {
-      color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
-      background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
-      border-color: transparent;
-
-      .wa-scope &:not(:disabled) {
-        .wa-scope &:hover {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .wa-scope &:active {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    /* Default styles for file selector buttons */
-    .wa-scope :where(&:is(input[type='file'])) {
-      .wa-scope &::file-selector-button {
-        color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-        background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
-        border-color: transparent;
-      }
-
-      .wa-scope &:not(:disabled) {
-        .wa-scope &::file-selector-button:hover {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .wa-scope &::file-selector-button:active {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    /* Modifier classes */
-    .wa-scope &.wa-plain {
-      .wa-scope &:not(input[type='file']),
-      .wa-scope &::file-selector-button {
-        color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-        background-color: transparent;
-        border-color: transparent;
-      }
-
-      .wa-scope &:not(:disabled) {
-        .wa-scope &:not(input[type='file']):hover,
-        .wa-scope &::file-selector-button:hover {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
-        }
-
-        .wa-scope &:not(input[type='file']):active,
-        .wa-scope &::file-selector-button:active {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    .wa-scope &.wa-outlined {
-      .wa-scope &:not(input[type='file']),
-      .wa-scope &::file-selector-button {
-        color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-        background-color: transparent;
-        border-color: var(--wa-color-border-loud, var(--wa-color-neutral-border-loud));
-      }
-
-      .wa-scope &:not(:disabled) {
-        .wa-scope &:not(input[type='file']):hover,
-        .wa-scope &::file-selector-button:hover {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
-        }
-
-        .wa-scope &:not(input[type='file']):active,
-        .wa-scope &::file-selector-button:active {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    .wa-scope &.wa-filled {
-      .wa-scope &:not(input[type='file']),
-      .wa-scope &::file-selector-button {
-        color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-        background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
-        border-color: transparent;
-      }
-
-      .wa-scope &:not(:disabled) {
-        .wa-scope &:not(input[type='file']):hover,
-        .wa-scope &::file-selector-button:hover {
-          color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .wa-scope &:not(input[type='file']):active,
-        .wa-scope &::file-selector-button:active {
-          color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-
-      .wa-scope &.wa-outlined {
-        .wa-scope &:not(input[type='file']),
-        .wa-scope &::file-selector-button {
-          border-color: var(--wa-color-border-normal, var(--wa-color-neutral-border-normal));
-        }
-      }
-    }
-
-    .wa-scope &.wa-accent {
-      .wa-scope &:not(input[type='file']),
-      .wa-scope &::file-selector-button {
-        color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
-        background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
-        border-color: transparent;
-      }
-
-      .wa-scope &:not(:disabled) {
-        .wa-scope &:not(input[type='file']):hover,
-        .wa-scope &::file-selector-button:hover {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .wa-scope &:not(input[type='file']):active,
-        .wa-scope &::file-selector-button:active {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    .wa-scope &.wa-pill {
-      .wa-scope &:not(input[type='file']),
-      .wa-scope &::file-selector-button {
-        border-radius: var(--wa-border-radius-pill);
-      }
-    }
-
-    .wa-scope &:focus {
-      outline: none;
-    }
-
-    .wa-scope &:focus-visible {
-      outline: var(--wa-focus-ring);
-      outline-offset: var(--wa-focus-ring-offset);
-    }
-
-    /* Wrap in :is() so that Safari doesn't stop parsing this block */
-    .wa-scope &:is(::-moz-focus-inner) {
-      border: 0;
-    }
-
-    .wa-scope &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-
-      /* When disabled, prevent mouse events from bubbling up from children */
-      .wa-scope * {
-        pointer-events: none;
-      }
-    }
-
-    /* Adds space between icons and adjacent elements
-     * Prefer sibling selectors over :first-child/:last-child to avoid extra space when an icon is used alone */
-    .wa-scope & > wa-icon:has(+ *) {
-      margin-inline-end: 0.75em;
-    }
-
-    .wa-scope & > * + wa-icon {
-      margin-inline-start: 0.75em;
-    }
-  }
-  /* #endregion */
-
-  /* #region File Inputs ~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope input[type='file'] {
-    display: block;
-
-    max-inline-size: 100%;
-
-    color: var(--wa-form-control-value-color);
-    font-family: inherit;
-    font-size: var(--wa-form-control-value-font-size);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-    vertical-align: middle;
-
-    border-radius: var(--wa-border-radius-m);
-
-    cursor: pointer;
-  }
-  /* #endregion */
-
-  /* #region Checkboxes + Radios ~~~~~~~~~~~~~ */
-  .wa-scope input[type='checkbox'],
-  .wa-scope label:has(input[type='checkbox']),
-  .wa-scope input[type='radio'],
-  .wa-scope label:has(input[type='radio']) {
-    display: inline-flex;
-
-    width: fit-content;
-
-    color: var(--wa-form-control-value-color);
-    font-family: inherit;
-    font-size: var(--wa-form-control-value-font-size);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-
-    user-select: none;
-    -webkit-user-select: none;
-
-    .wa-scope &,
-    .wa-scope + label {
-      cursor: pointer;
-    }
-
-    .wa-scope &:disabled,
-    .wa-scope &:has(:disabled) {
-      opacity: 0.5;
-
-      cursor: not-allowed;
-    }
-  }
-
-  .wa-scope input[type='checkbox'],
-  .wa-scope input[type='radio'] {
-    appearance: none;
-
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-
-    width: var(--wa-form-control-toggle-size);
-    height: var(--wa-form-control-toggle-size);
-    margin: 0;
-    margin-inline-end: 0.5em;
-
-    background-color: var(--wa-form-control-background-color);
-    border-color: var(--wa-form-control-border-color);
-    border-style: var(--wa-border-style);
-    border-width: var(--wa-form-control-border-width);
-
-    transition:
-      background var(--wa-transition-normal),
-      border-color var(--wa-transition-fast),
-      box-shadow var(--wa-transition-fast),
-      color var(--wa-transition-fast);
-    transition-timing-function: var(--wa-transition-easing);
-
-    .wa-scope &:focus-visible {
-      outline: var(--wa-focus-ring);
-      outline-offset: var(--wa-focus-ring-offset);
-    }
-  }
-
-  /* Checkbox */
-  .wa-scope input[type='checkbox'] {
-    --checked-icon-color: var(--wa-color-brand-on-loud);
-    --checked-icon-scale: 0.8;
-
-    border-radius: min(
-      calc(var(--wa-form-control-toggle-size) * 0.375),
-      var(--wa-border-radius-s)
-    ); /* min prevents entirely circular checkbox */
-
-    .wa-scope &:checked,
-    .wa-scope &:indeterminate {
-      color: var(--checked-icon-color);
-
-      background-color: var(--wa-form-control-activated-color);
-      border-color: var(--wa-form-control-activated-color);
-    }
-
-    .wa-scope &:checked::after,
-    .wa-scope &:indeterminate::after {
-      content: '';
-
-      width: var(--wa-form-control-toggle-size);
-      height: var(--wa-form-control-toggle-size);
-      scale: var(--checked-icon-scale);
-
-      background-color: currentColor;
-    }
-
-    .wa-scope &:checked::after {
-      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"/></svg>')
-        center / 1em 1em no-repeat;
-    }
-
-    .wa-scope &:indeterminate::after {
-      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M431 256c0 17.7-14.3 32-32 32H49c-17.7 0-32-14.3-32-32s14.3-32 32-32h350c17.7 0 32 14.3 32 32z"/></svg>')
-        center no-repeat;
-    }
-  }
-
-  /* Radio */
-  .wa-scope input[type='radio'] {
-    --checked-icon-color: var(--wa-form-control-activated-color);
-    --checked-icon-scale: 0.7;
-
-    color: transparent;
-
-    border-radius: 50%;
-
-    .wa-scope &:checked {
-      color: var(--checked-icon-color);
-
-      border-color: var(--wa-form-control-activated-color);
-    }
-
-    .wa-scope &:checked::after {
-      content: '';
-
-      aspect-ratio: 1;
-      width: 100%;
-      scale: var(--checked-icon-scale);
-
-      background-color: currentColor;
-      border-radius: 50%;
-    }
-  }
-  /* #endregion */
-
-  /* #region Text Fields + Textareas + Selects */
-  .wa-scope input:not(
-
-    [type='button'],
-    [type='checkbox'],
-    [type='color'],
-    [type='file'],
-    [type='hidden'],
-    [type='image'],
-    [type='radio'],
-    [type='range'],
-    [type='reset'],
-    [type='submit']
-  ),
-    .wa-scope textarea,
-    .wa-scope select {
-    width: 100%;
-    height: var(--wa-form-control-height);
-    padding: 0 var(--wa-form-control-padding-inline);
-
-    color: var(--wa-form-control-value-color);
-    font-size: var(--wa-form-control-value-size);
-    font-family: inherit;
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-    vertical-align: middle;
-
-    background-color: var(--wa-form-control-background-color);
-    border-color: var(--wa-form-control-border-color);
-    border-style: var(--wa-form-control-border-style);
-    border-width: var(--wa-form-control-border-width);
-    border-radius: var(--wa-form-control-border-radius);
-
-    transition:
-      background-color var(--wa-transition-normal),
-      border var(--wa-transition-normal),
-      outline var(--wa-transition-fast);
-    transition-timing-function: var(--wa-transition-easing);
-
-    cursor: text;
-
-    .wa-scope &::placeholder {
-      color: var(--wa-form-control-placeholder-color);
-
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .wa-scope &:focus {
-      outline: none;
-    }
-
-    .wa-scope &:focus-visible {
-      outline: var(--wa-focus-ring);
-      outline-offset: var(--wa-focus-ring-offset);
-    }
-
-    .wa-scope &:disabled {
-      opacity: 0.5;
-
-      cursor: not-allowed;
-    }
-
-    .wa-scope &.wa-outlined {
-      background-color: var(--wa-form-control-background-color);
-      border-color: var(--wa-form-control-border-color);
-    }
-
-    .wa-scope &.wa-filled {
-      background-color: var(--wa-color-neutral-fill-quiet);
-      border-color: var(--wa-color-neutral-fill-quiet);
-
-      .wa-scope &.wa-outlined {
-        border-color: var(--wa-form-control-border-color);
-      }
-    }
-
-    .wa-scope &.wa-pill {
-      border-radius: var(--wa-border-radius-pill);
-    }
-  }
-
-  /* Textarea */
-  .wa-scope textarea {
-    height: auto;
-    min-height: var(--wa-form-control-height);
-    padding: calc(var(--wa-form-control-padding-block) - ((1lh - 1em) / 2)) var(--wa-form-control-padding-inline); /* accounts for the larger line height of textarea content */
-
-    line-height: var(--wa-line-height-normal);
-
-    resize: vertical;
-  }
-
-  /* Select */
-  .wa-scope select {
-    --icon-caret: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="rgb(180 180 200)" d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>');
-
-    appearance: none;
-
-    position: relative;
-
-    min-width: 0;
-    overflow: hidden;
-
-    background-image: var(--icon-caret), var(--icon-caret);
-    background-repeat: no-repeat;
-    background-position: center right var(--wa-form-control-padding-inline);
-    background-blend-mode: hue, difference;
-    background-size: 1rem 1rem;
-
-    cursor: pointer;
-  }
-  /* #endregion */
-
-  /* #region Color Pickers ~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope input[type='color'] {
-    display: block;
-
-    block-size: var(--wa-form-control-height);
-    inline-size: var(--wa-form-control-height);
-    padding: calc(var(--wa-form-control-border-width) * 2);
-
-    font-size: 1em;
-
-    background: transparent;
-    border: var(--wa-form-control-border-width) var(--wa-border-style) var(--wa-form-control-border-color);
-    border-radius: var(--wa-form-control-border-radius);
-
-    cursor: pointer;
-    forced-color-adjust: none;
-
-    .wa-scope &::-webkit-color-swatch-wrapper {
-      padding: 0;
-      border-radius: inherit;
-    }
-
-    .wa-scope &::-webkit-color-swatch {
-      border: none;
-      border-radius: calc(var(--wa-form-control-border-radius) - var(--wa-form-control-border-width) * 3);
-    }
-
-    .wa-scope &::-moz-color-swatch {
-      border: none;
-      border-radius: calc(var(--wa-form-control-border-radius) - var(--wa-form-control-border-width) * 3);
-    }
-
-    .wa-scope &:focus-visible {
-      outline: var(--wa-focus-ring);
-      outline-offset: var(--wa-focus-ring-offset);
-    }
-  }
-  /* #endregion */
-
-  /* #region Sliders ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope input[type='range'] {
-    --thumb-width: 1.4em;
-    --thumb-height: 1.4em;
-    --track-size: 0.5em;
-
-    -webkit-appearance: none;
-
-    display: flex;
-    flex-direction: column;
-    position: relative;
-
-    width: 100%;
-    height: var(--track-size);
-    margin: 0;
-
-    font-size: inherit;
-    line-height: var(--wa-form-control-height);
-    vertical-align: middle;
-
-    background-color: var(--wa-color-neutral-fill-normal);
-    border-radius: calc(var(--track-size) / 2);
-
-    .wa-scope &::-webkit-slider-runnable-track {
-      width: 100%;
-      height: var(--track-size);
-
-      border: none;
-      border-radius: 999px;
-    }
-
-    .wa-scope &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-
-      width: var(--thumb-width);
-      height: var(--thumb-height);
-      margin-top: calc(var(--thumb-height) / -2 + var(--track-size) / 2);
-
-      background-color: var(--wa-form-control-activated-color);
-      border: solid 0.125em var(--wa-color-surface-default);
-      border-radius: 50%;
-
-      transition-property: background-color, border-color, box-shadow, color;
-      transition-duration: var(--wa-transition-normal);
-      transition-timing-function: var(--wa-transition-easing);
-    }
-
-    .wa-scope &:enabled {
-      .wa-scope &:focus-visible::-webkit-slider-thumb {
-        outline: var(--wa-focus-ring);
-        outline-offset: var(--wa-focus-ring-offset);
-      }
-
-      .wa-scope &::-webkit-slider-thumb {
-        cursor: pointer;
-      }
-
-      .wa-scope &::-webkit-slider-thumb:active {
-        cursor: grabbing;
-      }
-    }
-
-    .wa-scope &::-moz-focus-outer {
-      border: 0;
-    }
-
-    .wa-scope &::-moz-range-progress {
-      height: var(--track-size);
-
-      background-color: var(--wa-color-neutral-fill-normal);
-      border-radius: 3px;
-    }
-
-    .wa-scope &::-moz-range-track {
-      width: 100%;
-      height: var(--track-size);
-
-      background-color: var(--wa-color-neutral-fill-normal);
-      border: none;
-      border-radius: 999px;
-    }
-
-    .wa-scope &::-moz-range-thumb {
-      width: var(--thumb-width);
-      height: var(--thumb-height);
-
-      background-color: var(--wa-form-control-activated-color);
-      border: solid 0.125em var(--wa-color-surface-default);
-      border-radius: 50%;
-
-      transition-property: background-color, border-color, box-shadow, color;
-      transition-duration: var(--wa-transition-normal);
-      transition-timing-function: var(--wa-transition-easing);
-    }
-
-    .wa-scope &:enabled {
-      .wa-scope &:focus-visible::-moz-range-thumb {
-        outline: var(--wa-focus-ring);
-        outline-offset: var(--wa-focus-ring-offset);
-      }
-
-      .wa-scope &::-moz-range-thumb {
-        cursor: pointer;
-      }
-
-      .wa-scope &::-moz-range-thumb:active {
-        cursor: grabbing;
-      }
-    }
-  }
-
-  .wa-scope label > input[type='range'] {
-    margin-block-start: 1em;
-  }
-
-  .wa-scope input[type='range']:focus {
-    outline: none;
-  }
-
-  .wa-scope input[type='range']:disabled {
-    opacity: 0.5;
-
-    cursor: not-allowed;
-
-    .wa-scope &::-webkit-slider-thumb {
-      cursor: not-allowed;
-    }
-
-    .wa-scope &::-moz-range-thumb {
-      cursor: not-allowed;
-    }
-  }
-  /* #endregion */
-
-  /* #region Progress ~~~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope progress {
-    --indicator-color: var(--wa-color-brand-fill-loud);
-
-    width: 100%;
-    height: 1rem;
-    overflow: hidden;
-
-    color: var(--wa-color-brand-on-loud);
-
-    background-color: var(--wa-color-neutral-fill-normal);
-    border-radius: var(--wa-border-radius-pill);
-
-    .wa-scope &::-webkit-progress-bar {
-      background: transparent;
-    }
-
-    .wa-scope &[value]::-webkit-progress-value {
-      background-color: var(--indicator-color);
-    }
-
-    .wa-scope &::-moz-progress-bar {
-      background-color: var(--indicator-color);
-    }
-  }
-
-  /* Indeterminate */
-  .wa-scope progress:not([value]) {
-    padding-left: var(--inset-inline-start);
-
-    animation: wa-progress-indeterminate 2.5s infinite cubic-bezier(0.37, 0, 0.63, 1);
-
-    .wa-scope &::-webkit-progress-bar {
-      background-color: var(
-        --indicator-color
-      ); /* Chrome does not render a ::-webkit-progress-value for indeterminate progress */
-    }
-  }
-
-  @keyframes wa-fade-in {
-    from {
-      opacity: 0;
-    }
-  }
-
-  /* For some reason Chrome fiercely resists animations on this pseudo
-\t  so we had to do it with padding on <progress> */
-  @keyframes wa-progress-indeterminate {
-    0% {
-      padding-inline-end: 100%;
-    }
-
-    25%,
-    100% {
-      padding-inline-end: 0%;
-    }
-
-    75%,
-    100% {
-      padding-inline-start: 100%;
-    }
-  }
-  /* #endregion */
-
-  /* #region Validation ~~~~~~~~~~~~~~~~~~~~~~ */
-  .wa-scope .wa-invalid {
-    --wa-form-control-border-color: var(--wa-color-danger-border-loud);
-    --wa-form-control-activated-color: var(--wa-color-danger-fill-loud);
-    --wa-form-control-value-color: var(--wa-color-danger-on-quiet);
-
-    /* Focus ring */
-    --wa-color-focus: var(--wa-color-danger-border-loud);
-
-    /* Help text */
-    --wa-color-text-quiet: var(--wa-color-danger-on-quiet);
-  }
-
-  .wa-scope .wa-valid {
-    --wa-form-control-border-color: var(--wa-color-success-border-loud);
-    --wa-form-control-activated-color: var(--wa-color-success-fill-loud);
-    --wa-form-control-value-color: var(--wa-color-success-on-quiet);
-
-    /* Focus ring */
-    --wa-color-focus: var(--wa-color-success-border-loud);
-
-    /* Help text */
-    --wa-color-text-quiet: var(--wa-color-success-on-quiet);
-  }
-  /* #endregion */
-}
-/* CSS utilities */
-@layer wa-utilities {
-  /*
-   * Utility to minimize FOUCE and show custom elements only after they're registered
-   */
-  .wa-scope .wa-cloak:has(:not(:defined)) {
-    animation: 2s step-end wa-fouce-cloak;
-  }
-
-  @keyframes wa-fouce-cloak {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-}
-@layer wa-utilities {
-  .wa-scope .wa-visually-hidden:not(:focus-within),
-  .wa-scope .wa-visually-hidden-force,
-  .wa-scope .wa-visually-hidden-hint::part(hint),
-  .wa-scope .wa-visually-hidden-label::part(label) {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    clip: rect(0 0 0 0) !important;
-    clip-path: inset(50%) !important;
-    border: none !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-    padding: 0 !important;
-  }
-}
-@layer wa-utilities {
-  /* These scroll lock helpers are put into this CSS file to avoid strict CSPs that affect style tag loading. */
-  @supports (scrollbar-gutter: stable) {
-    .wa-scope .wa-scroll-lock {
-      scrollbar-gutter: var(--wa-scroll-lock-gutter) !important;
-    }
-
-    .wa-scope .wa-scroll-lock body {
-      overflow: hidden !important;
-    }
-  }
-
-  /** This can go away once Safari has scrollbar-gutter support. */
-  @supports not (scrollbar-gutter: stable) {
-    .wa-scope .wa-scroll-lock body {
-      padding-right: var(--wa-scroll-lock-size) !important;
-      overflow: hidden !important;
-    }
-  }
-}
-@layer wa-utilities {
-  .wa-scope .wa-placeholder {
-    align-self: stretch;
-    background-color: var(--wa-color-neutral-fill-quiet);
-    border: dashed var(--wa-border-width-s) var(--wa-color-neutral-border-normal);
-    border-radius: var(--wa-border-radius-l);
-    padding: var(--wa-space-3xl);
-  }
-}
-@layer wa-utilities {
-  .wa-scope .wa-align-items-start {
-    align-items: flex-start;
-  }
-  .wa-scope .wa-align-items-end {
-    align-items: flex-end;
-  }
-  .wa-scope .wa-align-items-center {
-    align-items: center;
-  }
-  .wa-scope .wa-align-items-stretch {
-    align-items: stretch;
-  }
-  .wa-scope .wa-align-items-baseline {
-    align-items: baseline;
-  }
-}
-@layer wa-utilities {
-  .wa-scope .wa-border-radius-s {
-    border-radius: var(--wa-border-radius-s);
-  }
-  .wa-scope .wa-border-radius-m {
-    border-radius: var(--wa-border-radius-m);
-  }
-  .wa-scope .wa-border-radius-l {
-    border-radius: var(--wa-border-radius-l);
-  }
-  .wa-scope .wa-border-radius-pill {
-    border-radius: var(--wa-border-radius-pill);
-  }
-  .wa-scope .wa-border-radius-circle {
-    border-radius: var(--wa-border-radius-circle);
-  }
-  .wa-scope .wa-border-radius-square {
-    border-radius: var(--wa-border-radius-square);
-  }
-}
-@layer wa-utilities {
-  /* Apply Flexbox with 0 specificity to ensure a gap util produces a visible change */
-  .wa-scope :where(
-    .wa-gap-0,
-    .wa-gap-3xs,
-    .wa-gap-2xs,
-    .wa-gap-xs,
-    .wa-gap-s,
-    .wa-gap-m,
-    .wa-gap-l,
-    .wa-gap-xl,
-    .wa-gap-2xl,
-    .wa-gap-3xl
-  ) {
-    display: flex;
-  }
-
-  .wa-scope .wa-gap-0 {
-    gap: 0px;
-  }
-  .wa-scope .wa-gap-3xs {
-    gap: var(--wa-space-3xs);
-  }
-  .wa-scope .wa-gap-2xs {
-    gap: var(--wa-space-2xs);
-  }
-  .wa-scope .wa-gap-xs {
-    gap: var(--wa-space-xs);
-  }
-  .wa-scope .wa-gap-s {
-    gap: var(--wa-space-s);
-  }
-  .wa-scope .wa-gap-m {
-    gap: var(--wa-space-m);
-  }
-  .wa-scope .wa-gap-l {
-    gap: var(--wa-space-l);
-  }
-  .wa-scope .wa-gap-xl {
-    gap: var(--wa-space-xl);
-  }
-  .wa-scope .wa-gap-2xl {
-    gap: var(--wa-space-2xl);
-  }
-  .wa-scope .wa-gap-3xl {
-    gap: var(--wa-space-3xl);
-  }
-}
-@layer wa-utilities {
-  /* #region General ~~~~~ */
-  .wa-scope [class*='wa-body'] {
-    font-family: var(--wa-font-family-body);
-    font-weight: var(--wa-font-weight-body);
-    line-height: var(--wa-line-height-normal);
-  }
-
-  .wa-scope [class*='wa-heading'] {
-    font-family: var(--wa-font-family-heading);
-    font-weight: var(--wa-font-weight-heading);
-    line-height: var(--wa-line-height-condensed);
-    text-wrap: balance;
-  }
-
-  .wa-scope [class*='wa-caption'] {
-    color: var(--wa-color-text-quiet);
-    font-family: var(--wa-font-family-body);
-    font-weight: var(--wa-font-weight-body);
-    line-height: var(--wa-line-height-condensed);
-  }
-
-  .wa-scope [class*='wa-longform'] {
-    font-family: var(--wa-font-family-longform);
-    font-weight: var(--wa-font-weight-longform);
-    line-height: var(--wa-line-height-normal);
-  }
-
-  .wa-scope .wa-font-size-2xs,
-  .wa-scope .wa-body-2xs,
-  .wa-scope .wa-heading-2xs,
-  .wa-scope .wa-caption-2xs,
-  .wa-scope .wa-longform-2xs {
-    font-size: var(--wa-font-size-2xs);
-  }
-
-  .wa-scope .wa-font-size-xs,
-  .wa-scope .wa-body-xs,
-  .wa-scope .wa-heading-xs,
-  .wa-scope .wa-caption-xs,
-  .wa-scope .wa-longform-xs {
-    font-size: var(--wa-font-size-xs);
-  }
-
-  .wa-scope .wa-font-size-s,
-  .wa-scope .wa-body-s,
-  .wa-scope .wa-heading-s,
-  .wa-scope .wa-caption-s,
-  .wa-scope .wa-longform-s {
-    font-size: var(--wa-font-size-s);
-  }
-
-  .wa-scope .wa-font-size-m,
-  .wa-scope .wa-body-m,
-  .wa-scope .wa-heading-m,
-  .wa-scope .wa-caption-m,
-  .wa-scope .wa-longform-m {
-    font-size: var(--wa-font-size-m);
-  }
-
-  .wa-scope .wa-font-size-l,
-  .wa-scope .wa-body-l,
-  .wa-scope .wa-heading-l,
-  .wa-scope .wa-caption-l,
-  .wa-scope .wa-longform-l {
-    font-size: var(--wa-font-size-l);
-  }
-
-  .wa-scope .wa-font-size-xl,
-  .wa-scope .wa-body-xl,
-  .wa-scope .wa-heading-xl,
-  .wa-scope .wa-caption-xl,
-  .wa-scope .wa-longform-xl {
-    font-size: var(--wa-font-size-xl);
-  }
-
-  .wa-scope .wa-font-size-2xl,
-  .wa-scope .wa-body-2xl,
-  .wa-scope .wa-heading-2xl,
-  .wa-scope .wa-caption-2xl,
-  .wa-scope .wa-longform-2xl {
-    font-size: var(--wa-font-size-2xl);
-  }
-
-  .wa-scope .wa-font-size-3xl,
-  .wa-scope .wa-body-3xl,
-  .wa-scope .wa-heading-3xl,
-  .wa-scope .wa-caption-3xl,
-  .wa-scope .wa-longform-3xl {
-    font-size: var(--wa-font-size-3xl);
-  }
-
-  .wa-scope .wa-font-size-4xl,
-  .wa-scope .wa-body-4xl,
-  .wa-scope .wa-heading-4xl,
-  .wa-scope .wa-caption-4xl,
-  .wa-scope .wa-longform-4xl {
-    font-size: var(--wa-font-size-4xl);
-  }
-
-  .wa-scope .wa-font-weight-light {
-    font-weight: var(--wa-font-weight-light);
-  }
-
-  .wa-scope .wa-font-weight-normal {
-    font-weight: var(--wa-font-weight-normal);
-  }
-
-  .wa-scope .wa-font-weight-semibold {
-    font-weight: var(--wa-font-weight-semibold);
-  }
-
-  .wa-scope .wa-font-weight-bold {
-    font-weight: var(--wa-font-weight-bold);
-  }
-
-  .wa-scope .wa-color-text-normal {
-    color: var(--wa-color-text-normal);
-  }
-
-  .wa-scope .wa-color-text-quiet {
-    color: var(--wa-color-text-quiet);
-  }
-
-  .wa-scope .wa-color-text-link {
-    color: var(--wa-color-text-link);
-  }
-
-  .wa-scope .wa-text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  /* #endregion */
-
-  /* #region Links ~~~~~~~ */
-  .wa-scope .wa-link {
-    color: var(--wa-color-text-link);
-    text-decoration: var(--wa-link-decoration-default);
-    -webkit-text-decoration: var(--wa-link-decoration-default);
-
-    @media (hover: hover) {
-      .wa-scope &:hover {
-        color: color-mix(in oklab, var(--wa-color-text-link) 100%, var(--wa-color-mix-hover));
-        text-decoration: var(--wa-link-decoration-hover);
-        -webkit-text-decoration: var(--wa-link-decoration-hover);
-      }
-    }
-  }
-
-  .wa-scope .wa-link-plain {
-    color: var(--wa-color-text-normal);
-    text-decoration: none;
-
-    @media (hover: hover) {
-      .wa-scope &:hover {
-        color: color-mix(in oklab, currentColor, var(--wa-color-mix-hover));
-        text-decoration: none;
-      }
-    }
-  }
-  /* #endregion */
-
-  /* #region Lists ~~~~~~~ */
-  .wa-scope .wa-list-plain:is(ol, ul) {
-    list-style: none;
-    padding-inline-start: 0;
-
-    .wa-scope > li {
-      margin-inline-start: 0;
-    }
-  }
-  /* #endregion */
-
-  /* #region Form Controls */
-  .wa-scope .wa-form-control-label {
-    color: var(--wa-form-control-label-color);
-    font-weight: var(--wa-form-control-label-font-weight);
-    line-height: var(--wa-form-control-label-line-height);
-  }
-
-  .wa-scope .wa-form-control-value {
-    color: var(--wa-form-control-value-color);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-  }
-
-  .wa-scope .wa-form-control-placeholder {
-    color: var(--wa-form-control-placeholder-color);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-  }
-
-  .wa-scope .wa-form-control-hint {
-    color: var(--wa-form-control-hint-color);
-    font-weight: var(--wa-form-control-hint-font-weight);
-    font-size: var(--wa-font-size-smaller);
-    line-height: var(--wa-form-control-hint-line-height);
-  }
-  /* #endregion */
-}
-@layer wa-utilities {
-  .wa-scope :is(
-      [class*='wa-cluster'],
-      [class*='wa-flank'],
-      [class*='wa-frame'],
-      [class*='wa-grid'],
-      [class*='wa-stack'],
-      [class*='wa-split']
-    )
-    > * {
-    margin-block: 0;
-    margin-inline: 0;
-  }
-
-  .wa-scope :where(
-    [class*='wa-cluster'],
-    [class*='wa-flank'],
-    [class*='wa-frame'],
-    [class*='wa-grid'],
-    [class*='wa-stack'],
-    [class*='wa-split']
-  ) {
-    gap: var(--wa-space-m);
-  }
-
-  /* #region Cluster */
-  .wa-scope [class*='wa-cluster'] {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .wa-scope :where([class*='wa-cluster']) {
-    align-items: center;
-  }
-  /* #endregion */
-
-  /* #region Flank */
-  .wa-scope [class*='wa-flank'] {
-    display: flex;
-    flex-wrap: wrap;
-
-    --content-percentage: initial;
-    --flank-size: initial;
-  }
-
-  .wa-scope [class*='wa-flank']:not([class*='\\:end']) > :first-child,
-  .wa-scope [class*='wa-flank'][class*='\\:start'] > :first-child {
-    flex-basis: var(--flank-size, auto);
-    flex-grow: 1;
-  }
-  .wa-scope [class*='wa-flank']:not([class*='\\:end']) > :last-child,
-  .wa-scope [class*='wa-flank'][class*='\\:start'] > :last-child {
-    flex-basis: 0;
-    flex-grow: 999;
-    min-inline-size: var(--content-percentage, 50%);
-  }
-
-  .wa-scope [class*='wa-flank'][class*='\\:end'] > :last-child {
-    flex-basis: var(--flank-size, auto);
-    flex-grow: 1;
-  }
-  .wa-scope [class*='wa-flank'][class*='\\:end'] > :first-child {
-    flex-basis: 0;
-    flex-grow: 999;
-    min-inline-size: var(--content-percentage, 50%);
-  }
-
-  .wa-scope :where([class*='wa-flank']) {
-    align-items: center;
-  }
-  /* #endregion */
-
-  /* #region Frame */
-  .wa-scope [class*='wa-frame'] {
-    display: flex;
-    aspect-ratio: 1 / 1;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .wa-scope [class*='wa-frame'] > img,
-  .wa-scope [class*='wa-frame'] > video {
-    block-size: 100%;
-    inline-size: 100%;
-    object-fit: cover;
-  }
-
-  .wa-scope [class*='wa-frame'][class*='\\:square'] {
-    aspect-ratio: 1 / 1;
-  }
-  .wa-scope [class*='wa-frame'][class*='\\:landscape'] {
-    aspect-ratio: 16 / 9;
-  }
-  .wa-scope [class*='wa-frame'][class*='\\:portrait'] {
-    aspect-ratio: 9 / 16;
-  }
-
-  .wa-scope :where([class*='wa-frame']) {
-    align-items: center;
-  }
-  /* #endregion */
-
-  /* #region Grid */
-  .wa-scope [class*='wa-grid'] {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(var(--min-column-size, 20ch), 100%), 1fr));
-
-    --min-column-size: initial;
-  }
-
-  .wa-scope .wa-span-grid {
-    grid-column: 1 / -1;
-  }
-  /* #endregion */
-
-  /* #region Split */
-  .wa-scope [class*='wa-split'] {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-
-  .wa-scope [class*='wa-split'],
-  .wa-scope [class*='wa-split'][class*='\\:row'] {
-    flex-direction: row;
-    block-size: auto;
-    inline-size: 100%;
-  }
-
-  .wa-scope [class*='wa-split']:not([class*='\\:column']) > :first-child {
-    flex: 0 1 auto;
-  }
-
-  .wa-scope [class*='wa-split'][class*='\\:column'] {
-    flex-direction: column;
-    block-size: auto;
-    inline-size: auto;
-    align-self: stretch;
-  }
-
-  .wa-scope :where([class*='wa-split']) {
-    align-items: center;
-  }
-
-  /* #endregion */
-
-  /* #region Stack */
-  .wa-scope [class*='wa-stack'] {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  .wa-scope :where([class*='wa-stack']) {
-    align-items: stretch;
-  }
-  /* #endregion */
-}
-/* Theme */
 /* Rules shared by all palettes */
 @layer wa-color-variant {
-  :where(.wa-scope),
-  .wa-scope .wa-brand-blue {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-brand-blue {
     --wa-color-brand-95: var(--wa-color-blue-95);
     --wa-color-brand-90: var(--wa-color-blue-90);
     --wa-color-brand-80: var(--wa-color-blue-80);
@@ -1955,7 +28,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-blue-on);
   }
 
-  .wa-scope .wa-brand-red {
+  #lexml-parecer-app .wa-brand-red {
     --wa-color-brand-95: var(--wa-color-red-95);
     --wa-color-brand-90: var(--wa-color-red-90);
     --wa-color-brand-80: var(--wa-color-red-80);
@@ -1971,7 +44,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-red-on);
   }
 
-  .wa-scope .wa-brand-orange {
+  #lexml-parecer-app .wa-brand-orange {
     --wa-color-brand-95: var(--wa-color-orange-95);
     --wa-color-brand-90: var(--wa-color-orange-90);
     --wa-color-brand-80: var(--wa-color-orange-80);
@@ -1987,7 +60,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-orange-on);
   }
 
-  .wa-scope .wa-brand-yellow {
+  #lexml-parecer-app .wa-brand-yellow {
     --wa-color-brand-95: var(--wa-color-yellow-95);
     --wa-color-brand-90: var(--wa-color-yellow-90);
     --wa-color-brand-80: var(--wa-color-yellow-80);
@@ -2003,7 +76,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-yellow-on);
   }
 
-  .wa-scope .wa-brand-green {
+  #lexml-parecer-app .wa-brand-green {
     --wa-color-brand-95: var(--wa-color-green-95);
     --wa-color-brand-90: var(--wa-color-green-90);
     --wa-color-brand-80: var(--wa-color-green-80);
@@ -2019,7 +92,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-green-on);
   }
 
-  .wa-scope .wa-brand-cyan {
+  #lexml-parecer-app .wa-brand-cyan {
     --wa-color-brand-95: var(--wa-color-cyan-95);
     --wa-color-brand-90: var(--wa-color-cyan-90);
     --wa-color-brand-80: var(--wa-color-cyan-80);
@@ -2035,7 +108,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-cyan-on);
   }
 
-  .wa-scope .wa-brand-indigo {
+  #lexml-parecer-app .wa-brand-indigo {
     --wa-color-brand-95: var(--wa-color-indigo-95);
     --wa-color-brand-90: var(--wa-color-indigo-90);
     --wa-color-brand-80: var(--wa-color-indigo-80);
@@ -2051,7 +124,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-indigo-on);
   }
 
-  .wa-scope .wa-brand-purple {
+  #lexml-parecer-app .wa-brand-purple {
     --wa-color-brand-95: var(--wa-color-purple-95);
     --wa-color-brand-90: var(--wa-color-purple-90);
     --wa-color-brand-80: var(--wa-color-purple-80);
@@ -2067,7 +140,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-purple-on);
   }
 
-  .wa-scope .wa-brand-pink {
+  #lexml-parecer-app .wa-brand-pink {
     --wa-color-brand-95: var(--wa-color-pink-95);
     --wa-color-brand-90: var(--wa-color-pink-90);
     --wa-color-brand-80: var(--wa-color-pink-80);
@@ -2083,7 +156,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-pink-on);
   }
 
-  .wa-scope .wa-brand-gray {
+  #lexml-parecer-app .wa-brand-gray {
     --wa-color-brand-95: var(--wa-color-gray-95);
     --wa-color-brand-90: var(--wa-color-gray-90);
     --wa-color-brand-80: var(--wa-color-gray-80);
@@ -2100,8 +173,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(.wa-scope),
-  .wa-scope .wa-neutral-gray {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-neutral-gray {
     --wa-color-neutral-95: var(--wa-color-gray-95);
     --wa-color-neutral-90: var(--wa-color-gray-90);
     --wa-color-neutral-80: var(--wa-color-gray-80);
@@ -2117,7 +190,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-gray-on);
   }
 
-  .wa-scope .wa-neutral-red {
+  #lexml-parecer-app .wa-neutral-red {
     --wa-color-neutral-95: var(--wa-color-red-95);
     --wa-color-neutral-90: var(--wa-color-red-90);
     --wa-color-neutral-80: var(--wa-color-red-80);
@@ -2133,7 +206,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-red-on);
   }
 
-  .wa-scope .wa-neutral-orange {
+  #lexml-parecer-app .wa-neutral-orange {
     --wa-color-neutral-95: var(--wa-color-orange-95);
     --wa-color-neutral-90: var(--wa-color-orange-90);
     --wa-color-neutral-80: var(--wa-color-orange-80);
@@ -2149,7 +222,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-orange-on);
   }
 
-  .wa-scope .wa-neutral-yellow {
+  #lexml-parecer-app .wa-neutral-yellow {
     --wa-color-neutral-95: var(--wa-color-yellow-95);
     --wa-color-neutral-90: var(--wa-color-yellow-90);
     --wa-color-neutral-80: var(--wa-color-yellow-80);
@@ -2165,7 +238,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-yellow-on);
   }
 
-  .wa-scope .wa-neutral-green {
+  #lexml-parecer-app .wa-neutral-green {
     --wa-color-neutral-95: var(--wa-color-green-95);
     --wa-color-neutral-90: var(--wa-color-green-90);
     --wa-color-neutral-80: var(--wa-color-green-80);
@@ -2181,7 +254,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-green-on);
   }
 
-  .wa-scope .wa-neutral-cyan {
+  #lexml-parecer-app .wa-neutral-cyan {
     --wa-color-neutral-95: var(--wa-color-cyan-95);
     --wa-color-neutral-90: var(--wa-color-cyan-90);
     --wa-color-neutral-80: var(--wa-color-cyan-80);
@@ -2197,7 +270,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-cyan-on);
   }
 
-  .wa-scope .wa-neutral-blue {
+  #lexml-parecer-app .wa-neutral-blue {
     --wa-color-neutral-95: var(--wa-color-blue-95);
     --wa-color-neutral-90: var(--wa-color-blue-90);
     --wa-color-neutral-80: var(--wa-color-blue-80);
@@ -2213,7 +286,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-blue-on);
   }
 
-  .wa-scope .wa-neutral-indigo {
+  #lexml-parecer-app .wa-neutral-indigo {
     --wa-color-neutral-95: var(--wa-color-indigo-95);
     --wa-color-neutral-90: var(--wa-color-indigo-90);
     --wa-color-neutral-80: var(--wa-color-indigo-80);
@@ -2229,7 +302,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-indigo-on);
   }
 
-  .wa-scope .wa-neutral-purple {
+  #lexml-parecer-app .wa-neutral-purple {
     --wa-color-neutral-95: var(--wa-color-purple-95);
     --wa-color-neutral-90: var(--wa-color-purple-90);
     --wa-color-neutral-80: var(--wa-color-purple-80);
@@ -2245,7 +318,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-purple-on);
   }
 
-  .wa-scope .wa-neutral-pink {
+  #lexml-parecer-app .wa-neutral-pink {
     --wa-color-neutral-95: var(--wa-color-pink-95);
     --wa-color-neutral-90: var(--wa-color-pink-90);
     --wa-color-neutral-80: var(--wa-color-pink-80);
@@ -2262,8 +335,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(.wa-scope),
-  .wa-scope .wa-success-green {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-success-green {
     --wa-color-success-95: var(--wa-color-green-95);
     --wa-color-success-90: var(--wa-color-green-90);
     --wa-color-success-80: var(--wa-color-green-80);
@@ -2279,7 +352,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-green-on);
   }
 
-  .wa-scope .wa-success-red {
+  #lexml-parecer-app .wa-success-red {
     --wa-color-success-95: var(--wa-color-red-95);
     --wa-color-success-90: var(--wa-color-red-90);
     --wa-color-success-80: var(--wa-color-red-80);
@@ -2295,7 +368,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-red-on);
   }
 
-  .wa-scope .wa-success-orange {
+  #lexml-parecer-app .wa-success-orange {
     --wa-color-success-95: var(--wa-color-orange-95);
     --wa-color-success-90: var(--wa-color-orange-90);
     --wa-color-success-80: var(--wa-color-orange-80);
@@ -2311,7 +384,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-orange-on);
   }
 
-  .wa-scope .wa-success-yellow {
+  #lexml-parecer-app .wa-success-yellow {
     --wa-color-success-95: var(--wa-color-yellow-95);
     --wa-color-success-90: var(--wa-color-yellow-90);
     --wa-color-success-80: var(--wa-color-yellow-80);
@@ -2327,7 +400,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-yellow-on);
   }
 
-  .wa-scope .wa-success-cyan {
+  #lexml-parecer-app .wa-success-cyan {
     --wa-color-success-95: var(--wa-color-cyan-95);
     --wa-color-success-90: var(--wa-color-cyan-90);
     --wa-color-success-80: var(--wa-color-cyan-80);
@@ -2343,7 +416,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-cyan-on);
   }
 
-  .wa-scope .wa-success-blue {
+  #lexml-parecer-app .wa-success-blue {
     --wa-color-success-95: var(--wa-color-blue-95);
     --wa-color-success-90: var(--wa-color-blue-90);
     --wa-color-success-80: var(--wa-color-blue-80);
@@ -2359,7 +432,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-blue-on);
   }
 
-  .wa-scope .wa-success-indigo {
+  #lexml-parecer-app .wa-success-indigo {
     --wa-color-success-95: var(--wa-color-indigo-95);
     --wa-color-success-90: var(--wa-color-indigo-90);
     --wa-color-success-80: var(--wa-color-indigo-80);
@@ -2375,7 +448,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-indigo-on);
   }
 
-  .wa-scope .wa-success-purple {
+  #lexml-parecer-app .wa-success-purple {
     --wa-color-success-95: var(--wa-color-purple-95);
     --wa-color-success-90: var(--wa-color-purple-90);
     --wa-color-success-80: var(--wa-color-purple-80);
@@ -2391,7 +464,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-purple-on);
   }
 
-  .wa-scope .wa-success-pink {
+  #lexml-parecer-app .wa-success-pink {
     --wa-color-success-95: var(--wa-color-pink-95);
     --wa-color-success-90: var(--wa-color-pink-90);
     --wa-color-success-80: var(--wa-color-pink-80);
@@ -2407,7 +480,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-pink-on);
   }
 
-  .wa-scope .wa-success-gray {
+  #lexml-parecer-app .wa-success-gray {
     --wa-color-success-95: var(--wa-color-gray-95);
     --wa-color-success-90: var(--wa-color-gray-90);
     --wa-color-success-80: var(--wa-color-gray-80);
@@ -2424,8 +497,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(.wa-scope),
-  .wa-scope .wa-warning-yellow {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-warning-yellow {
     --wa-color-warning-95: var(--wa-color-yellow-95);
     --wa-color-warning-90: var(--wa-color-yellow-90);
     --wa-color-warning-80: var(--wa-color-yellow-80);
@@ -2441,7 +514,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-yellow-on);
   }
 
-  .wa-scope .wa-warning-red {
+  #lexml-parecer-app .wa-warning-red {
     --wa-color-warning-95: var(--wa-color-red-95);
     --wa-color-warning-90: var(--wa-color-red-90);
     --wa-color-warning-80: var(--wa-color-red-80);
@@ -2457,7 +530,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-red-on);
   }
 
-  .wa-scope .wa-warning-orange {
+  #lexml-parecer-app .wa-warning-orange {
     --wa-color-warning-95: var(--wa-color-orange-95);
     --wa-color-warning-90: var(--wa-color-orange-90);
     --wa-color-warning-80: var(--wa-color-orange-80);
@@ -2473,7 +546,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-orange-on);
   }
 
-  .wa-scope .wa-warning-green {
+  #lexml-parecer-app .wa-warning-green {
     --wa-color-warning-95: var(--wa-color-green-95);
     --wa-color-warning-90: var(--wa-color-green-90);
     --wa-color-warning-80: var(--wa-color-green-80);
@@ -2489,7 +562,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-green-on);
   }
 
-  .wa-scope .wa-warning-cyan {
+  #lexml-parecer-app .wa-warning-cyan {
     --wa-color-warning-95: var(--wa-color-cyan-95);
     --wa-color-warning-90: var(--wa-color-cyan-90);
     --wa-color-warning-80: var(--wa-color-cyan-80);
@@ -2505,7 +578,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-cyan-on);
   }
 
-  .wa-scope .wa-warning-blue {
+  #lexml-parecer-app .wa-warning-blue {
     --wa-color-warning-95: var(--wa-color-blue-95);
     --wa-color-warning-90: var(--wa-color-blue-90);
     --wa-color-warning-80: var(--wa-color-blue-80);
@@ -2521,7 +594,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-blue-on);
   }
 
-  .wa-scope .wa-warning-indigo {
+  #lexml-parecer-app .wa-warning-indigo {
     --wa-color-warning-95: var(--wa-color-indigo-95);
     --wa-color-warning-90: var(--wa-color-indigo-90);
     --wa-color-warning-80: var(--wa-color-indigo-80);
@@ -2537,7 +610,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-indigo-on);
   }
 
-  .wa-scope .wa-warning-purple {
+  #lexml-parecer-app .wa-warning-purple {
     --wa-color-warning-95: var(--wa-color-purple-95);
     --wa-color-warning-90: var(--wa-color-purple-90);
     --wa-color-warning-80: var(--wa-color-purple-80);
@@ -2553,7 +626,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-purple-on);
   }
 
-  .wa-scope .wa-warning-pink {
+  #lexml-parecer-app .wa-warning-pink {
     --wa-color-warning-95: var(--wa-color-pink-95);
     --wa-color-warning-90: var(--wa-color-pink-90);
     --wa-color-warning-80: var(--wa-color-pink-80);
@@ -2569,7 +642,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-pink-on);
   }
 
-  .wa-scope .wa-warning-gray {
+  #lexml-parecer-app .wa-warning-gray {
     --wa-color-warning-95: var(--wa-color-gray-95);
     --wa-color-warning-90: var(--wa-color-gray-90);
     --wa-color-warning-80: var(--wa-color-gray-80);
@@ -2586,8 +659,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(.wa-scope),
-  .wa-scope .wa-danger-red {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-danger-red {
     --wa-color-danger-95: var(--wa-color-red-95);
     --wa-color-danger-90: var(--wa-color-red-90);
     --wa-color-danger-80: var(--wa-color-red-80);
@@ -2603,7 +676,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-red-on);
   }
 
-  .wa-scope .wa-danger-orange {
+  #lexml-parecer-app .wa-danger-orange {
     --wa-color-danger-95: var(--wa-color-orange-95);
     --wa-color-danger-90: var(--wa-color-orange-90);
     --wa-color-danger-80: var(--wa-color-orange-80);
@@ -2619,7 +692,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-orange-on);
   }
 
-  .wa-scope .wa-danger-yellow {
+  #lexml-parecer-app .wa-danger-yellow {
     --wa-color-danger-95: var(--wa-color-yellow-95);
     --wa-color-danger-90: var(--wa-color-yellow-90);
     --wa-color-danger-80: var(--wa-color-yellow-80);
@@ -2635,7 +708,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-yellow-on);
   }
 
-  .wa-scope .wa-danger-green {
+  #lexml-parecer-app .wa-danger-green {
     --wa-color-danger-95: var(--wa-color-green-95);
     --wa-color-danger-90: var(--wa-color-green-90);
     --wa-color-danger-80: var(--wa-color-green-80);
@@ -2651,7 +724,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-green-on);
   }
 
-  .wa-scope .wa-danger-cyan {
+  #lexml-parecer-app .wa-danger-cyan {
     --wa-color-danger-95: var(--wa-color-cyan-95);
     --wa-color-danger-90: var(--wa-color-cyan-90);
     --wa-color-danger-80: var(--wa-color-cyan-80);
@@ -2667,7 +740,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-cyan-on);
   }
 
-  .wa-scope .wa-danger-blue {
+  #lexml-parecer-app .wa-danger-blue {
     --wa-color-danger-95: var(--wa-color-blue-95);
     --wa-color-danger-90: var(--wa-color-blue-90);
     --wa-color-danger-80: var(--wa-color-blue-80);
@@ -2683,7 +756,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-blue-on);
   }
 
-  .wa-scope .wa-danger-indigo {
+  #lexml-parecer-app .wa-danger-indigo {
     --wa-color-danger-95: var(--wa-color-indigo-95);
     --wa-color-danger-90: var(--wa-color-indigo-90);
     --wa-color-danger-80: var(--wa-color-indigo-80);
@@ -2699,7 +772,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-indigo-on);
   }
 
-  .wa-scope .wa-danger-purple {
+  #lexml-parecer-app .wa-danger-purple {
     --wa-color-danger-95: var(--wa-color-purple-95);
     --wa-color-danger-90: var(--wa-color-purple-90);
     --wa-color-danger-80: var(--wa-color-purple-80);
@@ -2715,7 +788,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-purple-on);
   }
 
-  .wa-scope .wa-danger-pink {
+  #lexml-parecer-app .wa-danger-pink {
     --wa-color-danger-95: var(--wa-color-pink-95);
     --wa-color-danger-90: var(--wa-color-pink-90);
     --wa-color-danger-80: var(--wa-color-pink-80);
@@ -2731,7 +804,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-pink-on);
   }
 
-  .wa-scope .wa-danger-gray {
+  #lexml-parecer-app .wa-danger-gray {
     --wa-color-danger-95: var(--wa-color-gray-95);
     --wa-color-danger-90: var(--wa-color-gray-90);
     --wa-color-danger-80: var(--wa-color-gray-80);
@@ -2748,8 +821,8 @@ export const waResetString = `
   }
 }
 /* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
-:where(.wa-scope),
-.wa-scope :host {
+:where(#lexml-parecer-app),
+#lexml-parecer-app :host {
   /**
     * Conditional tokens to check if the key color is >= 60
     * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
@@ -2788,8 +861,3421 @@ export const waResetString = `
   --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
 }
 @layer wa-color-palette {
-  :where(.wa-scope),
-  .wa-scope .wa-palette-default {
+  #lexml-parecer-app .wa-palette-shoelace,
+  #lexml-parecer-app .wa-palette-shoelace :host {
+    --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
+    --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
+    --wa-color-red-80: #ffb8b5 /* oklch(84.778% 0.083 21.686) */;
+    --wa-color-red-70: #fe8f8d /* oklch(76.859% 0.13466 21.762) */;
+    --wa-color-red-60: #f56667 /* oklch(68.982% 0.17631 22.472) */;
+    --wa-color-red-50: #e02c2b /* oklch(58.861% 0.21461 27.156) */;
+    --wa-color-red-40: #b5051a /* oklch(48.833% 0.19611 25.68) */;
+    --wa-color-red-30: #900015 /* oklch(41.172% 0.16676 24.609) */;
+    --wa-color-red-20: #6c000d /* oklch(33.479% 0.1356 24.617) */;
+    --wa-color-red-10: #450005 /* oklch(24.598% 0.09968 24.835) */;
+    --wa-color-red-05: #2f0002 /* oklch(19.218% 0.07801 25.517) */;
+    --wa-color-red: var(--wa-color-red-50);
+    --wa-color-red-key: 50;
+
+    --wa-color-orange-95: #fff0e4 /* oklch(96.374% 0.0228 61.238) */;
+    --wa-color-orange-90: #ffe0c8 /* oklch(92.611% 0.04689 59.917) */;
+    --wa-color-orange-80: #ffbb89 /* oklch(84.386% 0.10217 57.161) */;
+    --wa-color-orange-70: #ff9342 /* oklch(76.486% 0.15964 54.102) */;
+    --wa-color-orange-60: #f36d00 /* oklch(68.715% 0.18774 47.79) */;
+    --wa-color-orange-50: #c94e00 /* oklch(58.068% 0.17131 43.217) */;
+    --wa-color-orange-40: #9d3800 /* oklch(47.924% 0.14534 41.739) */;
+    --wa-color-orange-30: #7e2900 /* oklch(40.53% 0.1259 40.51) */;
+    --wa-color-orange-20: #5e1c00 /* oklch(32.874% 0.1027 40.228) */;
+    --wa-color-orange-10: #3b0f00 /* oklch(24.125% 0.07446 40.837) */;
+    --wa-color-orange-05: #280700 /* oklch(18.837% 0.05933 39.827) */;
+    --wa-color-orange: var(--wa-color-orange-60);
+    --wa-color-orange-key: 60;
+
+    --wa-color-yellow-95: #fef2bf /* oklch(95.823% 0.06674 96.369) */;
+    --wa-color-yellow-90: #fde588 /* oklch(92.2% 0.11633 95.327) */;
+    --wa-color-yellow-80: #f5c24b /* oklch(83.879% 0.14445 85.083) */;
+    --wa-color-yellow-70: #e9a010 /* oklch(75.825% 0.15689 75.537) */;
+    --wa-color-yellow-60: #d78000 /* oklch(67.839% 0.15287 64.455) */;
+    --wa-color-yellow-50: #b26000 /* oklch(57.324% 0.13672 58.338) */;
+    --wa-color-yellow-40: #8a4700 /* oklch(47.183% 0.11461 56.655) */;
+    --wa-color-yellow-30: #6e3700 /* oklch(40.03% 0.0976 56.323) */;
+    --wa-color-yellow-20: #522700 /* oklch(32.54% 0.07981 55.802) */;
+    --wa-color-yellow-10: #331600 /* oklch(23.846% 0.05834 56.02) */;
+    --wa-color-yellow-05: #210d00 /* oklch(18.619% 0.04431 58.553) */;
+    --wa-color-yellow: var(--wa-color-yellow-70);
+    --wa-color-yellow-key: 70;
+
+    --wa-color-green-95: #d4fce1 /* oklch(95.554% 0.05477 155.71) */;
+    --wa-color-green-90: #a4f8c2 /* oklch(91.11% 0.1107 155.35) */;
+    --wa-color-green-80: #6ae095 /* oklch(81.924% 0.15151 153.52) */;
+    --wa-color-green-70: #44c670 /* oklch(73.506% 0.16742 151) */;
+    --wa-color-green-60: #21ab52 /* oklch(65.151% 0.17062 149.59) */;
+    --wa-color-green-50: #0d873f /* oklch(54.644% 0.14593 150.18) */;
+    --wa-color-green-40: #166635 /* oklch(45.105% 0.10874 151.56) */;
+    --wa-color-green-30: #115029 /* oklch(38.182% 0.09049 151.63) */;
+    --wa-color-green-20: #0a3a1c /* oklch(30.854% 0.07315 151.48) */;
+    --wa-color-green-10: #04230f /* oklch(22.692% 0.05324 151.92) */;
+    --wa-color-green-05: #021608 /* oklch(17.756% 0.04076 152.68) */;
+    --wa-color-green: var(--wa-color-green-60);
+    --wa-color-green-key: 60;
+
+    --wa-color-cyan-95: #d8fafc /* oklch(96.149% 0.03524 200.93) */;
+    --wa-color-cyan-90: #a3f2f7 /* oklch(91.187% 0.07744 200.93) */;
+    --wa-color-cyan-80: #67dbe2 /* oklch(82.721% 0.1051 200.68) */;
+    --wa-color-cyan-70: #29c0ca /* oklch(73.859% 0.11825 201.93) */;
+    --wa-color-cyan-60: #0ca4ae /* oklch(65.523% 0.10997 202.61) */;
+    --wa-color-cyan-50: #0c828c /* oklch(55.424% 0.09237 204.53) */;
+    --wa-color-cyan-40: #0a626b /* oklch(45.428% 0.07504 206.17) */;
+    --wa-color-cyan-30: #084d55 /* oklch(38.542% 0.06312 207.36) */;
+    --wa-color-cyan-20: #06383f /* oklch(31.335% 0.05062 209.3) */;
+    --wa-color-cyan-10: #002127 /* oklch(22.739% 0.03961 211.94) */;
+    --wa-color-cyan-05: #00151b /* oklch(18.055% 0.03231 217.31) */;
+    --wa-color-cyan: var(--wa-color-cyan-70);
+    --wa-color-cyan-key: 70;
+
+    --wa-color-blue-95: #e2f6ff /* oklch(96.112% 0.0243 226.47) */;
+    --wa-color-blue-90: #c0ecff /* oklch(91.822% 0.0523 226) */;
+    --wa-color-blue-80: #7fd4fc /* oklch(83.068% 0.09979 229.91) */;
+    --wa-color-blue-70: #48b9f4 /* oklch(74.644% 0.13162 235.42) */;
+    --wa-color-blue-60: #1f9de2 /* oklch(66.419% 0.14398 240.02) */;
+    --wa-color-blue-50: #007bbc /* oklch(55.956% 0.1346 242.72) */;
+    --wa-color-blue-40: #005d93 /* oklch(46.121% 0.11438 244.28) */;
+    --wa-color-blue-30: #004975 /* oklch(39.093% 0.09705 244.33) */;
+    --wa-color-blue-20: #003558 /* oklch(31.8% 0.08026 245.13) */;
+    --wa-color-blue-10: #001f36 /* oklch(23.093% 0.05763 244.59) */;
+    --wa-color-blue-05: #001325 /* oklch(18.113% 0.04675 246.17) */;
+    --wa-color-blue: var(--wa-color-blue-60);
+    --wa-color-blue-key: 60;
+
+    --wa-color-indigo-95: #eff2ff /* oklch(96.265% 0.01769 275.64) */;
+    --wa-color-indigo-90: #e0e5ff /* oklch(92.602% 0.03569 277.03) */;
+    --wa-color-indigo-80: #bec7ff /* oklch(84.198% 0.07895 277.45) */;
+    --wa-color-indigo-70: #9da9fc /* oklch(75.797% 0.11994 276.85) */;
+    --wa-color-indigo-60: #808bf8 /* oklch(67.752% 0.15983 276.9) */;
+    --wa-color-indigo-50: #6163f0 /* oklch(57.814% 0.20686 277.14) */;
+    --wa-color-indigo-40: #4a41d4 /* oklch(48.413% 0.21583 277.35) */;
+    --wa-color-indigo-30: #3b369d /* oklch(40.562% 0.16149 278.54) */;
+    --wa-color-indigo-20: #2b2872 /* oklch(32.937% 0.12339 278.99) */;
+    --wa-color-indigo-10: #191748 /* oklch(24.174% 0.08853 279.28) */;
+    --wa-color-indigo-05: #0e0d31 /* oklch(18.772% 0.06933 278.6) */;
+    --wa-color-indigo: var(--wa-color-indigo-40);
+    --wa-color-indigo-key: 40;
+
+    --wa-color-purple-95: #f6f0ff /* oklch(96.412% 0.02086 304.04) */;
+    --wa-color-purple-90: #eee0ff /* oklch(92.72% 0.04406 305.89) */;
+    --wa-color-purple-80: #dcbdff /* oklch(84.694% 0.09583 305.85) */;
+    --wa-color-purple-70: #ca99ff /* oklch(76.728% 0.14961 305.27) */;
+    --wa-color-purple-60: #b874ff /* oklch(69.085% 0.2024 304.19) */;
+    --wa-color-purple-50: #9f46ee /* oklch(59.304% 0.23941 304.1) */;
+    --wa-color-purple-40: #7e2ac2 /* oklch(49.181% 0.21892 304.24) */;
+    --wa-color-purple-30: #632198 /* oklch(41.448% 0.18071 304.64) */;
+    --wa-color-purple-20: #4a1574 /* oklch(33.839% 0.15043 304.56) */;
+    --wa-color-purple-10: #2e094b /* oklch(24.855% 0.11212 304.52) */;
+    --wa-color-purple-05: #1e0433 /* oklch(19.319% 0.0877 304.85) */;
+    --wa-color-purple: var(--wa-color-purple-50);
+    --wa-color-purple-key: 50;
+
+    --wa-color-pink-95: #fdeff7 /* oklch(96.539% 0.01831 342.02) */;
+    --wa-color-pink-90: #fcdcee /* oklch(92.607% 0.04228 343.07) */;
+    --wa-color-pink-80: #fab6db /* oklch(84.992% 0.09131 345.4) */;
+    --wa-color-pink-70: #f78cc4 /* oklch(77.072% 0.14455 348.37) */;
+    --wa-color-pink-60: #f160a9 /* oklch(69.418% 0.19234 351.99) */;
+    --wa-color-pink-50: #db2878 /* oklch(59.255% 0.21755 0.28257) */;
+    --wa-color-pink-40: #ab1854 /* oklch(48.723% 0.18199 3.8244) */;
+    --wa-color-pink-30: #851844 /* oklch(41.188% 0.14622 2.4184) */;
+    --wa-color-pink-20: #640e30 /* oklch(33.442% 0.12022 3.3857) */;
+    --wa-color-pink-10: #43001a /* oklch(24.613% 0.09885 5.3211) */;
+    --wa-color-pink-05: #2f000b /* oklch(19.457% 0.07776 12.211) */;
+    --wa-color-pink: var(--wa-color-pink-50);
+    --wa-color-pink-key: 50;
+
+    --wa-color-gray-95: #f2f2f3 /* oklch(96.143% 0.00133 286.37) */;
+    --wa-color-gray-90: #e5e5e8 /* oklch(92.276% 0.00403 286.32) */;
+    --wa-color-gray-80: #c9c9cc /* oklch(83.679% 0.00413 286.31) */;
+    --wa-color-gray-70: #aeafb1 /* oklch(75.381% 0.00306 264.54) */;
+    --wa-color-gray-60: #94959b /* oklch(67.089% 0.00884 278.56) */;
+    --wa-color-gray-50: #72747d /* oklch(56.027% 0.01402 275.93) */;
+    --wa-color-gray-40: #565861 /* oklch(46.18% 0.01474 275.83) */;
+    --wa-color-gray-30: #43454d /* oklch(39.154% 0.01373 274.58) */;
+    --wa-color-gray-20: #313134 /* oklch(31.432% 0.00529 286.09) */;
+    --wa-color-gray-10: #1d1d20 /* oklch(23.201% 0.00571 285.95) */;
+    --wa-color-gray-05: #101113 /* oklch(17.739% 0.00442 264.46) */;
+    --wa-color-gray: var(--wa-color-gray-40);
+    --wa-color-gray-key: 40;
+  }
+}
+/* To use this palette, add class="wa-palette-shoelace" to the <html> element */
+@layer wa-theme {
+  #lexml-parecer-app .wa-theme-shoelace,
+  #lexml-parecer-app .wa-theme-shoelace.wa-light,
+  #lexml-parecer-app .wa-theme-shoelace .wa-light,
+  #lexml-parecer-app .wa-theme-shoelace.wa-dark .wa-invert,
+  #lexml-parecer-app .wa-theme-shoelace .wa-dark .wa-invert,
+  #lexml-parecer-app .wa-light .wa-theme-shoelace,
+  #lexml-parecer-app .wa-dark .wa-theme-shoelace.wa-invert,
+  #lexml-parecer-app .wa-dark .wa-theme-shoelace .wa-invert {
+    /* #region Colors (Light) ~~~~~~~~~~~~~~~~~~~~~ */
+    color-scheme: light;
+    color: var(--wa-color-text-normal);
+
+    --wa-color-surface-raised: white;
+    --wa-color-surface-default: white;
+    --wa-color-surface-lowered: var(--wa-color-neutral-95);
+    --wa-color-surface-border: var(--wa-color-neutral-90);
+
+    --wa-color-text-normal: var(--wa-color-neutral-10);
+    --wa-color-text-quiet: var(--wa-color-neutral-40);
+    --wa-color-text-link: var(--wa-color-brand-40);
+
+    --wa-color-overlay-modal: color-mix(in oklab, var(--wa-color-neutral-05) 50%, transparent);
+    --wa-color-overlay-inline: color-mix(in oklab, var(--wa-color-neutral-80) 25%, transparent);
+
+    --wa-color-shadow: color-mix(
+      in oklab,
+      var(--wa-color-neutral-05) calc(var(--wa-shadow-blur-scale) * 4% + 8%),
+      transparent
+    );
+
+    --wa-color-focus: var(--wa-color-brand-60);
+
+    --wa-color-mix-hover: black 10%;
+    --wa-color-mix-active: black 20%;
+
+    --wa-color-brand-fill-quiet: var(--wa-color-brand-95);
+    --wa-color-brand-fill-normal: var(--wa-color-brand-90);
+    --wa-color-brand-fill-loud: var(--wa-color-brand-50);
+    --wa-color-brand-border-quiet: var(--wa-color-brand-90);
+    --wa-color-brand-border-normal: var(--wa-color-brand-80);
+    --wa-color-brand-border-loud: var(--wa-color-brand-60);
+    --wa-color-brand-on-quiet: var(--wa-color-brand-50);
+    --wa-color-brand-on-normal: var(--wa-color-brand-40);
+    --wa-color-brand-on-loud: white;
+
+    --wa-color-success-fill-quiet: var(--wa-color-success-95);
+    --wa-color-success-fill-normal: var(--wa-color-success-90);
+    --wa-color-success-fill-loud: var(--wa-color-success-50);
+    --wa-color-success-border-quiet: var(--wa-color-success-90);
+    --wa-color-success-border-normal: var(--wa-color-success-80);
+    --wa-color-success-border-loud: var(--wa-color-success-60);
+    --wa-color-success-on-quiet: var(--wa-color-success-50);
+    --wa-color-success-on-normal: var(--wa-color-success-40);
+    --wa-color-success-on-loud: white;
+
+    --wa-color-warning-fill-quiet: var(--wa-color-warning-95);
+    --wa-color-warning-fill-normal: var(--wa-color-warning-90);
+    --wa-color-warning-fill-loud: var(--wa-color-warning-50);
+    --wa-color-warning-border-quiet: var(--wa-color-warning-90);
+    --wa-color-warning-border-normal: var(--wa-color-warning-80);
+    --wa-color-warning-border-loud: var(--wa-color-warning-60);
+    --wa-color-warning-on-quiet: var(--wa-color-warning-50);
+    --wa-color-warning-on-normal: var(--wa-color-warning-40);
+    --wa-color-warning-on-loud: white;
+
+    --wa-color-danger-fill-quiet: var(--wa-color-danger-95);
+    --wa-color-danger-fill-normal: var(--wa-color-danger-90);
+    --wa-color-danger-fill-loud: var(--wa-color-danger-50);
+    --wa-color-danger-border-quiet: var(--wa-color-danger-90);
+    --wa-color-danger-border-normal: var(--wa-color-danger-80);
+    --wa-color-danger-border-loud: var(--wa-color-danger-60);
+    --wa-color-danger-on-quiet: var(--wa-color-danger-50);
+    --wa-color-danger-on-normal: var(--wa-color-danger-40);
+    --wa-color-danger-on-loud: white;
+
+    --wa-color-neutral-fill-quiet: var(--wa-color-neutral-95);
+    --wa-color-neutral-fill-normal: var(--wa-color-neutral-90);
+    --wa-color-neutral-fill-loud: var(--wa-color-neutral-40);
+    --wa-color-neutral-border-quiet: var(--wa-color-neutral-90);
+    --wa-color-neutral-border-normal: var(--wa-color-neutral-80);
+    --wa-color-neutral-border-loud: var(--wa-color-neutral-50);
+    --wa-color-neutral-on-quiet: var(--wa-color-neutral-40);
+    --wa-color-neutral-on-normal: var(--wa-color-neutral-30);
+    --wa-color-neutral-on-loud: white;
+    /* #endregion */
+  }
+
+  #lexml-parecer-app .wa-theme-shoelace.wa-dark,
+  #lexml-parecer-app .wa-theme-shoelace .wa-dark,
+  #lexml-parecer-app .wa-theme-shoelace.wa-invert,
+  #lexml-parecer-app .wa-theme-shoelace .wa-invert,
+  #lexml-parecer-app .wa-dark .wa-theme-shoelace,
+  #lexml-parecer-app .wa-light .wa-theme-shoelace.wa-invert,
+  #lexml-parecer-app .wa-light .wa-theme-shoelace .wa-invert {
+    /* #region Colors (Dark) ~~~~~~~~~~~~~~~~~~~~~~ */
+    color-scheme: dark;
+    color: var(--wa-color-text-normal);
+
+    --wa-color-surface-raised: var(--wa-color-neutral-10);
+    --wa-color-surface-default: var(--wa-color-neutral-05);
+    --wa-color-surface-lowered: color-mix(in oklab, var(--wa-color-surface-default), black 20%);
+    --wa-color-surface-border: var(--wa-color-neutral-20);
+
+    --wa-color-text-normal: var(--wa-color-neutral-95);
+    --wa-color-text-quiet: var(--wa-color-neutral-60);
+    --wa-color-text-link: var(--wa-color-brand-70);
+
+    --wa-color-overlay-modal: color-mix(in oklab, black 60%, transparent);
+    --wa-color-overlay-inline: color-mix(in oklab, var(--wa-color-neutral-50) 10%, transparent);
+
+    --wa-color-shadow: color-mix(
+      in oklab,
+      var(--wa-color-surface-lowered) calc(var(--wa-shadow-blur-scale) * 32% + 40%),
+      transparent
+    );
+
+    --wa-color-focus: var(--wa-color-brand-60);
+
+    --wa-color-mix-hover: black 8%;
+    --wa-color-mix-active: black 16%;
+
+    --wa-color-brand-fill-quiet: var(--wa-color-brand-20);
+    --wa-color-brand-fill-normal: var(--wa-color-brand-30);
+    --wa-color-brand-fill-loud: var(--wa-color-brand-70);
+    --wa-color-brand-border-quiet: var(--wa-color-brand-30);
+    --wa-color-brand-border-normal: var(--wa-color-brand-40);
+    --wa-color-brand-border-loud: var(--wa-color-brand-50);
+    --wa-color-brand-on-quiet: var(--wa-color-brand-70);
+    --wa-color-brand-on-normal: var(--wa-color-brand-80);
+    --wa-color-brand-on-loud: var(--wa-color-neutral-10);
+
+    --wa-color-success-fill-quiet: var(--wa-color-success-20);
+    --wa-color-success-fill-normal: var(--wa-color-success-30);
+    --wa-color-success-fill-loud: var(--wa-color-success-70);
+    --wa-color-success-border-quiet: var(--wa-color-success-30);
+    --wa-color-success-border-normal: var(--wa-color-success-40);
+    --wa-color-success-border-loud: var(--wa-color-success-50);
+    --wa-color-success-on-quiet: var(--wa-color-success-70);
+    --wa-color-success-on-normal: var(--wa-color-success-80);
+    --wa-color-success-on-loud: var(--wa-color-neutral-10);
+
+    --wa-color-warning-fill-quiet: var(--wa-color-warning-20);
+    --wa-color-warning-fill-normal: var(--wa-color-warning-30);
+    --wa-color-warning-fill-loud: var(--wa-color-warning-70);
+    --wa-color-warning-border-quiet: var(--wa-color-warning-30);
+    --wa-color-warning-border-normal: var(--wa-color-warning-40);
+    --wa-color-warning-border-loud: var(--wa-color-warning-50);
+    --wa-color-warning-on-quiet: var(--wa-color-warning-70);
+    --wa-color-warning-on-normal: var(--wa-color-warning-80);
+    --wa-color-warning-on-loud: var(--wa-color-neutral-10);
+
+    --wa-color-danger-fill-quiet: var(--wa-color-danger-20);
+    --wa-color-danger-fill-normal: var(--wa-color-danger-30);
+    --wa-color-danger-fill-loud: var(--wa-color-danger-60);
+    --wa-color-danger-border-quiet: var(--wa-color-danger-30);
+    --wa-color-danger-border-normal: var(--wa-color-danger-40);
+    --wa-color-danger-border-loud: var(--wa-color-danger-50);
+    --wa-color-danger-on-quiet: var(--wa-color-danger-70);
+    --wa-color-danger-on-normal: var(--wa-color-danger-80);
+    --wa-color-danger-on-loud: var(--wa-color-neutral-10);
+
+    --wa-color-neutral-fill-quiet: var(--wa-color-neutral-10);
+    --wa-color-neutral-fill-normal: var(--wa-color-neutral-20);
+    --wa-color-neutral-fill-loud: var(--wa-color-neutral-60);
+    --wa-color-neutral-border-quiet: var(--wa-color-neutral-20);
+    --wa-color-neutral-border-normal: var(--wa-color-neutral-30);
+    --wa-color-neutral-border-loud: var(--wa-color-neutral-50);
+    --wa-color-neutral-on-quiet: var(--wa-color-neutral-60);
+    --wa-color-neutral-on-normal: var(--wa-color-neutral-70);
+    --wa-color-neutral-on-loud: var(--wa-color-neutral-05);
+    /* #endregion */
+  }
+
+  #lexml-parecer-app .wa-theme-shoelace,
+  #lexml-parecer-app .wa-theme-shoelace.wa-light,
+  #lexml-parecer-app .wa-theme-shoelace .wa-light,
+  #lexml-parecer-app .wa-theme-shoelace.wa-dark,
+  #lexml-parecer-app .wa-theme-shoelace .wa-dark,
+  #lexml-parecer-app .wa-theme-shoelace.wa-invert,
+  #lexml-parecer-app .wa-theme-shoelace .wa-invert {
+    font-family: var(--wa-font-family-body);
+
+    /* #region Fonts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-font-family-body: ui-sans-serif, system-ui, sans-serif;
+    --wa-font-family-heading: var(--wa-font-family-body);
+    --wa-font-family-code: ui-monospace, monospace;
+    --wa-font-family-longform: ui-serif, serif;
+
+    /* Font sizes use a ratio of 1.125 to scale sizes proportionally.
+     * For larger font sizes, each size is twice 1.125x larger to maximize impact.
+     * Each value uses \`rem\` units and is rounded to the nearest whole pixel when rendered. */
+    --wa-font-size-scale: 1;
+    --wa-font-size-2xs: round(calc(var(--wa-font-size-xs) / 1.125), 1px); /* 11px */
+    --wa-font-size-xs: round(calc(var(--wa-font-size-s) / 1.125), 1px); /* 12px */
+    --wa-font-size-s: round(calc(var(--wa-font-size-m) / 1.125), 1px); /* 14px */
+    --wa-font-size-m: calc(1rem * var(--wa-font-size-scale)); /* 16px */
+    --wa-font-size-l: round(calc(var(--wa-font-size-m) * 1.125 * 1.125), 1px); /* 20px */
+    --wa-font-size-xl: round(calc(var(--wa-font-size-l) * 1.125 * 1.125), 1px); /* 25px */
+    --wa-font-size-2xl: round(calc(var(--wa-font-size-xl) * 1.125 * 1.125), 1px); /* 32px */
+    --wa-font-size-3xl: round(calc(var(--wa-font-size-2xl) * 1.125 * 1.125), 1px); /* 41px */
+    --wa-font-size-4xl: round(calc(var(--wa-font-size-3xl) * 1.125 * 1.125), 1px); /* 52px */
+
+    --wa-font-size-smaller: round(calc(1em / 1.125), 1px);
+    --wa-font-size-larger: round(calc(1em * 1.125 * 1.125), 1px);
+
+    --wa-font-weight-light: 300;
+    --wa-font-weight-normal: 400;
+    --wa-font-weight-semibold: 500;
+    --wa-font-weight-bold: 600;
+
+    --wa-font-weight-body: var(--wa-font-weight-normal);
+    --wa-font-weight-heading: var(--wa-font-weight-bold);
+    --wa-font-weight-code: var(--wa-font-weight-normal);
+    --wa-font-weight-longform: var(--wa-font-weight-normal);
+    --wa-font-weight-action: var(--wa-font-weight-semibold);
+
+    --wa-line-height-condensed: 1.2;
+    --wa-line-height-normal: 1.6;
+    --wa-line-height-expanded: 2;
+
+    --wa-link-decoration-default: underline;
+    --wa-link-decoration-hover: underline;
+    /* #endregion */
+
+    /* #region Space ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-space-scale: 1;
+    --wa-space-3xs: calc(var(--wa-space-scale) * 0.125rem); /* 2px */
+    --wa-space-2xs: calc(var(--wa-space-scale) * 0.25rem); /* 4px */
+    --wa-space-xs: calc(var(--wa-space-scale) * 0.5rem); /* 8px */
+    --wa-space-s: calc(var(--wa-space-scale) * 0.75rem); /* 12px */
+    --wa-space-m: calc(var(--wa-space-scale) * 1rem); /* 16px */
+    --wa-space-l: calc(var(--wa-space-scale) * 1.5rem); /* 24px */
+    --wa-space-xl: calc(var(--wa-space-scale) * 2rem); /* 32px */
+    --wa-space-2xl: calc(var(--wa-space-scale) * 2.5rem); /* 40px */
+    --wa-space-3xl: calc(var(--wa-space-scale) * 3rem); /* 48px */
+    --wa-space-4xl: calc(var(--wa-space-scale) * 4rem); /* 64px */
+
+    --wa-content-spacing: var(--wa-space-l);
+    /* #endregion */
+
+    /* #region Borders ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-border-style: solid;
+
+    --wa-border-width-scale: 1;
+    --wa-border-width-s: calc(var(--wa-border-width-scale) * 0.0625rem);
+    --wa-border-width-m: calc(var(--wa-border-width-scale) * 0.125rem);
+    --wa-border-width-l: calc(var(--wa-border-width-scale) * 0.1875rem);
+    /* #endregion */
+
+    /* #region Rounding ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-border-radius-scale: 0.7;
+    --wa-border-radius-s: calc(var(--wa-border-radius-scale) * 0.1875rem);
+    --wa-border-radius-m: calc(var(--wa-border-radius-scale) * 0.375rem);
+    --wa-border-radius-l: calc(var(--wa-border-radius-scale) * 0.75rem);
+
+    --wa-border-radius-pill: 9999px;
+    --wa-border-radius-circle: 50%;
+    --wa-border-radius-square: 0px;
+    /* #endregion */
+
+    /* #region Focus ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-focus-ring-style: solid;
+    --wa-focus-ring-width: 0.1875rem; /* 3px */
+    --wa-focus-ring: var(--wa-focus-ring-style) var(--wa-focus-ring-width)
+      color-mix(in oklab, var(--wa-color-focus) 60%, transparent);
+    --wa-focus-ring-offset: 0.0625rem; /* 1px */
+    /* #endregion */
+
+    /* #region Shadows ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-shadow-offset-x-scale: 0;
+    --wa-shadow-offset-x-s: calc(var(--wa-shadow-offset-x-scale) * 0.125rem);
+    --wa-shadow-offset-x-m: calc(var(--wa-shadow-offset-x-scale) * 0.25rem);
+    --wa-shadow-offset-x-l: calc(var(--wa-shadow-offset-x-scale) * 0.5rem);
+
+    --wa-shadow-offset-y-scale: 0.0625;
+    --wa-shadow-offset-y-s: calc(var(--wa-shadow-offset-y-scale) * 0.125rem);
+    --wa-shadow-offset-y-m: calc(var(--wa-shadow-offset-y-scale) * 0.25rem);
+    --wa-shadow-offset-y-l: calc(var(--wa-shadow-offset-y-scale) * 0.5rem);
+
+    --wa-shadow-blur-scale: 1;
+    --wa-shadow-blur-s: calc(var(--wa-shadow-blur-scale) * 0.125rem);
+    --wa-shadow-blur-m: calc(var(--wa-shadow-blur-scale) * 0.25rem);
+    --wa-shadow-blur-l: calc(var(--wa-shadow-blur-scale) * 0.5rem);
+
+    --wa-shadow-spread-scale: 0;
+    --wa-shadow-spread-s: calc(var(--wa-shadow-spread-scale) * 0.125rem);
+    --wa-shadow-spread-m: calc(var(--wa-shadow-spread-scale) * 0.25rem);
+    --wa-shadow-spread-l: calc(var(--wa-shadow-spread-scale) * 0.5rem);
+
+    --wa-shadow-s: var(--wa-shadow-offset-x-s) var(--wa-shadow-offset-y-s) var(--wa-shadow-blur-s)
+      var(--wa-shadow-spread-s) var(--wa-color-shadow);
+    --wa-shadow-m: var(--wa-shadow-offset-x-m) var(--wa-shadow-offset-y-m) var(--wa-shadow-blur-m)
+      var(--wa-shadow-spread-m) var(--wa-color-shadow);
+    --wa-shadow-l: var(--wa-shadow-offset-x-l) var(--wa-shadow-offset-y-l) var(--wa-shadow-blur-l)
+      var(--wa-shadow-spread-l) var(--wa-color-shadow);
+    /* #endregion */
+
+    /* #region Transitions ~~~~~~~~~~~~~~~~~~~~~~ */
+    --wa-transition-easing: ease;
+    --wa-transition-slow: 250ms;
+    --wa-transition-normal: 150ms;
+    --wa-transition-fast: 50ms;
+    /* #endregion */
+
+    /* #region Components ~~~~~~~~~~~~~~~~~~~~~~~ */
+    /* Form Controls */
+    --wa-form-control-background-color: var(--wa-color-surface-default);
+
+    --wa-form-control-border-color: var(--wa-color-neutral-border-normal);
+    --wa-form-control-border-style: var(--wa-border-style);
+    --wa-form-control-border-width: var(--wa-border-width-s);
+    --wa-form-control-border-radius: var(--wa-border-radius-m);
+
+    --wa-form-control-activated-color: var(--wa-color-brand-fill-loud);
+
+    --wa-form-control-label-color: var(--wa-color-text-normal);
+    --wa-form-control-label-font-weight: var(--wa-font-weight-semibold);
+    --wa-form-control-label-line-height: var(--wa-line-height-condensed);
+
+    --wa-form-control-value-color: var(--wa-color-text-normal);
+    --wa-form-control-value-font-weight: var(--wa-font-weight-body);
+    --wa-form-control-value-line-height: var(--wa-line-height-condensed);
+
+    --wa-form-control-hint-color: var(--wa-color-text-quiet);
+    --wa-form-control-hint-font-weight: var(--wa-font-weight-body);
+    --wa-form-control-hint-line-height: var(--wa-line-height-normal);
+
+    --wa-form-control-placeholder-color: var(--wa-color-gray-50);
+
+    --wa-form-control-required-content: '*';
+    --wa-form-control-required-content-color: inherit;
+    --wa-form-control-required-content-offset: 0.1em;
+
+    --wa-form-control-padding-block: 0.75em;
+    --wa-form-control-padding-inline: 1em;
+    --wa-form-control-height: round(
+      calc(2 * var(--wa-form-control-padding-block) + 1em * var(--wa-form-control-value-line-height)),
+      1px
+    );
+    --wa-form-control-toggle-size: round(1.25em, 1px);
+
+    /* Panels */
+    --wa-panel-border-style: var(--wa-border-style);
+    --wa-panel-border-width: var(--wa-border-width-s);
+    --wa-panel-border-radius: var(--wa-border-radius-m);
+
+    /* Tooltips */
+    --wa-tooltip-arrow-size: 0.375rem;
+
+    --wa-tooltip-background-color: var(--wa-color-text-normal);
+
+    --wa-tooltip-border-color: var(--wa-tooltip-background-color);
+    --wa-tooltip-border-style: var(--wa-border-style);
+    --wa-tooltip-border-width: var(--wa-border-width-s);
+    --wa-tooltip-border-radius: var(--wa-border-radius-s);
+
+    --wa-tooltip-content-color: var(--wa-color-surface-default);
+    --wa-tooltip-font-size: var(--wa-font-size-s);
+    --wa-tooltip-line-height: var(--wa-line-height-normal);
+    /* #endregion */
+  }
+}
+@layer wa-theme-overrides {
+  #lexml-parecer-app .wa-theme-shoelace {
+    #lexml-parecer-app wa-avatar {
+      background-color: var(--wa-color-neutral-fill-loud);
+      color: var(--wa-color-neutral-on-loud);
+    }
+
+    #lexml-parecer-app wa-button::part(label),
+    #lexml-parecer-app wa-radio[appearance='button'],
+    #lexml-parecer-app button,
+    #lexml-parecer-app input:where([type='button'], [type='reset'], [type='submit']) {
+      font-size: var(--wa-font-size-smaller);
+    }
+
+    #lexml-parecer-app wa-radio[appearance='button'] {
+      font-weight: var(--wa-font-weight-action);
+
+      #lexml-parecer-app &:state(checked) {
+        background-color: var(--wa-form-control-activated-color);
+        color: var(--wa-color-brand-on-loud);
+      }
+    }
+
+    #lexml-parecer-app wa-breadcrumb {
+      font-size: var(--wa-font-size-s);
+    }
+
+    #lexml-parecer-app wa-callout {
+      padding: var(--wa-space-m);
+      font-size: var(--wa-font-size-smaller);
+
+      #lexml-parecer-app &:is([appearance~='outlined']) {
+        border-top-width: var(--wa-border-width-l);
+        border-color: var(--wa-color-surface-border);
+        border-top-color: var(--border-color, var(--wa-color-border-loud));
+      }
+    }
+
+    #lexml-parecer-app wa-card {
+      background-color: var(--wa-color-surface-raised);
+    }
+
+    #lexml-parecer-app :is(
+        wa-input,
+        wa-select,
+        wa-textarea,
+        input:where(
+            :not(
+              [type='button'],
+              [type='checkbox'],
+              [type='color'],
+              [type='file'],
+              [type='hidden'],
+              [type='image'],
+              [type='radio'],
+              [type='range'],
+              [type='reset'],
+              [type='submit']
+            )
+          ),
+        select,
+        textarea
+      ):not([appearance='filled'], .wa-filled) {
+      --wa-focus-ring: var(--wa-focus-ring-style) var(--wa-focus-ring-width)
+        color-mix(in oklab, var(--wa-color-focus), transparent 50%);
+      --wa-focus-ring-offset: 0;
+    }
+
+    #lexml-parecer-app wa-radio,
+    #lexml-parecer-app input[type='radio'] {
+      --checked-icon-color: var(--wa-color-surface-default);
+      --checked-icon-scale: 0.4;
+
+      #lexml-parecer-app &:checked,
+      #lexml-parecer-app &:state(checked)::part(control) {
+        background-color: var(--wa-form-control-activated-color);
+      }
+    }
+
+    #lexml-parecer-app wa-slider::part(thumb) {
+      border: none;
+    }
+
+    #lexml-parecer-app wa-switch {
+      --height: calc(1em * var(--wa-form-control-value-line-height) - var(--wa-form-control-border-width) * 2);
+      --thumb-size: calc(var(--height) + 0.25em);
+      --width: calc(var(--height) * 2);
+
+      #lexml-parecer-app &::part(control) {
+        background-color: var(--wa-color-gray-50);
+        border-color: var(--wa-color-gray-50);
+      }
+
+      #lexml-parecer-app &:state(checked)::part(control) {
+        background-color: var(--wa-form-control-activated-color);
+        border-color: var(--wa-form-control-activated-color);
+      }
+
+      #lexml-parecer-app &::part(thumb) {
+        background-color: var(--wa-color-surface-default);
+        border: var(--wa-border-width-s) var(--wa-border-style) var(--wa-color-gray-50);
+      }
+      #lexml-parecer-app &:state(checked)::part(thumb) {
+        border-color: var(--wa-form-control-activated-color);
+      }
+    }
+
+    #lexml-parecer-app wa-tab {
+      font-size: var(--wa-font-size-smaller);
+    }
+  }
+}
+
+`;
+
+// 2. A BASE (Estrutura Base e Utilitários)
+export const waResetString = `
+
+@layer wa-native, wa-utilities, wa-color-palette, wa-color-variant, wa-theme, wa-theme-dimension, wa-theme-overrides;
+/* Cascade layers */
+/* Order of precedence for all cascade layers in Web Awesome */
+/* Native styles */
+/* Required utilities */
+@layer wa-utilities {
+  #lexml-parecer-app .wa-size-s {
+    font-size: var(--wa-font-size-s);
+  }
+
+  #lexml-parecer-app .wa-size-m {
+    font-size: var(--wa-font-size-m);
+  }
+
+  #lexml-parecer-app .wa-size-l {
+    font-size: var(--wa-font-size-l);
+  }
+}
+@layer wa-utilities {
+  :where(#lexml-parecer-app),
+  #lexml-parecer-app .wa-neutral {
+    --wa-color-fill-loud: var(--wa-color-neutral-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-neutral-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-neutral-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-neutral-border-loud);
+    --wa-color-border-normal: var(--wa-color-neutral-border-normal);
+    --wa-color-border-quiet: var(--wa-color-neutral-border-quiet);
+    --wa-color-on-loud: var(--wa-color-neutral-on-loud);
+    --wa-color-on-normal: var(--wa-color-neutral-on-normal);
+    --wa-color-on-quiet: var(--wa-color-neutral-on-quiet);
+  }
+
+  #lexml-parecer-app .wa-brand {
+    --wa-color-fill-loud: var(--wa-color-brand-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-brand-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-brand-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-brand-border-loud);
+    --wa-color-border-normal: var(--wa-color-brand-border-normal);
+    --wa-color-border-quiet: var(--wa-color-brand-border-quiet);
+    --wa-color-on-loud: var(--wa-color-brand-on-loud);
+    --wa-color-on-normal: var(--wa-color-brand-on-normal);
+    --wa-color-on-quiet: var(--wa-color-brand-on-quiet);
+  }
+
+  #lexml-parecer-app .wa-success {
+    --wa-color-fill-loud: var(--wa-color-success-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-success-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-success-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-success-border-loud);
+    --wa-color-border-normal: var(--wa-color-success-border-normal);
+    --wa-color-border-quiet: var(--wa-color-success-border-quiet);
+    --wa-color-on-loud: var(--wa-color-success-on-loud);
+    --wa-color-on-normal: var(--wa-color-success-on-normal);
+    --wa-color-on-quiet: var(--wa-color-success-on-quiet);
+  }
+
+  #lexml-parecer-app .wa-warning {
+    --wa-color-fill-loud: var(--wa-color-warning-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-warning-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-warning-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-warning-border-loud);
+    --wa-color-border-normal: var(--wa-color-warning-border-normal);
+    --wa-color-border-quiet: var(--wa-color-warning-border-quiet);
+    --wa-color-on-loud: var(--wa-color-warning-on-loud);
+    --wa-color-on-normal: var(--wa-color-warning-on-normal);
+    --wa-color-on-quiet: var(--wa-color-warning-on-quiet);
+  }
+
+  #lexml-parecer-app .wa-danger {
+    --wa-color-fill-loud: var(--wa-color-danger-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-danger-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-danger-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-danger-border-loud);
+    --wa-color-border-normal: var(--wa-color-danger-border-normal);
+    --wa-color-border-quiet: var(--wa-color-danger-border-quiet);
+    --wa-color-on-loud: var(--wa-color-danger-on-loud);
+    --wa-color-on-normal: var(--wa-color-danger-on-normal);
+    --wa-color-on-quiet: var(--wa-color-danger-on-quiet);
+  }
+}
+@layer wa-native {
+  /* #region General ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+    tab-size: 4;
+
+    background-color: var(--wa-color-surface-default);
+  }
+
+  #lexml-parecer-app *,
+  #lexml-parecer-app *::before,
+  #lexml-parecer-app *::after {
+    box-sizing: inherit;
+  }
+
+  #lexml-parecer-app {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    color: var(--wa-color-text-normal);
+    font-family: var(--wa-font-family-body);
+    font-size: var(--wa-font-size-m);
+    font-weight: var(--wa-font-weight-body);
+    line-height: var(--wa-line-height-normal);
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+  }
+  /* #endregion */
+
+  /* #region Content Flow ~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app address,
+  #lexml-parecer-app audio,
+  #lexml-parecer-app blockquote,
+  #lexml-parecer-app dd,
+  #lexml-parecer-app details,
+  #lexml-parecer-app dl,
+  #lexml-parecer-app fieldset,
+  #lexml-parecer-app figure,
+  #lexml-parecer-app h1,
+  #lexml-parecer-app h2,
+  #lexml-parecer-app h3,
+  #lexml-parecer-app h4,
+  #lexml-parecer-app h5,
+  #lexml-parecer-app h6,
+  #lexml-parecer-app hr,
+  #lexml-parecer-app iframe,
+  #lexml-parecer-app ol,
+  #lexml-parecer-app p,
+  #lexml-parecer-app pre,
+  #lexml-parecer-app table,
+  #lexml-parecer-app ul,
+  #lexml-parecer-app video {
+    margin: 0;
+
+    #lexml-parecer-app &:has(+ *) {
+      margin-block-end: var(--wa-content-spacing);
+    }
+  }
+  /* #endregion */
+
+  /* #region Block Text ~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app h1,
+  #lexml-parecer-app h2,
+  #lexml-parecer-app h3,
+  #lexml-parecer-app h4,
+  #lexml-parecer-app h5,
+  #lexml-parecer-app h6 {
+    font-family: var(--wa-font-family-heading);
+    font-weight: var(--wa-font-weight-heading);
+    line-height: var(--wa-line-height-condensed);
+    text-wrap: balance;
+  }
+
+  #lexml-parecer-app h1 {
+    font-size: var(--wa-font-size-3xl);
+  }
+
+  #lexml-parecer-app h2 {
+    font-size: var(--wa-font-size-2xl);
+  }
+
+  #lexml-parecer-app h3 {
+    font-size: var(--wa-font-size-xl);
+  }
+
+  #lexml-parecer-app h4 {
+    font-size: var(--wa-font-size-l);
+  }
+
+  #lexml-parecer-app h5 {
+    font-size: var(--wa-font-size-m);
+  }
+
+  #lexml-parecer-app h6 {
+    font-size: var(--wa-font-size-s);
+  }
+
+  #lexml-parecer-app p {
+    text-wrap: pretty;
+  }
+
+  #lexml-parecer-app blockquote {
+    padding: var(--wa-space-xl);
+
+    font-family: var(--wa-font-family-longform);
+    font-size: var(--wa-font-size-l);
+
+    border-inline-start: var(--wa-border-style) var(--wa-border-width-l) var(--wa-color-neutral-border-quiet);
+  }
+
+  #lexml-parecer-app hr {
+    margin: var(--wa-content-spacing) 0;
+
+    border: none;
+    border-bottom: solid var(--wa-border-width-s) var(--wa-color-surface-border);
+  }
+  /* #endregion */
+
+  /* #region Lists ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app ul,
+  #lexml-parecer-app ol {
+    padding: 0;
+  }
+
+  #lexml-parecer-app li > ul,
+  #lexml-parecer-app li > ol {
+    margin-inline-start: 0.25em;
+  }
+
+  #lexml-parecer-app ul {
+    list-style: disc;
+  }
+
+  #lexml-parecer-app li {
+    margin-inline-start: 1.125em;
+    padding: 0;
+  }
+
+  #lexml-parecer-app dt {
+    font-weight: var(--wa-font-weight-bold);
+  }
+  /* #endregion */
+
+  /* #region Inline Text ~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app strong,
+  #lexml-parecer-app b {
+    font-weight: var(--wa-font-weight-bold);
+  }
+
+  #lexml-parecer-app em,
+  #lexml-parecer-app i {
+    font-style: italic;
+  }
+
+  #lexml-parecer-app u {
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.09375em;
+    text-underline-offset: 0.125em;
+  }
+
+  #lexml-parecer-app s {
+    text-decoration-line: line-through;
+    text-decoration-thickness: 0.09375em;
+  }
+
+  #lexml-parecer-app ins {
+    text-decoration-color: var(--wa-color-success-on-quiet);
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.09375em;
+    text-underline-offset: 0.125em;
+  }
+
+  #lexml-parecer-app del {
+    color: color-mix(in oklab, currentColor, transparent 10%);
+    text-decoration-color: var(--wa-color-danger-on-quiet);
+    text-decoration-line: line-through;
+    text-decoration-thickness: 0.09375em;
+  }
+
+  #lexml-parecer-app mark {
+    padding: 0.125em 0.25em;
+
+    color: var(--wa-color-warning-on-quiet);
+
+    background-color: var(--wa-color-warning-fill-quiet);
+    border-radius: var(--wa-border-radius-s);
+  }
+
+  #lexml-parecer-app small {
+    font-size: var(--wa-font-size-smaller);
+  }
+
+  #lexml-parecer-app sub,
+  #lexml-parecer-app sup {
+    font-size: var(--wa-font-size-smaller);
+    line-height: 0;
+  }
+
+  #lexml-parecer-app sub {
+    vertical-align: sub;
+  }
+
+  #lexml-parecer-app sup {
+    vertical-align: super;
+  }
+
+  #lexml-parecer-app abbr[title] {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 0.09375em;
+    text-underline-offset: 0.125em;
+
+    cursor: help;
+  }
+
+  #lexml-parecer-app kbd {
+    padding: 0.125em 0.25em;
+
+    font-family: var(--wa-font-family-code);
+    font-size: var(--wa-font-size-smaller);
+    font-weight: var(--wa-font-weight-code);
+
+    border: solid var(--wa-border-width-s) color-mix(in oklab, currentColor, transparent 50%);
+    border-radius: var(--wa-border-radius-s);
+    box-shadow: 0 0.125em 0 0 color-mix(in oklab, currentColor, transparent 50%);
+
+    #lexml-parecer-app wa-icon {
+      vertical-align: -2px;
+    }
+  }
+  /* #endregion */
+
+  /* #region Links ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app a {
+    color: var(--wa-color-text-link);
+    text-decoration: var(--wa-link-decoration-default);
+    -webkit-text-decoration: var(--wa-link-decoration-default);
+    text-decoration-thickness: 0.09375em;
+    text-underline-offset: 0.125em;
+  }
+
+  #lexml-parecer-app *:is([appearance~='accent'], .wa-accent) {
+    #lexml-parecer-app a,
+    #lexml-parecer-app a:hover {
+      color: currentColor;
+    }
+  }
+
+  #lexml-parecer-app a:hover {
+    color: color-mix(in oklab, var(--wa-color-text-link), var(--wa-color-mix-hover));
+    text-decoration: var(--wa-link-decoration-hover);
+    -webkit-text-decoration: var(--wa-link-decoration-hover);
+  }
+
+  #lexml-parecer-app a:focus,
+  #lexml-parecer-app button:focus {
+    outline: none;
+  }
+
+  #lexml-parecer-app a:focus-visible,
+  #lexml-parecer-app button:focus-visible {
+    outline: var(--wa-focus-ring);
+    outline-offset: var(--wa-focus-ring-offset);
+  }
+  /* #endregion */
+
+  /* #region Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app code,
+  #lexml-parecer-app samp,
+  #lexml-parecer-app var {
+    padding: 0.125em 0.25em;
+
+    font-family: var(--wa-font-family-code);
+    font-size: var(--wa-font-size-smaller);
+    font-weight: var(--wa-font-weight-code);
+
+    background-color: var(--wa-color-overlay-inline);
+    border-radius: var(--wa-border-radius-s);
+  }
+
+  #lexml-parecer-app pre {
+    padding: var(--wa-space-m);
+
+    font-family: var(--wa-font-family-code);
+    font-size: var(--wa-font-size-smaller);
+    font-weight: var(--wa-font-weight-code);
+    white-space: pre;
+
+    background-color: var(--wa-color-overlay-inline);
+    border-radius: var(--wa-border-radius-m);
+
+    /* Remove overlapping styles for child code elements */
+    #lexml-parecer-app & code,
+    #lexml-parecer-app & samp,
+    #lexml-parecer-app & var {
+      padding: 0;
+
+      font-size: 1em;
+
+      background-color: transparent;
+    }
+
+    /* Print styles */
+    @media print {
+      background: none;
+      border: solid var(--wa-border-width-s) var(--wa-color-surface-border);
+    }
+  }
+  /* #endregion */
+
+  /* #region Media ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app img,
+  #lexml-parecer-app svg,
+  #lexml-parecer-app picture,
+  #lexml-parecer-app video {
+    max-width: 100%;
+    height: auto;
+
+    border-radius: var(--wa-border-radius-m);
+  }
+
+  #lexml-parecer-app embed,
+  #lexml-parecer-app iframe,
+  #lexml-parecer-app object {
+    max-width: 100%;
+  }
+
+  #lexml-parecer-app iframe {
+    border: none;
+  }
+  /* #endregion */
+
+  /* #region Tables ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app table {
+    width: 100%;
+
+    border: none;
+    border-collapse: collapse;
+  }
+
+  #lexml-parecer-app caption {
+    color: var(--wa-color-text-quiet);
+    font-size: var(--wa-font-size-smaller);
+
+    #lexml-parecer-app &:has(+ *) {
+      margin-block-end: 0.75em;
+    }
+  }
+
+  #lexml-parecer-app tbody {
+    #lexml-parecer-app tr {
+      border-top: solid var(--wa-border-width-s) var(--wa-color-border-quiet);
+
+      #lexml-parecer-app :where(table.wa-zebra-rows) &:nth-child(odd) {
+        background-color: color-mix(in oklab, var(--wa-color-fill-quiet) 60%, transparent);
+      }
+
+      #lexml-parecer-app :where(table.wa-hover-rows) & {
+        @media (hover: hover) {
+          #lexml-parecer-app &:hover {
+            background-color: var(--wa-color-fill-quiet);
+
+            #lexml-parecer-app &,
+            #lexml-parecer-app + tr {
+              border-top-color: var(--wa-color-border-normal);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #lexml-parecer-app td,
+  #lexml-parecer-app th {
+    padding: 0.75em;
+
+    text-align: start;
+    vertical-align: top;
+  }
+
+  #lexml-parecer-app th {
+    padding-block: 0.75em;
+
+    font-size: var(--wa-font-size-smaller);
+    font-weight: var(--wa-font-weight-bold);
+  }
+  /* #endregion */
+
+  /* #region Details ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app details {
+    padding: 0;
+
+    background-color: var(--wa-color-surface-default);
+    border: var(--wa-panel-border-width) var(--wa-color-surface-border) var(--wa-panel-border-style);
+    border-radius: var(--wa-panel-border-radius);
+
+    overflow-anchor: none;
+
+    #lexml-parecer-app summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: var(--wa-space-m);
+
+      border-radius: calc(var(--wa-panel-border-radius) - var(--wa-panel-border-width));
+
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+
+      #lexml-parecer-app > * {
+        margin: 0;
+      }
+
+      #lexml-parecer-app &:focus {
+        outline: none;
+      }
+
+      #lexml-parecer-app &:focus-visible {
+        outline: var(--wa-focus-ring);
+        outline-offset: calc(var(--wa-panel-border-width) + var(--wa-focus-ring-offset));
+      }
+    }
+
+    #lexml-parecer-app &[open] {
+      padding: 0 var(--wa-space-m) var(--wa-space-m) var(--wa-space-m);
+
+      #lexml-parecer-app summary {
+        margin-inline: calc(-1 * var(--wa-space-m));
+
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      background: none;
+      border: solid var(--wa-border-width-s) var(--wa-color-surface-border);
+
+      #lexml-parecer-app summary {
+        list-style: none;
+      }
+    }
+  }
+
+  /* Replace the summary marker */
+  #lexml-parecer-app details summary {
+    #lexml-parecer-app &::marker,
+    #lexml-parecer-app &::-webkit-details-marker {
+      display: none;
+    }
+
+    #lexml-parecer-app &::after {
+      content: '';
+      background-color: var(--wa-color-text-quiet);
+      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>')
+        center no-repeat;
+      width: 1rem;
+      height: 1rem;
+      rotate: 0deg;
+    }
+
+    #lexml-parecer-app &:dir(rtl)::after {
+      rotate: 180deg;
+    }
+  }
+
+  #lexml-parecer-app details[open] summary::after {
+    rotate: 90deg;
+  }
+  /* #endregion */
+
+  /* #region Dialogs ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app dialog {
+    flex-direction: column;
+    align-items: start;
+
+    width: 32rem;
+    max-width: calc(100% - var(--wa-space-l));
+    padding: var(--wa-space-l);
+
+    background-color: var(--wa-color-surface-raised);
+    border-radius: var(--wa-panel-border-radius);
+    border: none;
+    box-shadow: var(--wa-shadow-l);
+
+    transition: var(--wa-transition-slow, 200ms) var(--wa-transition-easing);
+
+    /* Center the dialog */
+    margin: auto;
+    inset: 0;
+
+    #lexml-parecer-app &[open] {
+      display: flex;
+    }
+
+    #lexml-parecer-app &:focus {
+      outline: none;
+    }
+  }
+
+  #lexml-parecer-app dialog::backdrop {
+    background-color: var(--wa-color-overlay-modal, rgb(0 0 0 / 0.25));
+  }
+  /* #endregion */
+
+  /* #region Form Labels ~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app label {
+    display: inline-block;
+    position: relative;
+
+    color: var(--wa-form-control-label-color);
+    font-weight: var(--wa-form-control-label-font-weight);
+    line-height: var(--wa-form-control-label-line-height);
+
+    #lexml-parecer-app &:has(
+        input:not(
+            [type='button'],
+            [type='checkbox'],
+            [type='color'],
+            [type='file'],
+            [type='hidden'],
+            [type='image'],
+            [type='radio'],
+            [type='reset'],
+            [type='submit']
+          ),
+        textarea,
+        select
+      ) {
+      width: 100%;
+    }
+
+    #lexml-parecer-app & + :is(input:not([type='checkbox'], [type='radio']), textarea, select), #lexml-parecer-app & > :is(input:not([type='checkbox'], [type='radio']), textarea, select) {
+      margin-block-start: 0.5em;
+    }
+  }
+  /* #endregion */
+
+  /* #region Fieldsets ~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app fieldset {
+    padding: var(--wa-space-l);
+    padding-block-start: calc(var(--wa-space-l) - 0.5em);
+
+    border: solid 1px var(--wa-color-surface-border);
+    border-radius: var(--wa-border-radius-m);
+  }
+
+  #lexml-parecer-app legend {
+    padding: 0;
+    padding-inline: var(--wa-space-xs);
+
+    font-weight: var(--wa-form-control-label-font-weight);
+  }
+  /* #endregion */
+
+  /* #region Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app button,
+  #lexml-parecer-app input[type='button'],
+  #lexml-parecer-app input[type='reset'],
+  #lexml-parecer-app input[type='submit'],
+  #lexml-parecer-app input[type='file'] {
+    /* We allow modifier classes on <input type="file">,
+     * but these selectors ensure the styles only apply to
+     * the file selector button in the user agent's shadow root */
+    #lexml-parecer-app &:not(input[type='file']),
+    #lexml-parecer-app &::file-selector-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      height: var(--wa-form-control-height);
+      padding: 0 var(--wa-form-control-padding-inline);
+
+      font-family: inherit;
+      font-size: var(--wa-form-control-value-font-size);
+      font-weight: var(--wa-font-weight-action);
+      line-height: calc(var(--wa-form-control-height) - var(--border-width) * 2);
+      text-decoration: none;
+      vertical-align: middle;
+      white-space: nowrap;
+
+      border-style: var(--wa-border-style);
+      border-width: max(1px, var(--wa-form-control-border-width));
+      border-radius: var(--wa-form-control-border-radius);
+
+      transition-property: background, border, box-shadow, color;
+      transition-duration: var(--wa-transition-fast);
+      transition-timing-function: var(--wa-transition-easing);
+
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Default styles for standard buttons */
+    #lexml-parecer-app :where(&:not(input[type='file'])) {
+      color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
+      background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
+      border-color: transparent;
+
+      #lexml-parecer-app &:not(:disabled) {
+        #lexml-parecer-app &:hover {
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
+            var(--wa-color-mix-hover)
+          );
+        }
+
+        #lexml-parecer-app &:active {
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
+            var(--wa-color-mix-active)
+          );
+        }
+      }
+    }
+
+    /* Default styles for file selector buttons */
+    #lexml-parecer-app :where(&:is(input[type='file'])) {
+      #lexml-parecer-app &::file-selector-button {
+        color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
+        background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
+        border-color: transparent;
+      }
+
+      #lexml-parecer-app &:not(:disabled) {
+        #lexml-parecer-app &::file-selector-button:hover {
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
+            var(--wa-color-mix-hover)
+          );
+        }
+
+        #lexml-parecer-app &::file-selector-button:active {
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
+            var(--wa-color-mix-active)
+          );
+        }
+      }
+    }
+
+    /* Modifier classes */
+    #lexml-parecer-app &.wa-plain {
+      #lexml-parecer-app &:not(input[type='file']),
+      #lexml-parecer-app &::file-selector-button {
+        color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      #lexml-parecer-app &:not(:disabled) {
+        #lexml-parecer-app &:not(input[type='file']):hover,
+        #lexml-parecer-app &::file-selector-button:hover {
+          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+          background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
+        }
+
+        #lexml-parecer-app &:not(input[type='file']):active,
+        #lexml-parecer-app &::file-selector-button:active {
+          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
+            var(--wa-color-mix-active)
+          );
+        }
+      }
+    }
+
+    #lexml-parecer-app &.wa-outlined {
+      #lexml-parecer-app &:not(input[type='file']),
+      #lexml-parecer-app &::file-selector-button {
+        color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+        background-color: transparent;
+        border-color: var(--wa-color-border-loud, var(--wa-color-neutral-border-loud));
+      }
+
+      #lexml-parecer-app &:not(:disabled) {
+        #lexml-parecer-app &:not(input[type='file']):hover,
+        #lexml-parecer-app &::file-selector-button:hover {
+          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+          background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
+        }
+
+        #lexml-parecer-app &:not(input[type='file']):active,
+        #lexml-parecer-app &::file-selector-button:active {
+          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
+            var(--wa-color-mix-active)
+          );
+        }
+      }
+    }
+
+    #lexml-parecer-app &.wa-filled {
+      #lexml-parecer-app &:not(input[type='file']),
+      #lexml-parecer-app &::file-selector-button {
+        color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
+        background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
+        border-color: transparent;
+      }
+
+      #lexml-parecer-app &:not(:disabled) {
+        #lexml-parecer-app &:not(input[type='file']):hover,
+        #lexml-parecer-app &::file-selector-button:hover {
+          color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
+            var(--wa-color-mix-hover)
+          );
+        }
+
+        #lexml-parecer-app &:not(input[type='file']):active,
+        #lexml-parecer-app &::file-selector-button:active {
+          color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
+            var(--wa-color-mix-active)
+          );
+        }
+      }
+
+      #lexml-parecer-app &.wa-outlined {
+        #lexml-parecer-app &:not(input[type='file']),
+        #lexml-parecer-app &::file-selector-button {
+          border-color: var(--wa-color-border-normal, var(--wa-color-neutral-border-normal));
+        }
+      }
+    }
+
+    #lexml-parecer-app &.wa-accent {
+      #lexml-parecer-app &:not(input[type='file']),
+      #lexml-parecer-app &::file-selector-button {
+        color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
+        background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
+        border-color: transparent;
+      }
+
+      #lexml-parecer-app &:not(:disabled) {
+        #lexml-parecer-app &:not(input[type='file']):hover,
+        #lexml-parecer-app &::file-selector-button:hover {
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
+            var(--wa-color-mix-hover)
+          );
+        }
+
+        #lexml-parecer-app &:not(input[type='file']):active,
+        #lexml-parecer-app &::file-selector-button:active {
+          background-color: color-mix(
+            in oklab,
+            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
+            var(--wa-color-mix-active)
+          );
+        }
+      }
+    }
+
+    #lexml-parecer-app &.wa-pill {
+      #lexml-parecer-app &:not(input[type='file']),
+      #lexml-parecer-app &::file-selector-button {
+        border-radius: var(--wa-border-radius-pill);
+      }
+    }
+
+    #lexml-parecer-app &:focus {
+      outline: none;
+    }
+
+    #lexml-parecer-app &:focus-visible {
+      outline: var(--wa-focus-ring);
+      outline-offset: var(--wa-focus-ring-offset);
+    }
+
+    /* Wrap in :is() so that Safari doesn't stop parsing this block */
+    #lexml-parecer-app &:is(::-moz-focus-inner) {
+      border: 0;
+    }
+
+    #lexml-parecer-app &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      /* When disabled, prevent mouse events from bubbling up from children */
+      #lexml-parecer-app * {
+        pointer-events: none;
+      }
+    }
+
+    /* Adds space between icons and adjacent elements
+     * Prefer sibling selectors over :first-child/:last-child to avoid extra space when an icon is used alone */
+    #lexml-parecer-app & > wa-icon:has(+ *) {
+      margin-inline-end: 0.75em;
+    }
+
+    #lexml-parecer-app & > * + wa-icon {
+      margin-inline-start: 0.75em;
+    }
+  }
+  /* #endregion */
+
+  /* #region File Inputs ~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app input[type='file'] {
+    display: block;
+
+    max-inline-size: 100%;
+
+    color: var(--wa-form-control-value-color);
+    font-family: inherit;
+    font-size: var(--wa-form-control-value-font-size);
+    font-weight: var(--wa-form-control-value-font-weight);
+    line-height: var(--wa-form-control-value-line-height);
+    vertical-align: middle;
+
+    border-radius: var(--wa-border-radius-m);
+
+    cursor: pointer;
+  }
+  /* #endregion */
+
+  /* #region Checkboxes + Radios ~~~~~~~~~~~~~ */
+  #lexml-parecer-app input[type='checkbox'],
+  #lexml-parecer-app label:has(input[type='checkbox']),
+  #lexml-parecer-app input[type='radio'],
+  #lexml-parecer-app label:has(input[type='radio']) {
+    display: inline-flex;
+
+    width: fit-content;
+
+    color: var(--wa-form-control-value-color);
+    font-family: inherit;
+    font-size: var(--wa-form-control-value-font-size);
+    font-weight: var(--wa-form-control-value-font-weight);
+    line-height: var(--wa-form-control-value-line-height);
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    #lexml-parecer-app &,
+    #lexml-parecer-app + label {
+      cursor: pointer;
+    }
+
+    #lexml-parecer-app &:disabled,
+    #lexml-parecer-app &:has(:disabled) {
+      opacity: 0.5;
+
+      cursor: not-allowed;
+    }
+  }
+
+  #lexml-parecer-app input[type='checkbox'],
+  #lexml-parecer-app input[type='radio'] {
+    appearance: none;
+
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    width: var(--wa-form-control-toggle-size);
+    height: var(--wa-form-control-toggle-size);
+    margin: 0;
+    margin-inline-end: 0.5em;
+
+    background-color: var(--wa-form-control-background-color);
+    border-color: var(--wa-form-control-border-color);
+    border-style: var(--wa-border-style);
+    border-width: var(--wa-form-control-border-width);
+
+    transition:
+      background var(--wa-transition-normal),
+      border-color var(--wa-transition-fast),
+      box-shadow var(--wa-transition-fast),
+      color var(--wa-transition-fast);
+    transition-timing-function: var(--wa-transition-easing);
+
+    #lexml-parecer-app &:focus-visible {
+      outline: var(--wa-focus-ring);
+      outline-offset: var(--wa-focus-ring-offset);
+    }
+  }
+
+  /* Checkbox */
+  #lexml-parecer-app input[type='checkbox'] {
+    --checked-icon-color: var(--wa-color-brand-on-loud);
+    --checked-icon-scale: 0.8;
+
+    border-radius: min(
+      calc(var(--wa-form-control-toggle-size) * 0.375),
+      var(--wa-border-radius-s)
+    ); /* min prevents entirely circular checkbox */
+
+    #lexml-parecer-app &:checked,
+    #lexml-parecer-app &:indeterminate {
+      color: var(--checked-icon-color);
+
+      background-color: var(--wa-form-control-activated-color);
+      border-color: var(--wa-form-control-activated-color);
+    }
+
+    #lexml-parecer-app &:checked::after,
+    #lexml-parecer-app &:indeterminate::after {
+      content: '';
+
+      width: var(--wa-form-control-toggle-size);
+      height: var(--wa-form-control-toggle-size);
+      scale: var(--checked-icon-scale);
+
+      background-color: currentColor;
+    }
+
+    #lexml-parecer-app &:checked::after {
+      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"/></svg>')
+        center / 1em 1em no-repeat;
+    }
+
+    #lexml-parecer-app &:indeterminate::after {
+      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M431 256c0 17.7-14.3 32-32 32H49c-17.7 0-32-14.3-32-32s14.3-32 32-32h350c17.7 0 32 14.3 32 32z"/></svg>')
+        center no-repeat;
+    }
+  }
+
+  /* Radio */
+  #lexml-parecer-app input[type='radio'] {
+    --checked-icon-color: var(--wa-form-control-activated-color);
+    --checked-icon-scale: 0.7;
+
+    color: transparent;
+
+    border-radius: 50%;
+
+    #lexml-parecer-app &:checked {
+      color: var(--checked-icon-color);
+
+      border-color: var(--wa-form-control-activated-color);
+    }
+
+    #lexml-parecer-app &:checked::after {
+      content: '';
+
+      aspect-ratio: 1;
+      width: 100%;
+      scale: var(--checked-icon-scale);
+
+      background-color: currentColor;
+      border-radius: 50%;
+    }
+  }
+  /* #endregion */
+
+  /* #region Text Fields + Textareas + Selects */
+  #lexml-parecer-app input:not(
+    
+    [type='button'],
+    [type='checkbox'],
+    [type='color'],
+    [type='file'],
+    [type='hidden'],
+    [type='image'],
+    [type='radio'],
+    [type='range'],
+    [type='reset'],
+    [type='submit']
+  ),
+    #lexml-parecer-app textarea,
+    #lexml-parecer-app select {
+    width: 100%;
+    height: var(--wa-form-control-height);
+    padding: 0 var(--wa-form-control-padding-inline);
+
+    color: var(--wa-form-control-value-color);
+    font-size: var(--wa-form-control-value-size);
+    font-family: inherit;
+    font-weight: var(--wa-form-control-value-font-weight);
+    line-height: var(--wa-form-control-value-line-height);
+    vertical-align: middle;
+
+    background-color: var(--wa-form-control-background-color);
+    border-color: var(--wa-form-control-border-color);
+    border-style: var(--wa-form-control-border-style);
+    border-width: var(--wa-form-control-border-width);
+    border-radius: var(--wa-form-control-border-radius);
+
+    transition:
+      background-color var(--wa-transition-normal),
+      border var(--wa-transition-normal),
+      outline var(--wa-transition-fast);
+    transition-timing-function: var(--wa-transition-easing);
+
+    cursor: text;
+
+    #lexml-parecer-app &::placeholder {
+      color: var(--wa-form-control-placeholder-color);
+
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #lexml-parecer-app &:focus {
+      outline: none;
+    }
+
+    #lexml-parecer-app &:focus-visible {
+      outline: var(--wa-focus-ring);
+      outline-offset: var(--wa-focus-ring-offset);
+    }
+
+    #lexml-parecer-app &:disabled {
+      opacity: 0.5;
+
+      cursor: not-allowed;
+    }
+
+    #lexml-parecer-app &.wa-outlined {
+      background-color: var(--wa-form-control-background-color);
+      border-color: var(--wa-form-control-border-color);
+    }
+
+    #lexml-parecer-app &.wa-filled {
+      background-color: var(--wa-color-neutral-fill-quiet);
+      border-color: var(--wa-color-neutral-fill-quiet);
+
+      #lexml-parecer-app &.wa-outlined {
+        border-color: var(--wa-form-control-border-color);
+      }
+    }
+
+    #lexml-parecer-app &.wa-pill {
+      border-radius: var(--wa-border-radius-pill);
+    }
+  }
+
+  /* Textarea */
+  #lexml-parecer-app textarea {
+    height: auto;
+    min-height: var(--wa-form-control-height);
+    padding: calc(var(--wa-form-control-padding-block) - ((1lh - 1em) / 2)) var(--wa-form-control-padding-inline); /* accounts for the larger line height of textarea content */
+
+    line-height: var(--wa-line-height-normal);
+
+    resize: vertical;
+  }
+
+  /* Select */
+  #lexml-parecer-app select {
+    --icon-caret: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="rgb(180 180 200)" d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>');
+
+    appearance: none;
+
+    position: relative;
+
+    min-width: 0;
+    overflow: hidden;
+
+    background-image: var(--icon-caret), var(--icon-caret);
+    background-repeat: no-repeat;
+    background-position: center right var(--wa-form-control-padding-inline);
+    background-blend-mode: hue, difference;
+    background-size: 1rem 1rem;
+
+    cursor: pointer;
+  }
+  /* #endregion */
+
+  /* #region Color Pickers ~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app input[type='color'] {
+    display: block;
+
+    block-size: var(--wa-form-control-height);
+    inline-size: var(--wa-form-control-height);
+    padding: calc(var(--wa-form-control-border-width) * 2);
+
+    font-size: 1em;
+
+    background: transparent;
+    border: var(--wa-form-control-border-width) var(--wa-border-style) var(--wa-form-control-border-color);
+    border-radius: var(--wa-form-control-border-radius);
+
+    cursor: pointer;
+    forced-color-adjust: none;
+
+    #lexml-parecer-app &::-webkit-color-swatch-wrapper {
+      padding: 0;
+      border-radius: inherit;
+    }
+
+    #lexml-parecer-app &::-webkit-color-swatch {
+      border: none;
+      border-radius: calc(var(--wa-form-control-border-radius) - var(--wa-form-control-border-width) * 3);
+    }
+
+    #lexml-parecer-app &::-moz-color-swatch {
+      border: none;
+      border-radius: calc(var(--wa-form-control-border-radius) - var(--wa-form-control-border-width) * 3);
+    }
+
+    #lexml-parecer-app &:focus-visible {
+      outline: var(--wa-focus-ring);
+      outline-offset: var(--wa-focus-ring-offset);
+    }
+  }
+  /* #endregion */
+
+  /* #region Sliders ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app input[type='range'] {
+    --thumb-width: 1.4em;
+    --thumb-height: 1.4em;
+    --track-size: 0.5em;
+
+    -webkit-appearance: none;
+
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 100%;
+    height: var(--track-size);
+    margin: 0;
+
+    font-size: inherit;
+    line-height: var(--wa-form-control-height);
+    vertical-align: middle;
+
+    background-color: var(--wa-color-neutral-fill-normal);
+    border-radius: calc(var(--track-size) / 2);
+
+    #lexml-parecer-app &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: var(--track-size);
+
+      border: none;
+      border-radius: 999px;
+    }
+
+    #lexml-parecer-app &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+
+      width: var(--thumb-width);
+      height: var(--thumb-height);
+      margin-top: calc(var(--thumb-height) / -2 + var(--track-size) / 2);
+
+      background-color: var(--wa-form-control-activated-color);
+      border: solid 0.125em var(--wa-color-surface-default);
+      border-radius: 50%;
+
+      transition-property: background-color, border-color, box-shadow, color;
+      transition-duration: var(--wa-transition-normal);
+      transition-timing-function: var(--wa-transition-easing);
+    }
+
+    #lexml-parecer-app &:enabled {
+      #lexml-parecer-app &:focus-visible::-webkit-slider-thumb {
+        outline: var(--wa-focus-ring);
+        outline-offset: var(--wa-focus-ring-offset);
+      }
+
+      #lexml-parecer-app &::-webkit-slider-thumb {
+        cursor: pointer;
+      }
+
+      #lexml-parecer-app &::-webkit-slider-thumb:active {
+        cursor: grabbing;
+      }
+    }
+
+    #lexml-parecer-app &::-moz-focus-outer {
+      border: 0;
+    }
+
+    #lexml-parecer-app &::-moz-range-progress {
+      height: var(--track-size);
+
+      background-color: var(--wa-color-neutral-fill-normal);
+      border-radius: 3px;
+    }
+
+    #lexml-parecer-app &::-moz-range-track {
+      width: 100%;
+      height: var(--track-size);
+
+      background-color: var(--wa-color-neutral-fill-normal);
+      border: none;
+      border-radius: 999px;
+    }
+
+    #lexml-parecer-app &::-moz-range-thumb {
+      width: var(--thumb-width);
+      height: var(--thumb-height);
+
+      background-color: var(--wa-form-control-activated-color);
+      border: solid 0.125em var(--wa-color-surface-default);
+      border-radius: 50%;
+
+      transition-property: background-color, border-color, box-shadow, color;
+      transition-duration: var(--wa-transition-normal);
+      transition-timing-function: var(--wa-transition-easing);
+    }
+
+    #lexml-parecer-app &:enabled {
+      #lexml-parecer-app &:focus-visible::-moz-range-thumb {
+        outline: var(--wa-focus-ring);
+        outline-offset: var(--wa-focus-ring-offset);
+      }
+
+      #lexml-parecer-app &::-moz-range-thumb {
+        cursor: pointer;
+      }
+
+      #lexml-parecer-app &::-moz-range-thumb:active {
+        cursor: grabbing;
+      }
+    }
+  }
+
+  #lexml-parecer-app label > input[type='range'] {
+    margin-block-start: 1em;
+  }
+
+  #lexml-parecer-app input[type='range']:focus {
+    outline: none;
+  }
+
+  #lexml-parecer-app input[type='range']:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    #lexml-parecer-app &::-webkit-slider-thumb {
+      cursor: not-allowed;
+    }
+
+    #lexml-parecer-app &::-moz-range-thumb {
+      cursor: not-allowed;
+    }
+  }
+  /* #endregion */
+
+  /* #region Progress ~~~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app progress {
+    --indicator-color: var(--wa-color-brand-fill-loud);
+
+    width: 100%;
+    height: 1rem;
+    overflow: hidden;
+
+    color: var(--wa-color-brand-on-loud);
+
+    background-color: var(--wa-color-neutral-fill-normal);
+    border-radius: var(--wa-border-radius-pill);
+
+    #lexml-parecer-app &::-webkit-progress-bar {
+      background: transparent;
+    }
+
+    #lexml-parecer-app &[value]::-webkit-progress-value {
+      background-color: var(--indicator-color);
+    }
+
+    #lexml-parecer-app &::-moz-progress-bar {
+      background-color: var(--indicator-color);
+    }
+  }
+
+  /* Indeterminate */
+  #lexml-parecer-app progress:not([value]) {
+    padding-left: var(--inset-inline-start);
+
+    animation: wa-progress-indeterminate 2.5s infinite cubic-bezier(0.37, 0, 0.63, 1);
+
+    #lexml-parecer-app &::-webkit-progress-bar {
+      background-color: var(
+        --indicator-color
+      ); /* Chrome does not render a ::-webkit-progress-value for indeterminate progress */
+    }
+  }
+
+  @keyframes wa-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* For some reason Chrome fiercely resists animations on this pseudo
+	  so we had to do it with padding on <progress> */
+  @keyframes wa-progress-indeterminate {
+    0% {
+      padding-inline-end: 100%;
+    }
+
+    25%,
+    100% {
+      padding-inline-end: 0%;
+    }
+
+    75%,
+    100% {
+      padding-inline-start: 100%;
+    }
+  }
+  /* #endregion */
+
+  /* #region Validation ~~~~~~~~~~~~~~~~~~~~~~ */
+  #lexml-parecer-app .wa-invalid {
+    --wa-form-control-border-color: var(--wa-color-danger-border-loud);
+    --wa-form-control-activated-color: var(--wa-color-danger-fill-loud);
+    --wa-form-control-value-color: var(--wa-color-danger-on-quiet);
+
+    /* Focus ring */
+    --wa-color-focus: var(--wa-color-danger-border-loud);
+
+    /* Help text */
+    --wa-color-text-quiet: var(--wa-color-danger-on-quiet);
+  }
+
+  #lexml-parecer-app .wa-valid {
+    --wa-form-control-border-color: var(--wa-color-success-border-loud);
+    --wa-form-control-activated-color: var(--wa-color-success-fill-loud);
+    --wa-form-control-value-color: var(--wa-color-success-on-quiet);
+
+    /* Focus ring */
+    --wa-color-focus: var(--wa-color-success-border-loud);
+
+    /* Help text */
+    --wa-color-text-quiet: var(--wa-color-success-on-quiet);
+  }
+  /* #endregion */
+}
+/* CSS utilities */
+@layer wa-utilities {
+  /*
+   * Utility to minimize FOUCE and show custom elements only after they're registered
+   */
+  #lexml-parecer-app .wa-cloak:has(:not(:defined)) {
+    animation: 2s step-end wa-fouce-cloak;
+  }
+
+  @keyframes wa-fouce-cloak {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+@layer wa-utilities {
+  #lexml-parecer-app .wa-visually-hidden:not(:focus-within),
+  #lexml-parecer-app .wa-visually-hidden-force,
+  #lexml-parecer-app .wa-visually-hidden-hint::part(hint),
+  #lexml-parecer-app .wa-visually-hidden-label::part(label) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+    border: none !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    padding: 0 !important;
+  }
+}
+@layer wa-utilities {
+  /* These scroll lock helpers are put into this CSS file to avoid strict CSPs that affect style tag loading. */
+  @supports (scrollbar-gutter: stable) {
+    #lexml-parecer-app .wa-scroll-lock {
+      scrollbar-gutter: var(--wa-scroll-lock-gutter) !important;
+    }
+
+    #lexml-parecer-app .wa-scroll-lock body {
+      overflow: hidden !important;
+    }
+  }
+
+  /** This can go away once Safari has scrollbar-gutter support. */
+  @supports not (scrollbar-gutter: stable) {
+    #lexml-parecer-app .wa-scroll-lock body {
+      padding-right: var(--wa-scroll-lock-size) !important;
+      overflow: hidden !important;
+    }
+  }
+}
+@layer wa-utilities {
+  #lexml-parecer-app .wa-placeholder {
+    align-self: stretch;
+    background-color: var(--wa-color-neutral-fill-quiet);
+    border: dashed var(--wa-border-width-s) var(--wa-color-neutral-border-normal);
+    border-radius: var(--wa-border-radius-l);
+    padding: var(--wa-space-3xl);
+  }
+}
+@layer wa-utilities {
+  #lexml-parecer-app .wa-align-items-start {
+    align-items: flex-start;
+  }
+  #lexml-parecer-app .wa-align-items-end {
+    align-items: flex-end;
+  }
+  #lexml-parecer-app .wa-align-items-center {
+    align-items: center;
+  }
+  #lexml-parecer-app .wa-align-items-stretch {
+    align-items: stretch;
+  }
+  #lexml-parecer-app .wa-align-items-baseline {
+    align-items: baseline;
+  }
+}
+@layer wa-utilities {
+  #lexml-parecer-app .wa-border-radius-s {
+    border-radius: var(--wa-border-radius-s);
+  }
+  #lexml-parecer-app .wa-border-radius-m {
+    border-radius: var(--wa-border-radius-m);
+  }
+  #lexml-parecer-app .wa-border-radius-l {
+    border-radius: var(--wa-border-radius-l);
+  }
+  #lexml-parecer-app .wa-border-radius-pill {
+    border-radius: var(--wa-border-radius-pill);
+  }
+  #lexml-parecer-app .wa-border-radius-circle {
+    border-radius: var(--wa-border-radius-circle);
+  }
+  #lexml-parecer-app .wa-border-radius-square {
+    border-radius: var(--wa-border-radius-square);
+  }
+}
+@layer wa-utilities {
+  /* Apply Flexbox with 0 specificity to ensure a gap util produces a visible change */
+  #lexml-parecer-app :where(
+    .wa-gap-0,
+    .wa-gap-3xs,
+    .wa-gap-2xs,
+    .wa-gap-xs,
+    .wa-gap-s,
+    .wa-gap-m,
+    .wa-gap-l,
+    .wa-gap-xl,
+    .wa-gap-2xl,
+    .wa-gap-3xl
+  ) {
+    display: flex;
+  }
+
+  #lexml-parecer-app .wa-gap-0 {
+    gap: 0px;
+  }
+  #lexml-parecer-app .wa-gap-3xs {
+    gap: var(--wa-space-3xs);
+  }
+  #lexml-parecer-app .wa-gap-2xs {
+    gap: var(--wa-space-2xs);
+  }
+  #lexml-parecer-app .wa-gap-xs {
+    gap: var(--wa-space-xs);
+  }
+  #lexml-parecer-app .wa-gap-s {
+    gap: var(--wa-space-s);
+  }
+  #lexml-parecer-app .wa-gap-m {
+    gap: var(--wa-space-m);
+  }
+  #lexml-parecer-app .wa-gap-l {
+    gap: var(--wa-space-l);
+  }
+  #lexml-parecer-app .wa-gap-xl {
+    gap: var(--wa-space-xl);
+  }
+  #lexml-parecer-app .wa-gap-2xl {
+    gap: var(--wa-space-2xl);
+  }
+  #lexml-parecer-app .wa-gap-3xl {
+    gap: var(--wa-space-3xl);
+  }
+}
+@layer wa-utilities {
+  /* #region General ~~~~~ */
+  #lexml-parecer-app [class*='wa-body'] {
+    font-family: var(--wa-font-family-body);
+    font-weight: var(--wa-font-weight-body);
+    line-height: var(--wa-line-height-normal);
+  }
+
+  #lexml-parecer-app [class*='wa-heading'] {
+    font-family: var(--wa-font-family-heading);
+    font-weight: var(--wa-font-weight-heading);
+    line-height: var(--wa-line-height-condensed);
+    text-wrap: balance;
+  }
+
+  #lexml-parecer-app [class*='wa-caption'] {
+    color: var(--wa-color-text-quiet);
+    font-family: var(--wa-font-family-body);
+    font-weight: var(--wa-font-weight-body);
+    line-height: var(--wa-line-height-condensed);
+  }
+
+  #lexml-parecer-app [class*='wa-longform'] {
+    font-family: var(--wa-font-family-longform);
+    font-weight: var(--wa-font-weight-longform);
+    line-height: var(--wa-line-height-normal);
+  }
+
+  #lexml-parecer-app .wa-font-size-2xs,
+  #lexml-parecer-app .wa-body-2xs,
+  #lexml-parecer-app .wa-heading-2xs,
+  #lexml-parecer-app .wa-caption-2xs,
+  #lexml-parecer-app .wa-longform-2xs {
+    font-size: var(--wa-font-size-2xs);
+  }
+
+  #lexml-parecer-app .wa-font-size-xs,
+  #lexml-parecer-app .wa-body-xs,
+  #lexml-parecer-app .wa-heading-xs,
+  #lexml-parecer-app .wa-caption-xs,
+  #lexml-parecer-app .wa-longform-xs {
+    font-size: var(--wa-font-size-xs);
+  }
+
+  #lexml-parecer-app .wa-font-size-s,
+  #lexml-parecer-app .wa-body-s,
+  #lexml-parecer-app .wa-heading-s,
+  #lexml-parecer-app .wa-caption-s,
+  #lexml-parecer-app .wa-longform-s {
+    font-size: var(--wa-font-size-s);
+  }
+
+  #lexml-parecer-app .wa-font-size-m,
+  #lexml-parecer-app .wa-body-m,
+  #lexml-parecer-app .wa-heading-m,
+  #lexml-parecer-app .wa-caption-m,
+  #lexml-parecer-app .wa-longform-m {
+    font-size: var(--wa-font-size-m);
+  }
+
+  #lexml-parecer-app .wa-font-size-l,
+  #lexml-parecer-app .wa-body-l,
+  #lexml-parecer-app .wa-heading-l,
+  #lexml-parecer-app .wa-caption-l,
+  #lexml-parecer-app .wa-longform-l {
+    font-size: var(--wa-font-size-l);
+  }
+
+  #lexml-parecer-app .wa-font-size-xl,
+  #lexml-parecer-app .wa-body-xl,
+  #lexml-parecer-app .wa-heading-xl,
+  #lexml-parecer-app .wa-caption-xl,
+  #lexml-parecer-app .wa-longform-xl {
+    font-size: var(--wa-font-size-xl);
+  }
+
+  #lexml-parecer-app .wa-font-size-2xl,
+  #lexml-parecer-app .wa-body-2xl,
+  #lexml-parecer-app .wa-heading-2xl,
+  #lexml-parecer-app .wa-caption-2xl,
+  #lexml-parecer-app .wa-longform-2xl {
+    font-size: var(--wa-font-size-2xl);
+  }
+
+  #lexml-parecer-app .wa-font-size-3xl,
+  #lexml-parecer-app .wa-body-3xl,
+  #lexml-parecer-app .wa-heading-3xl,
+  #lexml-parecer-app .wa-caption-3xl,
+  #lexml-parecer-app .wa-longform-3xl {
+    font-size: var(--wa-font-size-3xl);
+  }
+
+  #lexml-parecer-app .wa-font-size-4xl,
+  #lexml-parecer-app .wa-body-4xl,
+  #lexml-parecer-app .wa-heading-4xl,
+  #lexml-parecer-app .wa-caption-4xl,
+  #lexml-parecer-app .wa-longform-4xl {
+    font-size: var(--wa-font-size-4xl);
+  }
+
+  #lexml-parecer-app .wa-font-weight-light {
+    font-weight: var(--wa-font-weight-light);
+  }
+
+  #lexml-parecer-app .wa-font-weight-normal {
+    font-weight: var(--wa-font-weight-normal);
+  }
+
+  #lexml-parecer-app .wa-font-weight-semibold {
+    font-weight: var(--wa-font-weight-semibold);
+  }
+
+  #lexml-parecer-app .wa-font-weight-bold {
+    font-weight: var(--wa-font-weight-bold);
+  }
+
+  #lexml-parecer-app .wa-color-text-normal {
+    color: var(--wa-color-text-normal);
+  }
+
+  #lexml-parecer-app .wa-color-text-quiet {
+    color: var(--wa-color-text-quiet);
+  }
+
+  #lexml-parecer-app .wa-color-text-link {
+    color: var(--wa-color-text-link);
+  }
+
+  #lexml-parecer-app .wa-text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* #endregion */
+
+  /* #region Links ~~~~~~~ */
+  #lexml-parecer-app .wa-link {
+    color: var(--wa-color-text-link);
+    text-decoration: var(--wa-link-decoration-default);
+    -webkit-text-decoration: var(--wa-link-decoration-default);
+
+    @media (hover: hover) {
+      #lexml-parecer-app &:hover {
+        color: color-mix(in oklab, var(--wa-color-text-link) 100%, var(--wa-color-mix-hover));
+        text-decoration: var(--wa-link-decoration-hover);
+        -webkit-text-decoration: var(--wa-link-decoration-hover);
+      }
+    }
+  }
+
+  #lexml-parecer-app .wa-link-plain {
+    color: var(--wa-color-text-normal);
+    text-decoration: none;
+
+    @media (hover: hover) {
+      #lexml-parecer-app &:hover {
+        color: color-mix(in oklab, currentColor, var(--wa-color-mix-hover));
+        text-decoration: none;
+      }
+    }
+  }
+  /* #endregion */
+
+  /* #region Lists ~~~~~~~ */
+  #lexml-parecer-app .wa-list-plain:is(ol, ul) {
+    list-style: none;
+    padding-inline-start: 0;
+
+    #lexml-parecer-app > li {
+      margin-inline-start: 0;
+    }
+  }
+  /* #endregion */
+
+  /* #region Form Controls */
+  #lexml-parecer-app .wa-form-control-label {
+    color: var(--wa-form-control-label-color);
+    font-weight: var(--wa-form-control-label-font-weight);
+    line-height: var(--wa-form-control-label-line-height);
+  }
+
+  #lexml-parecer-app .wa-form-control-value {
+    color: var(--wa-form-control-value-color);
+    font-weight: var(--wa-form-control-value-font-weight);
+    line-height: var(--wa-form-control-value-line-height);
+  }
+
+  #lexml-parecer-app .wa-form-control-placeholder {
+    color: var(--wa-form-control-placeholder-color);
+    font-weight: var(--wa-form-control-value-font-weight);
+    line-height: var(--wa-form-control-value-line-height);
+  }
+
+  #lexml-parecer-app .wa-form-control-hint {
+    color: var(--wa-form-control-hint-color);
+    font-weight: var(--wa-form-control-hint-font-weight);
+    font-size: var(--wa-font-size-smaller);
+    line-height: var(--wa-form-control-hint-line-height);
+  }
+  /* #endregion */
+}
+@layer wa-utilities {
+  #lexml-parecer-app :is(
+      [class*='wa-cluster'],
+      [class*='wa-flank'],
+      [class*='wa-frame'],
+      [class*='wa-grid'],
+      [class*='wa-stack'],
+      [class*='wa-split']
+    )
+    > * {
+    margin-block: 0;
+    margin-inline: 0;
+  }
+
+  #lexml-parecer-app :where(
+    [class*='wa-cluster'],
+    [class*='wa-flank'],
+    [class*='wa-frame'],
+    [class*='wa-grid'],
+    [class*='wa-stack'],
+    [class*='wa-split']
+  ) {
+    gap: var(--wa-space-m);
+  }
+
+  /* #region Cluster */
+  #lexml-parecer-app [class*='wa-cluster'] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  #lexml-parecer-app :where([class*='wa-cluster']) {
+    align-items: center;
+  }
+  /* #endregion */
+
+  /* #region Flank */
+  #lexml-parecer-app [class*='wa-flank'] {
+    display: flex;
+    flex-wrap: wrap;
+
+    --content-percentage: initial;
+    --flank-size: initial;
+  }
+
+  #lexml-parecer-app [class*='wa-flank']:not([class*='\:end']) > :first-child,
+  #lexml-parecer-app [class*='wa-flank'][class*='\:start'] > :first-child {
+    flex-basis: var(--flank-size, auto);
+    flex-grow: 1;
+  }
+  #lexml-parecer-app [class*='wa-flank']:not([class*='\:end']) > :last-child,
+  #lexml-parecer-app [class*='wa-flank'][class*='\:start'] > :last-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-inline-size: var(--content-percentage, 50%);
+  }
+
+  #lexml-parecer-app [class*='wa-flank'][class*='\:end'] > :last-child {
+    flex-basis: var(--flank-size, auto);
+    flex-grow: 1;
+  }
+  #lexml-parecer-app [class*='wa-flank'][class*='\:end'] > :first-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-inline-size: var(--content-percentage, 50%);
+  }
+
+  #lexml-parecer-app :where([class*='wa-flank']) {
+    align-items: center;
+  }
+  /* #endregion */
+
+  /* #region Frame */
+  #lexml-parecer-app [class*='wa-frame'] {
+    display: flex;
+    aspect-ratio: 1 / 1;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #lexml-parecer-app [class*='wa-frame'] > img,
+  #lexml-parecer-app [class*='wa-frame'] > video {
+    block-size: 100%;
+    inline-size: 100%;
+    object-fit: cover;
+  }
+
+  #lexml-parecer-app [class*='wa-frame'][class*='\:square'] {
+    aspect-ratio: 1 / 1;
+  }
+  #lexml-parecer-app [class*='wa-frame'][class*='\:landscape'] {
+    aspect-ratio: 16 / 9;
+  }
+  #lexml-parecer-app [class*='wa-frame'][class*='\:portrait'] {
+    aspect-ratio: 9 / 16;
+  }
+
+  #lexml-parecer-app :where([class*='wa-frame']) {
+    align-items: center;
+  }
+  /* #endregion */
+
+  /* #region Grid */
+  #lexml-parecer-app [class*='wa-grid'] {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--min-column-size, 20ch), 100%), 1fr));
+
+    --min-column-size: initial;
+  }
+
+  #lexml-parecer-app .wa-span-grid {
+    grid-column: 1 / -1;
+  }
+  /* #endregion */
+
+  /* #region Split */
+  #lexml-parecer-app [class*='wa-split'] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  #lexml-parecer-app [class*='wa-split'],
+  #lexml-parecer-app [class*='wa-split'][class*='\:row'] {
+    flex-direction: row;
+    block-size: auto;
+    inline-size: 100%;
+  }
+
+  #lexml-parecer-app [class*='wa-split']:not([class*='\:column']) > :first-child {
+    flex: 0 1 auto;
+  }
+
+  #lexml-parecer-app [class*='wa-split'][class*='\:column'] {
+    flex-direction: column;
+    block-size: auto;
+    inline-size: auto;
+    align-self: stretch;
+  }
+
+  #lexml-parecer-app :where([class*='wa-split']) {
+    align-items: center;
+  }
+
+  /* #endregion */
+
+  /* #region Stack */
+  #lexml-parecer-app [class*='wa-stack'] {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  #lexml-parecer-app :where([class*='wa-stack']) {
+    align-items: stretch;
+  }
+  /* #endregion */
+}
+/* Theme */
+/* Rules shared by all palettes */
+@layer wa-color-variant {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-brand-blue {
+    --wa-color-brand-95: var(--wa-color-blue-95);
+    --wa-color-brand-90: var(--wa-color-blue-90);
+    --wa-color-brand-80: var(--wa-color-blue-80);
+    --wa-color-brand-70: var(--wa-color-blue-70);
+    --wa-color-brand-60: var(--wa-color-blue-60);
+    --wa-color-brand-50: var(--wa-color-blue-50);
+    --wa-color-brand-40: var(--wa-color-blue-40);
+    --wa-color-brand-30: var(--wa-color-blue-30);
+    --wa-color-brand-20: var(--wa-color-blue-20);
+    --wa-color-brand-10: var(--wa-color-blue-10);
+    --wa-color-brand-05: var(--wa-color-blue-05);
+    --wa-color-brand: var(--wa-color-blue);
+    --wa-color-brand-on: var(--wa-color-blue-on);
+  }
+
+  #lexml-parecer-app .wa-brand-red {
+    --wa-color-brand-95: var(--wa-color-red-95);
+    --wa-color-brand-90: var(--wa-color-red-90);
+    --wa-color-brand-80: var(--wa-color-red-80);
+    --wa-color-brand-70: var(--wa-color-red-70);
+    --wa-color-brand-60: var(--wa-color-red-60);
+    --wa-color-brand-50: var(--wa-color-red-50);
+    --wa-color-brand-40: var(--wa-color-red-40);
+    --wa-color-brand-30: var(--wa-color-red-30);
+    --wa-color-brand-20: var(--wa-color-red-20);
+    --wa-color-brand-10: var(--wa-color-red-10);
+    --wa-color-brand-05: var(--wa-color-red-05);
+    --wa-color-brand: var(--wa-color-red);
+    --wa-color-brand-on: var(--wa-color-red-on);
+  }
+
+  #lexml-parecer-app .wa-brand-orange {
+    --wa-color-brand-95: var(--wa-color-orange-95);
+    --wa-color-brand-90: var(--wa-color-orange-90);
+    --wa-color-brand-80: var(--wa-color-orange-80);
+    --wa-color-brand-70: var(--wa-color-orange-70);
+    --wa-color-brand-60: var(--wa-color-orange-60);
+    --wa-color-brand-50: var(--wa-color-orange-50);
+    --wa-color-brand-40: var(--wa-color-orange-40);
+    --wa-color-brand-30: var(--wa-color-orange-30);
+    --wa-color-brand-20: var(--wa-color-orange-20);
+    --wa-color-brand-10: var(--wa-color-orange-10);
+    --wa-color-brand-05: var(--wa-color-orange-05);
+    --wa-color-brand: var(--wa-color-orange);
+    --wa-color-brand-on: var(--wa-color-orange-on);
+  }
+
+  #lexml-parecer-app .wa-brand-yellow {
+    --wa-color-brand-95: var(--wa-color-yellow-95);
+    --wa-color-brand-90: var(--wa-color-yellow-90);
+    --wa-color-brand-80: var(--wa-color-yellow-80);
+    --wa-color-brand-70: var(--wa-color-yellow-70);
+    --wa-color-brand-60: var(--wa-color-yellow-60);
+    --wa-color-brand-50: var(--wa-color-yellow-50);
+    --wa-color-brand-40: var(--wa-color-yellow-40);
+    --wa-color-brand-30: var(--wa-color-yellow-30);
+    --wa-color-brand-20: var(--wa-color-yellow-20);
+    --wa-color-brand-10: var(--wa-color-yellow-10);
+    --wa-color-brand-05: var(--wa-color-yellow-05);
+    --wa-color-brand: var(--wa-color-yellow);
+    --wa-color-brand-on: var(--wa-color-yellow-on);
+  }
+
+  #lexml-parecer-app .wa-brand-green {
+    --wa-color-brand-95: var(--wa-color-green-95);
+    --wa-color-brand-90: var(--wa-color-green-90);
+    --wa-color-brand-80: var(--wa-color-green-80);
+    --wa-color-brand-70: var(--wa-color-green-70);
+    --wa-color-brand-60: var(--wa-color-green-60);
+    --wa-color-brand-50: var(--wa-color-green-50);
+    --wa-color-brand-40: var(--wa-color-green-40);
+    --wa-color-brand-30: var(--wa-color-green-30);
+    --wa-color-brand-20: var(--wa-color-green-20);
+    --wa-color-brand-10: var(--wa-color-green-10);
+    --wa-color-brand-05: var(--wa-color-green-05);
+    --wa-color-brand: var(--wa-color-green);
+    --wa-color-brand-on: var(--wa-color-green-on);
+  }
+
+  #lexml-parecer-app .wa-brand-cyan {
+    --wa-color-brand-95: var(--wa-color-cyan-95);
+    --wa-color-brand-90: var(--wa-color-cyan-90);
+    --wa-color-brand-80: var(--wa-color-cyan-80);
+    --wa-color-brand-70: var(--wa-color-cyan-70);
+    --wa-color-brand-60: var(--wa-color-cyan-60);
+    --wa-color-brand-50: var(--wa-color-cyan-50);
+    --wa-color-brand-40: var(--wa-color-cyan-40);
+    --wa-color-brand-30: var(--wa-color-cyan-30);
+    --wa-color-brand-20: var(--wa-color-cyan-20);
+    --wa-color-brand-10: var(--wa-color-cyan-10);
+    --wa-color-brand-05: var(--wa-color-cyan-05);
+    --wa-color-brand: var(--wa-color-cyan);
+    --wa-color-brand-on: var(--wa-color-cyan-on);
+  }
+
+  #lexml-parecer-app .wa-brand-indigo {
+    --wa-color-brand-95: var(--wa-color-indigo-95);
+    --wa-color-brand-90: var(--wa-color-indigo-90);
+    --wa-color-brand-80: var(--wa-color-indigo-80);
+    --wa-color-brand-70: var(--wa-color-indigo-70);
+    --wa-color-brand-60: var(--wa-color-indigo-60);
+    --wa-color-brand-50: var(--wa-color-indigo-50);
+    --wa-color-brand-40: var(--wa-color-indigo-40);
+    --wa-color-brand-30: var(--wa-color-indigo-30);
+    --wa-color-brand-20: var(--wa-color-indigo-20);
+    --wa-color-brand-10: var(--wa-color-indigo-10);
+    --wa-color-brand-05: var(--wa-color-indigo-05);
+    --wa-color-brand: var(--wa-color-indigo);
+    --wa-color-brand-on: var(--wa-color-indigo-on);
+  }
+
+  #lexml-parecer-app .wa-brand-purple {
+    --wa-color-brand-95: var(--wa-color-purple-95);
+    --wa-color-brand-90: var(--wa-color-purple-90);
+    --wa-color-brand-80: var(--wa-color-purple-80);
+    --wa-color-brand-70: var(--wa-color-purple-70);
+    --wa-color-brand-60: var(--wa-color-purple-60);
+    --wa-color-brand-50: var(--wa-color-purple-50);
+    --wa-color-brand-40: var(--wa-color-purple-40);
+    --wa-color-brand-30: var(--wa-color-purple-30);
+    --wa-color-brand-20: var(--wa-color-purple-20);
+    --wa-color-brand-10: var(--wa-color-purple-10);
+    --wa-color-brand-05: var(--wa-color-purple-05);
+    --wa-color-brand: var(--wa-color-purple);
+    --wa-color-brand-on: var(--wa-color-purple-on);
+  }
+
+  #lexml-parecer-app .wa-brand-pink {
+    --wa-color-brand-95: var(--wa-color-pink-95);
+    --wa-color-brand-90: var(--wa-color-pink-90);
+    --wa-color-brand-80: var(--wa-color-pink-80);
+    --wa-color-brand-70: var(--wa-color-pink-70);
+    --wa-color-brand-60: var(--wa-color-pink-60);
+    --wa-color-brand-50: var(--wa-color-pink-50);
+    --wa-color-brand-40: var(--wa-color-pink-40);
+    --wa-color-brand-30: var(--wa-color-pink-30);
+    --wa-color-brand-20: var(--wa-color-pink-20);
+    --wa-color-brand-10: var(--wa-color-pink-10);
+    --wa-color-brand-05: var(--wa-color-pink-05);
+    --wa-color-brand: var(--wa-color-pink);
+    --wa-color-brand-on: var(--wa-color-pink-on);
+  }
+
+  #lexml-parecer-app .wa-brand-gray {
+    --wa-color-brand-95: var(--wa-color-gray-95);
+    --wa-color-brand-90: var(--wa-color-gray-90);
+    --wa-color-brand-80: var(--wa-color-gray-80);
+    --wa-color-brand-70: var(--wa-color-gray-70);
+    --wa-color-brand-60: var(--wa-color-gray-60);
+    --wa-color-brand-50: var(--wa-color-gray-50);
+    --wa-color-brand-40: var(--wa-color-gray-40);
+    --wa-color-brand-30: var(--wa-color-gray-30);
+    --wa-color-brand-20: var(--wa-color-gray-20);
+    --wa-color-brand-10: var(--wa-color-gray-10);
+    --wa-color-brand-05: var(--wa-color-gray-05);
+    --wa-color-brand: var(--wa-color-gray);
+    --wa-color-brand-on: var(--wa-color-gray-on);
+  }
+}
+@layer wa-color-variant {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-neutral-gray {
+    --wa-color-neutral-95: var(--wa-color-gray-95);
+    --wa-color-neutral-90: var(--wa-color-gray-90);
+    --wa-color-neutral-80: var(--wa-color-gray-80);
+    --wa-color-neutral-70: var(--wa-color-gray-70);
+    --wa-color-neutral-60: var(--wa-color-gray-60);
+    --wa-color-neutral-50: var(--wa-color-gray-50);
+    --wa-color-neutral-40: var(--wa-color-gray-40);
+    --wa-color-neutral-30: var(--wa-color-gray-30);
+    --wa-color-neutral-20: var(--wa-color-gray-20);
+    --wa-color-neutral-10: var(--wa-color-gray-10);
+    --wa-color-neutral-05: var(--wa-color-gray-05);
+    --wa-color-neutral: var(--wa-color-gray);
+    --wa-color-neutral-on: var(--wa-color-gray-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-red {
+    --wa-color-neutral-95: var(--wa-color-red-95);
+    --wa-color-neutral-90: var(--wa-color-red-90);
+    --wa-color-neutral-80: var(--wa-color-red-80);
+    --wa-color-neutral-70: var(--wa-color-red-70);
+    --wa-color-neutral-60: var(--wa-color-red-60);
+    --wa-color-neutral-50: var(--wa-color-red-50);
+    --wa-color-neutral-40: var(--wa-color-red-40);
+    --wa-color-neutral-30: var(--wa-color-red-30);
+    --wa-color-neutral-20: var(--wa-color-red-20);
+    --wa-color-neutral-10: var(--wa-color-red-10);
+    --wa-color-neutral-05: var(--wa-color-red-05);
+    --wa-color-neutral: var(--wa-color-red);
+    --wa-color-neutral-on: var(--wa-color-red-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-orange {
+    --wa-color-neutral-95: var(--wa-color-orange-95);
+    --wa-color-neutral-90: var(--wa-color-orange-90);
+    --wa-color-neutral-80: var(--wa-color-orange-80);
+    --wa-color-neutral-70: var(--wa-color-orange-70);
+    --wa-color-neutral-60: var(--wa-color-orange-60);
+    --wa-color-neutral-50: var(--wa-color-orange-50);
+    --wa-color-neutral-40: var(--wa-color-orange-40);
+    --wa-color-neutral-30: var(--wa-color-orange-30);
+    --wa-color-neutral-20: var(--wa-color-orange-20);
+    --wa-color-neutral-10: var(--wa-color-orange-10);
+    --wa-color-neutral-05: var(--wa-color-orange-05);
+    --wa-color-neutral: var(--wa-color-orange);
+    --wa-color-neutral-on: var(--wa-color-orange-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-yellow {
+    --wa-color-neutral-95: var(--wa-color-yellow-95);
+    --wa-color-neutral-90: var(--wa-color-yellow-90);
+    --wa-color-neutral-80: var(--wa-color-yellow-80);
+    --wa-color-neutral-70: var(--wa-color-yellow-70);
+    --wa-color-neutral-60: var(--wa-color-yellow-60);
+    --wa-color-neutral-50: var(--wa-color-yellow-50);
+    --wa-color-neutral-40: var(--wa-color-yellow-40);
+    --wa-color-neutral-30: var(--wa-color-yellow-30);
+    --wa-color-neutral-20: var(--wa-color-yellow-20);
+    --wa-color-neutral-10: var(--wa-color-yellow-10);
+    --wa-color-neutral-05: var(--wa-color-yellow-05);
+    --wa-color-neutral: var(--wa-color-yellow);
+    --wa-color-neutral-on: var(--wa-color-yellow-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-green {
+    --wa-color-neutral-95: var(--wa-color-green-95);
+    --wa-color-neutral-90: var(--wa-color-green-90);
+    --wa-color-neutral-80: var(--wa-color-green-80);
+    --wa-color-neutral-70: var(--wa-color-green-70);
+    --wa-color-neutral-60: var(--wa-color-green-60);
+    --wa-color-neutral-50: var(--wa-color-green-50);
+    --wa-color-neutral-40: var(--wa-color-green-40);
+    --wa-color-neutral-30: var(--wa-color-green-30);
+    --wa-color-neutral-20: var(--wa-color-green-20);
+    --wa-color-neutral-10: var(--wa-color-green-10);
+    --wa-color-neutral-05: var(--wa-color-green-05);
+    --wa-color-neutral: var(--wa-color-green);
+    --wa-color-neutral-on: var(--wa-color-green-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-cyan {
+    --wa-color-neutral-95: var(--wa-color-cyan-95);
+    --wa-color-neutral-90: var(--wa-color-cyan-90);
+    --wa-color-neutral-80: var(--wa-color-cyan-80);
+    --wa-color-neutral-70: var(--wa-color-cyan-70);
+    --wa-color-neutral-60: var(--wa-color-cyan-60);
+    --wa-color-neutral-50: var(--wa-color-cyan-50);
+    --wa-color-neutral-40: var(--wa-color-cyan-40);
+    --wa-color-neutral-30: var(--wa-color-cyan-30);
+    --wa-color-neutral-20: var(--wa-color-cyan-20);
+    --wa-color-neutral-10: var(--wa-color-cyan-10);
+    --wa-color-neutral-05: var(--wa-color-cyan-05);
+    --wa-color-neutral: var(--wa-color-cyan);
+    --wa-color-neutral-on: var(--wa-color-cyan-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-blue {
+    --wa-color-neutral-95: var(--wa-color-blue-95);
+    --wa-color-neutral-90: var(--wa-color-blue-90);
+    --wa-color-neutral-80: var(--wa-color-blue-80);
+    --wa-color-neutral-70: var(--wa-color-blue-70);
+    --wa-color-neutral-60: var(--wa-color-blue-60);
+    --wa-color-neutral-50: var(--wa-color-blue-50);
+    --wa-color-neutral-40: var(--wa-color-blue-40);
+    --wa-color-neutral-30: var(--wa-color-blue-30);
+    --wa-color-neutral-20: var(--wa-color-blue-20);
+    --wa-color-neutral-10: var(--wa-color-blue-10);
+    --wa-color-neutral-05: var(--wa-color-blue-05);
+    --wa-color-neutral: var(--wa-color-blue);
+    --wa-color-neutral-on: var(--wa-color-blue-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-indigo {
+    --wa-color-neutral-95: var(--wa-color-indigo-95);
+    --wa-color-neutral-90: var(--wa-color-indigo-90);
+    --wa-color-neutral-80: var(--wa-color-indigo-80);
+    --wa-color-neutral-70: var(--wa-color-indigo-70);
+    --wa-color-neutral-60: var(--wa-color-indigo-60);
+    --wa-color-neutral-50: var(--wa-color-indigo-50);
+    --wa-color-neutral-40: var(--wa-color-indigo-40);
+    --wa-color-neutral-30: var(--wa-color-indigo-30);
+    --wa-color-neutral-20: var(--wa-color-indigo-20);
+    --wa-color-neutral-10: var(--wa-color-indigo-10);
+    --wa-color-neutral-05: var(--wa-color-indigo-05);
+    --wa-color-neutral: var(--wa-color-indigo);
+    --wa-color-neutral-on: var(--wa-color-indigo-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-purple {
+    --wa-color-neutral-95: var(--wa-color-purple-95);
+    --wa-color-neutral-90: var(--wa-color-purple-90);
+    --wa-color-neutral-80: var(--wa-color-purple-80);
+    --wa-color-neutral-70: var(--wa-color-purple-70);
+    --wa-color-neutral-60: var(--wa-color-purple-60);
+    --wa-color-neutral-50: var(--wa-color-purple-50);
+    --wa-color-neutral-40: var(--wa-color-purple-40);
+    --wa-color-neutral-30: var(--wa-color-purple-30);
+    --wa-color-neutral-20: var(--wa-color-purple-20);
+    --wa-color-neutral-10: var(--wa-color-purple-10);
+    --wa-color-neutral-05: var(--wa-color-purple-05);
+    --wa-color-neutral: var(--wa-color-purple);
+    --wa-color-neutral-on: var(--wa-color-purple-on);
+  }
+
+  #lexml-parecer-app .wa-neutral-pink {
+    --wa-color-neutral-95: var(--wa-color-pink-95);
+    --wa-color-neutral-90: var(--wa-color-pink-90);
+    --wa-color-neutral-80: var(--wa-color-pink-80);
+    --wa-color-neutral-70: var(--wa-color-pink-70);
+    --wa-color-neutral-60: var(--wa-color-pink-60);
+    --wa-color-neutral-50: var(--wa-color-pink-50);
+    --wa-color-neutral-40: var(--wa-color-pink-40);
+    --wa-color-neutral-30: var(--wa-color-pink-30);
+    --wa-color-neutral-20: var(--wa-color-pink-20);
+    --wa-color-neutral-10: var(--wa-color-pink-10);
+    --wa-color-neutral-05: var(--wa-color-pink-05);
+    --wa-color-neutral: var(--wa-color-pink);
+    --wa-color-neutral-on: var(--wa-color-pink-on);
+  }
+}
+@layer wa-color-variant {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-success-green {
+    --wa-color-success-95: var(--wa-color-green-95);
+    --wa-color-success-90: var(--wa-color-green-90);
+    --wa-color-success-80: var(--wa-color-green-80);
+    --wa-color-success-70: var(--wa-color-green-70);
+    --wa-color-success-60: var(--wa-color-green-60);
+    --wa-color-success-50: var(--wa-color-green-50);
+    --wa-color-success-40: var(--wa-color-green-40);
+    --wa-color-success-30: var(--wa-color-green-30);
+    --wa-color-success-20: var(--wa-color-green-20);
+    --wa-color-success-10: var(--wa-color-green-10);
+    --wa-color-success-05: var(--wa-color-green-05);
+    --wa-color-success: var(--wa-color-green);
+    --wa-color-success-on: var(--wa-color-green-on);
+  }
+
+  #lexml-parecer-app .wa-success-red {
+    --wa-color-success-95: var(--wa-color-red-95);
+    --wa-color-success-90: var(--wa-color-red-90);
+    --wa-color-success-80: var(--wa-color-red-80);
+    --wa-color-success-70: var(--wa-color-red-70);
+    --wa-color-success-60: var(--wa-color-red-60);
+    --wa-color-success-50: var(--wa-color-red-50);
+    --wa-color-success-40: var(--wa-color-red-40);
+    --wa-color-success-30: var(--wa-color-red-30);
+    --wa-color-success-20: var(--wa-color-red-20);
+    --wa-color-success-10: var(--wa-color-red-10);
+    --wa-color-success-05: var(--wa-color-red-05);
+    --wa-color-success: var(--wa-color-red);
+    --wa-color-success-on: var(--wa-color-red-on);
+  }
+
+  #lexml-parecer-app .wa-success-orange {
+    --wa-color-success-95: var(--wa-color-orange-95);
+    --wa-color-success-90: var(--wa-color-orange-90);
+    --wa-color-success-80: var(--wa-color-orange-80);
+    --wa-color-success-70: var(--wa-color-orange-70);
+    --wa-color-success-60: var(--wa-color-orange-60);
+    --wa-color-success-50: var(--wa-color-orange-50);
+    --wa-color-success-40: var(--wa-color-orange-40);
+    --wa-color-success-30: var(--wa-color-orange-30);
+    --wa-color-success-20: var(--wa-color-orange-20);
+    --wa-color-success-10: var(--wa-color-orange-10);
+    --wa-color-success-05: var(--wa-color-orange-05);
+    --wa-color-success: var(--wa-color-orange);
+    --wa-color-success-on: var(--wa-color-orange-on);
+  }
+
+  #lexml-parecer-app .wa-success-yellow {
+    --wa-color-success-95: var(--wa-color-yellow-95);
+    --wa-color-success-90: var(--wa-color-yellow-90);
+    --wa-color-success-80: var(--wa-color-yellow-80);
+    --wa-color-success-70: var(--wa-color-yellow-70);
+    --wa-color-success-60: var(--wa-color-yellow-60);
+    --wa-color-success-50: var(--wa-color-yellow-50);
+    --wa-color-success-40: var(--wa-color-yellow-40);
+    --wa-color-success-30: var(--wa-color-yellow-30);
+    --wa-color-success-20: var(--wa-color-yellow-20);
+    --wa-color-success-10: var(--wa-color-yellow-10);
+    --wa-color-success-05: var(--wa-color-yellow-05);
+    --wa-color-success: var(--wa-color-yellow);
+    --wa-color-success-on: var(--wa-color-yellow-on);
+  }
+
+  #lexml-parecer-app .wa-success-cyan {
+    --wa-color-success-95: var(--wa-color-cyan-95);
+    --wa-color-success-90: var(--wa-color-cyan-90);
+    --wa-color-success-80: var(--wa-color-cyan-80);
+    --wa-color-success-70: var(--wa-color-cyan-70);
+    --wa-color-success-60: var(--wa-color-cyan-60);
+    --wa-color-success-50: var(--wa-color-cyan-50);
+    --wa-color-success-40: var(--wa-color-cyan-40);
+    --wa-color-success-30: var(--wa-color-cyan-30);
+    --wa-color-success-20: var(--wa-color-cyan-20);
+    --wa-color-success-10: var(--wa-color-cyan-10);
+    --wa-color-success-05: var(--wa-color-cyan-05);
+    --wa-color-success: var(--wa-color-cyan);
+    --wa-color-success-on: var(--wa-color-cyan-on);
+  }
+
+  #lexml-parecer-app .wa-success-blue {
+    --wa-color-success-95: var(--wa-color-blue-95);
+    --wa-color-success-90: var(--wa-color-blue-90);
+    --wa-color-success-80: var(--wa-color-blue-80);
+    --wa-color-success-70: var(--wa-color-blue-70);
+    --wa-color-success-60: var(--wa-color-blue-60);
+    --wa-color-success-50: var(--wa-color-blue-50);
+    --wa-color-success-40: var(--wa-color-blue-40);
+    --wa-color-success-30: var(--wa-color-blue-30);
+    --wa-color-success-20: var(--wa-color-blue-20);
+    --wa-color-success-10: var(--wa-color-blue-10);
+    --wa-color-success-05: var(--wa-color-blue-05);
+    --wa-color-success: var(--wa-color-blue);
+    --wa-color-success-on: var(--wa-color-blue-on);
+  }
+
+  #lexml-parecer-app .wa-success-indigo {
+    --wa-color-success-95: var(--wa-color-indigo-95);
+    --wa-color-success-90: var(--wa-color-indigo-90);
+    --wa-color-success-80: var(--wa-color-indigo-80);
+    --wa-color-success-70: var(--wa-color-indigo-70);
+    --wa-color-success-60: var(--wa-color-indigo-60);
+    --wa-color-success-50: var(--wa-color-indigo-50);
+    --wa-color-success-40: var(--wa-color-indigo-40);
+    --wa-color-success-30: var(--wa-color-indigo-30);
+    --wa-color-success-20: var(--wa-color-indigo-20);
+    --wa-color-success-10: var(--wa-color-indigo-10);
+    --wa-color-success-05: var(--wa-color-indigo-05);
+    --wa-color-success: var(--wa-color-indigo);
+    --wa-color-success-on: var(--wa-color-indigo-on);
+  }
+
+  #lexml-parecer-app .wa-success-purple {
+    --wa-color-success-95: var(--wa-color-purple-95);
+    --wa-color-success-90: var(--wa-color-purple-90);
+    --wa-color-success-80: var(--wa-color-purple-80);
+    --wa-color-success-70: var(--wa-color-purple-70);
+    --wa-color-success-60: var(--wa-color-purple-60);
+    --wa-color-success-50: var(--wa-color-purple-50);
+    --wa-color-success-40: var(--wa-color-purple-40);
+    --wa-color-success-30: var(--wa-color-purple-30);
+    --wa-color-success-20: var(--wa-color-purple-20);
+    --wa-color-success-10: var(--wa-color-purple-10);
+    --wa-color-success-05: var(--wa-color-purple-05);
+    --wa-color-success: var(--wa-color-purple);
+    --wa-color-success-on: var(--wa-color-purple-on);
+  }
+
+  #lexml-parecer-app .wa-success-pink {
+    --wa-color-success-95: var(--wa-color-pink-95);
+    --wa-color-success-90: var(--wa-color-pink-90);
+    --wa-color-success-80: var(--wa-color-pink-80);
+    --wa-color-success-70: var(--wa-color-pink-70);
+    --wa-color-success-60: var(--wa-color-pink-60);
+    --wa-color-success-50: var(--wa-color-pink-50);
+    --wa-color-success-40: var(--wa-color-pink-40);
+    --wa-color-success-30: var(--wa-color-pink-30);
+    --wa-color-success-20: var(--wa-color-pink-20);
+    --wa-color-success-10: var(--wa-color-pink-10);
+    --wa-color-success-05: var(--wa-color-pink-05);
+    --wa-color-success: var(--wa-color-pink);
+    --wa-color-success-on: var(--wa-color-pink-on);
+  }
+
+  #lexml-parecer-app .wa-success-gray {
+    --wa-color-success-95: var(--wa-color-gray-95);
+    --wa-color-success-90: var(--wa-color-gray-90);
+    --wa-color-success-80: var(--wa-color-gray-80);
+    --wa-color-success-70: var(--wa-color-gray-70);
+    --wa-color-success-60: var(--wa-color-gray-60);
+    --wa-color-success-50: var(--wa-color-gray-50);
+    --wa-color-success-40: var(--wa-color-gray-40);
+    --wa-color-success-30: var(--wa-color-gray-30);
+    --wa-color-success-20: var(--wa-color-gray-20);
+    --wa-color-success-10: var(--wa-color-gray-10);
+    --wa-color-success-05: var(--wa-color-gray-05);
+    --wa-color-success: var(--wa-color-gray);
+    --wa-color-success-on: var(--wa-color-gray-on);
+  }
+}
+@layer wa-color-variant {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-warning-yellow {
+    --wa-color-warning-95: var(--wa-color-yellow-95);
+    --wa-color-warning-90: var(--wa-color-yellow-90);
+    --wa-color-warning-80: var(--wa-color-yellow-80);
+    --wa-color-warning-70: var(--wa-color-yellow-70);
+    --wa-color-warning-60: var(--wa-color-yellow-60);
+    --wa-color-warning-50: var(--wa-color-yellow-50);
+    --wa-color-warning-40: var(--wa-color-yellow-40);
+    --wa-color-warning-30: var(--wa-color-yellow-30);
+    --wa-color-warning-20: var(--wa-color-yellow-20);
+    --wa-color-warning-10: var(--wa-color-yellow-10);
+    --wa-color-warning-05: var(--wa-color-yellow-05);
+    --wa-color-warning: var(--wa-color-yellow);
+    --wa-color-warning-on: var(--wa-color-yellow-on);
+  }
+
+  #lexml-parecer-app .wa-warning-red {
+    --wa-color-warning-95: var(--wa-color-red-95);
+    --wa-color-warning-90: var(--wa-color-red-90);
+    --wa-color-warning-80: var(--wa-color-red-80);
+    --wa-color-warning-70: var(--wa-color-red-70);
+    --wa-color-warning-60: var(--wa-color-red-60);
+    --wa-color-warning-50: var(--wa-color-red-50);
+    --wa-color-warning-40: var(--wa-color-red-40);
+    --wa-color-warning-30: var(--wa-color-red-30);
+    --wa-color-warning-20: var(--wa-color-red-20);
+    --wa-color-warning-10: var(--wa-color-red-10);
+    --wa-color-warning-05: var(--wa-color-red-05);
+    --wa-color-warning: var(--wa-color-red);
+    --wa-color-warning-on: var(--wa-color-red-on);
+  }
+
+  #lexml-parecer-app .wa-warning-orange {
+    --wa-color-warning-95: var(--wa-color-orange-95);
+    --wa-color-warning-90: var(--wa-color-orange-90);
+    --wa-color-warning-80: var(--wa-color-orange-80);
+    --wa-color-warning-70: var(--wa-color-orange-70);
+    --wa-color-warning-60: var(--wa-color-orange-60);
+    --wa-color-warning-50: var(--wa-color-orange-50);
+    --wa-color-warning-40: var(--wa-color-orange-40);
+    --wa-color-warning-30: var(--wa-color-orange-30);
+    --wa-color-warning-20: var(--wa-color-orange-20);
+    --wa-color-warning-10: var(--wa-color-orange-10);
+    --wa-color-warning-05: var(--wa-color-orange-05);
+    --wa-color-warning: var(--wa-color-orange);
+    --wa-color-warning-on: var(--wa-color-orange-on);
+  }
+
+  #lexml-parecer-app .wa-warning-green {
+    --wa-color-warning-95: var(--wa-color-green-95);
+    --wa-color-warning-90: var(--wa-color-green-90);
+    --wa-color-warning-80: var(--wa-color-green-80);
+    --wa-color-warning-70: var(--wa-color-green-70);
+    --wa-color-warning-60: var(--wa-color-green-60);
+    --wa-color-warning-50: var(--wa-color-green-50);
+    --wa-color-warning-40: var(--wa-color-green-40);
+    --wa-color-warning-30: var(--wa-color-green-30);
+    --wa-color-warning-20: var(--wa-color-green-20);
+    --wa-color-warning-10: var(--wa-color-green-10);
+    --wa-color-warning-05: var(--wa-color-green-05);
+    --wa-color-warning: var(--wa-color-green);
+    --wa-color-warning-on: var(--wa-color-green-on);
+  }
+
+  #lexml-parecer-app .wa-warning-cyan {
+    --wa-color-warning-95: var(--wa-color-cyan-95);
+    --wa-color-warning-90: var(--wa-color-cyan-90);
+    --wa-color-warning-80: var(--wa-color-cyan-80);
+    --wa-color-warning-70: var(--wa-color-cyan-70);
+    --wa-color-warning-60: var(--wa-color-cyan-60);
+    --wa-color-warning-50: var(--wa-color-cyan-50);
+    --wa-color-warning-40: var(--wa-color-cyan-40);
+    --wa-color-warning-30: var(--wa-color-cyan-30);
+    --wa-color-warning-20: var(--wa-color-cyan-20);
+    --wa-color-warning-10: var(--wa-color-cyan-10);
+    --wa-color-warning-05: var(--wa-color-cyan-05);
+    --wa-color-warning: var(--wa-color-cyan);
+    --wa-color-warning-on: var(--wa-color-cyan-on);
+  }
+
+  #lexml-parecer-app .wa-warning-blue {
+    --wa-color-warning-95: var(--wa-color-blue-95);
+    --wa-color-warning-90: var(--wa-color-blue-90);
+    --wa-color-warning-80: var(--wa-color-blue-80);
+    --wa-color-warning-70: var(--wa-color-blue-70);
+    --wa-color-warning-60: var(--wa-color-blue-60);
+    --wa-color-warning-50: var(--wa-color-blue-50);
+    --wa-color-warning-40: var(--wa-color-blue-40);
+    --wa-color-warning-30: var(--wa-color-blue-30);
+    --wa-color-warning-20: var(--wa-color-blue-20);
+    --wa-color-warning-10: var(--wa-color-blue-10);
+    --wa-color-warning-05: var(--wa-color-blue-05);
+    --wa-color-warning: var(--wa-color-blue);
+    --wa-color-warning-on: var(--wa-color-blue-on);
+  }
+
+  #lexml-parecer-app .wa-warning-indigo {
+    --wa-color-warning-95: var(--wa-color-indigo-95);
+    --wa-color-warning-90: var(--wa-color-indigo-90);
+    --wa-color-warning-80: var(--wa-color-indigo-80);
+    --wa-color-warning-70: var(--wa-color-indigo-70);
+    --wa-color-warning-60: var(--wa-color-indigo-60);
+    --wa-color-warning-50: var(--wa-color-indigo-50);
+    --wa-color-warning-40: var(--wa-color-indigo-40);
+    --wa-color-warning-30: var(--wa-color-indigo-30);
+    --wa-color-warning-20: var(--wa-color-indigo-20);
+    --wa-color-warning-10: var(--wa-color-indigo-10);
+    --wa-color-warning-05: var(--wa-color-indigo-05);
+    --wa-color-warning: var(--wa-color-indigo);
+    --wa-color-warning-on: var(--wa-color-indigo-on);
+  }
+
+  #lexml-parecer-app .wa-warning-purple {
+    --wa-color-warning-95: var(--wa-color-purple-95);
+    --wa-color-warning-90: var(--wa-color-purple-90);
+    --wa-color-warning-80: var(--wa-color-purple-80);
+    --wa-color-warning-70: var(--wa-color-purple-70);
+    --wa-color-warning-60: var(--wa-color-purple-60);
+    --wa-color-warning-50: var(--wa-color-purple-50);
+    --wa-color-warning-40: var(--wa-color-purple-40);
+    --wa-color-warning-30: var(--wa-color-purple-30);
+    --wa-color-warning-20: var(--wa-color-purple-20);
+    --wa-color-warning-10: var(--wa-color-purple-10);
+    --wa-color-warning-05: var(--wa-color-purple-05);
+    --wa-color-warning: var(--wa-color-purple);
+    --wa-color-warning-on: var(--wa-color-purple-on);
+  }
+
+  #lexml-parecer-app .wa-warning-pink {
+    --wa-color-warning-95: var(--wa-color-pink-95);
+    --wa-color-warning-90: var(--wa-color-pink-90);
+    --wa-color-warning-80: var(--wa-color-pink-80);
+    --wa-color-warning-70: var(--wa-color-pink-70);
+    --wa-color-warning-60: var(--wa-color-pink-60);
+    --wa-color-warning-50: var(--wa-color-pink-50);
+    --wa-color-warning-40: var(--wa-color-pink-40);
+    --wa-color-warning-30: var(--wa-color-pink-30);
+    --wa-color-warning-20: var(--wa-color-pink-20);
+    --wa-color-warning-10: var(--wa-color-pink-10);
+    --wa-color-warning-05: var(--wa-color-pink-05);
+    --wa-color-warning: var(--wa-color-pink);
+    --wa-color-warning-on: var(--wa-color-pink-on);
+  }
+
+  #lexml-parecer-app .wa-warning-gray {
+    --wa-color-warning-95: var(--wa-color-gray-95);
+    --wa-color-warning-90: var(--wa-color-gray-90);
+    --wa-color-warning-80: var(--wa-color-gray-80);
+    --wa-color-warning-70: var(--wa-color-gray-70);
+    --wa-color-warning-60: var(--wa-color-gray-60);
+    --wa-color-warning-50: var(--wa-color-gray-50);
+    --wa-color-warning-40: var(--wa-color-gray-40);
+    --wa-color-warning-30: var(--wa-color-gray-30);
+    --wa-color-warning-20: var(--wa-color-gray-20);
+    --wa-color-warning-10: var(--wa-color-gray-10);
+    --wa-color-warning-05: var(--wa-color-gray-05);
+    --wa-color-warning: var(--wa-color-gray);
+    --wa-color-warning-on: var(--wa-color-gray-on);
+  }
+}
+@layer wa-color-variant {
+  :where(#lexml-parecer-app), 
+  #lexml-parecer-app .wa-danger-red {
+    --wa-color-danger-95: var(--wa-color-red-95);
+    --wa-color-danger-90: var(--wa-color-red-90);
+    --wa-color-danger-80: var(--wa-color-red-80);
+    --wa-color-danger-70: var(--wa-color-red-70);
+    --wa-color-danger-60: var(--wa-color-red-60);
+    --wa-color-danger-50: var(--wa-color-red-50);
+    --wa-color-danger-40: var(--wa-color-red-40);
+    --wa-color-danger-30: var(--wa-color-red-30);
+    --wa-color-danger-20: var(--wa-color-red-20);
+    --wa-color-danger-10: var(--wa-color-red-10);
+    --wa-color-danger-05: var(--wa-color-red-05);
+    --wa-color-danger: var(--wa-color-red);
+    --wa-color-danger-on: var(--wa-color-red-on);
+  }
+
+  #lexml-parecer-app .wa-danger-orange {
+    --wa-color-danger-95: var(--wa-color-orange-95);
+    --wa-color-danger-90: var(--wa-color-orange-90);
+    --wa-color-danger-80: var(--wa-color-orange-80);
+    --wa-color-danger-70: var(--wa-color-orange-70);
+    --wa-color-danger-60: var(--wa-color-orange-60);
+    --wa-color-danger-50: var(--wa-color-orange-50);
+    --wa-color-danger-40: var(--wa-color-orange-40);
+    --wa-color-danger-30: var(--wa-color-orange-30);
+    --wa-color-danger-20: var(--wa-color-orange-20);
+    --wa-color-danger-10: var(--wa-color-orange-10);
+    --wa-color-danger-05: var(--wa-color-orange-05);
+    --wa-color-danger: var(--wa-color-orange);
+    --wa-color-danger-on: var(--wa-color-orange-on);
+  }
+
+  #lexml-parecer-app .wa-danger-yellow {
+    --wa-color-danger-95: var(--wa-color-yellow-95);
+    --wa-color-danger-90: var(--wa-color-yellow-90);
+    --wa-color-danger-80: var(--wa-color-yellow-80);
+    --wa-color-danger-70: var(--wa-color-yellow-70);
+    --wa-color-danger-60: var(--wa-color-yellow-60);
+    --wa-color-danger-50: var(--wa-color-yellow-50);
+    --wa-color-danger-40: var(--wa-color-yellow-40);
+    --wa-color-danger-30: var(--wa-color-yellow-30);
+    --wa-color-danger-20: var(--wa-color-yellow-20);
+    --wa-color-danger-10: var(--wa-color-yellow-10);
+    --wa-color-danger-05: var(--wa-color-yellow-05);
+    --wa-color-danger: var(--wa-color-yellow);
+    --wa-color-danger-on: var(--wa-color-yellow-on);
+  }
+
+  #lexml-parecer-app .wa-danger-green {
+    --wa-color-danger-95: var(--wa-color-green-95);
+    --wa-color-danger-90: var(--wa-color-green-90);
+    --wa-color-danger-80: var(--wa-color-green-80);
+    --wa-color-danger-70: var(--wa-color-green-70);
+    --wa-color-danger-60: var(--wa-color-green-60);
+    --wa-color-danger-50: var(--wa-color-green-50);
+    --wa-color-danger-40: var(--wa-color-green-40);
+    --wa-color-danger-30: var(--wa-color-green-30);
+    --wa-color-danger-20: var(--wa-color-green-20);
+    --wa-color-danger-10: var(--wa-color-green-10);
+    --wa-color-danger-05: var(--wa-color-green-05);
+    --wa-color-danger: var(--wa-color-green);
+    --wa-color-danger-on: var(--wa-color-green-on);
+  }
+
+  #lexml-parecer-app .wa-danger-cyan {
+    --wa-color-danger-95: var(--wa-color-cyan-95);
+    --wa-color-danger-90: var(--wa-color-cyan-90);
+    --wa-color-danger-80: var(--wa-color-cyan-80);
+    --wa-color-danger-70: var(--wa-color-cyan-70);
+    --wa-color-danger-60: var(--wa-color-cyan-60);
+    --wa-color-danger-50: var(--wa-color-cyan-50);
+    --wa-color-danger-40: var(--wa-color-cyan-40);
+    --wa-color-danger-30: var(--wa-color-cyan-30);
+    --wa-color-danger-20: var(--wa-color-cyan-20);
+    --wa-color-danger-10: var(--wa-color-cyan-10);
+    --wa-color-danger-05: var(--wa-color-cyan-05);
+    --wa-color-danger: var(--wa-color-cyan);
+    --wa-color-danger-on: var(--wa-color-cyan-on);
+  }
+
+  #lexml-parecer-app .wa-danger-blue {
+    --wa-color-danger-95: var(--wa-color-blue-95);
+    --wa-color-danger-90: var(--wa-color-blue-90);
+    --wa-color-danger-80: var(--wa-color-blue-80);
+    --wa-color-danger-70: var(--wa-color-blue-70);
+    --wa-color-danger-60: var(--wa-color-blue-60);
+    --wa-color-danger-50: var(--wa-color-blue-50);
+    --wa-color-danger-40: var(--wa-color-blue-40);
+    --wa-color-danger-30: var(--wa-color-blue-30);
+    --wa-color-danger-20: var(--wa-color-blue-20);
+    --wa-color-danger-10: var(--wa-color-blue-10);
+    --wa-color-danger-05: var(--wa-color-blue-05);
+    --wa-color-danger: var(--wa-color-blue);
+    --wa-color-danger-on: var(--wa-color-blue-on);
+  }
+
+  #lexml-parecer-app .wa-danger-indigo {
+    --wa-color-danger-95: var(--wa-color-indigo-95);
+    --wa-color-danger-90: var(--wa-color-indigo-90);
+    --wa-color-danger-80: var(--wa-color-indigo-80);
+    --wa-color-danger-70: var(--wa-color-indigo-70);
+    --wa-color-danger-60: var(--wa-color-indigo-60);
+    --wa-color-danger-50: var(--wa-color-indigo-50);
+    --wa-color-danger-40: var(--wa-color-indigo-40);
+    --wa-color-danger-30: var(--wa-color-indigo-30);
+    --wa-color-danger-20: var(--wa-color-indigo-20);
+    --wa-color-danger-10: var(--wa-color-indigo-10);
+    --wa-color-danger-05: var(--wa-color-indigo-05);
+    --wa-color-danger: var(--wa-color-indigo);
+    --wa-color-danger-on: var(--wa-color-indigo-on);
+  }
+
+  #lexml-parecer-app .wa-danger-purple {
+    --wa-color-danger-95: var(--wa-color-purple-95);
+    --wa-color-danger-90: var(--wa-color-purple-90);
+    --wa-color-danger-80: var(--wa-color-purple-80);
+    --wa-color-danger-70: var(--wa-color-purple-70);
+    --wa-color-danger-60: var(--wa-color-purple-60);
+    --wa-color-danger-50: var(--wa-color-purple-50);
+    --wa-color-danger-40: var(--wa-color-purple-40);
+    --wa-color-danger-30: var(--wa-color-purple-30);
+    --wa-color-danger-20: var(--wa-color-purple-20);
+    --wa-color-danger-10: var(--wa-color-purple-10);
+    --wa-color-danger-05: var(--wa-color-purple-05);
+    --wa-color-danger: var(--wa-color-purple);
+    --wa-color-danger-on: var(--wa-color-purple-on);
+  }
+
+  #lexml-parecer-app .wa-danger-pink {
+    --wa-color-danger-95: var(--wa-color-pink-95);
+    --wa-color-danger-90: var(--wa-color-pink-90);
+    --wa-color-danger-80: var(--wa-color-pink-80);
+    --wa-color-danger-70: var(--wa-color-pink-70);
+    --wa-color-danger-60: var(--wa-color-pink-60);
+    --wa-color-danger-50: var(--wa-color-pink-50);
+    --wa-color-danger-40: var(--wa-color-pink-40);
+    --wa-color-danger-30: var(--wa-color-pink-30);
+    --wa-color-danger-20: var(--wa-color-pink-20);
+    --wa-color-danger-10: var(--wa-color-pink-10);
+    --wa-color-danger-05: var(--wa-color-pink-05);
+    --wa-color-danger: var(--wa-color-pink);
+    --wa-color-danger-on: var(--wa-color-pink-on);
+  }
+
+  #lexml-parecer-app .wa-danger-gray {
+    --wa-color-danger-95: var(--wa-color-gray-95);
+    --wa-color-danger-90: var(--wa-color-gray-90);
+    --wa-color-danger-80: var(--wa-color-gray-80);
+    --wa-color-danger-70: var(--wa-color-gray-70);
+    --wa-color-danger-60: var(--wa-color-gray-60);
+    --wa-color-danger-50: var(--wa-color-gray-50);
+    --wa-color-danger-40: var(--wa-color-gray-40);
+    --wa-color-danger-30: var(--wa-color-gray-30);
+    --wa-color-danger-20: var(--wa-color-gray-20);
+    --wa-color-danger-10: var(--wa-color-gray-10);
+    --wa-color-danger-05: var(--wa-color-gray-05);
+    --wa-color-danger: var(--wa-color-gray);
+    --wa-color-danger-on: var(--wa-color-gray-on);
+  }
+}
+/* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
+:where(#lexml-parecer-app),
+#lexml-parecer-app :host {
+  /**
+    * Conditional tokens to check if the key color is >= 60
+    * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
+    * The numeric value of the key is isolated as --wa-color-{hue}-key
+    * If key < 60, the result is 0%
+    * If key >= 60, the result is 100%
+    * Intended to be used in the color-mix() functions below
+    */
+
+  --wa-color-red-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-red-key), 1) * 100%));
+  --wa-color-orange-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-orange-key), 1) * 100%));
+  --wa-color-yellow-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-yellow-key), 1) * 100%));
+  --wa-color-green-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-green-key), 1) * 100%));
+  --wa-color-cyan-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-cyan-key), 1) * 100%));
+  --wa-color-blue-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-blue-key), 1) * 100%));
+  --wa-color-indigo-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-indigo-key), 1) * 100%));
+  --wa-color-purple-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-purple-key), 1) * 100%));
+  --wa-color-pink-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-pink-key), 1) * 100%));
+  --wa-color-gray-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-gray-key), 1) * 100%));
+
+  /**
+    * Tokens to set text color with appropriate WCAG 2.1 contrast
+    * If key < 60, the text color is white
+    * If key >= 60, the text color is {hue}-10
+    */
+
+  --wa-color-red-on: color-mix(in oklab, var(--wa-color-red-10) var(--wa-color-red-gte-60), white);
+  --wa-color-orange-on: color-mix(in oklab, var(--wa-color-orange-10) var(--wa-color-orange-gte-60), white);
+  --wa-color-yellow-on: color-mix(in oklab, var(--wa-color-yellow-10) var(--wa-color-yellow-gte-60), white);
+  --wa-color-green-on: color-mix(in oklab, var(--wa-color-green-10) var(--wa-color-green-gte-60), white);
+  --wa-color-cyan-on: color-mix(in oklab, var(--wa-color-cyan-10) var(--wa-color-cyan-gte-60), white);
+  --wa-color-blue-on: color-mix(in oklab, var(--wa-color-blue-10) var(--wa-color-blue-gte-60), white);
+  --wa-color-indigo-on: color-mix(in oklab, var(--wa-color-indigo-10) var(--wa-color-indigo-gte-60), white);
+  --wa-color-purple-on: color-mix(in oklab, var(--wa-color-purple-10) var(--wa-color-purple-gte-60), white);
+  --wa-color-pink-on: color-mix(in oklab, var(--wa-color-pink-10) var(--wa-color-pink-gte-60), white);
+  --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
+}
+@layer wa-color-palette {
+  :where(#lexml-parecer-app),
+  #lexml-parecer-app .wa-palette-default {
     --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
     --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
     --wa-color-red-80: #ffb8b6 /* oklch(84.803% 0.08289 20.771) */;
@@ -2932,13 +4418,13 @@ export const waResetString = `
   }
 }
 @layer wa-theme {
-  :where(.wa-scope),
-  .wa-scope .wa-theme-default,
-  .wa-scope .wa-light,
-  .wa-scope .wa-dark .wa-invert,
-  .wa-scope .wa-light .wa-theme-default,
-  .wa-scope .wa-dark .wa-theme-default.wa-invert,
-  .wa-scope .wa-dark .wa-theme-default .wa-invert {
+  :where(#lexml-parecer-app),
+  #lexml-parecer-app .wa-theme-default,
+  #lexml-parecer-app .wa-light,
+  #lexml-parecer-app .wa-dark .wa-invert,
+  #lexml-parecer-app .wa-light .wa-theme-default,
+  #lexml-parecer-app .wa-dark .wa-theme-default.wa-invert,
+  #lexml-parecer-app .wa-dark .wa-theme-default .wa-invert {
     /* #region Colors (Light) ~~~~~~~~~~~~~~~~~~~~~ */
     color-scheme: light;
     color: var(--wa-color-text-normal);
@@ -3018,11 +4504,11 @@ export const waResetString = `
     /* #endregion */
   }
 
-  .wa-scope .wa-dark,
-  .wa-scope .wa-invert,
-  .wa-scope .wa-dark .wa-theme-default,
-  .wa-scope .wa-light .wa-theme-default.wa-invert,
-  .wa-scope .wa-light .wa-theme-default .wa-invert {
+  #lexml-parecer-app .wa-dark,
+  #lexml-parecer-app .wa-invert,
+  #lexml-parecer-app .wa-dark .wa-theme-default,
+  #lexml-parecer-app .wa-light .wa-theme-default.wa-invert,
+  #lexml-parecer-app .wa-light .wa-theme-default .wa-invert {
     /* #region Colors (Dark) ~~~~~~~~~~~~~~~~~~~~~~ */
     color-scheme: dark;
     color: var(--wa-color-text-normal);
@@ -3102,11 +4588,11 @@ export const waResetString = `
     /* #endregion */
   }
 
-  :where(.wa-scope),
-  .wa-scope .wa-theme-default,
-  .wa-scope .wa-light,
-  .wa-scope .wa-dark,
-  .wa-scope .wa-invert {
+  :where(#lexml-parecer-app),
+  #lexml-parecer-app .wa-theme-default,
+  #lexml-parecer-app .wa-light,
+  #lexml-parecer-app .wa-dark,
+  #lexml-parecer-app .wa-invert {
     font-family: var(--wa-font-family-body);
 
     /* #region Fonts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -3288,4 +4774,5 @@ export const waResetString = `
     /* #endregion */
   }
 }
+
 `;

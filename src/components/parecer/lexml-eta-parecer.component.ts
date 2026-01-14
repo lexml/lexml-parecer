@@ -18,8 +18,7 @@ import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
 import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
-import { waResetString } from '../../assets/css/webawesome.js';
-import { waThemeString } from '../../assets/css/shoelace.js';
+import { waResetString, waThemeString } from '../../assets/css/wa-bundled.js';
 
 @customElement('lexml-eta-parecer')
 export class LexmlEtaParecer extends LitElement {
@@ -574,7 +573,7 @@ export class LexmlEtaParecer extends LitElement {
         }
       </style>
 
-      <div class="wa-scope">
+      <div id="lexml-parecer-app">
         <wa-tab-group>
           ${!this.isCamara
             ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
