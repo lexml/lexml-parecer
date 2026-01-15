@@ -16887,6 +16887,7 @@ function ensureStack(width) {
     if (!el) {
         const elDs = document.createElement('div');
         elDs.className = 'lexml-default-ds';
+        elDs.style.minHeight = 'auto';
         document.body.appendChild(elDs);
         el = document.createElement('div');
         el.id = id;
