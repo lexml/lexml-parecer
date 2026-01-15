@@ -35,15 +35,15 @@ async function processCss(filePath, isTheme) {
     // 1. Resolve @imports (Flatten)
     atImport(),
 
-    // 2. Escopo (#lexml-parecer-app)
+    // 2. Escopo: Lexml Default Design System (.lexml-default-ds)
     prefixer({
-      prefix: '#lexml-parecer-app',
+      prefix: '.lexml-default-ds',
       transform: function (prefix, selector, prefixedSelector) {
-        // Tema: substitui :root por #lexml-parecer-app
+        // Tema: substitui :root por .lexml-default-ds
         if (selector.includes(':root')) {
           return selector.replace(/:root/g, prefix);
         }
-        // Base: não prefixa html/body, mas troca por #lexml-parecer-app para segurança
+        // Base: não prefixa html/body, mas troca por .lexml-default-ds para segurança
         if (selector === 'html' || selector === 'body') {
           return prefix;
         }

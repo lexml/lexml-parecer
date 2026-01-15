@@ -573,65 +573,73 @@ export class LexmlEtaParecer extends LitElement {
         }
       </style>
 
-      <div id="lexml-parecer-app">
-        <wa-tab-group>
-          ${!this.isCamara
-            ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
-            : null}
-          <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
-          <wa-tab slot="nav" panel="analise">
-            ${this.parecer.tituloSecao2}
-          </wa-tab>
-          <wa-tab slot="nav" panel="voto">${this.parecer.tituloSecao3}</wa-tab>
-          <wa-tab slot="nav" panel="dataAutoriaImpressao"
-            >Data, Autoria e Impressão</wa-tab
-          >
-          <wa-tab slot="nav" panel="avisos">
-            Avisos
-            <div class="badge-pulse" id="contadorAvisos">
-              ${this.totalAlertas > 0
-                ? html`
-                    <wa-badge
-                      class="badge-alertas"
-                      variant="danger"
-                      attention="pulse"
-                      pill
-                    >
-                      ${this.totalAlertas}
-                    </wa-badge>
-                  `
-                : ''}
-            </div>
-          </wa-tab>
+      <div class="lexml-default-ds">
+        <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
+          <wa-tab-group>
+            ${!this.isCamara
+              ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
+              : null}
+            <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
+            <wa-tab slot="nav" panel="analise">
+              ${this.parecer.tituloSecao2}
+            </wa-tab>
+            <wa-tab slot="nav" panel="voto"
+              >${this.parecer.tituloSecao3}</wa-tab
+            >
+            <wa-tab slot="nav" panel="dataAutoriaImpressao"
+              >Data, Autoria e Impressão</wa-tab
+            >
+            <wa-tab slot="nav" panel="avisos">
+              Avisos
+              <div class="badge-pulse" id="contadorAvisos">
+                ${this.totalAlertas > 0
+                  ? html`
+                      <wa-badge
+                        class="badge-alertas"
+                        variant="danger"
+                        attention="pulse"
+                        pill
+                      >
+                        ${this.totalAlertas}
+                      </wa-badge>
+                    `
+                  : ''}
+              </div>
+            </wa-tab>
 
-          <wa-tab-panel name="ementa" class="overflow-hidden">
-            <lexml-parecer-ementa></lexml-parecer-ementa>
-          </wa-tab-panel>
-          <wa-tab-panel name="relatorio" class="overflow-hidden">
-            <lexml-parecer-relatorio></lexml-parecer-relatorio>
-          </wa-tab-panel>
-          <wa-tab-panel name="analise" class="overflow-hidden">
-            <lexml-parecer-analise></lexml-parecer-analise>
-          </wa-tab-panel>
-          <wa-tab-panel name="voto" class="overflow-hidden">
-            <lexml-parecer-voto .urlAnexo=${this.urlAnexo}></lexml-parecer-voto>
-          </wa-tab-panel>
-          <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
-            <lexml-parecer-data-autoria-impressao
-              .parlamentares=${this._parlamentares}
-            ></lexml-parecer-data-autoria-impressao>
-          </wa-tab-panel>
-          <wa-tab-panel name="avisos" class="overflow-hidden">
-            <lexml-parecer-avisos
-              .alertas=${this._alertas}
-              @parecer-total-alertas=${(e: CustomEvent<{ total: number }>) => {
-                this.totalAlertas = e.detail.total;
-              }}
-              @parecer-remover-alerta=${this._onRemoverAlerta}
-              @parecer-limpar-alertas=${this._onLimparAlertas}
-            ></lexml-parecer-avisos>
-          </wa-tab-panel>
-        </wa-tab-group>
+            <wa-tab-panel name="ementa" class="overflow-hidden">
+              <lexml-parecer-ementa></lexml-parecer-ementa>
+            </wa-tab-panel>
+            <wa-tab-panel name="relatorio" class="overflow-hidden">
+              <lexml-parecer-relatorio></lexml-parecer-relatorio>
+            </wa-tab-panel>
+            <wa-tab-panel name="analise" class="overflow-hidden">
+              <lexml-parecer-analise></lexml-parecer-analise>
+            </wa-tab-panel>
+            <wa-tab-panel name="voto" class="overflow-hidden">
+              <lexml-parecer-voto
+                .urlAnexo=${this.urlAnexo}
+              ></lexml-parecer-voto>
+            </wa-tab-panel>
+            <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
+              <lexml-parecer-data-autoria-impressao
+                .parlamentares=${this._parlamentares}
+              ></lexml-parecer-data-autoria-impressao>
+            </wa-tab-panel>
+            <wa-tab-panel name="avisos" class="overflow-hidden">
+              <lexml-parecer-avisos
+                .alertas=${this._alertas}
+                @parecer-total-alertas=${(
+                  e: CustomEvent<{ total: number }>,
+                ) => {
+                  this.totalAlertas = e.detail.total;
+                }}
+                @parecer-remover-alerta=${this._onRemoverAlerta}
+                @parecer-limpar-alertas=${this._onLimparAlertas}
+              ></lexml-parecer-avisos>
+            </wa-tab-panel>
+          </wa-tab-group>
+        </div>
       </div>
     `;
   }

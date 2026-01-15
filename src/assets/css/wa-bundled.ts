@@ -11,8 +11,8 @@ export const waThemeString = `
 /* Order of precedence for all cascade layers in Web Awesome */
 /* Rules shared by all palettes */
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-brand-blue {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-brand-blue {
     --wa-color-brand-95: var(--wa-color-blue-95);
     --wa-color-brand-90: var(--wa-color-blue-90);
     --wa-color-brand-80: var(--wa-color-blue-80);
@@ -28,7 +28,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-brand-red {
+  .lexml-default-ds .wa-brand-red {
     --wa-color-brand-95: var(--wa-color-red-95);
     --wa-color-brand-90: var(--wa-color-red-90);
     --wa-color-brand-80: var(--wa-color-red-80);
@@ -44,7 +44,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-brand-orange {
+  .lexml-default-ds .wa-brand-orange {
     --wa-color-brand-95: var(--wa-color-orange-95);
     --wa-color-brand-90: var(--wa-color-orange-90);
     --wa-color-brand-80: var(--wa-color-orange-80);
@@ -60,7 +60,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-brand-yellow {
+  .lexml-default-ds .wa-brand-yellow {
     --wa-color-brand-95: var(--wa-color-yellow-95);
     --wa-color-brand-90: var(--wa-color-yellow-90);
     --wa-color-brand-80: var(--wa-color-yellow-80);
@@ -76,7 +76,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-brand-green {
+  .lexml-default-ds .wa-brand-green {
     --wa-color-brand-95: var(--wa-color-green-95);
     --wa-color-brand-90: var(--wa-color-green-90);
     --wa-color-brand-80: var(--wa-color-green-80);
@@ -92,7 +92,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-brand-cyan {
+  .lexml-default-ds .wa-brand-cyan {
     --wa-color-brand-95: var(--wa-color-cyan-95);
     --wa-color-brand-90: var(--wa-color-cyan-90);
     --wa-color-brand-80: var(--wa-color-cyan-80);
@@ -108,7 +108,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-brand-indigo {
+  .lexml-default-ds .wa-brand-indigo {
     --wa-color-brand-95: var(--wa-color-indigo-95);
     --wa-color-brand-90: var(--wa-color-indigo-90);
     --wa-color-brand-80: var(--wa-color-indigo-80);
@@ -124,7 +124,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-brand-purple {
+  .lexml-default-ds .wa-brand-purple {
     --wa-color-brand-95: var(--wa-color-purple-95);
     --wa-color-brand-90: var(--wa-color-purple-90);
     --wa-color-brand-80: var(--wa-color-purple-80);
@@ -140,7 +140,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-brand-pink {
+  .lexml-default-ds .wa-brand-pink {
     --wa-color-brand-95: var(--wa-color-pink-95);
     --wa-color-brand-90: var(--wa-color-pink-90);
     --wa-color-brand-80: var(--wa-color-pink-80);
@@ -156,7 +156,7 @@ export const waThemeString = `
     --wa-color-brand-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-brand-gray {
+  .lexml-default-ds .wa-brand-gray {
     --wa-color-brand-95: var(--wa-color-gray-95);
     --wa-color-brand-90: var(--wa-color-gray-90);
     --wa-color-brand-80: var(--wa-color-gray-80);
@@ -173,8 +173,8 @@ export const waThemeString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-neutral-gray {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-neutral-gray {
     --wa-color-neutral-95: var(--wa-color-gray-95);
     --wa-color-neutral-90: var(--wa-color-gray-90);
     --wa-color-neutral-80: var(--wa-color-gray-80);
@@ -190,7 +190,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-gray-on);
   }
 
-  #lexml-parecer-app .wa-neutral-red {
+  .lexml-default-ds .wa-neutral-red {
     --wa-color-neutral-95: var(--wa-color-red-95);
     --wa-color-neutral-90: var(--wa-color-red-90);
     --wa-color-neutral-80: var(--wa-color-red-80);
@@ -206,7 +206,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-neutral-orange {
+  .lexml-default-ds .wa-neutral-orange {
     --wa-color-neutral-95: var(--wa-color-orange-95);
     --wa-color-neutral-90: var(--wa-color-orange-90);
     --wa-color-neutral-80: var(--wa-color-orange-80);
@@ -222,7 +222,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-neutral-yellow {
+  .lexml-default-ds .wa-neutral-yellow {
     --wa-color-neutral-95: var(--wa-color-yellow-95);
     --wa-color-neutral-90: var(--wa-color-yellow-90);
     --wa-color-neutral-80: var(--wa-color-yellow-80);
@@ -238,7 +238,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-neutral-green {
+  .lexml-default-ds .wa-neutral-green {
     --wa-color-neutral-95: var(--wa-color-green-95);
     --wa-color-neutral-90: var(--wa-color-green-90);
     --wa-color-neutral-80: var(--wa-color-green-80);
@@ -254,7 +254,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-neutral-cyan {
+  .lexml-default-ds .wa-neutral-cyan {
     --wa-color-neutral-95: var(--wa-color-cyan-95);
     --wa-color-neutral-90: var(--wa-color-cyan-90);
     --wa-color-neutral-80: var(--wa-color-cyan-80);
@@ -270,7 +270,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-neutral-blue {
+  .lexml-default-ds .wa-neutral-blue {
     --wa-color-neutral-95: var(--wa-color-blue-95);
     --wa-color-neutral-90: var(--wa-color-blue-90);
     --wa-color-neutral-80: var(--wa-color-blue-80);
@@ -286,7 +286,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-neutral-indigo {
+  .lexml-default-ds .wa-neutral-indigo {
     --wa-color-neutral-95: var(--wa-color-indigo-95);
     --wa-color-neutral-90: var(--wa-color-indigo-90);
     --wa-color-neutral-80: var(--wa-color-indigo-80);
@@ -302,7 +302,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-neutral-purple {
+  .lexml-default-ds .wa-neutral-purple {
     --wa-color-neutral-95: var(--wa-color-purple-95);
     --wa-color-neutral-90: var(--wa-color-purple-90);
     --wa-color-neutral-80: var(--wa-color-purple-80);
@@ -318,7 +318,7 @@ export const waThemeString = `
     --wa-color-neutral-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-neutral-pink {
+  .lexml-default-ds .wa-neutral-pink {
     --wa-color-neutral-95: var(--wa-color-pink-95);
     --wa-color-neutral-90: var(--wa-color-pink-90);
     --wa-color-neutral-80: var(--wa-color-pink-80);
@@ -335,8 +335,8 @@ export const waThemeString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-success-green {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-success-green {
     --wa-color-success-95: var(--wa-color-green-95);
     --wa-color-success-90: var(--wa-color-green-90);
     --wa-color-success-80: var(--wa-color-green-80);
@@ -352,7 +352,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-success-red {
+  .lexml-default-ds .wa-success-red {
     --wa-color-success-95: var(--wa-color-red-95);
     --wa-color-success-90: var(--wa-color-red-90);
     --wa-color-success-80: var(--wa-color-red-80);
@@ -368,7 +368,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-success-orange {
+  .lexml-default-ds .wa-success-orange {
     --wa-color-success-95: var(--wa-color-orange-95);
     --wa-color-success-90: var(--wa-color-orange-90);
     --wa-color-success-80: var(--wa-color-orange-80);
@@ -384,7 +384,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-success-yellow {
+  .lexml-default-ds .wa-success-yellow {
     --wa-color-success-95: var(--wa-color-yellow-95);
     --wa-color-success-90: var(--wa-color-yellow-90);
     --wa-color-success-80: var(--wa-color-yellow-80);
@@ -400,7 +400,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-success-cyan {
+  .lexml-default-ds .wa-success-cyan {
     --wa-color-success-95: var(--wa-color-cyan-95);
     --wa-color-success-90: var(--wa-color-cyan-90);
     --wa-color-success-80: var(--wa-color-cyan-80);
@@ -416,7 +416,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-success-blue {
+  .lexml-default-ds .wa-success-blue {
     --wa-color-success-95: var(--wa-color-blue-95);
     --wa-color-success-90: var(--wa-color-blue-90);
     --wa-color-success-80: var(--wa-color-blue-80);
@@ -432,7 +432,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-success-indigo {
+  .lexml-default-ds .wa-success-indigo {
     --wa-color-success-95: var(--wa-color-indigo-95);
     --wa-color-success-90: var(--wa-color-indigo-90);
     --wa-color-success-80: var(--wa-color-indigo-80);
@@ -448,7 +448,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-success-purple {
+  .lexml-default-ds .wa-success-purple {
     --wa-color-success-95: var(--wa-color-purple-95);
     --wa-color-success-90: var(--wa-color-purple-90);
     --wa-color-success-80: var(--wa-color-purple-80);
@@ -464,7 +464,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-success-pink {
+  .lexml-default-ds .wa-success-pink {
     --wa-color-success-95: var(--wa-color-pink-95);
     --wa-color-success-90: var(--wa-color-pink-90);
     --wa-color-success-80: var(--wa-color-pink-80);
@@ -480,7 +480,7 @@ export const waThemeString = `
     --wa-color-success-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-success-gray {
+  .lexml-default-ds .wa-success-gray {
     --wa-color-success-95: var(--wa-color-gray-95);
     --wa-color-success-90: var(--wa-color-gray-90);
     --wa-color-success-80: var(--wa-color-gray-80);
@@ -497,8 +497,8 @@ export const waThemeString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-warning-yellow {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-warning-yellow {
     --wa-color-warning-95: var(--wa-color-yellow-95);
     --wa-color-warning-90: var(--wa-color-yellow-90);
     --wa-color-warning-80: var(--wa-color-yellow-80);
@@ -514,7 +514,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-warning-red {
+  .lexml-default-ds .wa-warning-red {
     --wa-color-warning-95: var(--wa-color-red-95);
     --wa-color-warning-90: var(--wa-color-red-90);
     --wa-color-warning-80: var(--wa-color-red-80);
@@ -530,7 +530,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-warning-orange {
+  .lexml-default-ds .wa-warning-orange {
     --wa-color-warning-95: var(--wa-color-orange-95);
     --wa-color-warning-90: var(--wa-color-orange-90);
     --wa-color-warning-80: var(--wa-color-orange-80);
@@ -546,7 +546,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-warning-green {
+  .lexml-default-ds .wa-warning-green {
     --wa-color-warning-95: var(--wa-color-green-95);
     --wa-color-warning-90: var(--wa-color-green-90);
     --wa-color-warning-80: var(--wa-color-green-80);
@@ -562,7 +562,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-warning-cyan {
+  .lexml-default-ds .wa-warning-cyan {
     --wa-color-warning-95: var(--wa-color-cyan-95);
     --wa-color-warning-90: var(--wa-color-cyan-90);
     --wa-color-warning-80: var(--wa-color-cyan-80);
@@ -578,7 +578,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-warning-blue {
+  .lexml-default-ds .wa-warning-blue {
     --wa-color-warning-95: var(--wa-color-blue-95);
     --wa-color-warning-90: var(--wa-color-blue-90);
     --wa-color-warning-80: var(--wa-color-blue-80);
@@ -594,7 +594,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-warning-indigo {
+  .lexml-default-ds .wa-warning-indigo {
     --wa-color-warning-95: var(--wa-color-indigo-95);
     --wa-color-warning-90: var(--wa-color-indigo-90);
     --wa-color-warning-80: var(--wa-color-indigo-80);
@@ -610,7 +610,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-warning-purple {
+  .lexml-default-ds .wa-warning-purple {
     --wa-color-warning-95: var(--wa-color-purple-95);
     --wa-color-warning-90: var(--wa-color-purple-90);
     --wa-color-warning-80: var(--wa-color-purple-80);
@@ -626,7 +626,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-warning-pink {
+  .lexml-default-ds .wa-warning-pink {
     --wa-color-warning-95: var(--wa-color-pink-95);
     --wa-color-warning-90: var(--wa-color-pink-90);
     --wa-color-warning-80: var(--wa-color-pink-80);
@@ -642,7 +642,7 @@ export const waThemeString = `
     --wa-color-warning-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-warning-gray {
+  .lexml-default-ds .wa-warning-gray {
     --wa-color-warning-95: var(--wa-color-gray-95);
     --wa-color-warning-90: var(--wa-color-gray-90);
     --wa-color-warning-80: var(--wa-color-gray-80);
@@ -659,8 +659,8 @@ export const waThemeString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-danger-red {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-danger-red {
     --wa-color-danger-95: var(--wa-color-red-95);
     --wa-color-danger-90: var(--wa-color-red-90);
     --wa-color-danger-80: var(--wa-color-red-80);
@@ -676,7 +676,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-danger-orange {
+  .lexml-default-ds .wa-danger-orange {
     --wa-color-danger-95: var(--wa-color-orange-95);
     --wa-color-danger-90: var(--wa-color-orange-90);
     --wa-color-danger-80: var(--wa-color-orange-80);
@@ -692,7 +692,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-danger-yellow {
+  .lexml-default-ds .wa-danger-yellow {
     --wa-color-danger-95: var(--wa-color-yellow-95);
     --wa-color-danger-90: var(--wa-color-yellow-90);
     --wa-color-danger-80: var(--wa-color-yellow-80);
@@ -708,7 +708,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-danger-green {
+  .lexml-default-ds .wa-danger-green {
     --wa-color-danger-95: var(--wa-color-green-95);
     --wa-color-danger-90: var(--wa-color-green-90);
     --wa-color-danger-80: var(--wa-color-green-80);
@@ -724,7 +724,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-danger-cyan {
+  .lexml-default-ds .wa-danger-cyan {
     --wa-color-danger-95: var(--wa-color-cyan-95);
     --wa-color-danger-90: var(--wa-color-cyan-90);
     --wa-color-danger-80: var(--wa-color-cyan-80);
@@ -740,7 +740,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-danger-blue {
+  .lexml-default-ds .wa-danger-blue {
     --wa-color-danger-95: var(--wa-color-blue-95);
     --wa-color-danger-90: var(--wa-color-blue-90);
     --wa-color-danger-80: var(--wa-color-blue-80);
@@ -756,7 +756,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-danger-indigo {
+  .lexml-default-ds .wa-danger-indigo {
     --wa-color-danger-95: var(--wa-color-indigo-95);
     --wa-color-danger-90: var(--wa-color-indigo-90);
     --wa-color-danger-80: var(--wa-color-indigo-80);
@@ -772,7 +772,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-danger-purple {
+  .lexml-default-ds .wa-danger-purple {
     --wa-color-danger-95: var(--wa-color-purple-95);
     --wa-color-danger-90: var(--wa-color-purple-90);
     --wa-color-danger-80: var(--wa-color-purple-80);
@@ -788,7 +788,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-danger-pink {
+  .lexml-default-ds .wa-danger-pink {
     --wa-color-danger-95: var(--wa-color-pink-95);
     --wa-color-danger-90: var(--wa-color-pink-90);
     --wa-color-danger-80: var(--wa-color-pink-80);
@@ -804,7 +804,7 @@ export const waThemeString = `
     --wa-color-danger-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-danger-gray {
+  .lexml-default-ds .wa-danger-gray {
     --wa-color-danger-95: var(--wa-color-gray-95);
     --wa-color-danger-90: var(--wa-color-gray-90);
     --wa-color-danger-80: var(--wa-color-gray-80);
@@ -821,8 +821,8 @@ export const waThemeString = `
   }
 }
 /* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
-:where(#lexml-parecer-app),
-#lexml-parecer-app :host {
+:where(.lexml-default-ds),
+.lexml-default-ds :host {
   /**
     * Conditional tokens to check if the key color is >= 60
     * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
@@ -861,8 +861,8 @@ export const waThemeString = `
   --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
 }
 @layer wa-color-palette {
-  #lexml-parecer-app .wa-palette-shoelace,
-  #lexml-parecer-app .wa-palette-shoelace :host {
+  .lexml-default-ds .wa-palette-shoelace,
+  .lexml-default-ds .wa-palette-shoelace :host {
     --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
     --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
     --wa-color-red-80: #ffb8b5 /* oklch(84.778% 0.083 21.686) */;
@@ -1006,14 +1006,14 @@ export const waThemeString = `
 }
 /* To use this palette, add class="wa-palette-shoelace" to the <html> element */
 @layer wa-theme {
-  #lexml-parecer-app .wa-theme-shoelace,
-  #lexml-parecer-app .wa-theme-shoelace.wa-light,
-  #lexml-parecer-app .wa-theme-shoelace .wa-light,
-  #lexml-parecer-app .wa-theme-shoelace.wa-dark .wa-invert,
-  #lexml-parecer-app .wa-theme-shoelace .wa-dark .wa-invert,
-  #lexml-parecer-app .wa-light .wa-theme-shoelace,
-  #lexml-parecer-app .wa-dark .wa-theme-shoelace.wa-invert,
-  #lexml-parecer-app .wa-dark .wa-theme-shoelace .wa-invert {
+  .lexml-default-ds .wa-theme-shoelace,
+  .lexml-default-ds .wa-theme-shoelace.wa-light,
+  .lexml-default-ds .wa-theme-shoelace .wa-light,
+  .lexml-default-ds .wa-theme-shoelace.wa-dark .wa-invert,
+  .lexml-default-ds .wa-theme-shoelace .wa-dark .wa-invert,
+  .lexml-default-ds .wa-light .wa-theme-shoelace,
+  .lexml-default-ds .wa-dark .wa-theme-shoelace.wa-invert,
+  .lexml-default-ds .wa-dark .wa-theme-shoelace .wa-invert {
     /* #region Colors (Light) ~~~~~~~~~~~~~~~~~~~~~ */
     color-scheme: light;
     color: var(--wa-color-text-normal);
@@ -1093,13 +1093,13 @@ export const waThemeString = `
     /* #endregion */
   }
 
-  #lexml-parecer-app .wa-theme-shoelace.wa-dark,
-  #lexml-parecer-app .wa-theme-shoelace .wa-dark,
-  #lexml-parecer-app .wa-theme-shoelace.wa-invert,
-  #lexml-parecer-app .wa-theme-shoelace .wa-invert,
-  #lexml-parecer-app .wa-dark .wa-theme-shoelace,
-  #lexml-parecer-app .wa-light .wa-theme-shoelace.wa-invert,
-  #lexml-parecer-app .wa-light .wa-theme-shoelace .wa-invert {
+  .lexml-default-ds .wa-theme-shoelace.wa-dark,
+  .lexml-default-ds .wa-theme-shoelace .wa-dark,
+  .lexml-default-ds .wa-theme-shoelace.wa-invert,
+  .lexml-default-ds .wa-theme-shoelace .wa-invert,
+  .lexml-default-ds .wa-dark .wa-theme-shoelace,
+  .lexml-default-ds .wa-light .wa-theme-shoelace.wa-invert,
+  .lexml-default-ds .wa-light .wa-theme-shoelace .wa-invert {
     /* #region Colors (Dark) ~~~~~~~~~~~~~~~~~~~~~~ */
     color-scheme: dark;
     color: var(--wa-color-text-normal);
@@ -1179,13 +1179,13 @@ export const waThemeString = `
     /* #endregion */
   }
 
-  #lexml-parecer-app .wa-theme-shoelace,
-  #lexml-parecer-app .wa-theme-shoelace.wa-light,
-  #lexml-parecer-app .wa-theme-shoelace .wa-light,
-  #lexml-parecer-app .wa-theme-shoelace.wa-dark,
-  #lexml-parecer-app .wa-theme-shoelace .wa-dark,
-  #lexml-parecer-app .wa-theme-shoelace.wa-invert,
-  #lexml-parecer-app .wa-theme-shoelace .wa-invert {
+  .lexml-default-ds .wa-theme-shoelace,
+  .lexml-default-ds .wa-theme-shoelace.wa-light,
+  .lexml-default-ds .wa-theme-shoelace .wa-light,
+  .lexml-default-ds .wa-theme-shoelace.wa-dark,
+  .lexml-default-ds .wa-theme-shoelace .wa-dark,
+  .lexml-default-ds .wa-theme-shoelace.wa-invert,
+  .lexml-default-ds .wa-theme-shoelace .wa-invert {
     font-family: var(--wa-font-family-body);
 
     /* #region Fonts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -1369,48 +1369,48 @@ export const waThemeString = `
   }
 }
 @layer wa-theme-overrides {
-  #lexml-parecer-app .wa-theme-shoelace {
-    #lexml-parecer-app wa-avatar {
+  .lexml-default-ds .wa-theme-shoelace {
+    .lexml-default-ds wa-avatar {
       background-color: var(--wa-color-neutral-fill-loud);
       color: var(--wa-color-neutral-on-loud);
     }
 
-    #lexml-parecer-app wa-button::part(label),
-    #lexml-parecer-app wa-radio[appearance='button'],
-    #lexml-parecer-app button,
-    #lexml-parecer-app input:where([type='button'], [type='reset'], [type='submit']) {
+    .lexml-default-ds wa-button::part(label),
+    .lexml-default-ds wa-radio[appearance='button'],
+    .lexml-default-ds button,
+    .lexml-default-ds input:where([type='button'], [type='reset'], [type='submit']) {
       font-size: var(--wa-font-size-smaller);
     }
 
-    #lexml-parecer-app wa-radio[appearance='button'] {
+    .lexml-default-ds wa-radio[appearance='button'] {
       font-weight: var(--wa-font-weight-action);
 
-      #lexml-parecer-app &:state(checked) {
+      .lexml-default-ds &:state(checked) {
         background-color: var(--wa-form-control-activated-color);
         color: var(--wa-color-brand-on-loud);
       }
     }
 
-    #lexml-parecer-app wa-breadcrumb {
+    .lexml-default-ds wa-breadcrumb {
       font-size: var(--wa-font-size-s);
     }
 
-    #lexml-parecer-app wa-callout {
+    .lexml-default-ds wa-callout {
       padding: var(--wa-space-m);
       font-size: var(--wa-font-size-smaller);
 
-      #lexml-parecer-app &:is([appearance~='outlined']) {
+      .lexml-default-ds &:is([appearance~='outlined']) {
         border-top-width: var(--wa-border-width-l);
         border-color: var(--wa-color-surface-border);
         border-top-color: var(--border-color, var(--wa-color-border-loud));
       }
     }
 
-    #lexml-parecer-app wa-card {
+    .lexml-default-ds wa-card {
       background-color: var(--wa-color-surface-raised);
     }
 
-    #lexml-parecer-app :is(
+    .lexml-default-ds :is(
         wa-input,
         wa-select,
         wa-textarea,
@@ -1436,46 +1436,46 @@ export const waThemeString = `
       --wa-focus-ring-offset: 0;
     }
 
-    #lexml-parecer-app wa-radio,
-    #lexml-parecer-app input[type='radio'] {
+    .lexml-default-ds wa-radio,
+    .lexml-default-ds input[type='radio'] {
       --checked-icon-color: var(--wa-color-surface-default);
       --checked-icon-scale: 0.4;
 
-      #lexml-parecer-app &:checked,
-      #lexml-parecer-app &:state(checked)::part(control) {
+      .lexml-default-ds &:checked,
+      .lexml-default-ds &:state(checked)::part(control) {
         background-color: var(--wa-form-control-activated-color);
       }
     }
 
-    #lexml-parecer-app wa-slider::part(thumb) {
+    .lexml-default-ds wa-slider::part(thumb) {
       border: none;
     }
 
-    #lexml-parecer-app wa-switch {
+    .lexml-default-ds wa-switch {
       --height: calc(1em * var(--wa-form-control-value-line-height) - var(--wa-form-control-border-width) * 2);
       --thumb-size: calc(var(--height) + 0.25em);
       --width: calc(var(--height) * 2);
 
-      #lexml-parecer-app &::part(control) {
+      .lexml-default-ds &::part(control) {
         background-color: var(--wa-color-gray-50);
         border-color: var(--wa-color-gray-50);
       }
 
-      #lexml-parecer-app &:state(checked)::part(control) {
+      .lexml-default-ds &:state(checked)::part(control) {
         background-color: var(--wa-form-control-activated-color);
         border-color: var(--wa-form-control-activated-color);
       }
 
-      #lexml-parecer-app &::part(thumb) {
+      .lexml-default-ds &::part(thumb) {
         background-color: var(--wa-color-surface-default);
         border: var(--wa-border-width-s) var(--wa-border-style) var(--wa-color-gray-50);
       }
-      #lexml-parecer-app &:state(checked)::part(thumb) {
+      .lexml-default-ds &:state(checked)::part(thumb) {
         border-color: var(--wa-form-control-activated-color);
       }
     }
 
-    #lexml-parecer-app wa-tab {
+    .lexml-default-ds wa-tab {
       font-size: var(--wa-font-size-smaller);
     }
   }
@@ -1492,21 +1492,21 @@ export const waResetString = `
 /* Native styles */
 /* Required utilities */
 @layer wa-utilities {
-  #lexml-parecer-app .wa-size-s {
+  .lexml-default-ds .wa-size-s {
     font-size: var(--wa-font-size-s);
   }
 
-  #lexml-parecer-app .wa-size-m {
+  .lexml-default-ds .wa-size-m {
     font-size: var(--wa-font-size-m);
   }
 
-  #lexml-parecer-app .wa-size-l {
+  .lexml-default-ds .wa-size-l {
     font-size: var(--wa-font-size-l);
   }
 }
 @layer wa-utilities {
-  :where(#lexml-parecer-app),
-  #lexml-parecer-app .wa-neutral {
+  :where(.lexml-default-ds),
+  .lexml-default-ds .wa-neutral {
     --wa-color-fill-loud: var(--wa-color-neutral-fill-loud);
     --wa-color-fill-normal: var(--wa-color-neutral-fill-normal);
     --wa-color-fill-quiet: var(--wa-color-neutral-fill-quiet);
@@ -1518,7 +1518,7 @@ export const waResetString = `
     --wa-color-on-quiet: var(--wa-color-neutral-on-quiet);
   }
 
-  #lexml-parecer-app .wa-brand {
+  .lexml-default-ds .wa-brand {
     --wa-color-fill-loud: var(--wa-color-brand-fill-loud);
     --wa-color-fill-normal: var(--wa-color-brand-fill-normal);
     --wa-color-fill-quiet: var(--wa-color-brand-fill-quiet);
@@ -1530,7 +1530,7 @@ export const waResetString = `
     --wa-color-on-quiet: var(--wa-color-brand-on-quiet);
   }
 
-  #lexml-parecer-app .wa-success {
+  .lexml-default-ds .wa-success {
     --wa-color-fill-loud: var(--wa-color-success-fill-loud);
     --wa-color-fill-normal: var(--wa-color-success-fill-normal);
     --wa-color-fill-quiet: var(--wa-color-success-fill-quiet);
@@ -1542,7 +1542,7 @@ export const waResetString = `
     --wa-color-on-quiet: var(--wa-color-success-on-quiet);
   }
 
-  #lexml-parecer-app .wa-warning {
+  .lexml-default-ds .wa-warning {
     --wa-color-fill-loud: var(--wa-color-warning-fill-loud);
     --wa-color-fill-normal: var(--wa-color-warning-fill-normal);
     --wa-color-fill-quiet: var(--wa-color-warning-fill-quiet);
@@ -1554,7 +1554,7 @@ export const waResetString = `
     --wa-color-on-quiet: var(--wa-color-warning-on-quiet);
   }
 
-  #lexml-parecer-app .wa-danger {
+  .lexml-default-ds .wa-danger {
     --wa-color-fill-loud: var(--wa-color-danger-fill-loud);
     --wa-color-fill-normal: var(--wa-color-danger-fill-normal);
     --wa-color-fill-quiet: var(--wa-color-danger-fill-quiet);
@@ -1568,7 +1568,7 @@ export const waResetString = `
 }
 @layer wa-native {
   /* #region General ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app {
+  .lexml-default-ds {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -1578,13 +1578,13 @@ export const waResetString = `
     background-color: var(--wa-color-surface-default);
   }
 
-  #lexml-parecer-app *,
-  #lexml-parecer-app *::before,
-  #lexml-parecer-app *::after {
+  .lexml-default-ds *,
+  .lexml-default-ds *::before,
+  .lexml-default-ds *::after {
     box-sizing: inherit;
   }
 
-  #lexml-parecer-app {
+  .lexml-default-ds {
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -1603,78 +1603,78 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Content Flow ~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app address,
-  #lexml-parecer-app audio,
-  #lexml-parecer-app blockquote,
-  #lexml-parecer-app dd,
-  #lexml-parecer-app details,
-  #lexml-parecer-app dl,
-  #lexml-parecer-app fieldset,
-  #lexml-parecer-app figure,
-  #lexml-parecer-app h1,
-  #lexml-parecer-app h2,
-  #lexml-parecer-app h3,
-  #lexml-parecer-app h4,
-  #lexml-parecer-app h5,
-  #lexml-parecer-app h6,
-  #lexml-parecer-app hr,
-  #lexml-parecer-app iframe,
-  #lexml-parecer-app ol,
-  #lexml-parecer-app p,
-  #lexml-parecer-app pre,
-  #lexml-parecer-app table,
-  #lexml-parecer-app ul,
-  #lexml-parecer-app video {
+  .lexml-default-ds address,
+  .lexml-default-ds audio,
+  .lexml-default-ds blockquote,
+  .lexml-default-ds dd,
+  .lexml-default-ds details,
+  .lexml-default-ds dl,
+  .lexml-default-ds fieldset,
+  .lexml-default-ds figure,
+  .lexml-default-ds h1,
+  .lexml-default-ds h2,
+  .lexml-default-ds h3,
+  .lexml-default-ds h4,
+  .lexml-default-ds h5,
+  .lexml-default-ds h6,
+  .lexml-default-ds hr,
+  .lexml-default-ds iframe,
+  .lexml-default-ds ol,
+  .lexml-default-ds p,
+  .lexml-default-ds pre,
+  .lexml-default-ds table,
+  .lexml-default-ds ul,
+  .lexml-default-ds video {
     margin: 0;
 
-    #lexml-parecer-app &:has(+ *) {
+    .lexml-default-ds &:has(+ *) {
       margin-block-end: var(--wa-content-spacing);
     }
   }
   /* #endregion */
 
   /* #region Block Text ~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app h1,
-  #lexml-parecer-app h2,
-  #lexml-parecer-app h3,
-  #lexml-parecer-app h4,
-  #lexml-parecer-app h5,
-  #lexml-parecer-app h6 {
+  .lexml-default-ds h1,
+  .lexml-default-ds h2,
+  .lexml-default-ds h3,
+  .lexml-default-ds h4,
+  .lexml-default-ds h5,
+  .lexml-default-ds h6 {
     font-family: var(--wa-font-family-heading);
     font-weight: var(--wa-font-weight-heading);
     line-height: var(--wa-line-height-condensed);
     text-wrap: balance;
   }
 
-  #lexml-parecer-app h1 {
+  .lexml-default-ds h1 {
     font-size: var(--wa-font-size-3xl);
   }
 
-  #lexml-parecer-app h2 {
+  .lexml-default-ds h2 {
     font-size: var(--wa-font-size-2xl);
   }
 
-  #lexml-parecer-app h3 {
+  .lexml-default-ds h3 {
     font-size: var(--wa-font-size-xl);
   }
 
-  #lexml-parecer-app h4 {
+  .lexml-default-ds h4 {
     font-size: var(--wa-font-size-l);
   }
 
-  #lexml-parecer-app h5 {
+  .lexml-default-ds h5 {
     font-size: var(--wa-font-size-m);
   }
 
-  #lexml-parecer-app h6 {
+  .lexml-default-ds h6 {
     font-size: var(--wa-font-size-s);
   }
 
-  #lexml-parecer-app p {
+  .lexml-default-ds p {
     text-wrap: pretty;
   }
 
-  #lexml-parecer-app blockquote {
+  .lexml-default-ds blockquote {
     padding: var(--wa-space-xl);
 
     font-family: var(--wa-font-family-longform);
@@ -1683,7 +1683,7 @@ export const waResetString = `
     border-inline-start: var(--wa-border-style) var(--wa-border-width-l) var(--wa-color-neutral-border-quiet);
   }
 
-  #lexml-parecer-app hr {
+  .lexml-default-ds hr {
     margin: var(--wa-content-spacing) 0;
 
     border: none;
@@ -1692,67 +1692,67 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Lists ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app ul,
-  #lexml-parecer-app ol {
+  .lexml-default-ds ul,
+  .lexml-default-ds ol {
     padding: 0;
   }
 
-  #lexml-parecer-app li > ul,
-  #lexml-parecer-app li > ol {
+  .lexml-default-ds li > ul,
+  .lexml-default-ds li > ol {
     margin-inline-start: 0.25em;
   }
 
-  #lexml-parecer-app ul {
+  .lexml-default-ds ul {
     list-style: disc;
   }
 
-  #lexml-parecer-app li {
+  .lexml-default-ds li {
     margin-inline-start: 1.125em;
     padding: 0;
   }
 
-  #lexml-parecer-app dt {
+  .lexml-default-ds dt {
     font-weight: var(--wa-font-weight-bold);
   }
   /* #endregion */
 
   /* #region Inline Text ~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app strong,
-  #lexml-parecer-app b {
+  .lexml-default-ds strong,
+  .lexml-default-ds b {
     font-weight: var(--wa-font-weight-bold);
   }
 
-  #lexml-parecer-app em,
-  #lexml-parecer-app i {
+  .lexml-default-ds em,
+  .lexml-default-ds i {
     font-style: italic;
   }
 
-  #lexml-parecer-app u {
+  .lexml-default-ds u {
     text-decoration-line: underline;
     text-decoration-thickness: 0.09375em;
     text-underline-offset: 0.125em;
   }
 
-  #lexml-parecer-app s {
+  .lexml-default-ds s {
     text-decoration-line: line-through;
     text-decoration-thickness: 0.09375em;
   }
 
-  #lexml-parecer-app ins {
+  .lexml-default-ds ins {
     text-decoration-color: var(--wa-color-success-on-quiet);
     text-decoration-line: underline;
     text-decoration-thickness: 0.09375em;
     text-underline-offset: 0.125em;
   }
 
-  #lexml-parecer-app del {
+  .lexml-default-ds del {
     color: color-mix(in oklab, currentColor, transparent 10%);
     text-decoration-color: var(--wa-color-danger-on-quiet);
     text-decoration-line: line-through;
     text-decoration-thickness: 0.09375em;
   }
 
-  #lexml-parecer-app mark {
+  .lexml-default-ds mark {
     padding: 0.125em 0.25em;
 
     color: var(--wa-color-warning-on-quiet);
@@ -1761,25 +1761,25 @@ export const waResetString = `
     border-radius: var(--wa-border-radius-s);
   }
 
-  #lexml-parecer-app small {
+  .lexml-default-ds small {
     font-size: var(--wa-font-size-smaller);
   }
 
-  #lexml-parecer-app sub,
-  #lexml-parecer-app sup {
+  .lexml-default-ds sub,
+  .lexml-default-ds sup {
     font-size: var(--wa-font-size-smaller);
     line-height: 0;
   }
 
-  #lexml-parecer-app sub {
+  .lexml-default-ds sub {
     vertical-align: sub;
   }
 
-  #lexml-parecer-app sup {
+  .lexml-default-ds sup {
     vertical-align: super;
   }
 
-  #lexml-parecer-app abbr[title] {
+  .lexml-default-ds abbr[title] {
     text-decoration-line: underline;
     text-decoration-style: dotted;
     text-decoration-thickness: 0.09375em;
@@ -1788,7 +1788,7 @@ export const waResetString = `
     cursor: help;
   }
 
-  #lexml-parecer-app kbd {
+  .lexml-default-ds kbd {
     padding: 0.125em 0.25em;
 
     font-family: var(--wa-font-family-code);
@@ -1799,14 +1799,14 @@ export const waResetString = `
     border-radius: var(--wa-border-radius-s);
     box-shadow: 0 0.125em 0 0 color-mix(in oklab, currentColor, transparent 50%);
 
-    #lexml-parecer-app wa-icon {
+    .lexml-default-ds wa-icon {
       vertical-align: -2px;
     }
   }
   /* #endregion */
 
   /* #region Links ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app a {
+  .lexml-default-ds a {
     color: var(--wa-color-text-link);
     text-decoration: var(--wa-link-decoration-default);
     -webkit-text-decoration: var(--wa-link-decoration-default);
@@ -1814,35 +1814,35 @@ export const waResetString = `
     text-underline-offset: 0.125em;
   }
 
-  #lexml-parecer-app *:is([appearance~='accent'], .wa-accent) {
-    #lexml-parecer-app a,
-    #lexml-parecer-app a:hover {
+  .lexml-default-ds *:is([appearance~='accent'], .wa-accent) {
+    .lexml-default-ds a,
+    .lexml-default-ds a:hover {
       color: currentColor;
     }
   }
 
-  #lexml-parecer-app a:hover {
+  .lexml-default-ds a:hover {
     color: color-mix(in oklab, var(--wa-color-text-link), var(--wa-color-mix-hover));
     text-decoration: var(--wa-link-decoration-hover);
     -webkit-text-decoration: var(--wa-link-decoration-hover);
   }
 
-  #lexml-parecer-app a:focus,
-  #lexml-parecer-app button:focus {
+  .lexml-default-ds a:focus,
+  .lexml-default-ds button:focus {
     outline: none;
   }
 
-  #lexml-parecer-app a:focus-visible,
-  #lexml-parecer-app button:focus-visible {
+  .lexml-default-ds a:focus-visible,
+  .lexml-default-ds button:focus-visible {
     outline: var(--wa-focus-ring);
     outline-offset: var(--wa-focus-ring-offset);
   }
   /* #endregion */
 
   /* #region Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app code,
-  #lexml-parecer-app samp,
-  #lexml-parecer-app var {
+  .lexml-default-ds code,
+  .lexml-default-ds samp,
+  .lexml-default-ds var {
     padding: 0.125em 0.25em;
 
     font-family: var(--wa-font-family-code);
@@ -1853,7 +1853,7 @@ export const waResetString = `
     border-radius: var(--wa-border-radius-s);
   }
 
-  #lexml-parecer-app pre {
+  .lexml-default-ds pre {
     padding: var(--wa-space-m);
 
     font-family: var(--wa-font-family-code);
@@ -1865,9 +1865,9 @@ export const waResetString = `
     border-radius: var(--wa-border-radius-m);
 
     /* Remove overlapping styles for child code elements */
-    #lexml-parecer-app & code,
-    #lexml-parecer-app & samp,
-    #lexml-parecer-app & var {
+    .lexml-default-ds & code,
+    .lexml-default-ds & samp,
+    .lexml-default-ds & var {
       padding: 0;
 
       font-size: 1em;
@@ -1884,59 +1884,59 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Media ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app img,
-  #lexml-parecer-app svg,
-  #lexml-parecer-app picture,
-  #lexml-parecer-app video {
+  .lexml-default-ds img,
+  .lexml-default-ds svg,
+  .lexml-default-ds picture,
+  .lexml-default-ds video {
     max-width: 100%;
     height: auto;
 
     border-radius: var(--wa-border-radius-m);
   }
 
-  #lexml-parecer-app embed,
-  #lexml-parecer-app iframe,
-  #lexml-parecer-app object {
+  .lexml-default-ds embed,
+  .lexml-default-ds iframe,
+  .lexml-default-ds object {
     max-width: 100%;
   }
 
-  #lexml-parecer-app iframe {
+  .lexml-default-ds iframe {
     border: none;
   }
   /* #endregion */
 
   /* #region Tables ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app table {
+  .lexml-default-ds table {
     width: 100%;
 
     border: none;
     border-collapse: collapse;
   }
 
-  #lexml-parecer-app caption {
+  .lexml-default-ds caption {
     color: var(--wa-color-text-quiet);
     font-size: var(--wa-font-size-smaller);
 
-    #lexml-parecer-app &:has(+ *) {
+    .lexml-default-ds &:has(+ *) {
       margin-block-end: 0.75em;
     }
   }
 
-  #lexml-parecer-app tbody {
-    #lexml-parecer-app tr {
+  .lexml-default-ds tbody {
+    .lexml-default-ds tr {
       border-top: solid var(--wa-border-width-s) var(--wa-color-border-quiet);
 
-      #lexml-parecer-app :where(table.wa-zebra-rows) &:nth-child(odd) {
+      .lexml-default-ds :where(table.wa-zebra-rows) &:nth-child(odd) {
         background-color: color-mix(in oklab, var(--wa-color-fill-quiet) 60%, transparent);
       }
 
-      #lexml-parecer-app :where(table.wa-hover-rows) & {
+      .lexml-default-ds :where(table.wa-hover-rows) & {
         @media (hover: hover) {
-          #lexml-parecer-app &:hover {
+          .lexml-default-ds &:hover {
             background-color: var(--wa-color-fill-quiet);
 
-            #lexml-parecer-app &,
-            #lexml-parecer-app + tr {
+            .lexml-default-ds &,
+            .lexml-default-ds + tr {
               border-top-color: var(--wa-color-border-normal);
             }
           }
@@ -1945,15 +1945,15 @@ export const waResetString = `
     }
   }
 
-  #lexml-parecer-app td,
-  #lexml-parecer-app th {
+  .lexml-default-ds td,
+  .lexml-default-ds th {
     padding: 0.75em;
 
     text-align: start;
     vertical-align: top;
   }
 
-  #lexml-parecer-app th {
+  .lexml-default-ds th {
     padding-block: 0.75em;
 
     font-size: var(--wa-font-size-smaller);
@@ -1962,7 +1962,7 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Details ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app details {
+  .lexml-default-ds details {
     padding: 0;
 
     background-color: var(--wa-color-surface-default);
@@ -1971,7 +1971,7 @@ export const waResetString = `
 
     overflow-anchor: none;
 
-    #lexml-parecer-app summary {
+    .lexml-default-ds summary {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1984,24 +1984,24 @@ export const waResetString = `
       user-select: none;
       -webkit-user-select: none;
 
-      #lexml-parecer-app > * {
+      .lexml-default-ds > * {
         margin: 0;
       }
 
-      #lexml-parecer-app &:focus {
+      .lexml-default-ds &:focus {
         outline: none;
       }
 
-      #lexml-parecer-app &:focus-visible {
+      .lexml-default-ds &:focus-visible {
         outline: var(--wa-focus-ring);
         outline-offset: calc(var(--wa-panel-border-width) + var(--wa-focus-ring-offset));
       }
     }
 
-    #lexml-parecer-app &[open] {
+    .lexml-default-ds &[open] {
       padding: 0 var(--wa-space-m) var(--wa-space-m) var(--wa-space-m);
 
-      #lexml-parecer-app summary {
+      .lexml-default-ds summary {
         margin-inline: calc(-1 * var(--wa-space-m));
 
         border-end-start-radius: 0;
@@ -2014,20 +2014,20 @@ export const waResetString = `
       background: none;
       border: solid var(--wa-border-width-s) var(--wa-color-surface-border);
 
-      #lexml-parecer-app summary {
+      .lexml-default-ds summary {
         list-style: none;
       }
     }
   }
 
   /* Replace the summary marker */
-  #lexml-parecer-app details summary {
-    #lexml-parecer-app &::marker,
-    #lexml-parecer-app &::-webkit-details-marker {
+  .lexml-default-ds details summary {
+    .lexml-default-ds &::marker,
+    .lexml-default-ds &::-webkit-details-marker {
       display: none;
     }
 
-    #lexml-parecer-app &::after {
+    .lexml-default-ds &::after {
       content: '';
       background-color: var(--wa-color-text-quiet);
       mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>')
@@ -2037,18 +2037,18 @@ export const waResetString = `
       rotate: 0deg;
     }
 
-    #lexml-parecer-app &:dir(rtl)::after {
+    .lexml-default-ds &:dir(rtl)::after {
       rotate: 180deg;
     }
   }
 
-  #lexml-parecer-app details[open] summary::after {
+  .lexml-default-ds details[open] summary::after {
     rotate: 90deg;
   }
   /* #endregion */
 
   /* #region Dialogs ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app dialog {
+  .lexml-default-ds dialog {
     flex-direction: column;
     align-items: start;
 
@@ -2067,22 +2067,22 @@ export const waResetString = `
     margin: auto;
     inset: 0;
 
-    #lexml-parecer-app &[open] {
+    .lexml-default-ds &[open] {
       display: flex;
     }
 
-    #lexml-parecer-app &:focus {
+    .lexml-default-ds &:focus {
       outline: none;
     }
   }
 
-  #lexml-parecer-app dialog::backdrop {
+  .lexml-default-ds dialog::backdrop {
     background-color: var(--wa-color-overlay-modal, rgb(0 0 0 / 0.25));
   }
   /* #endregion */
 
   /* #region Form Labels ~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app label {
+  .lexml-default-ds label {
     display: inline-block;
     position: relative;
 
@@ -2090,7 +2090,7 @@ export const waResetString = `
     font-weight: var(--wa-form-control-label-font-weight);
     line-height: var(--wa-form-control-label-line-height);
 
-    #lexml-parecer-app &:has(
+    .lexml-default-ds &:has(
         input:not(
             [type='button'],
             [type='checkbox'],
@@ -2108,14 +2108,14 @@ export const waResetString = `
       width: 100%;
     }
 
-    #lexml-parecer-app & + :is(input:not([type='checkbox'], [type='radio']), textarea, select), #lexml-parecer-app & > :is(input:not([type='checkbox'], [type='radio']), textarea, select) {
+    .lexml-default-ds & + :is(input:not([type='checkbox'], [type='radio']), textarea, select), .lexml-default-ds & > :is(input:not([type='checkbox'], [type='radio']), textarea, select) {
       margin-block-start: 0.5em;
     }
   }
   /* #endregion */
 
   /* #region Fieldsets ~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app fieldset {
+  .lexml-default-ds fieldset {
     padding: var(--wa-space-l);
     padding-block-start: calc(var(--wa-space-l) - 0.5em);
 
@@ -2123,7 +2123,7 @@ export const waResetString = `
     border-radius: var(--wa-border-radius-m);
   }
 
-  #lexml-parecer-app legend {
+  .lexml-default-ds legend {
     padding: 0;
     padding-inline: var(--wa-space-xs);
 
@@ -2132,16 +2132,16 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app button,
-  #lexml-parecer-app input[type='button'],
-  #lexml-parecer-app input[type='reset'],
-  #lexml-parecer-app input[type='submit'],
-  #lexml-parecer-app input[type='file'] {
+  .lexml-default-ds button,
+  .lexml-default-ds input[type='button'],
+  .lexml-default-ds input[type='reset'],
+  .lexml-default-ds input[type='submit'],
+  .lexml-default-ds input[type='file'] {
     /* We allow modifier classes on <input type="file">,
      * but these selectors ensure the styles only apply to
      * the file selector button in the user agent's shadow root */
-    #lexml-parecer-app &:not(input[type='file']),
-    #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds &:not(input[type='file']),
+    .lexml-default-ds &::file-selector-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -2171,13 +2171,13 @@ export const waResetString = `
     }
 
     /* Default styles for standard buttons */
-    #lexml-parecer-app :where(&:not(input[type='file'])) {
+    .lexml-default-ds :where(&:not(input[type='file'])) {
       color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
       background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
       border-color: transparent;
 
-      #lexml-parecer-app &:not(:disabled) {
-        #lexml-parecer-app &:hover {
+      .lexml-default-ds &:not(:disabled) {
+        .lexml-default-ds &:hover {
           background-color: color-mix(
             in oklab,
             var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
@@ -2185,7 +2185,7 @@ export const waResetString = `
           );
         }
 
-        #lexml-parecer-app &:active {
+        .lexml-default-ds &:active {
           background-color: color-mix(
             in oklab,
             var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
@@ -2196,15 +2196,15 @@ export const waResetString = `
     }
 
     /* Default styles for file selector buttons */
-    #lexml-parecer-app :where(&:is(input[type='file'])) {
-      #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds :where(&:is(input[type='file'])) {
+      .lexml-default-ds &::file-selector-button {
         color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
         background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
         border-color: transparent;
       }
 
-      #lexml-parecer-app &:not(:disabled) {
-        #lexml-parecer-app &::file-selector-button:hover {
+      .lexml-default-ds &:not(:disabled) {
+        .lexml-default-ds &::file-selector-button:hover {
           background-color: color-mix(
             in oklab,
             var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
@@ -2212,7 +2212,7 @@ export const waResetString = `
           );
         }
 
-        #lexml-parecer-app &::file-selector-button:active {
+        .lexml-default-ds &::file-selector-button:active {
           background-color: color-mix(
             in oklab,
             var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
@@ -2223,23 +2223,23 @@ export const waResetString = `
     }
 
     /* Modifier classes */
-    #lexml-parecer-app &.wa-plain {
-      #lexml-parecer-app &:not(input[type='file']),
-      #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds &.wa-plain {
+      .lexml-default-ds &:not(input[type='file']),
+      .lexml-default-ds &::file-selector-button {
         color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
         background-color: transparent;
         border-color: transparent;
       }
 
-      #lexml-parecer-app &:not(:disabled) {
-        #lexml-parecer-app &:not(input[type='file']):hover,
-        #lexml-parecer-app &::file-selector-button:hover {
+      .lexml-default-ds &:not(:disabled) {
+        .lexml-default-ds &:not(input[type='file']):hover,
+        .lexml-default-ds &::file-selector-button:hover {
           color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
           background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
         }
 
-        #lexml-parecer-app &:not(input[type='file']):active,
-        #lexml-parecer-app &::file-selector-button:active {
+        .lexml-default-ds &:not(input[type='file']):active,
+        .lexml-default-ds &::file-selector-button:active {
           color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
           background-color: color-mix(
             in oklab,
@@ -2250,23 +2250,23 @@ export const waResetString = `
       }
     }
 
-    #lexml-parecer-app &.wa-outlined {
-      #lexml-parecer-app &:not(input[type='file']),
-      #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds &.wa-outlined {
+      .lexml-default-ds &:not(input[type='file']),
+      .lexml-default-ds &::file-selector-button {
         color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
         background-color: transparent;
         border-color: var(--wa-color-border-loud, var(--wa-color-neutral-border-loud));
       }
 
-      #lexml-parecer-app &:not(:disabled) {
-        #lexml-parecer-app &:not(input[type='file']):hover,
-        #lexml-parecer-app &::file-selector-button:hover {
+      .lexml-default-ds &:not(:disabled) {
+        .lexml-default-ds &:not(input[type='file']):hover,
+        .lexml-default-ds &::file-selector-button:hover {
           color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
           background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
         }
 
-        #lexml-parecer-app &:not(input[type='file']):active,
-        #lexml-parecer-app &::file-selector-button:active {
+        .lexml-default-ds &:not(input[type='file']):active,
+        .lexml-default-ds &::file-selector-button:active {
           color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
           background-color: color-mix(
             in oklab,
@@ -2277,17 +2277,17 @@ export const waResetString = `
       }
     }
 
-    #lexml-parecer-app &.wa-filled {
-      #lexml-parecer-app &:not(input[type='file']),
-      #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds &.wa-filled {
+      .lexml-default-ds &:not(input[type='file']),
+      .lexml-default-ds &::file-selector-button {
         color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
         background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
         border-color: transparent;
       }
 
-      #lexml-parecer-app &:not(:disabled) {
-        #lexml-parecer-app &:not(input[type='file']):hover,
-        #lexml-parecer-app &::file-selector-button:hover {
+      .lexml-default-ds &:not(:disabled) {
+        .lexml-default-ds &:not(input[type='file']):hover,
+        .lexml-default-ds &::file-selector-button:hover {
           color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
           background-color: color-mix(
             in oklab,
@@ -2296,8 +2296,8 @@ export const waResetString = `
           );
         }
 
-        #lexml-parecer-app &:not(input[type='file']):active,
-        #lexml-parecer-app &::file-selector-button:active {
+        .lexml-default-ds &:not(input[type='file']):active,
+        .lexml-default-ds &::file-selector-button:active {
           color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
           background-color: color-mix(
             in oklab,
@@ -2307,25 +2307,25 @@ export const waResetString = `
         }
       }
 
-      #lexml-parecer-app &.wa-outlined {
-        #lexml-parecer-app &:not(input[type='file']),
-        #lexml-parecer-app &::file-selector-button {
+      .lexml-default-ds &.wa-outlined {
+        .lexml-default-ds &:not(input[type='file']),
+        .lexml-default-ds &::file-selector-button {
           border-color: var(--wa-color-border-normal, var(--wa-color-neutral-border-normal));
         }
       }
     }
 
-    #lexml-parecer-app &.wa-accent {
-      #lexml-parecer-app &:not(input[type='file']),
-      #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds &.wa-accent {
+      .lexml-default-ds &:not(input[type='file']),
+      .lexml-default-ds &::file-selector-button {
         color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
         background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
         border-color: transparent;
       }
 
-      #lexml-parecer-app &:not(:disabled) {
-        #lexml-parecer-app &:not(input[type='file']):hover,
-        #lexml-parecer-app &::file-selector-button:hover {
+      .lexml-default-ds &:not(:disabled) {
+        .lexml-default-ds &:not(input[type='file']):hover,
+        .lexml-default-ds &::file-selector-button:hover {
           background-color: color-mix(
             in oklab,
             var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
@@ -2333,8 +2333,8 @@ export const waResetString = `
           );
         }
 
-        #lexml-parecer-app &:not(input[type='file']):active,
-        #lexml-parecer-app &::file-selector-button:active {
+        .lexml-default-ds &:not(input[type='file']):active,
+        .lexml-default-ds &::file-selector-button:active {
           background-color: color-mix(
             in oklab,
             var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
@@ -2344,51 +2344,51 @@ export const waResetString = `
       }
     }
 
-    #lexml-parecer-app &.wa-pill {
-      #lexml-parecer-app &:not(input[type='file']),
-      #lexml-parecer-app &::file-selector-button {
+    .lexml-default-ds &.wa-pill {
+      .lexml-default-ds &:not(input[type='file']),
+      .lexml-default-ds &::file-selector-button {
         border-radius: var(--wa-border-radius-pill);
       }
     }
 
-    #lexml-parecer-app &:focus {
+    .lexml-default-ds &:focus {
       outline: none;
     }
 
-    #lexml-parecer-app &:focus-visible {
+    .lexml-default-ds &:focus-visible {
       outline: var(--wa-focus-ring);
       outline-offset: var(--wa-focus-ring-offset);
     }
 
     /* Wrap in :is() so that Safari doesn't stop parsing this block */
-    #lexml-parecer-app &:is(::-moz-focus-inner) {
+    .lexml-default-ds &:is(::-moz-focus-inner) {
       border: 0;
     }
 
-    #lexml-parecer-app &:disabled {
+    .lexml-default-ds &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
 
       /* When disabled, prevent mouse events from bubbling up from children */
-      #lexml-parecer-app * {
+      .lexml-default-ds * {
         pointer-events: none;
       }
     }
 
     /* Adds space between icons and adjacent elements
      * Prefer sibling selectors over :first-child/:last-child to avoid extra space when an icon is used alone */
-    #lexml-parecer-app & > wa-icon:has(+ *) {
+    .lexml-default-ds & > wa-icon:has(+ *) {
       margin-inline-end: 0.75em;
     }
 
-    #lexml-parecer-app & > * + wa-icon {
+    .lexml-default-ds & > * + wa-icon {
       margin-inline-start: 0.75em;
     }
   }
   /* #endregion */
 
   /* #region File Inputs ~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app input[type='file'] {
+  .lexml-default-ds input[type='file'] {
     display: block;
 
     max-inline-size: 100%;
@@ -2407,10 +2407,10 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Checkboxes + Radios ~~~~~~~~~~~~~ */
-  #lexml-parecer-app input[type='checkbox'],
-  #lexml-parecer-app label:has(input[type='checkbox']),
-  #lexml-parecer-app input[type='radio'],
-  #lexml-parecer-app label:has(input[type='radio']) {
+  .lexml-default-ds input[type='checkbox'],
+  .lexml-default-ds label:has(input[type='checkbox']),
+  .lexml-default-ds input[type='radio'],
+  .lexml-default-ds label:has(input[type='radio']) {
     display: inline-flex;
 
     width: fit-content;
@@ -2424,21 +2424,21 @@ export const waResetString = `
     user-select: none;
     -webkit-user-select: none;
 
-    #lexml-parecer-app &,
-    #lexml-parecer-app + label {
+    .lexml-default-ds &,
+    .lexml-default-ds + label {
       cursor: pointer;
     }
 
-    #lexml-parecer-app &:disabled,
-    #lexml-parecer-app &:has(:disabled) {
+    .lexml-default-ds &:disabled,
+    .lexml-default-ds &:has(:disabled) {
       opacity: 0.5;
 
       cursor: not-allowed;
     }
   }
 
-  #lexml-parecer-app input[type='checkbox'],
-  #lexml-parecer-app input[type='radio'] {
+  .lexml-default-ds input[type='checkbox'],
+  .lexml-default-ds input[type='radio'] {
     appearance: none;
 
     flex: 0 0 auto;
@@ -2462,14 +2462,14 @@ export const waResetString = `
       color var(--wa-transition-fast);
     transition-timing-function: var(--wa-transition-easing);
 
-    #lexml-parecer-app &:focus-visible {
+    .lexml-default-ds &:focus-visible {
       outline: var(--wa-focus-ring);
       outline-offset: var(--wa-focus-ring-offset);
     }
   }
 
   /* Checkbox */
-  #lexml-parecer-app input[type='checkbox'] {
+  .lexml-default-ds input[type='checkbox'] {
     --checked-icon-color: var(--wa-color-brand-on-loud);
     --checked-icon-scale: 0.8;
 
@@ -2478,16 +2478,16 @@ export const waResetString = `
       var(--wa-border-radius-s)
     ); /* min prevents entirely circular checkbox */
 
-    #lexml-parecer-app &:checked,
-    #lexml-parecer-app &:indeterminate {
+    .lexml-default-ds &:checked,
+    .lexml-default-ds &:indeterminate {
       color: var(--checked-icon-color);
 
       background-color: var(--wa-form-control-activated-color);
       border-color: var(--wa-form-control-activated-color);
     }
 
-    #lexml-parecer-app &:checked::after,
-    #lexml-parecer-app &:indeterminate::after {
+    .lexml-default-ds &:checked::after,
+    .lexml-default-ds &:indeterminate::after {
       content: '';
 
       width: var(--wa-form-control-toggle-size);
@@ -2497,19 +2497,19 @@ export const waResetString = `
       background-color: currentColor;
     }
 
-    #lexml-parecer-app &:checked::after {
+    .lexml-default-ds &:checked::after {
       mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"/></svg>')
         center / 1em 1em no-repeat;
     }
 
-    #lexml-parecer-app &:indeterminate::after {
+    .lexml-default-ds &:indeterminate::after {
       mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M431 256c0 17.7-14.3 32-32 32H49c-17.7 0-32-14.3-32-32s14.3-32 32-32h350c17.7 0 32 14.3 32 32z"/></svg>')
         center no-repeat;
     }
   }
 
   /* Radio */
-  #lexml-parecer-app input[type='radio'] {
+  .lexml-default-ds input[type='radio'] {
     --checked-icon-color: var(--wa-form-control-activated-color);
     --checked-icon-scale: 0.7;
 
@@ -2517,13 +2517,13 @@ export const waResetString = `
 
     border-radius: 50%;
 
-    #lexml-parecer-app &:checked {
+    .lexml-default-ds &:checked {
       color: var(--checked-icon-color);
 
       border-color: var(--wa-form-control-activated-color);
     }
 
-    #lexml-parecer-app &:checked::after {
+    .lexml-default-ds &:checked::after {
       content: '';
 
       aspect-ratio: 1;
@@ -2537,7 +2537,7 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Text Fields + Textareas + Selects */
-  #lexml-parecer-app input:not(
+  .lexml-default-ds input:not(
     
     [type='button'],
     [type='checkbox'],
@@ -2550,8 +2550,8 @@ export const waResetString = `
     [type='reset'],
     [type='submit']
   ),
-    #lexml-parecer-app textarea,
-    #lexml-parecer-app select {
+    .lexml-default-ds textarea,
+    .lexml-default-ds select {
     width: 100%;
     height: var(--wa-form-control-height);
     padding: 0 var(--wa-form-control-padding-inline);
@@ -2577,49 +2577,49 @@ export const waResetString = `
 
     cursor: text;
 
-    #lexml-parecer-app &::placeholder {
+    .lexml-default-ds &::placeholder {
       color: var(--wa-form-control-placeholder-color);
 
       user-select: none;
       -webkit-user-select: none;
     }
 
-    #lexml-parecer-app &:focus {
+    .lexml-default-ds &:focus {
       outline: none;
     }
 
-    #lexml-parecer-app &:focus-visible {
+    .lexml-default-ds &:focus-visible {
       outline: var(--wa-focus-ring);
       outline-offset: var(--wa-focus-ring-offset);
     }
 
-    #lexml-parecer-app &:disabled {
+    .lexml-default-ds &:disabled {
       opacity: 0.5;
 
       cursor: not-allowed;
     }
 
-    #lexml-parecer-app &.wa-outlined {
+    .lexml-default-ds &.wa-outlined {
       background-color: var(--wa-form-control-background-color);
       border-color: var(--wa-form-control-border-color);
     }
 
-    #lexml-parecer-app &.wa-filled {
+    .lexml-default-ds &.wa-filled {
       background-color: var(--wa-color-neutral-fill-quiet);
       border-color: var(--wa-color-neutral-fill-quiet);
 
-      #lexml-parecer-app &.wa-outlined {
+      .lexml-default-ds &.wa-outlined {
         border-color: var(--wa-form-control-border-color);
       }
     }
 
-    #lexml-parecer-app &.wa-pill {
+    .lexml-default-ds &.wa-pill {
       border-radius: var(--wa-border-radius-pill);
     }
   }
 
   /* Textarea */
-  #lexml-parecer-app textarea {
+  .lexml-default-ds textarea {
     height: auto;
     min-height: var(--wa-form-control-height);
     padding: calc(var(--wa-form-control-padding-block) - ((1lh - 1em) / 2)) var(--wa-form-control-padding-inline); /* accounts for the larger line height of textarea content */
@@ -2630,7 +2630,7 @@ export const waResetString = `
   }
 
   /* Select */
-  #lexml-parecer-app select {
+  .lexml-default-ds select {
     --icon-caret: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="rgb(180 180 200)" d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>');
 
     appearance: none;
@@ -2651,7 +2651,7 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Color Pickers ~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app input[type='color'] {
+  .lexml-default-ds input[type='color'] {
     display: block;
 
     block-size: var(--wa-form-control-height);
@@ -2667,22 +2667,22 @@ export const waResetString = `
     cursor: pointer;
     forced-color-adjust: none;
 
-    #lexml-parecer-app &::-webkit-color-swatch-wrapper {
+    .lexml-default-ds &::-webkit-color-swatch-wrapper {
       padding: 0;
       border-radius: inherit;
     }
 
-    #lexml-parecer-app &::-webkit-color-swatch {
+    .lexml-default-ds &::-webkit-color-swatch {
       border: none;
       border-radius: calc(var(--wa-form-control-border-radius) - var(--wa-form-control-border-width) * 3);
     }
 
-    #lexml-parecer-app &::-moz-color-swatch {
+    .lexml-default-ds &::-moz-color-swatch {
       border: none;
       border-radius: calc(var(--wa-form-control-border-radius) - var(--wa-form-control-border-width) * 3);
     }
 
-    #lexml-parecer-app &:focus-visible {
+    .lexml-default-ds &:focus-visible {
       outline: var(--wa-focus-ring);
       outline-offset: var(--wa-focus-ring-offset);
     }
@@ -2690,7 +2690,7 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Sliders ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app input[type='range'] {
+  .lexml-default-ds input[type='range'] {
     --thumb-width: 1.4em;
     --thumb-height: 1.4em;
     --track-size: 0.5em;
@@ -2712,7 +2712,7 @@ export const waResetString = `
     background-color: var(--wa-color-neutral-fill-normal);
     border-radius: calc(var(--track-size) / 2);
 
-    #lexml-parecer-app &::-webkit-slider-runnable-track {
+    .lexml-default-ds &::-webkit-slider-runnable-track {
       width: 100%;
       height: var(--track-size);
 
@@ -2720,7 +2720,7 @@ export const waResetString = `
       border-radius: 999px;
     }
 
-    #lexml-parecer-app &::-webkit-slider-thumb {
+    .lexml-default-ds &::-webkit-slider-thumb {
       -webkit-appearance: none;
 
       width: var(--thumb-width);
@@ -2736,33 +2736,33 @@ export const waResetString = `
       transition-timing-function: var(--wa-transition-easing);
     }
 
-    #lexml-parecer-app &:enabled {
-      #lexml-parecer-app &:focus-visible::-webkit-slider-thumb {
+    .lexml-default-ds &:enabled {
+      .lexml-default-ds &:focus-visible::-webkit-slider-thumb {
         outline: var(--wa-focus-ring);
         outline-offset: var(--wa-focus-ring-offset);
       }
 
-      #lexml-parecer-app &::-webkit-slider-thumb {
+      .lexml-default-ds &::-webkit-slider-thumb {
         cursor: pointer;
       }
 
-      #lexml-parecer-app &::-webkit-slider-thumb:active {
+      .lexml-default-ds &::-webkit-slider-thumb:active {
         cursor: grabbing;
       }
     }
 
-    #lexml-parecer-app &::-moz-focus-outer {
+    .lexml-default-ds &::-moz-focus-outer {
       border: 0;
     }
 
-    #lexml-parecer-app &::-moz-range-progress {
+    .lexml-default-ds &::-moz-range-progress {
       height: var(--track-size);
 
       background-color: var(--wa-color-neutral-fill-normal);
       border-radius: 3px;
     }
 
-    #lexml-parecer-app &::-moz-range-track {
+    .lexml-default-ds &::-moz-range-track {
       width: 100%;
       height: var(--track-size);
 
@@ -2771,7 +2771,7 @@ export const waResetString = `
       border-radius: 999px;
     }
 
-    #lexml-parecer-app &::-moz-range-thumb {
+    .lexml-default-ds &::-moz-range-thumb {
       width: var(--thumb-width);
       height: var(--thumb-height);
 
@@ -2784,47 +2784,47 @@ export const waResetString = `
       transition-timing-function: var(--wa-transition-easing);
     }
 
-    #lexml-parecer-app &:enabled {
-      #lexml-parecer-app &:focus-visible::-moz-range-thumb {
+    .lexml-default-ds &:enabled {
+      .lexml-default-ds &:focus-visible::-moz-range-thumb {
         outline: var(--wa-focus-ring);
         outline-offset: var(--wa-focus-ring-offset);
       }
 
-      #lexml-parecer-app &::-moz-range-thumb {
+      .lexml-default-ds &::-moz-range-thumb {
         cursor: pointer;
       }
 
-      #lexml-parecer-app &::-moz-range-thumb:active {
+      .lexml-default-ds &::-moz-range-thumb:active {
         cursor: grabbing;
       }
     }
   }
 
-  #lexml-parecer-app label > input[type='range'] {
+  .lexml-default-ds label > input[type='range'] {
     margin-block-start: 1em;
   }
 
-  #lexml-parecer-app input[type='range']:focus {
+  .lexml-default-ds input[type='range']:focus {
     outline: none;
   }
 
-  #lexml-parecer-app input[type='range']:disabled {
+  .lexml-default-ds input[type='range']:disabled {
     opacity: 0.5;
 
     cursor: not-allowed;
 
-    #lexml-parecer-app &::-webkit-slider-thumb {
+    .lexml-default-ds &::-webkit-slider-thumb {
       cursor: not-allowed;
     }
 
-    #lexml-parecer-app &::-moz-range-thumb {
+    .lexml-default-ds &::-moz-range-thumb {
       cursor: not-allowed;
     }
   }
   /* #endregion */
 
   /* #region Progress ~~~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app progress {
+  .lexml-default-ds progress {
     --indicator-color: var(--wa-color-brand-fill-loud);
 
     width: 100%;
@@ -2836,26 +2836,26 @@ export const waResetString = `
     background-color: var(--wa-color-neutral-fill-normal);
     border-radius: var(--wa-border-radius-pill);
 
-    #lexml-parecer-app &::-webkit-progress-bar {
+    .lexml-default-ds &::-webkit-progress-bar {
       background: transparent;
     }
 
-    #lexml-parecer-app &[value]::-webkit-progress-value {
+    .lexml-default-ds &[value]::-webkit-progress-value {
       background-color: var(--indicator-color);
     }
 
-    #lexml-parecer-app &::-moz-progress-bar {
+    .lexml-default-ds &::-moz-progress-bar {
       background-color: var(--indicator-color);
     }
   }
 
   /* Indeterminate */
-  #lexml-parecer-app progress:not([value]) {
+  .lexml-default-ds progress:not([value]) {
     padding-left: var(--inset-inline-start);
 
     animation: wa-progress-indeterminate 2.5s infinite cubic-bezier(0.37, 0, 0.63, 1);
 
-    #lexml-parecer-app &::-webkit-progress-bar {
+    .lexml-default-ds &::-webkit-progress-bar {
       background-color: var(
         --indicator-color
       ); /* Chrome does not render a ::-webkit-progress-value for indeterminate progress */
@@ -2888,7 +2888,7 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Validation ~~~~~~~~~~~~~~~~~~~~~~ */
-  #lexml-parecer-app .wa-invalid {
+  .lexml-default-ds .wa-invalid {
     --wa-form-control-border-color: var(--wa-color-danger-border-loud);
     --wa-form-control-activated-color: var(--wa-color-danger-fill-loud);
     --wa-form-control-value-color: var(--wa-color-danger-on-quiet);
@@ -2900,7 +2900,7 @@ export const waResetString = `
     --wa-color-text-quiet: var(--wa-color-danger-on-quiet);
   }
 
-  #lexml-parecer-app .wa-valid {
+  .lexml-default-ds .wa-valid {
     --wa-form-control-border-color: var(--wa-color-success-border-loud);
     --wa-form-control-activated-color: var(--wa-color-success-fill-loud);
     --wa-form-control-value-color: var(--wa-color-success-on-quiet);
@@ -2918,7 +2918,7 @@ export const waResetString = `
   /*
    * Utility to minimize FOUCE and show custom elements only after they're registered
    */
-  #lexml-parecer-app .wa-cloak:has(:not(:defined)) {
+  .lexml-default-ds .wa-cloak:has(:not(:defined)) {
     animation: 2s step-end wa-fouce-cloak;
   }
 
@@ -2932,10 +2932,10 @@ export const waResetString = `
   }
 }
 @layer wa-utilities {
-  #lexml-parecer-app .wa-visually-hidden:not(:focus-within),
-  #lexml-parecer-app .wa-visually-hidden-force,
-  #lexml-parecer-app .wa-visually-hidden-hint::part(hint),
-  #lexml-parecer-app .wa-visually-hidden-label::part(label) {
+  .lexml-default-ds .wa-visually-hidden:not(:focus-within),
+  .lexml-default-ds .wa-visually-hidden-force,
+  .lexml-default-ds .wa-visually-hidden-hint::part(hint),
+  .lexml-default-ds .wa-visually-hidden-label::part(label) {
     position: absolute !important;
     width: 1px !important;
     height: 1px !important;
@@ -2950,25 +2950,25 @@ export const waResetString = `
 @layer wa-utilities {
   /* These scroll lock helpers are put into this CSS file to avoid strict CSPs that affect style tag loading. */
   @supports (scrollbar-gutter: stable) {
-    #lexml-parecer-app .wa-scroll-lock {
+    .lexml-default-ds .wa-scroll-lock {
       scrollbar-gutter: var(--wa-scroll-lock-gutter) !important;
     }
 
-    #lexml-parecer-app .wa-scroll-lock body {
+    .lexml-default-ds .wa-scroll-lock body {
       overflow: hidden !important;
     }
   }
 
   /** This can go away once Safari has scrollbar-gutter support. */
   @supports not (scrollbar-gutter: stable) {
-    #lexml-parecer-app .wa-scroll-lock body {
+    .lexml-default-ds .wa-scroll-lock body {
       padding-right: var(--wa-scroll-lock-size) !important;
       overflow: hidden !important;
     }
   }
 }
 @layer wa-utilities {
-  #lexml-parecer-app .wa-placeholder {
+  .lexml-default-ds .wa-placeholder {
     align-self: stretch;
     background-color: var(--wa-color-neutral-fill-quiet);
     border: dashed var(--wa-border-width-s) var(--wa-color-neutral-border-normal);
@@ -2977,45 +2977,45 @@ export const waResetString = `
   }
 }
 @layer wa-utilities {
-  #lexml-parecer-app .wa-align-items-start {
+  .lexml-default-ds .wa-align-items-start {
     align-items: flex-start;
   }
-  #lexml-parecer-app .wa-align-items-end {
+  .lexml-default-ds .wa-align-items-end {
     align-items: flex-end;
   }
-  #lexml-parecer-app .wa-align-items-center {
+  .lexml-default-ds .wa-align-items-center {
     align-items: center;
   }
-  #lexml-parecer-app .wa-align-items-stretch {
+  .lexml-default-ds .wa-align-items-stretch {
     align-items: stretch;
   }
-  #lexml-parecer-app .wa-align-items-baseline {
+  .lexml-default-ds .wa-align-items-baseline {
     align-items: baseline;
   }
 }
 @layer wa-utilities {
-  #lexml-parecer-app .wa-border-radius-s {
+  .lexml-default-ds .wa-border-radius-s {
     border-radius: var(--wa-border-radius-s);
   }
-  #lexml-parecer-app .wa-border-radius-m {
+  .lexml-default-ds .wa-border-radius-m {
     border-radius: var(--wa-border-radius-m);
   }
-  #lexml-parecer-app .wa-border-radius-l {
+  .lexml-default-ds .wa-border-radius-l {
     border-radius: var(--wa-border-radius-l);
   }
-  #lexml-parecer-app .wa-border-radius-pill {
+  .lexml-default-ds .wa-border-radius-pill {
     border-radius: var(--wa-border-radius-pill);
   }
-  #lexml-parecer-app .wa-border-radius-circle {
+  .lexml-default-ds .wa-border-radius-circle {
     border-radius: var(--wa-border-radius-circle);
   }
-  #lexml-parecer-app .wa-border-radius-square {
+  .lexml-default-ds .wa-border-radius-square {
     border-radius: var(--wa-border-radius-square);
   }
 }
 @layer wa-utilities {
   /* Apply Flexbox with 0 specificity to ensure a gap util produces a visible change */
-  #lexml-parecer-app :where(
+  .lexml-default-ds :where(
     .wa-gap-0,
     .wa-gap-3xs,
     .wa-gap-2xs,
@@ -3030,166 +3030,166 @@ export const waResetString = `
     display: flex;
   }
 
-  #lexml-parecer-app .wa-gap-0 {
+  .lexml-default-ds .wa-gap-0 {
     gap: 0px;
   }
-  #lexml-parecer-app .wa-gap-3xs {
+  .lexml-default-ds .wa-gap-3xs {
     gap: var(--wa-space-3xs);
   }
-  #lexml-parecer-app .wa-gap-2xs {
+  .lexml-default-ds .wa-gap-2xs {
     gap: var(--wa-space-2xs);
   }
-  #lexml-parecer-app .wa-gap-xs {
+  .lexml-default-ds .wa-gap-xs {
     gap: var(--wa-space-xs);
   }
-  #lexml-parecer-app .wa-gap-s {
+  .lexml-default-ds .wa-gap-s {
     gap: var(--wa-space-s);
   }
-  #lexml-parecer-app .wa-gap-m {
+  .lexml-default-ds .wa-gap-m {
     gap: var(--wa-space-m);
   }
-  #lexml-parecer-app .wa-gap-l {
+  .lexml-default-ds .wa-gap-l {
     gap: var(--wa-space-l);
   }
-  #lexml-parecer-app .wa-gap-xl {
+  .lexml-default-ds .wa-gap-xl {
     gap: var(--wa-space-xl);
   }
-  #lexml-parecer-app .wa-gap-2xl {
+  .lexml-default-ds .wa-gap-2xl {
     gap: var(--wa-space-2xl);
   }
-  #lexml-parecer-app .wa-gap-3xl {
+  .lexml-default-ds .wa-gap-3xl {
     gap: var(--wa-space-3xl);
   }
 }
 @layer wa-utilities {
   /* #region General ~~~~~ */
-  #lexml-parecer-app [class*='wa-body'] {
+  .lexml-default-ds [class*='wa-body'] {
     font-family: var(--wa-font-family-body);
     font-weight: var(--wa-font-weight-body);
     line-height: var(--wa-line-height-normal);
   }
 
-  #lexml-parecer-app [class*='wa-heading'] {
+  .lexml-default-ds [class*='wa-heading'] {
     font-family: var(--wa-font-family-heading);
     font-weight: var(--wa-font-weight-heading);
     line-height: var(--wa-line-height-condensed);
     text-wrap: balance;
   }
 
-  #lexml-parecer-app [class*='wa-caption'] {
+  .lexml-default-ds [class*='wa-caption'] {
     color: var(--wa-color-text-quiet);
     font-family: var(--wa-font-family-body);
     font-weight: var(--wa-font-weight-body);
     line-height: var(--wa-line-height-condensed);
   }
 
-  #lexml-parecer-app [class*='wa-longform'] {
+  .lexml-default-ds [class*='wa-longform'] {
     font-family: var(--wa-font-family-longform);
     font-weight: var(--wa-font-weight-longform);
     line-height: var(--wa-line-height-normal);
   }
 
-  #lexml-parecer-app .wa-font-size-2xs,
-  #lexml-parecer-app .wa-body-2xs,
-  #lexml-parecer-app .wa-heading-2xs,
-  #lexml-parecer-app .wa-caption-2xs,
-  #lexml-parecer-app .wa-longform-2xs {
+  .lexml-default-ds .wa-font-size-2xs,
+  .lexml-default-ds .wa-body-2xs,
+  .lexml-default-ds .wa-heading-2xs,
+  .lexml-default-ds .wa-caption-2xs,
+  .lexml-default-ds .wa-longform-2xs {
     font-size: var(--wa-font-size-2xs);
   }
 
-  #lexml-parecer-app .wa-font-size-xs,
-  #lexml-parecer-app .wa-body-xs,
-  #lexml-parecer-app .wa-heading-xs,
-  #lexml-parecer-app .wa-caption-xs,
-  #lexml-parecer-app .wa-longform-xs {
+  .lexml-default-ds .wa-font-size-xs,
+  .lexml-default-ds .wa-body-xs,
+  .lexml-default-ds .wa-heading-xs,
+  .lexml-default-ds .wa-caption-xs,
+  .lexml-default-ds .wa-longform-xs {
     font-size: var(--wa-font-size-xs);
   }
 
-  #lexml-parecer-app .wa-font-size-s,
-  #lexml-parecer-app .wa-body-s,
-  #lexml-parecer-app .wa-heading-s,
-  #lexml-parecer-app .wa-caption-s,
-  #lexml-parecer-app .wa-longform-s {
+  .lexml-default-ds .wa-font-size-s,
+  .lexml-default-ds .wa-body-s,
+  .lexml-default-ds .wa-heading-s,
+  .lexml-default-ds .wa-caption-s,
+  .lexml-default-ds .wa-longform-s {
     font-size: var(--wa-font-size-s);
   }
 
-  #lexml-parecer-app .wa-font-size-m,
-  #lexml-parecer-app .wa-body-m,
-  #lexml-parecer-app .wa-heading-m,
-  #lexml-parecer-app .wa-caption-m,
-  #lexml-parecer-app .wa-longform-m {
+  .lexml-default-ds .wa-font-size-m,
+  .lexml-default-ds .wa-body-m,
+  .lexml-default-ds .wa-heading-m,
+  .lexml-default-ds .wa-caption-m,
+  .lexml-default-ds .wa-longform-m {
     font-size: var(--wa-font-size-m);
   }
 
-  #lexml-parecer-app .wa-font-size-l,
-  #lexml-parecer-app .wa-body-l,
-  #lexml-parecer-app .wa-heading-l,
-  #lexml-parecer-app .wa-caption-l,
-  #lexml-parecer-app .wa-longform-l {
+  .lexml-default-ds .wa-font-size-l,
+  .lexml-default-ds .wa-body-l,
+  .lexml-default-ds .wa-heading-l,
+  .lexml-default-ds .wa-caption-l,
+  .lexml-default-ds .wa-longform-l {
     font-size: var(--wa-font-size-l);
   }
 
-  #lexml-parecer-app .wa-font-size-xl,
-  #lexml-parecer-app .wa-body-xl,
-  #lexml-parecer-app .wa-heading-xl,
-  #lexml-parecer-app .wa-caption-xl,
-  #lexml-parecer-app .wa-longform-xl {
+  .lexml-default-ds .wa-font-size-xl,
+  .lexml-default-ds .wa-body-xl,
+  .lexml-default-ds .wa-heading-xl,
+  .lexml-default-ds .wa-caption-xl,
+  .lexml-default-ds .wa-longform-xl {
     font-size: var(--wa-font-size-xl);
   }
 
-  #lexml-parecer-app .wa-font-size-2xl,
-  #lexml-parecer-app .wa-body-2xl,
-  #lexml-parecer-app .wa-heading-2xl,
-  #lexml-parecer-app .wa-caption-2xl,
-  #lexml-parecer-app .wa-longform-2xl {
+  .lexml-default-ds .wa-font-size-2xl,
+  .lexml-default-ds .wa-body-2xl,
+  .lexml-default-ds .wa-heading-2xl,
+  .lexml-default-ds .wa-caption-2xl,
+  .lexml-default-ds .wa-longform-2xl {
     font-size: var(--wa-font-size-2xl);
   }
 
-  #lexml-parecer-app .wa-font-size-3xl,
-  #lexml-parecer-app .wa-body-3xl,
-  #lexml-parecer-app .wa-heading-3xl,
-  #lexml-parecer-app .wa-caption-3xl,
-  #lexml-parecer-app .wa-longform-3xl {
+  .lexml-default-ds .wa-font-size-3xl,
+  .lexml-default-ds .wa-body-3xl,
+  .lexml-default-ds .wa-heading-3xl,
+  .lexml-default-ds .wa-caption-3xl,
+  .lexml-default-ds .wa-longform-3xl {
     font-size: var(--wa-font-size-3xl);
   }
 
-  #lexml-parecer-app .wa-font-size-4xl,
-  #lexml-parecer-app .wa-body-4xl,
-  #lexml-parecer-app .wa-heading-4xl,
-  #lexml-parecer-app .wa-caption-4xl,
-  #lexml-parecer-app .wa-longform-4xl {
+  .lexml-default-ds .wa-font-size-4xl,
+  .lexml-default-ds .wa-body-4xl,
+  .lexml-default-ds .wa-heading-4xl,
+  .lexml-default-ds .wa-caption-4xl,
+  .lexml-default-ds .wa-longform-4xl {
     font-size: var(--wa-font-size-4xl);
   }
 
-  #lexml-parecer-app .wa-font-weight-light {
+  .lexml-default-ds .wa-font-weight-light {
     font-weight: var(--wa-font-weight-light);
   }
 
-  #lexml-parecer-app .wa-font-weight-normal {
+  .lexml-default-ds .wa-font-weight-normal {
     font-weight: var(--wa-font-weight-normal);
   }
 
-  #lexml-parecer-app .wa-font-weight-semibold {
+  .lexml-default-ds .wa-font-weight-semibold {
     font-weight: var(--wa-font-weight-semibold);
   }
 
-  #lexml-parecer-app .wa-font-weight-bold {
+  .lexml-default-ds .wa-font-weight-bold {
     font-weight: var(--wa-font-weight-bold);
   }
 
-  #lexml-parecer-app .wa-color-text-normal {
+  .lexml-default-ds .wa-color-text-normal {
     color: var(--wa-color-text-normal);
   }
 
-  #lexml-parecer-app .wa-color-text-quiet {
+  .lexml-default-ds .wa-color-text-quiet {
     color: var(--wa-color-text-quiet);
   }
 
-  #lexml-parecer-app .wa-color-text-link {
+  .lexml-default-ds .wa-color-text-link {
     color: var(--wa-color-text-link);
   }
 
-  #lexml-parecer-app .wa-text-truncate {
+  .lexml-default-ds .wa-text-truncate {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3197,13 +3197,13 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Links ~~~~~~~ */
-  #lexml-parecer-app .wa-link {
+  .lexml-default-ds .wa-link {
     color: var(--wa-color-text-link);
     text-decoration: var(--wa-link-decoration-default);
     -webkit-text-decoration: var(--wa-link-decoration-default);
 
     @media (hover: hover) {
-      #lexml-parecer-app &:hover {
+      .lexml-default-ds &:hover {
         color: color-mix(in oklab, var(--wa-color-text-link) 100%, var(--wa-color-mix-hover));
         text-decoration: var(--wa-link-decoration-hover);
         -webkit-text-decoration: var(--wa-link-decoration-hover);
@@ -3211,12 +3211,12 @@ export const waResetString = `
     }
   }
 
-  #lexml-parecer-app .wa-link-plain {
+  .lexml-default-ds .wa-link-plain {
     color: var(--wa-color-text-normal);
     text-decoration: none;
 
     @media (hover: hover) {
-      #lexml-parecer-app &:hover {
+      .lexml-default-ds &:hover {
         color: color-mix(in oklab, currentColor, var(--wa-color-mix-hover));
         text-decoration: none;
       }
@@ -3225,36 +3225,36 @@ export const waResetString = `
   /* #endregion */
 
   /* #region Lists ~~~~~~~ */
-  #lexml-parecer-app .wa-list-plain:is(ol, ul) {
+  .lexml-default-ds .wa-list-plain:is(ol, ul) {
     list-style: none;
     padding-inline-start: 0;
 
-    #lexml-parecer-app > li {
+    .lexml-default-ds > li {
       margin-inline-start: 0;
     }
   }
   /* #endregion */
 
   /* #region Form Controls */
-  #lexml-parecer-app .wa-form-control-label {
+  .lexml-default-ds .wa-form-control-label {
     color: var(--wa-form-control-label-color);
     font-weight: var(--wa-form-control-label-font-weight);
     line-height: var(--wa-form-control-label-line-height);
   }
 
-  #lexml-parecer-app .wa-form-control-value {
+  .lexml-default-ds .wa-form-control-value {
     color: var(--wa-form-control-value-color);
     font-weight: var(--wa-form-control-value-font-weight);
     line-height: var(--wa-form-control-value-line-height);
   }
 
-  #lexml-parecer-app .wa-form-control-placeholder {
+  .lexml-default-ds .wa-form-control-placeholder {
     color: var(--wa-form-control-placeholder-color);
     font-weight: var(--wa-form-control-value-font-weight);
     line-height: var(--wa-form-control-value-line-height);
   }
 
-  #lexml-parecer-app .wa-form-control-hint {
+  .lexml-default-ds .wa-form-control-hint {
     color: var(--wa-form-control-hint-color);
     font-weight: var(--wa-form-control-hint-font-weight);
     font-size: var(--wa-font-size-smaller);
@@ -3263,7 +3263,7 @@ export const waResetString = `
   /* #endregion */
 }
 @layer wa-utilities {
-  #lexml-parecer-app :is(
+  .lexml-default-ds :is(
       [class*='wa-cluster'],
       [class*='wa-flank'],
       [class*='wa-frame'],
@@ -3276,7 +3276,7 @@ export const waResetString = `
     margin-inline: 0;
   }
 
-  #lexml-parecer-app :where(
+  .lexml-default-ds :where(
     [class*='wa-cluster'],
     [class*='wa-flank'],
     [class*='wa-frame'],
@@ -3288,19 +3288,19 @@ export const waResetString = `
   }
 
   /* #region Cluster */
-  #lexml-parecer-app [class*='wa-cluster'] {
+  .lexml-default-ds [class*='wa-cluster'] {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
   }
 
-  #lexml-parecer-app :where([class*='wa-cluster']) {
+  .lexml-default-ds :where([class*='wa-cluster']) {
     align-items: center;
   }
   /* #endregion */
 
   /* #region Flank */
-  #lexml-parecer-app [class*='wa-flank'] {
+  .lexml-default-ds [class*='wa-flank'] {
     display: flex;
     flex-wrap: wrap;
 
@@ -3308,115 +3308,115 @@ export const waResetString = `
     --flank-size: initial;
   }
 
-  #lexml-parecer-app [class*='wa-flank']:not([class*='\:end']) > :first-child,
-  #lexml-parecer-app [class*='wa-flank'][class*='\:start'] > :first-child {
+  .lexml-default-ds [class*='wa-flank']:not([class*='\:end']) > :first-child,
+  .lexml-default-ds [class*='wa-flank'][class*='\:start'] > :first-child {
     flex-basis: var(--flank-size, auto);
     flex-grow: 1;
   }
-  #lexml-parecer-app [class*='wa-flank']:not([class*='\:end']) > :last-child,
-  #lexml-parecer-app [class*='wa-flank'][class*='\:start'] > :last-child {
+  .lexml-default-ds [class*='wa-flank']:not([class*='\:end']) > :last-child,
+  .lexml-default-ds [class*='wa-flank'][class*='\:start'] > :last-child {
     flex-basis: 0;
     flex-grow: 999;
     min-inline-size: var(--content-percentage, 50%);
   }
 
-  #lexml-parecer-app [class*='wa-flank'][class*='\:end'] > :last-child {
+  .lexml-default-ds [class*='wa-flank'][class*='\:end'] > :last-child {
     flex-basis: var(--flank-size, auto);
     flex-grow: 1;
   }
-  #lexml-parecer-app [class*='wa-flank'][class*='\:end'] > :first-child {
+  .lexml-default-ds [class*='wa-flank'][class*='\:end'] > :first-child {
     flex-basis: 0;
     flex-grow: 999;
     min-inline-size: var(--content-percentage, 50%);
   }
 
-  #lexml-parecer-app :where([class*='wa-flank']) {
+  .lexml-default-ds :where([class*='wa-flank']) {
     align-items: center;
   }
   /* #endregion */
 
   /* #region Frame */
-  #lexml-parecer-app [class*='wa-frame'] {
+  .lexml-default-ds [class*='wa-frame'] {
     display: flex;
     aspect-ratio: 1 / 1;
     justify-content: center;
     overflow: hidden;
   }
 
-  #lexml-parecer-app [class*='wa-frame'] > img,
-  #lexml-parecer-app [class*='wa-frame'] > video {
+  .lexml-default-ds [class*='wa-frame'] > img,
+  .lexml-default-ds [class*='wa-frame'] > video {
     block-size: 100%;
     inline-size: 100%;
     object-fit: cover;
   }
 
-  #lexml-parecer-app [class*='wa-frame'][class*='\:square'] {
+  .lexml-default-ds [class*='wa-frame'][class*='\:square'] {
     aspect-ratio: 1 / 1;
   }
-  #lexml-parecer-app [class*='wa-frame'][class*='\:landscape'] {
+  .lexml-default-ds [class*='wa-frame'][class*='\:landscape'] {
     aspect-ratio: 16 / 9;
   }
-  #lexml-parecer-app [class*='wa-frame'][class*='\:portrait'] {
+  .lexml-default-ds [class*='wa-frame'][class*='\:portrait'] {
     aspect-ratio: 9 / 16;
   }
 
-  #lexml-parecer-app :where([class*='wa-frame']) {
+  .lexml-default-ds :where([class*='wa-frame']) {
     align-items: center;
   }
   /* #endregion */
 
   /* #region Grid */
-  #lexml-parecer-app [class*='wa-grid'] {
+  .lexml-default-ds [class*='wa-grid'] {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(var(--min-column-size, 20ch), 100%), 1fr));
 
     --min-column-size: initial;
   }
 
-  #lexml-parecer-app .wa-span-grid {
+  .lexml-default-ds .wa-span-grid {
     grid-column: 1 / -1;
   }
   /* #endregion */
 
   /* #region Split */
-  #lexml-parecer-app [class*='wa-split'] {
+  .lexml-default-ds [class*='wa-split'] {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
 
-  #lexml-parecer-app [class*='wa-split'],
-  #lexml-parecer-app [class*='wa-split'][class*='\:row'] {
+  .lexml-default-ds [class*='wa-split'],
+  .lexml-default-ds [class*='wa-split'][class*='\:row'] {
     flex-direction: row;
     block-size: auto;
     inline-size: 100%;
   }
 
-  #lexml-parecer-app [class*='wa-split']:not([class*='\:column']) > :first-child {
+  .lexml-default-ds [class*='wa-split']:not([class*='\:column']) > :first-child {
     flex: 0 1 auto;
   }
 
-  #lexml-parecer-app [class*='wa-split'][class*='\:column'] {
+  .lexml-default-ds [class*='wa-split'][class*='\:column'] {
     flex-direction: column;
     block-size: auto;
     inline-size: auto;
     align-self: stretch;
   }
 
-  #lexml-parecer-app :where([class*='wa-split']) {
+  .lexml-default-ds :where([class*='wa-split']) {
     align-items: center;
   }
 
   /* #endregion */
 
   /* #region Stack */
-  #lexml-parecer-app [class*='wa-stack'] {
+  .lexml-default-ds [class*='wa-stack'] {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
   }
 
-  #lexml-parecer-app :where([class*='wa-stack']) {
+  .lexml-default-ds :where([class*='wa-stack']) {
     align-items: stretch;
   }
   /* #endregion */
@@ -3424,8 +3424,8 @@ export const waResetString = `
 /* Theme */
 /* Rules shared by all palettes */
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-brand-blue {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-brand-blue {
     --wa-color-brand-95: var(--wa-color-blue-95);
     --wa-color-brand-90: var(--wa-color-blue-90);
     --wa-color-brand-80: var(--wa-color-blue-80);
@@ -3441,7 +3441,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-brand-red {
+  .lexml-default-ds .wa-brand-red {
     --wa-color-brand-95: var(--wa-color-red-95);
     --wa-color-brand-90: var(--wa-color-red-90);
     --wa-color-brand-80: var(--wa-color-red-80);
@@ -3457,7 +3457,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-brand-orange {
+  .lexml-default-ds .wa-brand-orange {
     --wa-color-brand-95: var(--wa-color-orange-95);
     --wa-color-brand-90: var(--wa-color-orange-90);
     --wa-color-brand-80: var(--wa-color-orange-80);
@@ -3473,7 +3473,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-brand-yellow {
+  .lexml-default-ds .wa-brand-yellow {
     --wa-color-brand-95: var(--wa-color-yellow-95);
     --wa-color-brand-90: var(--wa-color-yellow-90);
     --wa-color-brand-80: var(--wa-color-yellow-80);
@@ -3489,7 +3489,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-brand-green {
+  .lexml-default-ds .wa-brand-green {
     --wa-color-brand-95: var(--wa-color-green-95);
     --wa-color-brand-90: var(--wa-color-green-90);
     --wa-color-brand-80: var(--wa-color-green-80);
@@ -3505,7 +3505,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-brand-cyan {
+  .lexml-default-ds .wa-brand-cyan {
     --wa-color-brand-95: var(--wa-color-cyan-95);
     --wa-color-brand-90: var(--wa-color-cyan-90);
     --wa-color-brand-80: var(--wa-color-cyan-80);
@@ -3521,7 +3521,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-brand-indigo {
+  .lexml-default-ds .wa-brand-indigo {
     --wa-color-brand-95: var(--wa-color-indigo-95);
     --wa-color-brand-90: var(--wa-color-indigo-90);
     --wa-color-brand-80: var(--wa-color-indigo-80);
@@ -3537,7 +3537,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-brand-purple {
+  .lexml-default-ds .wa-brand-purple {
     --wa-color-brand-95: var(--wa-color-purple-95);
     --wa-color-brand-90: var(--wa-color-purple-90);
     --wa-color-brand-80: var(--wa-color-purple-80);
@@ -3553,7 +3553,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-brand-pink {
+  .lexml-default-ds .wa-brand-pink {
     --wa-color-brand-95: var(--wa-color-pink-95);
     --wa-color-brand-90: var(--wa-color-pink-90);
     --wa-color-brand-80: var(--wa-color-pink-80);
@@ -3569,7 +3569,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-brand-gray {
+  .lexml-default-ds .wa-brand-gray {
     --wa-color-brand-95: var(--wa-color-gray-95);
     --wa-color-brand-90: var(--wa-color-gray-90);
     --wa-color-brand-80: var(--wa-color-gray-80);
@@ -3586,8 +3586,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-neutral-gray {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-neutral-gray {
     --wa-color-neutral-95: var(--wa-color-gray-95);
     --wa-color-neutral-90: var(--wa-color-gray-90);
     --wa-color-neutral-80: var(--wa-color-gray-80);
@@ -3603,7 +3603,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-gray-on);
   }
 
-  #lexml-parecer-app .wa-neutral-red {
+  .lexml-default-ds .wa-neutral-red {
     --wa-color-neutral-95: var(--wa-color-red-95);
     --wa-color-neutral-90: var(--wa-color-red-90);
     --wa-color-neutral-80: var(--wa-color-red-80);
@@ -3619,7 +3619,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-neutral-orange {
+  .lexml-default-ds .wa-neutral-orange {
     --wa-color-neutral-95: var(--wa-color-orange-95);
     --wa-color-neutral-90: var(--wa-color-orange-90);
     --wa-color-neutral-80: var(--wa-color-orange-80);
@@ -3635,7 +3635,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-neutral-yellow {
+  .lexml-default-ds .wa-neutral-yellow {
     --wa-color-neutral-95: var(--wa-color-yellow-95);
     --wa-color-neutral-90: var(--wa-color-yellow-90);
     --wa-color-neutral-80: var(--wa-color-yellow-80);
@@ -3651,7 +3651,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-neutral-green {
+  .lexml-default-ds .wa-neutral-green {
     --wa-color-neutral-95: var(--wa-color-green-95);
     --wa-color-neutral-90: var(--wa-color-green-90);
     --wa-color-neutral-80: var(--wa-color-green-80);
@@ -3667,7 +3667,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-neutral-cyan {
+  .lexml-default-ds .wa-neutral-cyan {
     --wa-color-neutral-95: var(--wa-color-cyan-95);
     --wa-color-neutral-90: var(--wa-color-cyan-90);
     --wa-color-neutral-80: var(--wa-color-cyan-80);
@@ -3683,7 +3683,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-neutral-blue {
+  .lexml-default-ds .wa-neutral-blue {
     --wa-color-neutral-95: var(--wa-color-blue-95);
     --wa-color-neutral-90: var(--wa-color-blue-90);
     --wa-color-neutral-80: var(--wa-color-blue-80);
@@ -3699,7 +3699,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-neutral-indigo {
+  .lexml-default-ds .wa-neutral-indigo {
     --wa-color-neutral-95: var(--wa-color-indigo-95);
     --wa-color-neutral-90: var(--wa-color-indigo-90);
     --wa-color-neutral-80: var(--wa-color-indigo-80);
@@ -3715,7 +3715,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-neutral-purple {
+  .lexml-default-ds .wa-neutral-purple {
     --wa-color-neutral-95: var(--wa-color-purple-95);
     --wa-color-neutral-90: var(--wa-color-purple-90);
     --wa-color-neutral-80: var(--wa-color-purple-80);
@@ -3731,7 +3731,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-neutral-pink {
+  .lexml-default-ds .wa-neutral-pink {
     --wa-color-neutral-95: var(--wa-color-pink-95);
     --wa-color-neutral-90: var(--wa-color-pink-90);
     --wa-color-neutral-80: var(--wa-color-pink-80);
@@ -3748,8 +3748,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-success-green {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-success-green {
     --wa-color-success-95: var(--wa-color-green-95);
     --wa-color-success-90: var(--wa-color-green-90);
     --wa-color-success-80: var(--wa-color-green-80);
@@ -3765,7 +3765,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-success-red {
+  .lexml-default-ds .wa-success-red {
     --wa-color-success-95: var(--wa-color-red-95);
     --wa-color-success-90: var(--wa-color-red-90);
     --wa-color-success-80: var(--wa-color-red-80);
@@ -3781,7 +3781,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-success-orange {
+  .lexml-default-ds .wa-success-orange {
     --wa-color-success-95: var(--wa-color-orange-95);
     --wa-color-success-90: var(--wa-color-orange-90);
     --wa-color-success-80: var(--wa-color-orange-80);
@@ -3797,7 +3797,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-success-yellow {
+  .lexml-default-ds .wa-success-yellow {
     --wa-color-success-95: var(--wa-color-yellow-95);
     --wa-color-success-90: var(--wa-color-yellow-90);
     --wa-color-success-80: var(--wa-color-yellow-80);
@@ -3813,7 +3813,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-success-cyan {
+  .lexml-default-ds .wa-success-cyan {
     --wa-color-success-95: var(--wa-color-cyan-95);
     --wa-color-success-90: var(--wa-color-cyan-90);
     --wa-color-success-80: var(--wa-color-cyan-80);
@@ -3829,7 +3829,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-success-blue {
+  .lexml-default-ds .wa-success-blue {
     --wa-color-success-95: var(--wa-color-blue-95);
     --wa-color-success-90: var(--wa-color-blue-90);
     --wa-color-success-80: var(--wa-color-blue-80);
@@ -3845,7 +3845,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-success-indigo {
+  .lexml-default-ds .wa-success-indigo {
     --wa-color-success-95: var(--wa-color-indigo-95);
     --wa-color-success-90: var(--wa-color-indigo-90);
     --wa-color-success-80: var(--wa-color-indigo-80);
@@ -3861,7 +3861,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-success-purple {
+  .lexml-default-ds .wa-success-purple {
     --wa-color-success-95: var(--wa-color-purple-95);
     --wa-color-success-90: var(--wa-color-purple-90);
     --wa-color-success-80: var(--wa-color-purple-80);
@@ -3877,7 +3877,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-success-pink {
+  .lexml-default-ds .wa-success-pink {
     --wa-color-success-95: var(--wa-color-pink-95);
     --wa-color-success-90: var(--wa-color-pink-90);
     --wa-color-success-80: var(--wa-color-pink-80);
@@ -3893,7 +3893,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-success-gray {
+  .lexml-default-ds .wa-success-gray {
     --wa-color-success-95: var(--wa-color-gray-95);
     --wa-color-success-90: var(--wa-color-gray-90);
     --wa-color-success-80: var(--wa-color-gray-80);
@@ -3910,8 +3910,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-warning-yellow {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-warning-yellow {
     --wa-color-warning-95: var(--wa-color-yellow-95);
     --wa-color-warning-90: var(--wa-color-yellow-90);
     --wa-color-warning-80: var(--wa-color-yellow-80);
@@ -3927,7 +3927,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-warning-red {
+  .lexml-default-ds .wa-warning-red {
     --wa-color-warning-95: var(--wa-color-red-95);
     --wa-color-warning-90: var(--wa-color-red-90);
     --wa-color-warning-80: var(--wa-color-red-80);
@@ -3943,7 +3943,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-warning-orange {
+  .lexml-default-ds .wa-warning-orange {
     --wa-color-warning-95: var(--wa-color-orange-95);
     --wa-color-warning-90: var(--wa-color-orange-90);
     --wa-color-warning-80: var(--wa-color-orange-80);
@@ -3959,7 +3959,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-warning-green {
+  .lexml-default-ds .wa-warning-green {
     --wa-color-warning-95: var(--wa-color-green-95);
     --wa-color-warning-90: var(--wa-color-green-90);
     --wa-color-warning-80: var(--wa-color-green-80);
@@ -3975,7 +3975,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-warning-cyan {
+  .lexml-default-ds .wa-warning-cyan {
     --wa-color-warning-95: var(--wa-color-cyan-95);
     --wa-color-warning-90: var(--wa-color-cyan-90);
     --wa-color-warning-80: var(--wa-color-cyan-80);
@@ -3991,7 +3991,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-warning-blue {
+  .lexml-default-ds .wa-warning-blue {
     --wa-color-warning-95: var(--wa-color-blue-95);
     --wa-color-warning-90: var(--wa-color-blue-90);
     --wa-color-warning-80: var(--wa-color-blue-80);
@@ -4007,7 +4007,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-warning-indigo {
+  .lexml-default-ds .wa-warning-indigo {
     --wa-color-warning-95: var(--wa-color-indigo-95);
     --wa-color-warning-90: var(--wa-color-indigo-90);
     --wa-color-warning-80: var(--wa-color-indigo-80);
@@ -4023,7 +4023,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-warning-purple {
+  .lexml-default-ds .wa-warning-purple {
     --wa-color-warning-95: var(--wa-color-purple-95);
     --wa-color-warning-90: var(--wa-color-purple-90);
     --wa-color-warning-80: var(--wa-color-purple-80);
@@ -4039,7 +4039,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-warning-pink {
+  .lexml-default-ds .wa-warning-pink {
     --wa-color-warning-95: var(--wa-color-pink-95);
     --wa-color-warning-90: var(--wa-color-pink-90);
     --wa-color-warning-80: var(--wa-color-pink-80);
@@ -4055,7 +4055,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-warning-gray {
+  .lexml-default-ds .wa-warning-gray {
     --wa-color-warning-95: var(--wa-color-gray-95);
     --wa-color-warning-90: var(--wa-color-gray-90);
     --wa-color-warning-80: var(--wa-color-gray-80);
@@ -4072,8 +4072,8 @@ export const waResetString = `
   }
 }
 @layer wa-color-variant {
-  :where(#lexml-parecer-app), 
-  #lexml-parecer-app .wa-danger-red {
+  :where(.lexml-default-ds), 
+  .lexml-default-ds .wa-danger-red {
     --wa-color-danger-95: var(--wa-color-red-95);
     --wa-color-danger-90: var(--wa-color-red-90);
     --wa-color-danger-80: var(--wa-color-red-80);
@@ -4089,7 +4089,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-red-on);
   }
 
-  #lexml-parecer-app .wa-danger-orange {
+  .lexml-default-ds .wa-danger-orange {
     --wa-color-danger-95: var(--wa-color-orange-95);
     --wa-color-danger-90: var(--wa-color-orange-90);
     --wa-color-danger-80: var(--wa-color-orange-80);
@@ -4105,7 +4105,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-orange-on);
   }
 
-  #lexml-parecer-app .wa-danger-yellow {
+  .lexml-default-ds .wa-danger-yellow {
     --wa-color-danger-95: var(--wa-color-yellow-95);
     --wa-color-danger-90: var(--wa-color-yellow-90);
     --wa-color-danger-80: var(--wa-color-yellow-80);
@@ -4121,7 +4121,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-yellow-on);
   }
 
-  #lexml-parecer-app .wa-danger-green {
+  .lexml-default-ds .wa-danger-green {
     --wa-color-danger-95: var(--wa-color-green-95);
     --wa-color-danger-90: var(--wa-color-green-90);
     --wa-color-danger-80: var(--wa-color-green-80);
@@ -4137,7 +4137,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-green-on);
   }
 
-  #lexml-parecer-app .wa-danger-cyan {
+  .lexml-default-ds .wa-danger-cyan {
     --wa-color-danger-95: var(--wa-color-cyan-95);
     --wa-color-danger-90: var(--wa-color-cyan-90);
     --wa-color-danger-80: var(--wa-color-cyan-80);
@@ -4153,7 +4153,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-cyan-on);
   }
 
-  #lexml-parecer-app .wa-danger-blue {
+  .lexml-default-ds .wa-danger-blue {
     --wa-color-danger-95: var(--wa-color-blue-95);
     --wa-color-danger-90: var(--wa-color-blue-90);
     --wa-color-danger-80: var(--wa-color-blue-80);
@@ -4169,7 +4169,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-blue-on);
   }
 
-  #lexml-parecer-app .wa-danger-indigo {
+  .lexml-default-ds .wa-danger-indigo {
     --wa-color-danger-95: var(--wa-color-indigo-95);
     --wa-color-danger-90: var(--wa-color-indigo-90);
     --wa-color-danger-80: var(--wa-color-indigo-80);
@@ -4185,7 +4185,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-indigo-on);
   }
 
-  #lexml-parecer-app .wa-danger-purple {
+  .lexml-default-ds .wa-danger-purple {
     --wa-color-danger-95: var(--wa-color-purple-95);
     --wa-color-danger-90: var(--wa-color-purple-90);
     --wa-color-danger-80: var(--wa-color-purple-80);
@@ -4201,7 +4201,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-purple-on);
   }
 
-  #lexml-parecer-app .wa-danger-pink {
+  .lexml-default-ds .wa-danger-pink {
     --wa-color-danger-95: var(--wa-color-pink-95);
     --wa-color-danger-90: var(--wa-color-pink-90);
     --wa-color-danger-80: var(--wa-color-pink-80);
@@ -4217,7 +4217,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-pink-on);
   }
 
-  #lexml-parecer-app .wa-danger-gray {
+  .lexml-default-ds .wa-danger-gray {
     --wa-color-danger-95: var(--wa-color-gray-95);
     --wa-color-danger-90: var(--wa-color-gray-90);
     --wa-color-danger-80: var(--wa-color-gray-80);
@@ -4234,8 +4234,8 @@ export const waResetString = `
   }
 }
 /* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
-:where(#lexml-parecer-app),
-#lexml-parecer-app :host {
+:where(.lexml-default-ds),
+.lexml-default-ds :host {
   /**
     * Conditional tokens to check if the key color is >= 60
     * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
@@ -4274,8 +4274,8 @@ export const waResetString = `
   --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
 }
 @layer wa-color-palette {
-  :where(#lexml-parecer-app),
-  #lexml-parecer-app .wa-palette-default {
+  :where(.lexml-default-ds),
+  .lexml-default-ds .wa-palette-default {
     --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
     --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
     --wa-color-red-80: #ffb8b6 /* oklch(84.803% 0.08289 20.771) */;
@@ -4418,13 +4418,13 @@ export const waResetString = `
   }
 }
 @layer wa-theme {
-  :where(#lexml-parecer-app),
-  #lexml-parecer-app .wa-theme-default,
-  #lexml-parecer-app .wa-light,
-  #lexml-parecer-app .wa-dark .wa-invert,
-  #lexml-parecer-app .wa-light .wa-theme-default,
-  #lexml-parecer-app .wa-dark .wa-theme-default.wa-invert,
-  #lexml-parecer-app .wa-dark .wa-theme-default .wa-invert {
+  :where(.lexml-default-ds),
+  .lexml-default-ds .wa-theme-default,
+  .lexml-default-ds .wa-light,
+  .lexml-default-ds .wa-dark .wa-invert,
+  .lexml-default-ds .wa-light .wa-theme-default,
+  .lexml-default-ds .wa-dark .wa-theme-default.wa-invert,
+  .lexml-default-ds .wa-dark .wa-theme-default .wa-invert {
     /* #region Colors (Light) ~~~~~~~~~~~~~~~~~~~~~ */
     color-scheme: light;
     color: var(--wa-color-text-normal);
@@ -4504,11 +4504,11 @@ export const waResetString = `
     /* #endregion */
   }
 
-  #lexml-parecer-app .wa-dark,
-  #lexml-parecer-app .wa-invert,
-  #lexml-parecer-app .wa-dark .wa-theme-default,
-  #lexml-parecer-app .wa-light .wa-theme-default.wa-invert,
-  #lexml-parecer-app .wa-light .wa-theme-default .wa-invert {
+  .lexml-default-ds .wa-dark,
+  .lexml-default-ds .wa-invert,
+  .lexml-default-ds .wa-dark .wa-theme-default,
+  .lexml-default-ds .wa-light .wa-theme-default.wa-invert,
+  .lexml-default-ds .wa-light .wa-theme-default .wa-invert {
     /* #region Colors (Dark) ~~~~~~~~~~~~~~~~~~~~~~ */
     color-scheme: dark;
     color: var(--wa-color-text-normal);
@@ -4588,11 +4588,11 @@ export const waResetString = `
     /* #endregion */
   }
 
-  :where(#lexml-parecer-app),
-  #lexml-parecer-app .wa-theme-default,
-  #lexml-parecer-app .wa-light,
-  #lexml-parecer-app .wa-dark,
-  #lexml-parecer-app .wa-invert {
+  :where(.lexml-default-ds),
+  .lexml-default-ds .wa-theme-default,
+  .lexml-default-ds .wa-light,
+  .lexml-default-ds .wa-dark,
+  .lexml-default-ds .wa-invert {
     font-family: var(--wa-font-family-body);
 
     /* #region Fonts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
