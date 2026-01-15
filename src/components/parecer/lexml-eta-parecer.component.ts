@@ -573,7 +573,7 @@ export class LexmlEtaParecer extends LitElement {
         }
       </style>
 
-      <div class="lexml-default-ds">
+      <div class="lexml-default-ds" style="min-height: auto;">
         <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
           <wa-tab-group>
             ${!this.isCamara

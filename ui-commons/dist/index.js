@@ -12825,6 +12825,11 @@ let Data = class Data extends LitElement {
         }
         return this.data || null;
     }
+    ajustarTextField() {
+        const tf = this.inputData?.shadowRoot?.querySelector('.text-field');
+        if (tf)
+            tf.style.marginTop = '-10px';
+    }
     firstUpdated() {
         setTimeout(() => {
             const internalLabel = this.inputData.shadowRoot?.querySelector('label');
@@ -12837,6 +12842,15 @@ let Data = class Data extends LitElement {
                 console.error('FALHA: A label interna do wa-input.');
             }
         }, 100);
+        requestAnimationFrame(() => {
+            this.ajustarTextField();
+            const root = this.inputData?.shadowRoot;
+            if (root) {
+                const obs = new MutationObserver(() => this.ajustarTextField());
+                obs.observe(root, { childList: true, subtree: true });
+            }
+        });
+        this.informarData = !!this.data;
         this.informarData = !!this.data;
     }
     selecionarRadioData() {
@@ -12906,9 +12920,6 @@ let Data = class Data extends LitElement {
             margin-right: 20px;
             font-size: 14px;
           }
-          ::part(input) {
-            margin-top: -10px;
-          }
           ::part(label) {
             text-align: right;
           }
@@ -12922,6 +12933,9 @@ let Data = class Data extends LitElement {
         }
         .label-on-left wa-input::part(label) {
           cursor: pointer;
+        }
+        .label-on-left div .text-field {
+          margin-top: -10px;
         }
       </style>
       <fieldset class="lexml-data">

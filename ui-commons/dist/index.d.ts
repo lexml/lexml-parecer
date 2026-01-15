@@ -158,6 +158,7 @@ declare class Data extends LitElement {
   private informarData;
   data: string;
   getData(): string | null;
+  private ajustarTextField;
   firstUpdated(): void;
   private selecionarRadioData;
   updated(): void;
