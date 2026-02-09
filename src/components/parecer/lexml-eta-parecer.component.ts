@@ -576,6 +576,7 @@ export class LexmlEtaParecer extends LitElement {
       <div class="lexml-default-ds" style="min-height: auto;">
         <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
           <wa-tab-group>
+            <wa-tab slot="nav" panel="teste-eta">teste-eta</wa-tab>
             ${!this.isCamara
               ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
               : null}
@@ -607,6 +608,9 @@ export class LexmlEtaParecer extends LitElement {
               </div>
             </wa-tab>
 
+            <wa-tab-panel name="teste-eta" class="overflow-hidden">
+              <lexml-parecer-lexml-eta></lexml-parecer-lexml-eta>
+            </wa-tab-panel>
             <wa-tab-panel name="ementa" class="overflow-hidden">
               <lexml-parecer-ementa></lexml-parecer-ementa>
             </wa-tab-panel>

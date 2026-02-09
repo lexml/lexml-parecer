@@ -11,12 +11,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const uiCommonsPath = path.resolve(__dirname, './ui-commons/dist/index.js');
+const lexmlEtaPath  = path.resolve(__dirname, './lexml-eta/dist/index.js');
+
 console.log('[alias @ui-commons] =>', uiCommonsPath);
+console.log('[alias @lexml-eta]  =>', lexmlEtaPath);
 
 
 const basePlugins = [
   alias({
-    entries: [{ find: '@ui-commons', replacement: uiCommonsPath }]
+    entries: [
+			{ find: '@ui-commons', replacement: uiCommonsPath }, 
+			{ find: '@lexml-eta',  replacement: lexmlEtaPath }
+		]
   }),
   nodeResolve({ browser: true, preferBuiltins: false, exportConditions: ['browser','module','import','default'] }),
   typescript({ tsconfig: 'tsconfig.json', sourceMap: true }),

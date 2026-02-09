@@ -34,6 +34,8 @@ export { LexmlParecerVoto } from './components/voto/parecer-voto.component.js';
 export { LexmlParecerDataAutoriaImpressao } from './components/dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 export { LexmlParecerAvisos } from './components/avisos/parecer-avisos.component.js';
 export { LexmlParecerAutoriaComponent } from './components/autoria/parecer-autoria.component.js';
+export { LexmlParecerEta } from './components/parecerlexmlEta/parecer-lexml-eta.component.js';
 export { LexmlParecerConfig } from './config/lexml-parecer-config.js';
+export { LexmlEtaComponent } from '@lexml-eta';
 export { Usuario, Comissao, Destino } from '@ui-commons';
 export { Parecer, ProposicaoReferenciada } from './models/diversos.model.js';

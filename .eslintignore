@@ -1,3 +1,4 @@
 node_modules/
 dist/
 ui-commons/dist/**
+lexml-eta/dist/**

@@ -18,7 +18,8 @@
     "skipLibCheck": true,
     "baseUrl": ".", 
     "paths": {
-      "@ui-commons": ["./ui-commons/dist/index.d.ts"]
+      "@ui-commons": ["./ui-commons/dist/index.d.ts"],
+      "@lexml-eta": ["./lexml-eta/dist/index.d.ts"]
     }
   },
   "include": ["**/*.ts", "src/**/*", "src/types/**/*.d.ts"],
