@@ -40,6 +40,11 @@ export class LexmlEtaParecer extends LitElement {
 
   @state() private _pendenciasPreenchimento: string[] = [];
 
+  @state() private _abaAtiva: string = 'relatorio';
+
+  @query('wa-tab-group')
+  private _tabGroup?: any;
+
   @query(
     'wa-tab-panel[name="dataAutoriaImpressao"] lexml-parecer-data-autoria-impressao',
   )
@@ -174,6 +179,18 @@ export class LexmlEtaParecer extends LitElement {
   protected firstUpdated(): void {
     this._aplicarTitulosSecoes();
     this._recalcularAlertas();
+    this._definirAbaInicial();
+  }
+
+  private _definirAbaInicial(): void {
+    if (this.isCamara) {
+      // Força a ativação da aba no próximo ciclo
+      setTimeout(() => {
+        if (this._tabGroup) {
+          this._tabGroup.active = 'relatorio';
+        }
+      }, 0);
+    }
   }
 
   private _onRteChange = (_ev: Event): void => {
@@ -298,6 +315,7 @@ export class LexmlEtaParecer extends LitElement {
     await this.updateComplete;
     if (params.parecer) {
       this.setParecer(params.parecer);
+      this._definirAbaInicial();
     }
   }
 
@@ -607,9 +625,11 @@ export class LexmlEtaParecer extends LitElement {
               </div>
             </wa-tab>
 
-            <wa-tab-panel name="ementa" class="overflow-hidden">
-              <lexml-parecer-ementa></lexml-parecer-ementa>
-            </wa-tab-panel>
+            ${!this.isCamara
+              ? html`<wa-tab-panel name="ementa" class="overflow-hidden">
+                  <lexml-parecer-ementa></lexml-parecer-ementa>
+                </wa-tab-panel>`
+              : null}
             <wa-tab-panel name="relatorio" class="overflow-hidden">
               <lexml-parecer-relatorio></lexml-parecer-relatorio>
             </wa-tab-panel>
