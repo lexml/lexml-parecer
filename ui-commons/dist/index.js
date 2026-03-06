@@ -12825,6 +12825,11 @@ let Data = class Data extends LitElement {
         }
         return this.data || null;
     }
+    ajustarTextField() {
+        const tf = this.inputData?.shadowRoot?.querySelector('.text-field');
+        if (tf)
+            tf.style.marginTop = '-10px';
+    }
     firstUpdated() {
         setTimeout(() => {
             const internalLabel = this.inputData.shadowRoot?.querySelector('label');
@@ -12837,6 +12842,15 @@ let Data = class Data extends LitElement {
                 console.error('FALHA: A label interna do wa-input.');
             }
         }, 100);
+        requestAnimationFrame(() => {
+            this.ajustarTextField();
+            const root = this.inputData?.shadowRoot;
+            if (root) {
+                const obs = new MutationObserver(() => this.ajustarTextField());
+                obs.observe(root, { childList: true, subtree: true });
+            }
+        });
+        this.informarData = !!this.data;
         this.informarData = !!this.data;
     }
     selecionarRadioData() {
@@ -12906,9 +12920,6 @@ let Data = class Data extends LitElement {
             margin-right: 20px;
             font-size: 14px;
           }
-          ::part(input) {
-            margin-top: -10px;
-          }
           ::part(label) {
             text-align: right;
           }
@@ -12922,6 +12933,9 @@ let Data = class Data extends LitElement {
         }
         .label-on-left wa-input::part(label) {
           cursor: pointer;
+        }
+        .label-on-left div .text-field {
+          margin-top: -10px;
         }
       </style>
       <fieldset class="lexml-data">
@@ -13059,6 +13073,11 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
     render() {
         return html `
       <style>
+        :host {
+          font-size: 14px;
+          --wa-font-size-medium: 14px;
+          font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        }
         fieldset {
           font-size: 14px;
           font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
@@ -13096,12 +13115,24 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
           align-items: center;
           gap: 5px;
         }
+        .font-size-input {
+          font-size: 14px;
+        }
+        .lbl-imprimir-brasao {
+          margin-bottom: 3px;
+        }
+        .lbl-reduzir-espaco {
+          margin-top: 3px;
+        }
       </style>
 
       <fieldset class="lexml-opcoes-impressao">
         <legend>Opções de impressão</legend>
         <div>
-          <label class="lbl-imprimir-brasao" for="chk-imprimir-brasao">
+          <label
+            class="lbl-imprimir-brasao font-size-input"
+            for="chk-imprimir-brasao"
+          >
             <input
               type="checkbox"
               id="chk-imprimir-brasao"
@@ -13116,7 +13147,9 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
           id="input-cabecalho"
           name="textoCabecalho"
           label="Texto do cabeçalho"
+          class="font-size-input"
           value=${this._opcoesImpressao?.textoCabecalho}
+          maxlength="150"
           @input=${(ev) => this._atualizarTextoCabecalho(ev)}
           size="small"
         ></wa-input>
@@ -13125,6 +13158,7 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
             id="select-tamanho-fonte"
             label="Tamanho da letra"
             size="small"
+            class="font-size-input"
             value=${String(this._opcoesImpressao?.tamanhoFonte ?? 14)}
           >
             <wa-option value="14">14</wa-option>
@@ -13133,7 +13167,10 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
           </wa-select>
         </div>
         <div>
-          <label class="lbl-reduzir-espaco" for="chk-reduzir-espaco">
+          <label
+            class="lbl-reduzir-espaco font-size-input"
+            for="chk-reduzir-espaco"
+          >
             <input
               type="checkbox"
               id="chk-reduzir-espaco"
