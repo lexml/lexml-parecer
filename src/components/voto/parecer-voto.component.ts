@@ -21,6 +21,7 @@ export class LexmlParecerVoto extends LitElement {
     return this;
   }
   @property({ type: String }) urlAnexo: string = '';
+  @property({ type: Number }) alturaEditor = 320;
 
   @query('lexml-ui-editor-texto-rico')
   private _ed!: HTMLElement & {
@@ -424,40 +425,18 @@ export class LexmlParecerVoto extends LitElement {
     await Promise.allSettled(animations.map(a => a.finished.catch(() => {})));
   }
 
-  private getScrollContainer(): HTMLElement | Window {
-    return this.findScrollContainer(this);
-  }
-
-  private findScrollContainer(start: HTMLElement | null): HTMLElement | Window {
-    let el = start;
-
-    while (el) {
-      const st = getComputedStyle(el);
-      const oy = st.overflowY;
-
-      const isScrollable =
-        (oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight;
-
-      if (isScrollable) return el;
-
-      el = el.parentElement;
-    }
-
-    return window;
-  }
-
   private async scrollToBottom(): Promise<void> {
     await this.updateComplete;
     await new Promise<void>(r => requestAnimationFrame(() => r()));
 
-    const sc = this.getScrollContainer();
-
-    if (sc === window) {
-      const doc = document.documentElement;
-      window.scrollTo({ top: doc.scrollHeight, behavior: 'smooth' });
-    } else {
-      const el = sc as HTMLElement;
-      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    const tabPanelContent = this.closest(
+      '.tab-panel-content',
+    ) as HTMLElement | null;
+    if (tabPanelContent) {
+      tabPanelContent.scrollTo({
+        top: tabPanelContent.scrollHeight,
+        behavior: 'smooth',
+      });
     }
   }
   // ---------- EMISSÃO DE EVENTO ----------
@@ -878,11 +857,10 @@ export class LexmlParecerVoto extends LitElement {
           flex: 1;
         }
       </style>
-
       <div class="wa-grid field-texto-voto" style="--min-column-size: 16rem;">
         <div class="wa-span-grid">
           <lexml-ui-editor-texto-rico
-            height="320"
+            .height=${this.alturaEditor}
             orientacaoNotaRodaPe="abaixo"
             @onchange=${this._onTextoChange}
           ></lexml-ui-editor-texto-rico>

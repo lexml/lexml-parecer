@@ -84,17 +84,21 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
           padding-right: 10px;
           padding-left: 10px;
         }
+        .espaco {
+          display: block;
+          height: 12px;
+        }
       </style>
       <div class="main-data-autoria-impressao">
         <lexml-ui-data .data=${this._dataValor ?? ''}></lexml-ui-data>
-        <br />
+        <span class="espaco"></span>
         <lexml-parecer-autoria
           .parlamentares=${this.parlamentares}
           .autoria=${this._autoria}
           @onchange=${this._onAutoriaChange}
         >
         </lexml-parecer-autoria>
-        <br />
+        <span class="espaco"></span>
         <lexml-ui-opcoes-impressao
           .opcoesImpressao=${this._opcoesValor}
         ></lexml-ui-opcoes-impressao>

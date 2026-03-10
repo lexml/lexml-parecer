@@ -1,6 +1,6 @@
 import { Usuario } from '@ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { NotaRodape } from '../../models/diversos.model.js';
 import { RevisaoRelatorio } from '../../models/revisao.model.js';
 
@@ -9,6 +9,8 @@ export class LexmlParecerRelatorio extends LitElement {
   createRenderRoot(): LitElement {
     return this;
   }
+
+  @property({ type: Number }) alturaEditor = 590;
 
   @query('lexml-ui-editor-texto-rico') private _ed!: HTMLElement & {
     getTexto: () => string;
@@ -90,7 +92,7 @@ export class LexmlParecerRelatorio extends LitElement {
 
   render(): TemplateResult {
     return html`<lexml-ui-editor-texto-rico
-      height="590"
+      .height=${this.alturaEditor}
       orientacaoNotaRodaPe="abaixo"
     ></lexml-ui-editor-texto-rico>`;
   }

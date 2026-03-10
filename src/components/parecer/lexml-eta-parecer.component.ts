@@ -42,6 +42,8 @@ export class LexmlEtaParecer extends LitElement {
 
   @state() private _abaAtiva: string = 'relatorio';
 
+  @state() private _alturaEditor = 590;
+
   @query('wa-tab-group')
   private _tabGroup?: any;
 
@@ -61,6 +63,57 @@ export class LexmlEtaParecer extends LitElement {
 
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
+
+  private _resizeObserver?: ResizeObserver;
+
+  private readonly _alturaMinimaEditor = 300;
+
+  private _onTabShow = () => this._agendarAjusteAltura();
+
+  private _pesquisarAlturaParentElement(elemento: HTMLElement | null): number {
+    if (!elemento) return 0;
+
+    if (elemento.clientHeight >= this._alturaMinimaEditor) {
+      return elemento.clientHeight;
+    }
+
+    return this._pesquisarAlturaParentElement(elemento.parentElement);
+  }
+
+  private _obterAlturaTabs(): number {
+    const nav = this._tabGroup?.shadowRoot?.querySelector(
+      '.tab-group__nav-container',
+    ) as HTMLElement | null;
+    return nav?.clientHeight ?? 0;
+  }
+
+  private _ajustarAltura = (): void => {
+    const alturaBaseParent = this._pesquisarAlturaParentElement(
+      this.parentElement as HTMLElement | null,
+    );
+    const alturaBaseViewport =
+      window.innerHeight - this.getBoundingClientRect().top - 12;
+    const alturaBase = Math.min(
+      alturaBaseParent || Number.POSITIVE_INFINITY,
+      alturaBaseViewport,
+    );
+    const alturaTabs = this._obterAlturaTabs();
+
+    if (!alturaBase || !alturaTabs || !Number.isFinite(alturaBase)) return;
+
+    const novaAltura = Math.max(
+      this._alturaMinimaEditor,
+      alturaBase - alturaTabs - 12,
+    );
+
+    if (novaAltura !== this._alturaEditor) {
+      this._alturaEditor = novaAltura;
+    }
+  };
+
+  private _agendarAjusteAltura(): void {
+    requestAnimationFrame(() => this._ajustarAltura());
+  }
 
   private _aplicarTitulosSecoes(): void {
     this.parecer.tituloSecao2 = this.isCamara ? 'Voto' : 'Análise';
@@ -180,6 +233,12 @@ export class LexmlEtaParecer extends LitElement {
     this._aplicarTitulosSecoes();
     this._recalcularAlertas();
     this._definirAbaInicial();
+    this._agendarAjusteAltura();
+    this._tabGroup?.addEventListener('wa-tab-show', this._onTabShow as any);
+
+    this._resizeObserver = new ResizeObserver(() => this._ajustarAltura());
+    this._resizeObserver.observe(this);
+    window.addEventListener('resize', this._ajustarAltura);
   }
 
   private _definirAbaInicial(): void {
@@ -314,9 +373,10 @@ export class LexmlEtaParecer extends LitElement {
   async inicializarEdicao(params: LexmlEtaParecerParametrosEdicao) {
     await this.updateComplete;
     if (params.parecer) {
-      this.setParecer(params.parecer);
+      await this.setParecer(params.parecer);
       this._definirAbaInicial();
     }
+    this._agendarAjusteAltura();
   }
 
   private _nrGlobalScheduled = false;
@@ -386,6 +446,10 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   disconnectedCallback(): void {
+    this._tabGroup?.removeEventListener('wa-tab-show', this._onTabShow as any);
+    this._resizeObserver?.disconnect();
+    window.removeEventListener('resize', this._ajustarAltura);
+
     this.removeEventListener(
       'switch-revisao:intent',
       this._onSwitchIntent as any,
@@ -473,6 +537,7 @@ export class LexmlEtaParecer extends LitElement {
 
     this._recalcularAlertas();
     this._aplicarTitulosSecoes();
+    this._agendarAjusteAltura();
   }
 
   public getParecer(): Parecer {
@@ -565,19 +630,70 @@ export class LexmlEtaParecer extends LitElement {
   render(): TemplateResult {
     return html`
       <style>
-        ${waResetString} ${waThemeString} :host {
+        ${waResetString} ${waThemeString} lexml-eta-parecer {
           --wa-color-primary-600: #ff0000 !important; /* Vermelho para testar */
           --wa-color-primary-500: #ff0000 !important;
+          --altura-max-tab-panel: ${this._alturaEditor}px;
           display: block;
-        }
-
-        lexml-eta-parecer {
-          display: block;
+          height: 100%;
+          min-height: 0;
+          overflow: hidden;
           color: var(--lexml-eta-parecer-text-color, #000);
         }
+        .lexml-default-ds {
+          min-height: 0 !important;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .wa-theme-shoelace.wa-palette-shoelace.wa-brand-blue {
+          height: 100%;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+          flex: 1 1 auto;
+        }
+        wa-tab-group {
+          height: 100%;
+          min-height: 0;
+          flex: 1 1 auto;
+        }
+        wa-tab-group::part(body) {
+          height: var(--altura-max-tab-panel);
+          max-height: var(--altura-max-tab-panel);
+          min-height: 0;
+          overflow: hidden;
+        }
+        lexml-eta-parecer wa-tab-panel {
+          height: var(--altura-max-tab-panel);
+          max-height: var(--altura-max-tab-panel);
+          min-height: 0;
+        }
+        lexml-parecer-voto {
+          display: block;
+          height: 100%;
+          min-height: 0;
+        }
         lexml-eta-parecer wa-tab-panel::part(base) {
-          padding-top: 1rem;
-          padding-bottom: 0px;
+          height: 100%;
+          max-height: 100%;
+          padding-top: 0;
+          padding-bottom: 0;
+          min-height: 0;
+          overflow: hidden;
+        }
+        lexml-eta-parecer wa-tab-panel.overflow-hidden {
+          overflow: hidden;
+        }
+        .tab-panel-content {
+          box-sizing: border-box;
+          height: 100%;
+          max-height: 100%;
+          min-height: 0;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-top: 2px;
         }
         .badge-pulse {
           margin-left: 7px;
@@ -591,7 +707,10 @@ export class LexmlEtaParecer extends LitElement {
         }
       </style>
 
-      <div class="lexml-default-ds" style="min-height: auto;">
+      <div
+        class="lexml-default-ds"
+        style="--altura-max-tab-panel: ${this._alturaEditor}px;"
+      >
         <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
           <wa-tab-group>
             ${!this.isCamara
@@ -627,36 +746,54 @@ export class LexmlEtaParecer extends LitElement {
 
             ${!this.isCamara
               ? html`<wa-tab-panel name="ementa" class="overflow-hidden">
-                  <lexml-parecer-ementa></lexml-parecer-ementa>
+                  <div class="tab-panel-content">
+                    <lexml-parecer-ementa
+                      .alturaEditor=${this._alturaEditor - 2}
+                    ></lexml-parecer-ementa>
+                  </div>
                 </wa-tab-panel>`
               : null}
             <wa-tab-panel name="relatorio" class="overflow-hidden">
-              <lexml-parecer-relatorio></lexml-parecer-relatorio>
+              <div class="tab-panel-content">
+                <lexml-parecer-relatorio
+                  .alturaEditor=${this._alturaEditor - 2}
+                ></lexml-parecer-relatorio>
+              </div>
             </wa-tab-panel>
             <wa-tab-panel name="analise" class="overflow-hidden">
-              <lexml-parecer-analise></lexml-parecer-analise>
+              <div class="tab-panel-content">
+                <lexml-parecer-analise
+                  .alturaEditor=${this._alturaEditor - 2}
+                ></lexml-parecer-analise>
+              </div>
             </wa-tab-panel>
             <wa-tab-panel name="voto" class="overflow-hidden">
-              <lexml-parecer-voto
-                .urlAnexo=${this.urlAnexo}
-              ></lexml-parecer-voto>
+              <div class="tab-panel-content">
+                <lexml-parecer-voto
+                  .urlAnexo=${this.urlAnexo}
+                ></lexml-parecer-voto>
+              </div>
             </wa-tab-panel>
             <wa-tab-panel name="dataAutoriaImpressao" class="overflow-hidden">
-              <lexml-parecer-data-autoria-impressao
-                .parlamentares=${this._parlamentares}
-              ></lexml-parecer-data-autoria-impressao>
+              <div class="tab-panel-content">
+                <lexml-parecer-data-autoria-impressao
+                  .parlamentares=${this._parlamentares}
+                ></lexml-parecer-data-autoria-impressao>
+              </div>
             </wa-tab-panel>
             <wa-tab-panel name="avisos" class="overflow-hidden">
-              <lexml-parecer-avisos
-                .alertas=${this._alertas}
-                @parecer-total-alertas=${(
-                  e: CustomEvent<{ total: number }>,
-                ) => {
-                  this.totalAlertas = e.detail.total;
-                }}
-                @parecer-remover-alerta=${this._onRemoverAlerta}
-                @parecer-limpar-alertas=${this._onLimparAlertas}
-              ></lexml-parecer-avisos>
+              <div class="tab-panel-content">
+                <lexml-parecer-avisos
+                  .alertas=${this._alertas}
+                  @parecer-total-alertas=${(
+                    e: CustomEvent<{ total: number }>,
+                  ) => {
+                    this.totalAlertas = e.detail.total;
+                  }}
+                  @parecer-remover-alerta=${this._onRemoverAlerta}
+                  @parecer-limpar-alertas=${this._onLimparAlertas}
+                ></lexml-parecer-avisos>
+              </div>
             </wa-tab-panel>
           </wa-tab-group>
         </div>

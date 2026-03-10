@@ -13090,7 +13090,6 @@ let OpcoesImpressaoComponent = class OpcoesImpressaoComponent extends LitElement
           padding: 20px 20px;
           border: solid var(--wa-panel-border-width) var(--wa-color-gray-90);
           border-radius: var(--wa-border-radius-s);
-          margin: 1em 0 2em 0;
         }
 
         legend {

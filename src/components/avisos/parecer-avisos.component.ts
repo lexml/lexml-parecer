@@ -52,8 +52,7 @@ export class LexmlParecerAvisos extends LitElement {
   render(): TemplateResult {
     return html` <style>
         .main-avisos {
-          padding-right: 10px;
-          padding-left: 10px;
+          padding: 10px 10px 10px 10px;
         }
       </style>
 
