@@ -11838,6 +11838,7 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
         this.minChars = 3;
         this.maxSuggestions = 10;
         this.opened = false;
+        this.clearInvalidOnBlur = true;
         this._bound = {};
         this._interval = 300; // debounce
         this._blur = false;
@@ -11864,11 +11865,18 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
         return (this.contentElement && this.contentElement.value) || '';
     }
     set value(v) {
+        const next = v ?? '';
         if (!this.contentElement) {
-            this._tempValue = v;
+            this._tempValue = next;
+            this._selectedOption = next
+                ? (this._findOptionByText(next) ?? new Option(next, next))
+                : undefined;
             return;
         }
-        this.contentElement.value = v ?? '';
+        this.contentElement.value = next;
+        this._selectedOption = next
+            ? (this._findOptionByText(next) ?? new Option(next, next))
+            : undefined;
     }
     // Render
     render() {
@@ -11972,8 +11980,10 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
         el.addEventListener('blur', this._bound.onBlur);
         el.addEventListener('wa-input', this._bound.onChange);
         el.addEventListener('click', this._bound.onClick);
-        if (this._tempValue !== undefined)
-            el.value = this._tempValue;
+        if (this._tempValue !== undefined) {
+            this.value = this._tempValue;
+            this._tempValue = undefined;
+        }
         this._recalcList(); // primeira passada
     }
     disconnectedCallback() {
@@ -12002,6 +12012,29 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
             this._highlightedEl.classList.add('active');
         }
     }
+    _normalizeText(v) {
+        return (v ?? '')
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+    }
+    _findOptionByText(text) {
+        const normalizedText = this._normalizeText(text);
+        if (!normalizedText)
+            return undefined;
+        const base = this.mode === 'sync'
+            ? this._itemsToOptions(this.items)
+            : this._itemsToOptions(this._currentOptions);
+        return base.find(opt => {
+            const description = this._normalizeText(opt.description);
+            const value = this._normalizeText(opt.value);
+            return description === normalizedText || value === normalizedText;
+        });
+    }
+    _emitChange(value) {
+        this.onChange?.(value);
+    }
     _itemsToOptions(src) {
         return (src || []).map(it => typeof it === 'string' ? new Option(it, it) : it);
     }
@@ -12029,9 +12062,10 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
         this._highlightedEl = null;
     }
     // ---------------- select ----------------
-    _selectOption(opt) {
+    _selectOption(opt, refocus = true) {
         // escreve só o texto no input (sempre string)
         this.contentElement.value = opt?.description ?? '';
+        this._selectedOption = opt;
         this.onSelect?.(opt);
         // compat com o autocomplete "antigo" que emitia evento
         this.dispatchEvent(new CustomEvent('autocomplete', {
@@ -12040,7 +12074,8 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
             detail: { value: this.contentElement.value, option: opt },
         }));
         this.close();
-        this.contentElement?.focus?.();
+        if (refocus)
+            this.contentElement?.focus?.();
     }
     // ---------------- keyboard / input handlers ----------------
     _handleKeyDown(ev) {
@@ -12134,10 +12169,39 @@ let LexmlAutocompleteUniversal = class LexmlAutocompleteUniversal extends LitEle
     }
     _handleBlur() {
         this._blur = true;
-        setTimeout(() => this.close(), 200);
+        setTimeout(() => {
+            if (this.clearInvalidOnBlur)
+                this._clearInvalidValueOnBlur();
+            this.close();
+        }, 200);
+    }
+    _clearInvalidValueOnBlur() {
+        const currentValue = (this.value ?? '').trim();
+        if (!currentValue) {
+            this._selectedOption = undefined;
+            return;
+        }
+        if (this._selectedOption &&
+            this._normalizeText(this._selectedOption.description) ===
+                this._normalizeText(currentValue)) {
+            return;
+        }
+        const matchedOption = this._findOptionByText(currentValue);
+        if (matchedOption) {
+            this._selectOption(matchedOption, false);
+            return;
+        }
+        this.contentElement.value = '';
+        this._selectedOption = undefined;
+        this._emitChange('');
     }
     _handleChange(value) {
-        this.onChange?.(value);
+        if (this._selectedOption &&
+            this._normalizeText(this._selectedOption.description) !==
+                this._normalizeText(value ?? '')) {
+            this._selectedOption = undefined;
+        }
+        this._emitChange(value);
     }
     _handleClick(value) {
         this.onClick?.(value);
@@ -12200,6 +12264,9 @@ __decorate([
 __decorate([
     property({ type: Boolean, reflect: true })
 ], LexmlAutocompleteUniversal.prototype, "opened", void 0);
+__decorate([
+    property({ type: Boolean })
+], LexmlAutocompleteUniversal.prototype, "clearInvalidOnBlur", void 0);
 __decorate([
     property({ type: String })
 ], LexmlAutocompleteUniversal.prototype, "value", null);

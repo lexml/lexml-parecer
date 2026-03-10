@@ -1034,6 +1034,7 @@ export class LexmlParecerVoto extends LitElement {
               appearance="outlined"
               pill
               size="small"
+              ?disabled=${idx === 0}
               @click=${(e: Event) => this.moveByEvent(e, -1)}
             >
               <wa-icon
@@ -1048,6 +1049,7 @@ export class LexmlParecerVoto extends LitElement {
               appearance="outlined"
               pill
               size="small"
+              ?disabled=${idx === this.anexos.length - 1}
               @click=${(e: Event) => this.moveByEvent(e, 1)}
             >
               <wa-icon

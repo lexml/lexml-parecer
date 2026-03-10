@@ -454,6 +454,7 @@ declare class LexmlAutocompleteUniversal extends LitElement {
   minChars: number;
   maxSuggestions: number;
   opened: boolean;
+  clearInvalidOnBlur: boolean;
   private _inputEl;
   private _suggestionEl;
   private _highlightedEl;
@@ -461,6 +462,7 @@ declare class LexmlAutocompleteUniversal extends LitElement {
   private _timer;
   private _interval;
   private _blur;
+  private _selectedOption?;
   private _tempValue?;
   get value(): string;
   set value(v: string);
@@ -473,6 +475,9 @@ declare class LexmlAutocompleteUniversal extends LitElement {
   disconnectedCallback(): void;
   updated(changed: PropertyValues): void;
   private _currentOptions;
+  private _normalizeText;
+  private _findOptionByText;
+  private _emitChange;
   private _itemsToOptions;
   private _recalcList;
   private _setSuggestions;
@@ -484,6 +489,7 @@ declare class LexmlAutocompleteUniversal extends LitElement {
   private _debouncedSearch;
   private _handleFocus;
   private _handleBlur;
+  private _clearInvalidValueOnBlur;
   private _handleChange;
   private _handleClick;
 }
