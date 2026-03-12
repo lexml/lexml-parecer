@@ -713,9 +713,13 @@ export class LexmlEtaParecer extends LitElement {
       >
         <div class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue">
           <wa-tab-group>
-            ${!this.isCamara
-              ? html`<wa-tab slot="nav" panel="ementa">Ementa</wa-tab>`
-              : null}
+            <wa-tab
+              slot="nav"
+              panel="ementa"
+              style="${this.isCamara ? 'display: none;' : ''}"
+            >
+              Ementa
+            </wa-tab>
             <wa-tab slot="nav" panel="relatorio">Relatório</wa-tab>
             <wa-tab slot="nav" panel="analise">
               ${this.parecer.tituloSecao2}
@@ -744,15 +748,17 @@ export class LexmlEtaParecer extends LitElement {
               </div>
             </wa-tab>
 
-            ${!this.isCamara
-              ? html`<wa-tab-panel name="ementa" class="overflow-hidden">
-                  <div class="tab-panel-content">
-                    <lexml-parecer-ementa
-                      .alturaEditor=${this._alturaEditor - 2}
-                    ></lexml-parecer-ementa>
-                  </div>
-                </wa-tab-panel>`
-              : null}
+            <wa-tab-panel
+              name="ementa"
+              class="overflow-hidden"
+              style="${this.isCamara ? 'display: none;' : ''}"
+            >
+              <div class="tab-panel-content">
+                <lexml-parecer-ementa
+                  .alturaEditor=${this._alturaEditor - 2}
+                ></lexml-parecer-ementa>
+              </div>
+            </wa-tab-panel>
             <wa-tab-panel name="relatorio" class="overflow-hidden">
               <div class="tab-panel-content">
                 <lexml-parecer-relatorio
