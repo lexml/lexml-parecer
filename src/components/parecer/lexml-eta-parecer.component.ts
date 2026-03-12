@@ -215,7 +215,7 @@ export class LexmlEtaParecer extends LitElement {
       });
     }
 
-    if (!autoriaParecer?.presidente) {
+    if (!autoriaParecer?.presidente && !this.isCamara) {
       alertas.push({
         id: 'presidente-nao-informado',
         tipo: TipoMensagem.ERROR,
