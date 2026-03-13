@@ -564,6 +564,8 @@ declare class EditorTextoRicoComponent extends LitElement {
   indHabilitarNotaRodape: boolean;
   private apresentarNotaRodape;
   modo: string;
+  /** Modo inline para manter conteÃºdo em linha Ãºnica (sem parÃ¡grafo na saÃ­da). */
+  inline: boolean;
   /** Toolbar opcional: string com tokens separados por vírgula.
    * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
    *         clean, align, textindent, marginbottom, image, link, notarodape, table.
@@ -633,6 +635,10 @@ declare class EditorTextoRicoComponent extends LitElement {
   alertaGlobalRevisao(): void;
   updateNotasRodape: () => void;
   ajustaHtml: (html?: string) => string;
+  private isTextoVazio;
+  private normalizarHtmlInlineSaida;
+  private normalizarHtmlInlineParaEditor;
+  private flattenInlineHtml;
   undo: () => any;
   redo: () => any;
   isEditorVazio: () => boolean;

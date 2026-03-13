@@ -11704,9 +11704,10 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
         <br />
         <lexml-ui-editor-texto-rico
           .toolbar=${'italic'}
+          .inline=${true}
         ></lexml-ui-editor-texto-rico>
         <div class="area-texto">
-          <lexml-ui-editor-texto-rico></lexml-ui-editor-texto-rico>
+          <lexml-ui-editor-texto-rico .inline=${true} ></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <br />
@@ -14328,6 +14329,11 @@ const editorTextoRicoCss = html `
       height: 100%;
       overflow: auto;
       font-size: 18px !important;
+    }
+    .editor-texto-rico.editor-texto-rico--inline .ql-editor {
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
     }
 
     .rte-toolbar .ql-toolbar.ql-snow {
@@ -20662,6 +20668,8 @@ function deltaEndsWith(delta, text) {
 class ModuloCustomClipboard extends Clipboard {
     constructor(quill, options) {
         super(quill, options);
+        this.inline = false;
+        this.inline = !!options?.inline;
         this.quill.root.addEventListener('cut', this.onCut.bind(this));
     }
     onCut(e) {
@@ -20685,11 +20693,29 @@ class ModuloCustomClipboard extends Clipboard {
             return;
         const range = this.quill.getSelection();
         let delta = new Delta$1().retain(range.index);
+        const textoInlineClipboard = this.inline
+            ? this.normalizarTextoColadoInline(e?.clipboardData?.getData?.('text/plain') ||
+                this.extrairTextoDeHtml(e?.clipboardData?.getData?.('text/html') || ''))
+            : '';
         const scrollTop = this.quill.scrollingContainer.scrollTop;
         this.container.focus();
         this.quill.selection.update('silent');
         setTimeout(() => {
-            delta = delta.concat(this.convert()).delete(range.length);
+            if (this.inline) {
+                const textoColado = textoInlineClipboard ||
+                    this.normalizarTextoColadoInline(this.container?.innerText || '');
+                if (textoColado) {
+                    delta = delta
+                        .concat(new Delta$1().insert(textoColado))
+                        .delete(range.length);
+                }
+                else {
+                    delta = delta.concat(this.convert()).delete(range.length);
+                }
+            }
+            else {
+                delta = delta.concat(this.convert()).delete(range.length);
+            }
             // WORKAROUND: o Quill insere um \t (tab) quando cola conteúdo rich text que possui formatação de correção ortográfica
             // TODO: descobrir por quê e tentar corrigir na fonte
             delta.ops = delta.ops.filter((o) => o.insert !== '\t' || o.attributes);
@@ -20699,6 +20725,21 @@ class ModuloCustomClipboard extends Clipboard {
             this.quill.scrollingContainer.scrollTop = scrollTop;
             this.quill.focus();
         }, 1);
+    }
+    normalizarTextoColadoInline(texto = '') {
+        return (texto || '')
+            .replace(/[\u00a0\u2007\u202f]/g, ' ')
+            .replace(/[\u2028\u2029]/g, ' ')
+            .replace(/\r?\n+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+    extrairTextoDeHtml(html = '') {
+        if (!html)
+            return '';
+        const el = document.createElement('div');
+        el.innerHTML = html;
+        return el.textContent || el.innerText || '';
     }
     convert(html) {
         if (typeof html === 'string') {
@@ -21522,7 +21563,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
           ></wa-icon>
           <div slot="start" class="split-start">
             <div class="editor-wrapper">
-              <div id="${this._containerId}" class="editor-texto-rico"></div>
+              <div
+                id="${this._containerId}"
+                class=${`editor-texto-rico ${this.inline ? 'editor-texto-rico--inline' : ''}`}
+              ></div>
             </div>
           </div>
           <div slot="end" class="split-end">
@@ -21574,6 +21618,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.indHabilitarNotaRodape = true;
         this.apresentarNotaRodape = true;
         this.modo = '';
+        /** Modo inline para manter conteÃºdo em linha Ãºnica (sem parÃ¡grafo na saÃ­da). */
+        this.inline = false;
         /** Toolbar opcional: string com tokens separados por vírgula.
          * Tokens: bold, italic, underline, ordered, bullet, sub, super, undo, redo,
          *         clean, align, textindent, marginbottom, image, link, notarodape, table.
@@ -21611,9 +21657,13 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                     customFormatsOptions = this.buildFormats(tokens);
                 }
                 else {
-                    customToolbarOptions = [...toolbarOptions];
-                    customFormatsOptions = [...formatsOptions];
-                    if (this.indHabilitarNotaRodape) {
+                    customToolbarOptions = this.inline
+                        ? [...toolbarInlineOptions]
+                        : [...toolbarOptions];
+                    customFormatsOptions = this.inline
+                        ? [...formatsInlineOptions]
+                        : [...formatsOptions];
+                    if (this.indHabilitarNotaRodape && !this.inline) {
                         customToolbarOptions.push(['nota-rodape']);
                         customFormatsOptions.push('nota-rodape', 'link');
                     }
@@ -21660,7 +21710,9 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                             maxStack: 500,
                             userOnly: true,
                         },
-                        clipboard: {},
+                        clipboard: {
+                            inline: this.inline,
+                        },
                         keyboard: {
                             // Since Quill’s default handlers are added at initialization, the only way to prevent them is to add yours in the configuration.
                             bindings: {
@@ -21742,6 +21794,19 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                                     key: ' ',
                                     handler: () => true,
                                 },
+                                ...(this.inline
+                                    ? {
+                                        enter: {
+                                            key: 'enter',
+                                            handler: () => false,
+                                        },
+                                        shiftEnter: {
+                                            key: 'enter',
+                                            shiftKey: true,
+                                            handler: () => false,
+                                        },
+                                    }
+                                    : {}),
                             },
                         },
                     },
@@ -21928,12 +21993,17 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 return;
             }
             this.scheduleRenumerarNotas();
-            this.texto = texto;
             const textoAjustado = (texto || '')
                 .replace(/align-justify/g, 'ql-align-justify')
                 .replace(/align-center/g, 'ql-align-center')
                 .replace(/align-right/g, 'ql-align-right');
-            const hasNotaRodape = /<\s*nota-rodape\b/i.test(textoAjustado);
+            const conteudoEditor = this.inline
+                ? this.normalizarHtmlInlineParaEditor(textoAjustado)
+                : textoAjustado;
+            this.texto = this.inline
+                ? this.normalizarHtmlInlineSaida(textoAjustado)
+                : texto;
+            const hasNotaRodape = /<\s*nota-rodape\b/i.test(conteudoEditor);
             if (hasNotaRodape) {
                 this.apresentarNotaRodape = true;
             }
@@ -21942,7 +22012,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 this.quill.revisao.modo = this.modo;
             }
             this.configAbrindoTexto(true);
-            this.quill.setContents(this.quill.clipboard.convert(textoAjustado), 'silent');
+            this.quill.setContents(this.quill.clipboard.convert(conteudoEditor), 'silent');
             this.configAbrindoTexto(false);
             this.notasRodape = notasRodape;
             this._atualizarVisibilidadeNotasRodape();
@@ -21974,7 +22044,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                     /* noop */
                 }
             }, 0);
-            if (!textoAjustado)
+            if (!conteudoEditor && !this.inline)
                 this.quill.format('align', 'justify');
             this.atualizaStatusElementosRevisao();
         };
@@ -22010,11 +22080,11 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         };
         this.updateApenasTexto = () => {
             const texto = this.ajustaHtml(this.quill?.root.innerHTML);
-            this.texto = texto === '<p><br></p>' ? '' : texto;
+            this.texto = this.isTextoVazio(texto) ? '' : texto;
         };
         this.updateTexto = () => {
             const texto = this.ajustaHtml(this.quill?.root.innerHTML);
-            this.texto = texto === '<p><br></p>' ? '' : texto;
+            this.texto = this.isTextoVazio(texto) ? '' : texto;
             this.agendarEmissaoEventoOnChange();
             this.onSelectionChange(this.quill?.getSelection());
             this.atualizaStatusElementosRevisao(false);
@@ -22048,7 +22118,10 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 .replace(/ql-align-center/g, 'align-center')
                 .replace(/ql-align-right/g, 'align-right');
             result = removeElementosTDOcultos(result);
-            return this.quill.notasRodape.ajustarConteudoTagsNotaRodape(result);
+            const htmlAjustado = this.quill.notasRodape.ajustarConteudoTagsNotaRodape(result);
+            return this.inline
+                ? this.normalizarHtmlInlineSaida(htmlAjustado)
+                : htmlAjustado;
         };
         this.undo = () => {
             this.quill?.focus();
@@ -22277,6 +22350,27 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
                 }));
         }
     }
+    isTextoVazio(texto = '') {
+        const t = (texto || '').trim();
+        return !t || t === '<p><br></p>' || t === '<br>';
+    }
+    normalizarHtmlInlineSaida(html = '') {
+        const flatten = this.flattenInlineHtml(html);
+        return flatten === '&nbsp;' ? '' : flatten;
+    }
+    normalizarHtmlInlineParaEditor(html = '') {
+        const flatten = this.flattenInlineHtml(html);
+        return flatten ? `<p>${flatten}</p>` : '<p><br></p>';
+    }
+    flattenInlineHtml(html = '') {
+        if (!html)
+            return '';
+        return html
+            .replace(/<br\s*\/?>/gi, ' ')
+            .replace(/<\/?(?:p|div|li|ul|ol|blockquote|h[1-6]|table|thead|tbody|tfoot|tr|td|th)[^>]*>/gi, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
     editarNotaRodape(idNotaRodape) {
         this.quill?.notasRodape?.editar(idNotaRodape);
     }
@@ -22444,6 +22538,9 @@ __decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "modo", void 0);
 __decorate([
+    property({ type: Boolean, reflect: true })
+], EditorTextoRicoComponent.prototype, "inline", void 0);
+__decorate([
     property({ type: String, attribute: 'toolbar' })
 ], EditorTextoRicoComponent.prototype, "toolbar", void 0);
 __decorate([
@@ -22488,6 +22585,24 @@ const formatsOptions = [
     'removed',
     'misspell',
     'ignore',
+];
+const formatsInlineOptions = [
+    'estilo',
+    'bold',
+    'italic',
+    'underline',
+    'script',
+    'added',
+    'removed',
+    'misspell',
+    'ignore',
+];
+const toolbarInlineOptions = [
+    [{ estilo: [false, 'ementa', 'norma-alterada'] }],
+    ['bold', 'italic', 'underline'],
+    [{ script: 'sub' }, { script: 'super' }],
+    ['undo', 'redo'],
+    ['clean'],
 ];
 const toolbarOptions = [
     [{ estilo: [false, 'ementa', 'norma-alterada'] }],

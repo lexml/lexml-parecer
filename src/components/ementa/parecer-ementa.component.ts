@@ -94,6 +94,7 @@ export class LexmlParecerEmenta extends LitElement {
       .height=${this.alturaEditor}
       orientacaoNotaRodaPe="abaixo"
       .toolbar=${'italic'}
+      inline="true"
     ></lexml-ui-editor-texto-rico>`;
   }
 }
