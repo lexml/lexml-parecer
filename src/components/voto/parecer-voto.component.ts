@@ -2,6 +2,7 @@ import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { AnexoParecer, MimeType } from '../../models/anexo-parecer.model.js';
+import { VisualizarAnexoCallback } from '../../config/lexml-parecer-config.js';
 import {
   TipoDocumento,
   TipoDocumentoLabel,
@@ -21,6 +22,7 @@ export class LexmlParecerVoto extends LitElement {
     return this;
   }
   @property({ type: String }) urlAnexo: string = '';
+  @property({ attribute: false }) onVisualizarAnexo?: VisualizarAnexoCallback;
   @property({ type: Number }) alturaEditor = 320;
 
   @query('lexml-ui-editor-texto-rico')
@@ -340,6 +342,27 @@ export class LexmlParecerVoto extends LitElement {
 
     if (doc.mimeType !== MimeType.PDF) {
       alertarInfo('Visualização disponível apenas para PDFs.');
+      return;
+    }
+
+    const anexo: AnexoParecer = {
+      idArquivo: doc.idArquivo,
+      nomeArquivo: doc.nomeArquivo ?? '',
+      nomeDocumento: (doc.nomeDocumento ?? doc.nomeArquivo ?? '').trim(),
+      tipo: doc.tipo,
+      mimeType: doc.mimeType,
+    };
+
+    if (typeof this.onVisualizarAnexo === 'function') {
+      try {
+        await this.onVisualizarAnexo(anexo);
+      } catch (err) {
+        console.error(
+          '[lexml-parecer-voto] Erro ao executar callback de visualização:',
+          err,
+        );
+        alertarInfo('Não foi possível visualizar o anexo. Tente novamente.');
+      }
       return;
     }
 

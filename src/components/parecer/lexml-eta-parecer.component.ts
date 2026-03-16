@@ -17,7 +17,10 @@ import {
 import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-parametro-edicao.model.js';
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
-import { LexmlParecerConfig } from '../../config/lexml-parecer-config.js';
+import {
+  LexmlParecerConfig,
+  VisualizarAnexoCallback,
+} from '../../config/lexml-parecer-config.js';
 import { waResetString, waThemeString } from '../../assets/css/wa-bundled.js';
 
 @customElement('lexml-eta-parecer')
@@ -29,6 +32,8 @@ export class LexmlEtaParecer extends LitElement {
   @state() private urlAnexo: string = '';
 
   @state() private _parlamentares: Parlamentar[] = [];
+
+  @state() private onVisualizarAnexo?: VisualizarAnexoCallback;
 
   @property({ type: Number }) totalAlertas = 0;
 
@@ -621,9 +626,8 @@ export class LexmlEtaParecer extends LitElement {
   willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
       this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
-    }
-    if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
       this.urlAnexo = this.lexmlParecerConfig.urlAnexo ?? '';
+      this.onVisualizarAnexo = this.lexmlParecerConfig.onVisualizarAnexo;
     }
   }
 
@@ -777,6 +781,7 @@ export class LexmlEtaParecer extends LitElement {
               <div class="tab-panel-content">
                 <lexml-parecer-voto
                   .urlAnexo=${this.urlAnexo}
+                  .onVisualizarAnexo=${this.onVisualizarAnexo}
                 ></lexml-parecer-voto>
               </div>
             </wa-tab-panel>
