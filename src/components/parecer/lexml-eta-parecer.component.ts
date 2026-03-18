@@ -18,7 +18,10 @@ import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-
 import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
 import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
 import {
+  DeleteAnexoCallback,
   LexmlParecerConfig,
+  ObterAnexoBlobCallback,
+  UploadAnexoCallback,
   VisualizarAnexoCallback,
 } from '../../config/lexml-parecer-config.js';
 import { waResetString, waThemeString } from '../../assets/css/wa-bundled.js';
@@ -29,10 +32,11 @@ export class LexmlEtaParecer extends LitElement {
     return this;
   }
 
-  @state() private urlAnexo: string = '';
-
   @state() private _parlamentares: Parlamentar[] = [];
 
+  @state() private onUploadAnexo?: UploadAnexoCallback;
+  @state() private onDeleteAnexo?: DeleteAnexoCallback;
+  @state() private onObterAnexoBlob?: ObterAnexoBlobCallback;
   @state() private onVisualizarAnexo?: VisualizarAnexoCallback;
 
   @property({ type: Number }) totalAlertas = 0;
@@ -626,7 +630,9 @@ export class LexmlEtaParecer extends LitElement {
   willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
       this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
-      this.urlAnexo = this.lexmlParecerConfig.urlAnexo ?? '';
+      this.onUploadAnexo = this.lexmlParecerConfig.onUploadAnexo;
+      this.onDeleteAnexo = this.lexmlParecerConfig.onDeleteAnexo;
+      this.onObterAnexoBlob = this.lexmlParecerConfig.onObterAnexoBlob;
       this.onVisualizarAnexo = this.lexmlParecerConfig.onVisualizarAnexo;
     }
   }
@@ -780,7 +786,9 @@ export class LexmlEtaParecer extends LitElement {
             <wa-tab-panel name="voto" class="overflow-hidden">
               <div class="tab-panel-content">
                 <lexml-parecer-voto
-                  .urlAnexo=${this.urlAnexo}
+                  .onUploadAnexo=${this.onUploadAnexo}
+                  .onDeleteAnexo=${this.onDeleteAnexo}
+                  .onObterAnexoBlob=${this.onObterAnexoBlob}
                   .onVisualizarAnexo=${this.onVisualizarAnexo}
                 ></lexml-parecer-voto>
               </div>

@@ -2,7 +2,12 @@ import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { AnexoParecer, MimeType } from '../../models/anexo-parecer.model.js';
-import { VisualizarAnexoCallback } from '../../config/lexml-parecer-config.js';
+import {
+  DeleteAnexoCallback,
+  ObterAnexoBlobCallback,
+  UploadAnexoCallback,
+  VisualizarAnexoCallback,
+} from '../../config/lexml-parecer-config.js';
 import {
   TipoDocumento,
   TipoDocumentoLabel,
@@ -21,7 +26,9 @@ export class LexmlParecerVoto extends LitElement {
   createRenderRoot(): LitElement {
     return this;
   }
-  @property({ type: String }) urlAnexo: string = '';
+  @property({ attribute: false }) onUploadAnexo?: UploadAnexoCallback;
+  @property({ attribute: false }) onDeleteAnexo?: DeleteAnexoCallback;
+  @property({ attribute: false }) onObterAnexoBlob?: ObterAnexoBlobCallback;
   @property({ attribute: false }) onVisualizarAnexo?: VisualizarAnexoCallback;
   @property({ type: Number }) alturaEditor = 320;
 
@@ -249,6 +256,52 @@ export class LexmlParecerVoto extends LitElement {
     this.emitChange();
   }
 
+  private toAnexoParecer(anexo: Partial<AnexoParecer>): AnexoParecer {
+    return {
+      idArquivo: anexo.idArquivo ?? '',
+      nomeArquivo: anexo.nomeArquivo ?? '',
+      nomeDocumento: (anexo.nomeDocumento ?? anexo.nomeArquivo ?? '').trim(),
+      tipo: anexo.tipo,
+      mimeType: anexo.mimeType ?? MimeType.PDF,
+    };
+  }
+
+  private async uploadAnexo(file: File): Promise<string> {
+    if (typeof this.onUploadAnexo === 'function') {
+      const idArquivo = (await this.onUploadAnexo(file))?.trim();
+      if (!idArquivo) {
+        throw new Error('Callback de upload não retornou idArquivo válido.');
+      }
+      return idArquivo;
+    }
+    throw new Error('Callback onUploadAnexo não informado.');
+  }
+
+  private async deleteAnexo(anexo: AnexoParecer): Promise<void> {
+    if (!anexo?.idArquivo) return;
+    if (typeof this.onDeleteAnexo === 'function') {
+      await this.onDeleteAnexo(this.toAnexoParecer(anexo));
+      return;
+    }
+    throw new Error('Callback onDeleteAnexo não informado.');
+  }
+
+  private async obterAnexoBlob(
+    anexo: AnexoParecer,
+  ): Promise<{ blob: Blob; contentType: string | null }> {
+    if (typeof this.onObterAnexoBlob === 'function') {
+      const result = await this.onObterAnexoBlob(this.toAnexoParecer(anexo));
+      if (!result?.blob) {
+        throw new Error('Callback de obtenção de anexo não retornou blob.');
+      }
+      return {
+        blob: result.blob,
+        contentType: result.contentType ?? null,
+      };
+    }
+    throw new Error('Callback onObterAnexoBlob não informado.');
+  }
+
   private isAllowedFile(file: File): boolean {
     const hasGoodMime =
       file.type && LexmlParecerVoto.ALLOWED_MIME_TYPES.has(file.type);
@@ -274,7 +327,7 @@ export class LexmlParecerVoto extends LitElement {
 
     try {
       if (item.idArquivo) {
-        await this.deleteAnexoOnServer(item.idArquivo);
+        await this.deleteAnexo(this.toAnexoParecer(item));
       }
 
       this.anexos = this.anexos.filter((_, i) => i !== idx);
@@ -345,13 +398,7 @@ export class LexmlParecerVoto extends LitElement {
       return;
     }
 
-    const anexo: AnexoParecer = {
-      idArquivo: doc.idArquivo,
-      nomeArquivo: doc.nomeArquivo ?? '',
-      nomeDocumento: (doc.nomeDocumento ?? doc.nomeArquivo ?? '').trim(),
-      tipo: doc.tipo,
-      mimeType: doc.mimeType,
-    };
+    const anexo = this.toAnexoParecer(doc);
 
     if (typeof this.onVisualizarAnexo === 'function') {
       try {
@@ -366,7 +413,7 @@ export class LexmlParecerVoto extends LitElement {
       return;
     }
 
-    const { blob } = await this.getAnexoBlob(doc.idArquivo);
+    const { blob } = await this.obterAnexoBlob(anexo);
     const url = URL.createObjectURL(blob);
     window.open(url, '_blank', 'noopener');
     setTimeout(() => URL.revokeObjectURL(url), 60_000);
@@ -379,7 +426,8 @@ export class LexmlParecerVoto extends LitElement {
       return;
     }
 
-    const { blob } = await this.getAnexoBlob(doc.idArquivo);
+    const anexo = this.toAnexoParecer(doc);
+    const { blob } = await this.obterAnexoBlob(anexo);
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -493,85 +541,6 @@ export class LexmlParecerVoto extends LitElement {
       this.setTextoVoto(this._textoVoto);
     }
   };
-
-  private async uploadAnexoToServer(file: File): Promise<string> {
-    const endpoint = `${this.urlAnexo}`;
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const resp = await fetch(endpoint, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-
-    if (!resp.ok) {
-      const txt = await resp.text().catch(() => '');
-      console.error(
-        '[lexml-parecer-voto] Falha ao enviar anexo para o servidor:',
-        resp.status,
-        txt,
-      );
-      throw new Error('Falha ao enviar anexo para o servidor.');
-    }
-
-    const idArquivo = (await resp.text())?.trim();
-    if (!idArquivo) {
-      throw new Error(
-        'Servidor não retornou um idArquivo válido para o anexo.',
-      );
-    }
-
-    return idArquivo;
-  }
-
-  private async deleteAnexoOnServer(idArquivo: string): Promise<void> {
-    if (!idArquivo) {
-      return;
-    }
-
-    const endpoint = `${this.urlAnexo}${encodeURIComponent(idArquivo)}`;
-
-    const resp = await fetch(endpoint, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-
-    if (!resp.ok) {
-      const txt = await resp.text().catch(() => '');
-      console.error(
-        '[lexml-parecer-voto] Falha ao excluir anexo no servidor:',
-        resp.status,
-        txt,
-      );
-      throw new Error('Falha ao excluir anexo no servidor.');
-    }
-  }
-
-  private async getAnexoBlob(
-    idArquivo: string,
-  ): Promise<{ blob: Blob; contentType: string | null }> {
-    const endpoint = `${this.urlAnexo}${encodeURIComponent(idArquivo)}`;
-    const res = await fetch(endpoint, {
-      method: 'GET',
-      headers: { Accept: '*/*' },
-    });
-
-    if (!res.ok) {
-      const msg = await res.text().catch(() => '');
-      throw new Error(msg || `Falha ao buscar anexo (${res.status})`);
-    }
-
-    return {
-      blob: await res.blob(),
-      contentType: res.headers.get('content-type'),
-    };
-  }
 
   // ---------- MODAL FLOW ----------
 
@@ -693,7 +662,7 @@ export class LexmlParecerVoto extends LitElement {
     this.uploading = true;
 
     try {
-      const newIdArquivo = await this.uploadAnexoToServer(file);
+      const newIdArquivo = await this.uploadAnexo(file);
 
       if (this.dialogMode === 'new') {
         const novo: AnexoParecerRuntime = {
@@ -737,7 +706,10 @@ export class LexmlParecerVoto extends LitElement {
       this.closeDialog();
 
       if (oldIdArquivo && oldIdArquivo !== newIdArquivo) {
-        await this.deleteAnexoOnServer(oldIdArquivo);
+        await this.deleteAnexo({
+          ...this.toAnexoParecer(atual),
+          idArquivo: oldIdArquivo,
+        });
       }
     } catch (err) {
       console.error('[lexml-parecer-voto] Erro ao enviar anexo:', err);
