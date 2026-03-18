@@ -11707,7 +11707,9 @@ let LexmlUiCommons = class LexmlUiCommons extends LitElement {
           .inline=${true}
         ></lexml-ui-editor-texto-rico>
         <div class="area-texto">
-          <lexml-ui-editor-texto-rico .inline=${true} ></lexml-ui-editor-texto-rico>
+          <lexml-ui-editor-texto-rico
+            .inline=${true}
+          ></lexml-ui-editor-texto-rico>
         </div>
         <br />
         <br />
@@ -22159,8 +22161,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             return true;
         };
         this.getTexto = () => {
-            // retornar texto sem tag <span class="misspell" ...>
-            return this.texto.replace(/<span class="misspell"[^>]*>(.*?)<\/span>/g, '$1');
+            // retornar texto sem tag <span class="ql-misspell" ...>
+            return this.texto.replace(/<span class="ql-misspell"[^>]*>(.*?)<\/span>/g, '$1');
         };
         this.getNomeSwitch = () => `chk-em-revisao-texto-livre-${this._uid}`;
         this.getNomeBadge = () => `badge-marca-alteracao-texto-livre-${this._uid}`;
