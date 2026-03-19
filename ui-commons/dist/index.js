@@ -20395,7 +20395,15 @@ class MisspellBlot extends Inline {
             node.setAttribute('data-category-name', value.categoryName);
             node.setAttribute('data-message', value.message);
             node.setAttribute('data-short-message', value.shortMessage);
-            node.setAttribute('title', value.message);
+            node.setAttribute('title', MisspellBlot.trocarTagsPorAspasSimples(value.message));
+        }
+    }
+    static trocarTagsPorAspasSimples(texto) {
+        try {
+            return texto.replace(/<\w+>([^<]+)<\/\w+>/g, "'$1'");
+        }
+        catch (error) {
+            return texto;
         }
     }
     static format(node, value) {
