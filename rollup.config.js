@@ -22,6 +22,12 @@ const basePlugins = [
   typescript({ tsconfig: 'tsconfig.json', sourceMap: true }),
 ];
 
+const isExternal = id =>
+  id === 'lit' ||
+  id.startsWith('lit/') ||
+  id === '@awesome.me/webawesome' ||
+  id.startsWith('@awesome.me/webawesome/');
+
 
 const configTs = {
 	input: 'src/index.ts',
@@ -34,7 +40,7 @@ const configTs = {
 	plugins: [
 		...basePlugins,
 	],
-  external: []
+  external: isExternal
 };
 
 const configTsMin = {
@@ -56,6 +62,7 @@ const configTsMin = {
 			}
 		}),
 	],
+  external: isExternal
 };
 
 export default defineConfig([configTs, configTsMin]);

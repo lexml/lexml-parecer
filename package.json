@@ -1,13 +1,13 @@
 {
-  "name": "lexml-eta-parecer",
+  "name": "@lexml/lexml-parecer",
   "description": "Webcomponent lexml-eta-parecer following open-wc recommendations",
   "license": "MIT",
   "author": "lexml-eta-parecer",
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/src/index.js",
-  "module": "dist/src/index.js",
-  "browser": "dist/src/index.min.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "browser": "dist/index.min.js",
   "scripts": {
     "analyze": "cem analyze --litelement",
     "start": "rimraf dist && npm run generate:styles && tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
@@ -23,11 +23,10 @@
     "generate:styles": "node build-styles.cjs"
   },
   "dependencies": {
-    "@awesome.me/webawesome": "^3.0.0-beta.4",
-    "lit": "^3.1.4",
     "quill": "^1.3.7"
   },
   "devDependencies": {
+    "@awesome.me/webawesome": "^3.0.0-beta.4",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/testing": "^4.0.0",
@@ -63,7 +62,12 @@
     "rollup-plugin-lit-css": "^6.0.0",
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.6.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "lit": "^2.8.0"
+  },
+  "peerDependencies": {
+    "@awesome.me/webawesome": "^3.0.0-beta.4",
+    "lit": "^2.8.0"
   },
   "customElements": "custom-elements.json",
   "eslintConfig": {
