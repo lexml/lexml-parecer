@@ -14471,13 +14471,13 @@ const editorTextoRicoCss = html `
     }
 
     [id^='badge-marca-alteracao-justificativa-']::part(base) {
-      min-width: 1.4rem;
+      min-width: 0;
     }
 
     [id^='badge-marca-alteracao-texto-livre-']::part(base) {
-      min-width: 1.4rem;
+      min-width: 0;
     }
-    revisao-container {
+    .revisao-container {
       margin-left: auto;
     }
 
@@ -20395,15 +20395,7 @@ class MisspellBlot extends Inline {
             node.setAttribute('data-category-name', value.categoryName);
             node.setAttribute('data-message', value.message);
             node.setAttribute('data-short-message', value.shortMessage);
-            node.setAttribute('title', MisspellBlot.trocarTagsPorAspasSimples(value.message));
-        }
-    }
-    static trocarTagsPorAspasSimples(texto) {
-        try {
-            return texto.replace(/<\w+>([^<]+)<\/\w+>/g, "'$1'");
-        }
-        catch (error) {
-            return texto;
+            node.setAttribute('title', value.message);
         }
     }
     static format(node, value) {
@@ -21424,11 +21416,20 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             : 'grip-horizontal';
     }
     get _styleSplit() {
-        const h = `calc(${this.height}px - var(--rte-toolbar-h, 55px))`;
+        const alturaUtil = Math.max(120, this.height - this._toolbarHeight);
         const base = this._orientation === 'horizontal'
             ? '--divider-width: 20px; --min: 50%; --max: 90%;'
             : '--divider-width: 10px; --min: 50%; --max: 75%;';
-        return `${base} height:${h};`;
+        return `${base} height:${alturaUtil}px;`;
+    }
+    _observarAlturaToolbar() {
+        const elToolbar = this.querySelector(`#rte-toolbar-${this._uid}`);
+        if (!elToolbar)
+            return;
+        this._toolbarResizeObs?.disconnect();
+        this._toolbarResizeObs = new ResizeObserver(() => this._atualizarAlturaToolbar());
+        this._toolbarResizeObs.observe(elToolbar);
+        this._atualizarAlturaToolbar();
     }
     showAlterarLarguraImagemModal(img, width) {
         this.alterarLarguraImagemModal.show(img, width);
@@ -21619,6 +21620,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this._forcarAbaixo = false;
         this._forcarLado = false;
         this._orientacaoPreferida = this.orientacaoNotaRodaPe ?? 'abaixo';
+        this._toolbarHeight = 55;
         this.texto = '';
         // @property({ type: Array }) anexos: Anexo[] = [];
         this.notasRodape = [];
@@ -21639,6 +21641,14 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.toolbar = '';
         this.onChange = new Observable();
         this.icons = Quill.import('ui/icons');
+        this._atualizarAlturaToolbar = () => {
+            const elToolbar = this.querySelector(`#rte-toolbar-${this._uid}`);
+            const altura = Math.ceil(elToolbar?.getBoundingClientRect().height ?? elToolbar?.offsetHeight ?? 0);
+            const novaAltura = altura > 0 ? altura : 55;
+            if (novaAltura !== this._toolbarHeight) {
+                this._toolbarHeight = novaAltura;
+            }
+        };
         this.onTableInTable = () => {
             clearTimeout(this.timerAlerta);
             alertarInfo('Não é permitido inserir uma tabela dentro de outra tabela.');
@@ -22169,8 +22179,8 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
             return true;
         };
         this.getTexto = () => {
-            // retornar texto sem tag <span class="ql-misspell" ...>
-            return this.texto.replace(/<span class="ql-misspell"[^>]*>(.*?)<\/span>/g, '$1');
+            // retornar texto sem tag <span class="misspell" ...>
+            return this.texto.replace(/<span class="misspell"[^>]*>(.*?)<\/span>/g, '$1');
         };
         this.getNomeSwitch = () => `chk-em-revisao-texto-livre-${this._uid}`;
         this.getNomeBadge = () => `badge-marca-alteracao-texto-livre-${this._uid}`;
@@ -22269,6 +22279,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
     }
     firstUpdated() {
         this.init();
+        this._observarAlturaToolbar();
         const sp = this.renderRoot?.querySelector('wa-split-panel');
         if (sp) {
             this._splitResizeObs = new ResizeObserver(entries => {
@@ -22325,6 +22336,7 @@ let EditorTextoRicoComponent = class EditorTextoRicoComponent extends LitElement
         this.quill?.off('text-change', this.updateTexto);
         this.quill?.off('selection-change', this.onSelectionChange);
         this._splitResizeObs?.disconnect();
+        this._toolbarResizeObs?.disconnect();
         super.disconnectedCallback();
     }
     _atualizarVisibilidadeNotasRodape() {
@@ -22526,6 +22538,9 @@ __decorate([
 __decorate([
     state()
 ], EditorTextoRicoComponent.prototype, "_forcarLado", void 0);
+__decorate([
+    state()
+], EditorTextoRicoComponent.prototype, "_toolbarHeight", void 0);
 __decorate([
     property({ type: String })
 ], EditorTextoRicoComponent.prototype, "texto", void 0);
@@ -23017,17 +23032,94 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           background-color: #eee;
           cursor: pointer;
         }
-        wa-switch {
+
+        #switch-container wa-switch {
+          --height: 13px;
+          --width: 30px;
+          --thumb-size: 17px;
+          height: 32px;
+          width: 205px;
           border: 1px solid #ccc !important;
           padding: 5px 10px !important;
           border-radius: 20px !important;
           margin-left: auto;
           margin-right: 5px;
           font-weight: bold;
+          font-size: 14px;
           background-color: #eee;
+          display: flex;
+          justify-content:center;
         }
-        wa-switch[checked] {
-          background-color: var(--wa-color-blue-100);
+        
+        #switch-container wa-switch::part(control) {
+          background-color: var(--wa-color-neutral-50, #d1d5db);
+          border-color: var(--wa-color-neutral-50, #d1d5db);
+        }
+        #switch-container wa-switch:not([checked]):not([disabled]):hover::part(control) {
+          background-color: var(--wa-color-neutral-40, #9ca3af);
+          border-color: var(--wa-color-neutral-40, #9ca3af);
+        }
+        #switch-container wa-switch[checked]::part(control) {
+          background-color: var(
+            --wa-color-brand-50,
+            var(--wa-form-control-activated-color)
+          );
+          border-color: var(
+            --wa-color-brand-50,
+            var(--wa-form-control-activated-color)
+          );
+        }
+        #switch-container wa-switch[checked]:not([disabled]):hover::part(control) {
+          background-color: var(
+            --wa-color-brand-40,
+            var(--wa-form-control-activated-color)
+          );
+          border-color: var(
+            --wa-color-brand-40,
+            var(--wa-form-control-activated-color)
+          );
+        }
+        #switch-container wa-switch::part(thumb) {
+          background-color: var(--wa-color-surface-default, #ffffff);
+          border: var(--wa-border-width-s, 1px) var(--wa-border-style, solid)
+            var(--wa-color-neutral-40, #9ca3af);
+        }
+        #switch-container wa-switch:not([checked]):not([disabled]):hover::part(thumb) {
+          border-color: var(--wa-color-neutral-30, #6b7280);
+        }
+        #switch-container wa-switch[checked]::part(thumb) {
+          background-color: var(--wa-color-surface-default, #ffffff);
+          border-color: var(
+            --wa-color-brand-50,
+            var(--wa-form-control-activated-color)
+          );
+        }
+        #switch-container wa-switch[checked]:not([disabled]):hover::part(thumb) {
+          border-color: var(
+            --wa-color-brand-40,
+            var(--wa-form-control-activated-color)
+          );
+        }
+        #switch-container wa-switch[checked] {
+          background-color: var(--wa-color-blue-100, #dbeafe);
+        }
+        #switch-container wa-switch::part(label) {
+          display: inline-flex;
+          align-items: center;
+          gap: 2px;
+          line-height: 1;
+        }
+        #switch-container wa-switch .switch-label {
+          font-weight: normal;
+          line-height: 1;
+          margin: 0px 3px 0px 1px;
+        }
+        #switch-container wa-switch .badge-revisao {
+          margin: 2px;
+          padding: 3px 6px;
+          font-size: 12px;
+          line-height: 1;
+          vertical-align: middle;
         }
         .revisao-container {
           margin-left: auto;
@@ -23051,8 +23143,9 @@ let SwitchRevisaoComponent = class SwitchRevisaoComponent extends LitElement {
           ?checked=${this.checked}
           @change=${(ev) => this.onToggle(ev)}
         >
-          <span>Marcas de revisão</span>
+          <span class="switch-label">Marcas de revisão</span>
           <wa-badge
+            class="badge-revisao"
             id="${this.nomeBadgeQuantidadeRevisao}"
             variant="warning"
             pill

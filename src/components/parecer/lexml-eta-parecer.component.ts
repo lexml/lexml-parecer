@@ -75,14 +75,17 @@ export class LexmlEtaParecer extends LitElement {
 
   private _resizeObserver?: ResizeObserver;
 
-  private readonly _alturaMinimaEditor = 300;
+  private readonly _alturaMinimaEditor = 60;
+  private readonly _maxTentativasAjusteAltura = 12;
+  private _tentativasAjusteAltura = 0;
+  private _retryAjusteAlturaTimer?: number;
 
   private _onTabShow = () => this._agendarAjusteAltura();
 
   private _pesquisarAlturaParentElement(elemento: HTMLElement | null): number {
     if (!elemento) return 0;
 
-    if (elemento.clientHeight >= this._alturaMinimaEditor) {
+    if (elemento.clientHeight > 0) {
       return elemento.clientHeight;
     }
 
@@ -90,30 +93,82 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   private _obterAlturaTabs(): number {
-    const nav = this._tabGroup?.shadowRoot?.querySelector(
+    const tabGroup = this._tabGroup as HTMLElement | undefined;
+    if (!tabGroup) return 46;
+
+    const navByClass = tabGroup.shadowRoot?.querySelector(
       '.tab-group__nav-container',
     ) as HTMLElement | null;
-    return nav?.clientHeight ?? 0;
+    if ((navByClass?.clientHeight ?? 0) > 0) {
+      return navByClass!.clientHeight;
+    }
+
+    const navByPart = tabGroup.shadowRoot?.querySelector(
+      '[part~="nav"]',
+    ) as HTMLElement | null;
+    if ((navByPart?.clientHeight ?? 0) > 0) {
+      return navByPart!.clientHeight;
+    }
+
+    const bodyByPart = tabGroup.shadowRoot?.querySelector(
+      '[part~="body"]',
+    ) as HTMLElement | null;
+    if (bodyByPart) {
+      const alturaNav = Math.floor(
+        tabGroup.getBoundingClientRect().height -
+          bodyByPart.getBoundingClientRect().height,
+      );
+      if (alturaNav > 0) return alturaNav;
+    }
+
+    return 46;
+  }
+
+  private _resetarTentativasAjusteAltura(): void {
+    this._tentativasAjusteAltura = 0;
+    if (this._retryAjusteAlturaTimer !== undefined) {
+      window.clearTimeout(this._retryAjusteAlturaTimer);
+      this._retryAjusteAlturaTimer = undefined;
+    }
+  }
+
+  private _reagendarAjusteAlturaPorTiming(): void {
+    if (this._tentativasAjusteAltura >= this._maxTentativasAjusteAltura) return;
+
+    this._tentativasAjusteAltura += 1;
+    if (this._retryAjusteAlturaTimer !== undefined) {
+      window.clearTimeout(this._retryAjusteAlturaTimer);
+    }
+    this._retryAjusteAlturaTimer = window.setTimeout(
+      () => this._agendarAjusteAltura(),
+      50,
+    );
   }
 
   private _ajustarAltura = (): void => {
     const alturaBaseParent = this._pesquisarAlturaParentElement(
-      this.parentElement as HTMLElement | null,
+      this as unknown as HTMLElement,
     );
     const alturaBaseViewport =
       window.innerHeight - this.getBoundingClientRect().top - 12;
-    const alturaBase = Math.min(
-      alturaBaseParent || Number.POSITIVE_INFINITY,
-      alturaBaseViewport,
+    const alturasBase = [alturaBaseParent, alturaBaseViewport].filter(
+      altura => Number.isFinite(altura) && altura > 0,
     );
+    const alturaBase =
+      alturasBase.length > 0 ? Math.min(...alturasBase) : Number.NaN;
     const alturaTabs = this._obterAlturaTabs();
 
-    if (!alturaBase || !alturaTabs || !Number.isFinite(alturaBase)) return;
+    if (!Number.isFinite(alturaBase) || alturaBase <= 0) {
+      this._reagendarAjusteAlturaPorTiming();
+      return;
+    }
 
     const novaAltura = Math.max(
       this._alturaMinimaEditor,
-      alturaBase - alturaTabs - 12,
+      alturaBase - alturaTabs - 8,
     );
+
+    this._resetarTentativasAjusteAltura();
 
     if (novaAltura !== this._alturaEditor) {
       this._alturaEditor = novaAltura;
@@ -458,6 +513,7 @@ export class LexmlEtaParecer extends LitElement {
     this._tabGroup?.removeEventListener('wa-tab-show', this._onTabShow as any);
     this._resizeObserver?.disconnect();
     window.removeEventListener('resize', this._ajustarAltura);
+    this._resetarTentativasAjusteAltura();
 
     this.removeEventListener(
       'switch-revisao:intent',
@@ -638,11 +694,18 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   render(): TemplateResult {
+    const alturaEditorPrincipal = Math.max(
+      this._alturaMinimaEditor,
+      this._alturaEditor - 2,
+    );
+    const alturaEditorVoto = Math.max(
+      this._alturaMinimaEditor,
+      Math.floor((alturaEditorPrincipal * 13) / 20),
+    );
+
     return html`
       <style>
         ${waResetString} ${waThemeString} lexml-eta-parecer {
-          --wa-color-primary-600: #ff0000 !important; /* Vermelho para testar */
-          --wa-color-primary-500: #ff0000 !important;
           --altura-max-tab-panel: ${this._alturaEditor}px;
           display: block;
           height: 100%;
@@ -668,21 +731,35 @@ export class LexmlEtaParecer extends LitElement {
           height: 100%;
           min-height: 0;
           flex: 1 1 auto;
+          display: flex;
+          flex-direction: column;
         }
         wa-tab-group::part(body) {
           height: var(--altura-max-tab-panel);
           max-height: var(--altura-max-tab-panel);
           min-height: 0;
-          overflow: hidden;
+          overflow-y: auto;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
+          flex: 1 1 auto;
         }
         lexml-eta-parecer wa-tab-panel {
-          height: var(--altura-max-tab-panel);
-          max-height: var(--altura-max-tab-panel);
+          height: 100%;
+          max-height: 100%;
           min-height: 0;
         }
+        lexml-parecer-ementa,
+        lexml-parecer-relatorio,
+        lexml-parecer-analise,
         lexml-parecer-voto {
           display: block;
           height: 100%;
+          min-height: 0;
+        }
+        lexml-parecer-data-autoria-impressao,
+        lexml-parecer-avisos {
+          display: block;
           min-height: 0;
         }
         lexml-eta-parecer wa-tab-panel::part(base) {
@@ -691,7 +768,11 @@ export class LexmlEtaParecer extends LitElement {
           padding-top: 0;
           padding-bottom: 0;
           min-height: 0;
-          overflow: hidden;
+          overflow-y: auto;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
+          flex: 1 1 auto;
         }
         lexml-eta-parecer wa-tab-panel.overflow-hidden {
           overflow: hidden;
@@ -701,9 +782,18 @@ export class LexmlEtaParecer extends LitElement {
           height: 100%;
           max-height: 100%;
           min-height: 0;
+          display: flex;
+          flex-direction: column;
+          flex: 1 1 auto;
           overflow-y: auto;
           overflow-x: hidden;
           padding-top: 2px;
+        }
+        wa-tab-panel[name='dataAutoriaImpressao'] .tab-panel-content {
+          height: auto;
+          max-height: none;
+          min-height: 100%;
+          overflow: visible;
         }
         .badge-pulse {
           margin-left: 7px;
@@ -765,27 +855,28 @@ export class LexmlEtaParecer extends LitElement {
             >
               <div class="tab-panel-content">
                 <lexml-parecer-ementa
-                  .alturaEditor=${this._alturaEditor - 2}
+                  .alturaEditor=${alturaEditorPrincipal}
                 ></lexml-parecer-ementa>
               </div>
             </wa-tab-panel>
             <wa-tab-panel name="relatorio" class="overflow-hidden">
               <div class="tab-panel-content">
                 <lexml-parecer-relatorio
-                  .alturaEditor=${this._alturaEditor - 2}
+                  .alturaEditor=${alturaEditorPrincipal}
                 ></lexml-parecer-relatorio>
               </div>
             </wa-tab-panel>
             <wa-tab-panel name="analise" class="overflow-hidden">
               <div class="tab-panel-content">
                 <lexml-parecer-analise
-                  .alturaEditor=${this._alturaEditor - 2}
+                  .alturaEditor=${alturaEditorPrincipal}
                 ></lexml-parecer-analise>
               </div>
             </wa-tab-panel>
             <wa-tab-panel name="voto" class="overflow-hidden">
               <div class="tab-panel-content">
                 <lexml-parecer-voto
+                  .alturaEditor=${alturaEditorVoto}
                   .onUploadAnexo=${this.onUploadAnexo}
                   .onDeleteAnexo=${this.onDeleteAnexo}
                   .onObterAnexoBlob=${this.onObterAnexoBlob}

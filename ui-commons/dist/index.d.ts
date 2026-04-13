@@ -557,6 +557,8 @@ declare class EditorTextoRicoComponent extends LitElement {
   private _forcarLado;
   private _orientacaoPreferida;
   private _splitResizeObs?;
+  private _toolbarResizeObs?;
+  private _toolbarHeight;
   texto: string;
   notasRodape: NotaRodape[];
   registroEvento: string;
@@ -591,6 +593,8 @@ declare class EditorTextoRicoComponent extends LitElement {
   private get _posPercent();
   private get _dividerIcon();
   private get _styleSplit();
+  private _atualizarAlturaToolbar;
+  private _observarAlturaToolbar;
   showAlterarLarguraImagemModal(img: any, width: string): void;
   private showAlterarLarguraColunaModal;
   private hideAlterarLarguraColunaModal;

@@ -80,9 +80,14 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
   render(): TemplateResult {
     return html`
       <style>
+        :host {
+          display: block;
+          min-width: 0;
+        }
         .main-data-autoria-impressao {
           padding-right: 10px;
           padding-left: 10px;
+          min-width: 0;
         }
         .espaco {
           display: block;
