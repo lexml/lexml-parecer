@@ -6,7 +6,7 @@ import {
   alertarInfo,
   TipoMensagem,
   Alerta,
-} from '@ui-commons';
+} from '@lexml/lexml-ui-commons';
 import {
   AutoriaParecer,
   NotaRodape,

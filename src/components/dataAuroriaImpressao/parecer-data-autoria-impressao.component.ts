@@ -1,4 +1,4 @@
-import { Data, OpcoesImpressaoComponent } from '@ui-commons';
+import { Data, OpcoesImpressaoComponent } from '@lexml/lexml-ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import {

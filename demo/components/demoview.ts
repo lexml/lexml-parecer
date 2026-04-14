@@ -10,7 +10,7 @@ import {
 import { LexmlEtaParecer } from '../../src/components/parecer/lexml-eta-parecer.component.js';
 import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
 import { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
-import { Comissao, Destino, Revisao, Usuario } from '@ui-commons';
+import { Comissao, Destino, Revisao, Usuario } from '@lexml/lexml-ui-commons';
 import { TipoDocumento } from '../../src/types/tipo-documento.js';
 import {
   RevisaoRelatorio,

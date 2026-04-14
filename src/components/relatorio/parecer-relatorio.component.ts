@@ -1,4 +1,4 @@
-import { Usuario } from '@ui-commons';
+import { Usuario } from '@lexml/lexml-ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { NotaRodape } from '../../models/diversos.model.js';

@@ -35,5 +35,5 @@ export { LexmlParecerDataAutoriaImpressao } from './components/dataAuroriaImpres
 export { LexmlParecerAvisos } from './components/avisos/parecer-avisos.component.js';
 export { LexmlParecerAutoriaComponent } from './components/autoria/parecer-autoria.component.js';
 export { LexmlParecerConfig } from './config/lexml-parecer-config.js';
-export { Usuario, Comissao, Destino } from '@ui-commons';
+export { Usuario, Comissao, Destino } from '@lexml/lexml-ui-commons';
 export { Parecer, ProposicaoReferenciada } from './models/diversos.model.js';

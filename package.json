@@ -3,7 +3,7 @@
   "description": "Webcomponent lexml-eta-parecer following open-wc recommendations",
   "license": "MIT",
   "author": "lexml-eta-parecer",
-  "version": "0.0.0",
+  "version": "0.0.0-dev.20260414143024",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -26,6 +26,7 @@
     "quill": "^1.3.7"
   },
   "devDependencies": {
+    "@lexml/lexml-ui-commons": "file:ui-commons/lexml-lexml-ui-commons-0.0.0-dev.20260414152932.tgz",
     "@awesome.me/webawesome": "^3.0.0-beta.4",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@open-wc/eslint-config": "^12.0.3",

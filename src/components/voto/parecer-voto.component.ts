@@ -12,7 +12,7 @@ import {
   TipoDocumento,
   TipoDocumentoLabel,
 } from '../../types/tipo-documento.js';
-import { alertarInfo, Usuario } from '@ui-commons';
+import { alertarInfo, Usuario } from '@lexml/lexml-ui-commons';
 import { NotaRodape } from '../../models/diversos.model.js';
 import { RevisaoVoto } from '../../models/revisao.model.js';
 

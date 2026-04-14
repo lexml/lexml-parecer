@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-use-before-define */
-import { Destino, Revisao } from '@ui-commons';
+import { Destino, Revisao } from '@lexml/lexml-ui-commons';
 import { AnexoParecer } from './anexo-parecer.model.js';
 
 export class Parecer {

@@ -1,6 +1,6 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
-import { Alerta } from '@ui-commons';
+import { Alerta } from '@lexml/lexml-ui-commons';
 
 @customElement('lexml-parecer-avisos')
 export class LexmlParecerAvisos extends LitElement {

@@ -1,4 +1,4 @@
-import { Destino } from '@ui-commons';
+import { Destino } from '@lexml/lexml-ui-commons';
 import { getAnoAtual } from '../util/date-util.js';
 import { ProposicaoReferenciada } from './diversos.model.js';
 
