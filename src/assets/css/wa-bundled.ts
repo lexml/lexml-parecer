@@ -1,4 +1,3 @@
-
 /* eslint-disable no-useless-escape */
 /**
  * ARQUIVO GERADO AUTOMATICAMENTE via build-styles.cjs
@@ -7,1005 +6,6 @@
 
 // 1. O TEMA (shoelace)
 export const waThemeString = `
-
-@layer wa-native, wa-utilities, wa-color-palette, wa-color-variant, wa-theme, wa-theme-dimension, wa-theme-overrides;
-/* Order of precedence for all cascade layers in Web Awesome */
-/* Rules shared by all palettes */
-@layer wa-color-variant {
-  :where(.lexml-default-ds), 
-  .lexml-default-ds .wa-brand-blue {
-    --wa-color-brand-95: var(--wa-color-blue-95);
-    --wa-color-brand-90: var(--wa-color-blue-90);
-    --wa-color-brand-80: var(--wa-color-blue-80);
-    --wa-color-brand-70: var(--wa-color-blue-70);
-    --wa-color-brand-60: var(--wa-color-blue-60);
-    --wa-color-brand-50: var(--wa-color-blue-50);
-    --wa-color-brand-40: var(--wa-color-blue-40);
-    --wa-color-brand-30: var(--wa-color-blue-30);
-    --wa-color-brand-20: var(--wa-color-blue-20);
-    --wa-color-brand-10: var(--wa-color-blue-10);
-    --wa-color-brand-05: var(--wa-color-blue-05);
-    --wa-color-brand: var(--wa-color-blue);
-    --wa-color-brand-on: var(--wa-color-blue-on);
-  }
-
-  .lexml-default-ds .wa-brand-red {
-    --wa-color-brand-95: var(--wa-color-red-95);
-    --wa-color-brand-90: var(--wa-color-red-90);
-    --wa-color-brand-80: var(--wa-color-red-80);
-    --wa-color-brand-70: var(--wa-color-red-70);
-    --wa-color-brand-60: var(--wa-color-red-60);
-    --wa-color-brand-50: var(--wa-color-red-50);
-    --wa-color-brand-40: var(--wa-color-red-40);
-    --wa-color-brand-30: var(--wa-color-red-30);
-    --wa-color-brand-20: var(--wa-color-red-20);
-    --wa-color-brand-10: var(--wa-color-red-10);
-    --wa-color-brand-05: var(--wa-color-red-05);
-    --wa-color-brand: var(--wa-color-red);
-    --wa-color-brand-on: var(--wa-color-red-on);
-  }
-
-  .lexml-default-ds .wa-brand-orange {
-    --wa-color-brand-95: var(--wa-color-orange-95);
-    --wa-color-brand-90: var(--wa-color-orange-90);
-    --wa-color-brand-80: var(--wa-color-orange-80);
-    --wa-color-brand-70: var(--wa-color-orange-70);
-    --wa-color-brand-60: var(--wa-color-orange-60);
-    --wa-color-brand-50: var(--wa-color-orange-50);
-    --wa-color-brand-40: var(--wa-color-orange-40);
-    --wa-color-brand-30: var(--wa-color-orange-30);
-    --wa-color-brand-20: var(--wa-color-orange-20);
-    --wa-color-brand-10: var(--wa-color-orange-10);
-    --wa-color-brand-05: var(--wa-color-orange-05);
-    --wa-color-brand: var(--wa-color-orange);
-    --wa-color-brand-on: var(--wa-color-orange-on);
-  }
-
-  .lexml-default-ds .wa-brand-yellow {
-    --wa-color-brand-95: var(--wa-color-yellow-95);
-    --wa-color-brand-90: var(--wa-color-yellow-90);
-    --wa-color-brand-80: var(--wa-color-yellow-80);
-    --wa-color-brand-70: var(--wa-color-yellow-70);
-    --wa-color-brand-60: var(--wa-color-yellow-60);
-    --wa-color-brand-50: var(--wa-color-yellow-50);
-    --wa-color-brand-40: var(--wa-color-yellow-40);
-    --wa-color-brand-30: var(--wa-color-yellow-30);
-    --wa-color-brand-20: var(--wa-color-yellow-20);
-    --wa-color-brand-10: var(--wa-color-yellow-10);
-    --wa-color-brand-05: var(--wa-color-yellow-05);
-    --wa-color-brand: var(--wa-color-yellow);
-    --wa-color-brand-on: var(--wa-color-yellow-on);
-  }
-
-  .lexml-default-ds .wa-brand-green {
-    --wa-color-brand-95: var(--wa-color-green-95);
-    --wa-color-brand-90: var(--wa-color-green-90);
-    --wa-color-brand-80: var(--wa-color-green-80);
-    --wa-color-brand-70: var(--wa-color-green-70);
-    --wa-color-brand-60: var(--wa-color-green-60);
-    --wa-color-brand-50: var(--wa-color-green-50);
-    --wa-color-brand-40: var(--wa-color-green-40);
-    --wa-color-brand-30: var(--wa-color-green-30);
-    --wa-color-brand-20: var(--wa-color-green-20);
-    --wa-color-brand-10: var(--wa-color-green-10);
-    --wa-color-brand-05: var(--wa-color-green-05);
-    --wa-color-brand: var(--wa-color-green);
-    --wa-color-brand-on: var(--wa-color-green-on);
-  }
-
-  .lexml-default-ds .wa-brand-cyan {
-    --wa-color-brand-95: var(--wa-color-cyan-95);
-    --wa-color-brand-90: var(--wa-color-cyan-90);
-    --wa-color-brand-80: var(--wa-color-cyan-80);
-    --wa-color-brand-70: var(--wa-color-cyan-70);
-    --wa-color-brand-60: var(--wa-color-cyan-60);
-    --wa-color-brand-50: var(--wa-color-cyan-50);
-    --wa-color-brand-40: var(--wa-color-cyan-40);
-    --wa-color-brand-30: var(--wa-color-cyan-30);
-    --wa-color-brand-20: var(--wa-color-cyan-20);
-    --wa-color-brand-10: var(--wa-color-cyan-10);
-    --wa-color-brand-05: var(--wa-color-cyan-05);
-    --wa-color-brand: var(--wa-color-cyan);
-    --wa-color-brand-on: var(--wa-color-cyan-on);
-  }
-
-  .lexml-default-ds .wa-brand-indigo {
-    --wa-color-brand-95: var(--wa-color-indigo-95);
-    --wa-color-brand-90: var(--wa-color-indigo-90);
-    --wa-color-brand-80: var(--wa-color-indigo-80);
-    --wa-color-brand-70: var(--wa-color-indigo-70);
-    --wa-color-brand-60: var(--wa-color-indigo-60);
-    --wa-color-brand-50: var(--wa-color-indigo-50);
-    --wa-color-brand-40: var(--wa-color-indigo-40);
-    --wa-color-brand-30: var(--wa-color-indigo-30);
-    --wa-color-brand-20: var(--wa-color-indigo-20);
-    --wa-color-brand-10: var(--wa-color-indigo-10);
-    --wa-color-brand-05: var(--wa-color-indigo-05);
-    --wa-color-brand: var(--wa-color-indigo);
-    --wa-color-brand-on: var(--wa-color-indigo-on);
-  }
-
-  .lexml-default-ds .wa-brand-purple {
-    --wa-color-brand-95: var(--wa-color-purple-95);
-    --wa-color-brand-90: var(--wa-color-purple-90);
-    --wa-color-brand-80: var(--wa-color-purple-80);
-    --wa-color-brand-70: var(--wa-color-purple-70);
-    --wa-color-brand-60: var(--wa-color-purple-60);
-    --wa-color-brand-50: var(--wa-color-purple-50);
-    --wa-color-brand-40: var(--wa-color-purple-40);
-    --wa-color-brand-30: var(--wa-color-purple-30);
-    --wa-color-brand-20: var(--wa-color-purple-20);
-    --wa-color-brand-10: var(--wa-color-purple-10);
-    --wa-color-brand-05: var(--wa-color-purple-05);
-    --wa-color-brand: var(--wa-color-purple);
-    --wa-color-brand-on: var(--wa-color-purple-on);
-  }
-
-  .lexml-default-ds .wa-brand-pink {
-    --wa-color-brand-95: var(--wa-color-pink-95);
-    --wa-color-brand-90: var(--wa-color-pink-90);
-    --wa-color-brand-80: var(--wa-color-pink-80);
-    --wa-color-brand-70: var(--wa-color-pink-70);
-    --wa-color-brand-60: var(--wa-color-pink-60);
-    --wa-color-brand-50: var(--wa-color-pink-50);
-    --wa-color-brand-40: var(--wa-color-pink-40);
-    --wa-color-brand-30: var(--wa-color-pink-30);
-    --wa-color-brand-20: var(--wa-color-pink-20);
-    --wa-color-brand-10: var(--wa-color-pink-10);
-    --wa-color-brand-05: var(--wa-color-pink-05);
-    --wa-color-brand: var(--wa-color-pink);
-    --wa-color-brand-on: var(--wa-color-pink-on);
-  }
-
-  .lexml-default-ds .wa-brand-gray {
-    --wa-color-brand-95: var(--wa-color-gray-95);
-    --wa-color-brand-90: var(--wa-color-gray-90);
-    --wa-color-brand-80: var(--wa-color-gray-80);
-    --wa-color-brand-70: var(--wa-color-gray-70);
-    --wa-color-brand-60: var(--wa-color-gray-60);
-    --wa-color-brand-50: var(--wa-color-gray-50);
-    --wa-color-brand-40: var(--wa-color-gray-40);
-    --wa-color-brand-30: var(--wa-color-gray-30);
-    --wa-color-brand-20: var(--wa-color-gray-20);
-    --wa-color-brand-10: var(--wa-color-gray-10);
-    --wa-color-brand-05: var(--wa-color-gray-05);
-    --wa-color-brand: var(--wa-color-gray);
-    --wa-color-brand-on: var(--wa-color-gray-on);
-  }
-}
-@layer wa-color-variant {
-  :where(.lexml-default-ds), 
-  .lexml-default-ds .wa-neutral-gray {
-    --wa-color-neutral-95: var(--wa-color-gray-95);
-    --wa-color-neutral-90: var(--wa-color-gray-90);
-    --wa-color-neutral-80: var(--wa-color-gray-80);
-    --wa-color-neutral-70: var(--wa-color-gray-70);
-    --wa-color-neutral-60: var(--wa-color-gray-60);
-    --wa-color-neutral-50: var(--wa-color-gray-50);
-    --wa-color-neutral-40: var(--wa-color-gray-40);
-    --wa-color-neutral-30: var(--wa-color-gray-30);
-    --wa-color-neutral-20: var(--wa-color-gray-20);
-    --wa-color-neutral-10: var(--wa-color-gray-10);
-    --wa-color-neutral-05: var(--wa-color-gray-05);
-    --wa-color-neutral: var(--wa-color-gray);
-    --wa-color-neutral-on: var(--wa-color-gray-on);
-  }
-
-  .lexml-default-ds .wa-neutral-red {
-    --wa-color-neutral-95: var(--wa-color-red-95);
-    --wa-color-neutral-90: var(--wa-color-red-90);
-    --wa-color-neutral-80: var(--wa-color-red-80);
-    --wa-color-neutral-70: var(--wa-color-red-70);
-    --wa-color-neutral-60: var(--wa-color-red-60);
-    --wa-color-neutral-50: var(--wa-color-red-50);
-    --wa-color-neutral-40: var(--wa-color-red-40);
-    --wa-color-neutral-30: var(--wa-color-red-30);
-    --wa-color-neutral-20: var(--wa-color-red-20);
-    --wa-color-neutral-10: var(--wa-color-red-10);
-    --wa-color-neutral-05: var(--wa-color-red-05);
-    --wa-color-neutral: var(--wa-color-red);
-    --wa-color-neutral-on: var(--wa-color-red-on);
-  }
-
-  .lexml-default-ds .wa-neutral-orange {
-    --wa-color-neutral-95: var(--wa-color-orange-95);
-    --wa-color-neutral-90: var(--wa-color-orange-90);
-    --wa-color-neutral-80: var(--wa-color-orange-80);
-    --wa-color-neutral-70: var(--wa-color-orange-70);
-    --wa-color-neutral-60: var(--wa-color-orange-60);
-    --wa-color-neutral-50: var(--wa-color-orange-50);
-    --wa-color-neutral-40: var(--wa-color-orange-40);
-    --wa-color-neutral-30: var(--wa-color-orange-30);
-    --wa-color-neutral-20: var(--wa-color-orange-20);
-    --wa-color-neutral-10: var(--wa-color-orange-10);
-    --wa-color-neutral-05: var(--wa-color-orange-05);
-    --wa-color-neutral: var(--wa-color-orange);
-    --wa-color-neutral-on: var(--wa-color-orange-on);
-  }
-
-  .lexml-default-ds .wa-neutral-yellow {
-    --wa-color-neutral-95: var(--wa-color-yellow-95);
-    --wa-color-neutral-90: var(--wa-color-yellow-90);
-    --wa-color-neutral-80: var(--wa-color-yellow-80);
-    --wa-color-neutral-70: var(--wa-color-yellow-70);
-    --wa-color-neutral-60: var(--wa-color-yellow-60);
-    --wa-color-neutral-50: var(--wa-color-yellow-50);
-    --wa-color-neutral-40: var(--wa-color-yellow-40);
-    --wa-color-neutral-30: var(--wa-color-yellow-30);
-    --wa-color-neutral-20: var(--wa-color-yellow-20);
-    --wa-color-neutral-10: var(--wa-color-yellow-10);
-    --wa-color-neutral-05: var(--wa-color-yellow-05);
-    --wa-color-neutral: var(--wa-color-yellow);
-    --wa-color-neutral-on: var(--wa-color-yellow-on);
-  }
-
-  .lexml-default-ds .wa-neutral-green {
-    --wa-color-neutral-95: var(--wa-color-green-95);
-    --wa-color-neutral-90: var(--wa-color-green-90);
-    --wa-color-neutral-80: var(--wa-color-green-80);
-    --wa-color-neutral-70: var(--wa-color-green-70);
-    --wa-color-neutral-60: var(--wa-color-green-60);
-    --wa-color-neutral-50: var(--wa-color-green-50);
-    --wa-color-neutral-40: var(--wa-color-green-40);
-    --wa-color-neutral-30: var(--wa-color-green-30);
-    --wa-color-neutral-20: var(--wa-color-green-20);
-    --wa-color-neutral-10: var(--wa-color-green-10);
-    --wa-color-neutral-05: var(--wa-color-green-05);
-    --wa-color-neutral: var(--wa-color-green);
-    --wa-color-neutral-on: var(--wa-color-green-on);
-  }
-
-  .lexml-default-ds .wa-neutral-cyan {
-    --wa-color-neutral-95: var(--wa-color-cyan-95);
-    --wa-color-neutral-90: var(--wa-color-cyan-90);
-    --wa-color-neutral-80: var(--wa-color-cyan-80);
-    --wa-color-neutral-70: var(--wa-color-cyan-70);
-    --wa-color-neutral-60: var(--wa-color-cyan-60);
-    --wa-color-neutral-50: var(--wa-color-cyan-50);
-    --wa-color-neutral-40: var(--wa-color-cyan-40);
-    --wa-color-neutral-30: var(--wa-color-cyan-30);
-    --wa-color-neutral-20: var(--wa-color-cyan-20);
-    --wa-color-neutral-10: var(--wa-color-cyan-10);
-    --wa-color-neutral-05: var(--wa-color-cyan-05);
-    --wa-color-neutral: var(--wa-color-cyan);
-    --wa-color-neutral-on: var(--wa-color-cyan-on);
-  }
-
-  .lexml-default-ds .wa-neutral-blue {
-    --wa-color-neutral-95: var(--wa-color-blue-95);
-    --wa-color-neutral-90: var(--wa-color-blue-90);
-    --wa-color-neutral-80: var(--wa-color-blue-80);
-    --wa-color-neutral-70: var(--wa-color-blue-70);
-    --wa-color-neutral-60: var(--wa-color-blue-60);
-    --wa-color-neutral-50: var(--wa-color-blue-50);
-    --wa-color-neutral-40: var(--wa-color-blue-40);
-    --wa-color-neutral-30: var(--wa-color-blue-30);
-    --wa-color-neutral-20: var(--wa-color-blue-20);
-    --wa-color-neutral-10: var(--wa-color-blue-10);
-    --wa-color-neutral-05: var(--wa-color-blue-05);
-    --wa-color-neutral: var(--wa-color-blue);
-    --wa-color-neutral-on: var(--wa-color-blue-on);
-  }
-
-  .lexml-default-ds .wa-neutral-indigo {
-    --wa-color-neutral-95: var(--wa-color-indigo-95);
-    --wa-color-neutral-90: var(--wa-color-indigo-90);
-    --wa-color-neutral-80: var(--wa-color-indigo-80);
-    --wa-color-neutral-70: var(--wa-color-indigo-70);
-    --wa-color-neutral-60: var(--wa-color-indigo-60);
-    --wa-color-neutral-50: var(--wa-color-indigo-50);
-    --wa-color-neutral-40: var(--wa-color-indigo-40);
-    --wa-color-neutral-30: var(--wa-color-indigo-30);
-    --wa-color-neutral-20: var(--wa-color-indigo-20);
-    --wa-color-neutral-10: var(--wa-color-indigo-10);
-    --wa-color-neutral-05: var(--wa-color-indigo-05);
-    --wa-color-neutral: var(--wa-color-indigo);
-    --wa-color-neutral-on: var(--wa-color-indigo-on);
-  }
-
-  .lexml-default-ds .wa-neutral-purple {
-    --wa-color-neutral-95: var(--wa-color-purple-95);
-    --wa-color-neutral-90: var(--wa-color-purple-90);
-    --wa-color-neutral-80: var(--wa-color-purple-80);
-    --wa-color-neutral-70: var(--wa-color-purple-70);
-    --wa-color-neutral-60: var(--wa-color-purple-60);
-    --wa-color-neutral-50: var(--wa-color-purple-50);
-    --wa-color-neutral-40: var(--wa-color-purple-40);
-    --wa-color-neutral-30: var(--wa-color-purple-30);
-    --wa-color-neutral-20: var(--wa-color-purple-20);
-    --wa-color-neutral-10: var(--wa-color-purple-10);
-    --wa-color-neutral-05: var(--wa-color-purple-05);
-    --wa-color-neutral: var(--wa-color-purple);
-    --wa-color-neutral-on: var(--wa-color-purple-on);
-  }
-
-  .lexml-default-ds .wa-neutral-pink {
-    --wa-color-neutral-95: var(--wa-color-pink-95);
-    --wa-color-neutral-90: var(--wa-color-pink-90);
-    --wa-color-neutral-80: var(--wa-color-pink-80);
-    --wa-color-neutral-70: var(--wa-color-pink-70);
-    --wa-color-neutral-60: var(--wa-color-pink-60);
-    --wa-color-neutral-50: var(--wa-color-pink-50);
-    --wa-color-neutral-40: var(--wa-color-pink-40);
-    --wa-color-neutral-30: var(--wa-color-pink-30);
-    --wa-color-neutral-20: var(--wa-color-pink-20);
-    --wa-color-neutral-10: var(--wa-color-pink-10);
-    --wa-color-neutral-05: var(--wa-color-pink-05);
-    --wa-color-neutral: var(--wa-color-pink);
-    --wa-color-neutral-on: var(--wa-color-pink-on);
-  }
-}
-@layer wa-color-variant {
-  :where(.lexml-default-ds), 
-  .lexml-default-ds .wa-success-green {
-    --wa-color-success-95: var(--wa-color-green-95);
-    --wa-color-success-90: var(--wa-color-green-90);
-    --wa-color-success-80: var(--wa-color-green-80);
-    --wa-color-success-70: var(--wa-color-green-70);
-    --wa-color-success-60: var(--wa-color-green-60);
-    --wa-color-success-50: var(--wa-color-green-50);
-    --wa-color-success-40: var(--wa-color-green-40);
-    --wa-color-success-30: var(--wa-color-green-30);
-    --wa-color-success-20: var(--wa-color-green-20);
-    --wa-color-success-10: var(--wa-color-green-10);
-    --wa-color-success-05: var(--wa-color-green-05);
-    --wa-color-success: var(--wa-color-green);
-    --wa-color-success-on: var(--wa-color-green-on);
-  }
-
-  .lexml-default-ds .wa-success-red {
-    --wa-color-success-95: var(--wa-color-red-95);
-    --wa-color-success-90: var(--wa-color-red-90);
-    --wa-color-success-80: var(--wa-color-red-80);
-    --wa-color-success-70: var(--wa-color-red-70);
-    --wa-color-success-60: var(--wa-color-red-60);
-    --wa-color-success-50: var(--wa-color-red-50);
-    --wa-color-success-40: var(--wa-color-red-40);
-    --wa-color-success-30: var(--wa-color-red-30);
-    --wa-color-success-20: var(--wa-color-red-20);
-    --wa-color-success-10: var(--wa-color-red-10);
-    --wa-color-success-05: var(--wa-color-red-05);
-    --wa-color-success: var(--wa-color-red);
-    --wa-color-success-on: var(--wa-color-red-on);
-  }
-
-  .lexml-default-ds .wa-success-orange {
-    --wa-color-success-95: var(--wa-color-orange-95);
-    --wa-color-success-90: var(--wa-color-orange-90);
-    --wa-color-success-80: var(--wa-color-orange-80);
-    --wa-color-success-70: var(--wa-color-orange-70);
-    --wa-color-success-60: var(--wa-color-orange-60);
-    --wa-color-success-50: var(--wa-color-orange-50);
-    --wa-color-success-40: var(--wa-color-orange-40);
-    --wa-color-success-30: var(--wa-color-orange-30);
-    --wa-color-success-20: var(--wa-color-orange-20);
-    --wa-color-success-10: var(--wa-color-orange-10);
-    --wa-color-success-05: var(--wa-color-orange-05);
-    --wa-color-success: var(--wa-color-orange);
-    --wa-color-success-on: var(--wa-color-orange-on);
-  }
-
-  .lexml-default-ds .wa-success-yellow {
-    --wa-color-success-95: var(--wa-color-yellow-95);
-    --wa-color-success-90: var(--wa-color-yellow-90);
-    --wa-color-success-80: var(--wa-color-yellow-80);
-    --wa-color-success-70: var(--wa-color-yellow-70);
-    --wa-color-success-60: var(--wa-color-yellow-60);
-    --wa-color-success-50: var(--wa-color-yellow-50);
-    --wa-color-success-40: var(--wa-color-yellow-40);
-    --wa-color-success-30: var(--wa-color-yellow-30);
-    --wa-color-success-20: var(--wa-color-yellow-20);
-    --wa-color-success-10: var(--wa-color-yellow-10);
-    --wa-color-success-05: var(--wa-color-yellow-05);
-    --wa-color-success: var(--wa-color-yellow);
-    --wa-color-success-on: var(--wa-color-yellow-on);
-  }
-
-  .lexml-default-ds .wa-success-cyan {
-    --wa-color-success-95: var(--wa-color-cyan-95);
-    --wa-color-success-90: var(--wa-color-cyan-90);
-    --wa-color-success-80: var(--wa-color-cyan-80);
-    --wa-color-success-70: var(--wa-color-cyan-70);
-    --wa-color-success-60: var(--wa-color-cyan-60);
-    --wa-color-success-50: var(--wa-color-cyan-50);
-    --wa-color-success-40: var(--wa-color-cyan-40);
-    --wa-color-success-30: var(--wa-color-cyan-30);
-    --wa-color-success-20: var(--wa-color-cyan-20);
-    --wa-color-success-10: var(--wa-color-cyan-10);
-    --wa-color-success-05: var(--wa-color-cyan-05);
-    --wa-color-success: var(--wa-color-cyan);
-    --wa-color-success-on: var(--wa-color-cyan-on);
-  }
-
-  .lexml-default-ds .wa-success-blue {
-    --wa-color-success-95: var(--wa-color-blue-95);
-    --wa-color-success-90: var(--wa-color-blue-90);
-    --wa-color-success-80: var(--wa-color-blue-80);
-    --wa-color-success-70: var(--wa-color-blue-70);
-    --wa-color-success-60: var(--wa-color-blue-60);
-    --wa-color-success-50: var(--wa-color-blue-50);
-    --wa-color-success-40: var(--wa-color-blue-40);
-    --wa-color-success-30: var(--wa-color-blue-30);
-    --wa-color-success-20: var(--wa-color-blue-20);
-    --wa-color-success-10: var(--wa-color-blue-10);
-    --wa-color-success-05: var(--wa-color-blue-05);
-    --wa-color-success: var(--wa-color-blue);
-    --wa-color-success-on: var(--wa-color-blue-on);
-  }
-
-  .lexml-default-ds .wa-success-indigo {
-    --wa-color-success-95: var(--wa-color-indigo-95);
-    --wa-color-success-90: var(--wa-color-indigo-90);
-    --wa-color-success-80: var(--wa-color-indigo-80);
-    --wa-color-success-70: var(--wa-color-indigo-70);
-    --wa-color-success-60: var(--wa-color-indigo-60);
-    --wa-color-success-50: var(--wa-color-indigo-50);
-    --wa-color-success-40: var(--wa-color-indigo-40);
-    --wa-color-success-30: var(--wa-color-indigo-30);
-    --wa-color-success-20: var(--wa-color-indigo-20);
-    --wa-color-success-10: var(--wa-color-indigo-10);
-    --wa-color-success-05: var(--wa-color-indigo-05);
-    --wa-color-success: var(--wa-color-indigo);
-    --wa-color-success-on: var(--wa-color-indigo-on);
-  }
-
-  .lexml-default-ds .wa-success-purple {
-    --wa-color-success-95: var(--wa-color-purple-95);
-    --wa-color-success-90: var(--wa-color-purple-90);
-    --wa-color-success-80: var(--wa-color-purple-80);
-    --wa-color-success-70: var(--wa-color-purple-70);
-    --wa-color-success-60: var(--wa-color-purple-60);
-    --wa-color-success-50: var(--wa-color-purple-50);
-    --wa-color-success-40: var(--wa-color-purple-40);
-    --wa-color-success-30: var(--wa-color-purple-30);
-    --wa-color-success-20: var(--wa-color-purple-20);
-    --wa-color-success-10: var(--wa-color-purple-10);
-    --wa-color-success-05: var(--wa-color-purple-05);
-    --wa-color-success: var(--wa-color-purple);
-    --wa-color-success-on: var(--wa-color-purple-on);
-  }
-
-  .lexml-default-ds .wa-success-pink {
-    --wa-color-success-95: var(--wa-color-pink-95);
-    --wa-color-success-90: var(--wa-color-pink-90);
-    --wa-color-success-80: var(--wa-color-pink-80);
-    --wa-color-success-70: var(--wa-color-pink-70);
-    --wa-color-success-60: var(--wa-color-pink-60);
-    --wa-color-success-50: var(--wa-color-pink-50);
-    --wa-color-success-40: var(--wa-color-pink-40);
-    --wa-color-success-30: var(--wa-color-pink-30);
-    --wa-color-success-20: var(--wa-color-pink-20);
-    --wa-color-success-10: var(--wa-color-pink-10);
-    --wa-color-success-05: var(--wa-color-pink-05);
-    --wa-color-success: var(--wa-color-pink);
-    --wa-color-success-on: var(--wa-color-pink-on);
-  }
-
-  .lexml-default-ds .wa-success-gray {
-    --wa-color-success-95: var(--wa-color-gray-95);
-    --wa-color-success-90: var(--wa-color-gray-90);
-    --wa-color-success-80: var(--wa-color-gray-80);
-    --wa-color-success-70: var(--wa-color-gray-70);
-    --wa-color-success-60: var(--wa-color-gray-60);
-    --wa-color-success-50: var(--wa-color-gray-50);
-    --wa-color-success-40: var(--wa-color-gray-40);
-    --wa-color-success-30: var(--wa-color-gray-30);
-    --wa-color-success-20: var(--wa-color-gray-20);
-    --wa-color-success-10: var(--wa-color-gray-10);
-    --wa-color-success-05: var(--wa-color-gray-05);
-    --wa-color-success: var(--wa-color-gray);
-    --wa-color-success-on: var(--wa-color-gray-on);
-  }
-}
-@layer wa-color-variant {
-  :where(.lexml-default-ds), 
-  .lexml-default-ds .wa-warning-yellow {
-    --wa-color-warning-95: var(--wa-color-yellow-95);
-    --wa-color-warning-90: var(--wa-color-yellow-90);
-    --wa-color-warning-80: var(--wa-color-yellow-80);
-    --wa-color-warning-70: var(--wa-color-yellow-70);
-    --wa-color-warning-60: var(--wa-color-yellow-60);
-    --wa-color-warning-50: var(--wa-color-yellow-50);
-    --wa-color-warning-40: var(--wa-color-yellow-40);
-    --wa-color-warning-30: var(--wa-color-yellow-30);
-    --wa-color-warning-20: var(--wa-color-yellow-20);
-    --wa-color-warning-10: var(--wa-color-yellow-10);
-    --wa-color-warning-05: var(--wa-color-yellow-05);
-    --wa-color-warning: var(--wa-color-yellow);
-    --wa-color-warning-on: var(--wa-color-yellow-on);
-  }
-
-  .lexml-default-ds .wa-warning-red {
-    --wa-color-warning-95: var(--wa-color-red-95);
-    --wa-color-warning-90: var(--wa-color-red-90);
-    --wa-color-warning-80: var(--wa-color-red-80);
-    --wa-color-warning-70: var(--wa-color-red-70);
-    --wa-color-warning-60: var(--wa-color-red-60);
-    --wa-color-warning-50: var(--wa-color-red-50);
-    --wa-color-warning-40: var(--wa-color-red-40);
-    --wa-color-warning-30: var(--wa-color-red-30);
-    --wa-color-warning-20: var(--wa-color-red-20);
-    --wa-color-warning-10: var(--wa-color-red-10);
-    --wa-color-warning-05: var(--wa-color-red-05);
-    --wa-color-warning: var(--wa-color-red);
-    --wa-color-warning-on: var(--wa-color-red-on);
-  }
-
-  .lexml-default-ds .wa-warning-orange {
-    --wa-color-warning-95: var(--wa-color-orange-95);
-    --wa-color-warning-90: var(--wa-color-orange-90);
-    --wa-color-warning-80: var(--wa-color-orange-80);
-    --wa-color-warning-70: var(--wa-color-orange-70);
-    --wa-color-warning-60: var(--wa-color-orange-60);
-    --wa-color-warning-50: var(--wa-color-orange-50);
-    --wa-color-warning-40: var(--wa-color-orange-40);
-    --wa-color-warning-30: var(--wa-color-orange-30);
-    --wa-color-warning-20: var(--wa-color-orange-20);
-    --wa-color-warning-10: var(--wa-color-orange-10);
-    --wa-color-warning-05: var(--wa-color-orange-05);
-    --wa-color-warning: var(--wa-color-orange);
-    --wa-color-warning-on: var(--wa-color-orange-on);
-  }
-
-  .lexml-default-ds .wa-warning-green {
-    --wa-color-warning-95: var(--wa-color-green-95);
-    --wa-color-warning-90: var(--wa-color-green-90);
-    --wa-color-warning-80: var(--wa-color-green-80);
-    --wa-color-warning-70: var(--wa-color-green-70);
-    --wa-color-warning-60: var(--wa-color-green-60);
-    --wa-color-warning-50: var(--wa-color-green-50);
-    --wa-color-warning-40: var(--wa-color-green-40);
-    --wa-color-warning-30: var(--wa-color-green-30);
-    --wa-color-warning-20: var(--wa-color-green-20);
-    --wa-color-warning-10: var(--wa-color-green-10);
-    --wa-color-warning-05: var(--wa-color-green-05);
-    --wa-color-warning: var(--wa-color-green);
-    --wa-color-warning-on: var(--wa-color-green-on);
-  }
-
-  .lexml-default-ds .wa-warning-cyan {
-    --wa-color-warning-95: var(--wa-color-cyan-95);
-    --wa-color-warning-90: var(--wa-color-cyan-90);
-    --wa-color-warning-80: var(--wa-color-cyan-80);
-    --wa-color-warning-70: var(--wa-color-cyan-70);
-    --wa-color-warning-60: var(--wa-color-cyan-60);
-    --wa-color-warning-50: var(--wa-color-cyan-50);
-    --wa-color-warning-40: var(--wa-color-cyan-40);
-    --wa-color-warning-30: var(--wa-color-cyan-30);
-    --wa-color-warning-20: var(--wa-color-cyan-20);
-    --wa-color-warning-10: var(--wa-color-cyan-10);
-    --wa-color-warning-05: var(--wa-color-cyan-05);
-    --wa-color-warning: var(--wa-color-cyan);
-    --wa-color-warning-on: var(--wa-color-cyan-on);
-  }
-
-  .lexml-default-ds .wa-warning-blue {
-    --wa-color-warning-95: var(--wa-color-blue-95);
-    --wa-color-warning-90: var(--wa-color-blue-90);
-    --wa-color-warning-80: var(--wa-color-blue-80);
-    --wa-color-warning-70: var(--wa-color-blue-70);
-    --wa-color-warning-60: var(--wa-color-blue-60);
-    --wa-color-warning-50: var(--wa-color-blue-50);
-    --wa-color-warning-40: var(--wa-color-blue-40);
-    --wa-color-warning-30: var(--wa-color-blue-30);
-    --wa-color-warning-20: var(--wa-color-blue-20);
-    --wa-color-warning-10: var(--wa-color-blue-10);
-    --wa-color-warning-05: var(--wa-color-blue-05);
-    --wa-color-warning: var(--wa-color-blue);
-    --wa-color-warning-on: var(--wa-color-blue-on);
-  }
-
-  .lexml-default-ds .wa-warning-indigo {
-    --wa-color-warning-95: var(--wa-color-indigo-95);
-    --wa-color-warning-90: var(--wa-color-indigo-90);
-    --wa-color-warning-80: var(--wa-color-indigo-80);
-    --wa-color-warning-70: var(--wa-color-indigo-70);
-    --wa-color-warning-60: var(--wa-color-indigo-60);
-    --wa-color-warning-50: var(--wa-color-indigo-50);
-    --wa-color-warning-40: var(--wa-color-indigo-40);
-    --wa-color-warning-30: var(--wa-color-indigo-30);
-    --wa-color-warning-20: var(--wa-color-indigo-20);
-    --wa-color-warning-10: var(--wa-color-indigo-10);
-    --wa-color-warning-05: var(--wa-color-indigo-05);
-    --wa-color-warning: var(--wa-color-indigo);
-    --wa-color-warning-on: var(--wa-color-indigo-on);
-  }
-
-  .lexml-default-ds .wa-warning-purple {
-    --wa-color-warning-95: var(--wa-color-purple-95);
-    --wa-color-warning-90: var(--wa-color-purple-90);
-    --wa-color-warning-80: var(--wa-color-purple-80);
-    --wa-color-warning-70: var(--wa-color-purple-70);
-    --wa-color-warning-60: var(--wa-color-purple-60);
-    --wa-color-warning-50: var(--wa-color-purple-50);
-    --wa-color-warning-40: var(--wa-color-purple-40);
-    --wa-color-warning-30: var(--wa-color-purple-30);
-    --wa-color-warning-20: var(--wa-color-purple-20);
-    --wa-color-warning-10: var(--wa-color-purple-10);
-    --wa-color-warning-05: var(--wa-color-purple-05);
-    --wa-color-warning: var(--wa-color-purple);
-    --wa-color-warning-on: var(--wa-color-purple-on);
-  }
-
-  .lexml-default-ds .wa-warning-pink {
-    --wa-color-warning-95: var(--wa-color-pink-95);
-    --wa-color-warning-90: var(--wa-color-pink-90);
-    --wa-color-warning-80: var(--wa-color-pink-80);
-    --wa-color-warning-70: var(--wa-color-pink-70);
-    --wa-color-warning-60: var(--wa-color-pink-60);
-    --wa-color-warning-50: var(--wa-color-pink-50);
-    --wa-color-warning-40: var(--wa-color-pink-40);
-    --wa-color-warning-30: var(--wa-color-pink-30);
-    --wa-color-warning-20: var(--wa-color-pink-20);
-    --wa-color-warning-10: var(--wa-color-pink-10);
-    --wa-color-warning-05: var(--wa-color-pink-05);
-    --wa-color-warning: var(--wa-color-pink);
-    --wa-color-warning-on: var(--wa-color-pink-on);
-  }
-
-  .lexml-default-ds .wa-warning-gray {
-    --wa-color-warning-95: var(--wa-color-gray-95);
-    --wa-color-warning-90: var(--wa-color-gray-90);
-    --wa-color-warning-80: var(--wa-color-gray-80);
-    --wa-color-warning-70: var(--wa-color-gray-70);
-    --wa-color-warning-60: var(--wa-color-gray-60);
-    --wa-color-warning-50: var(--wa-color-gray-50);
-    --wa-color-warning-40: var(--wa-color-gray-40);
-    --wa-color-warning-30: var(--wa-color-gray-30);
-    --wa-color-warning-20: var(--wa-color-gray-20);
-    --wa-color-warning-10: var(--wa-color-gray-10);
-    --wa-color-warning-05: var(--wa-color-gray-05);
-    --wa-color-warning: var(--wa-color-gray);
-    --wa-color-warning-on: var(--wa-color-gray-on);
-  }
-}
-@layer wa-color-variant {
-  :where(.lexml-default-ds), 
-  .lexml-default-ds .wa-danger-red {
-    --wa-color-danger-95: var(--wa-color-red-95);
-    --wa-color-danger-90: var(--wa-color-red-90);
-    --wa-color-danger-80: var(--wa-color-red-80);
-    --wa-color-danger-70: var(--wa-color-red-70);
-    --wa-color-danger-60: var(--wa-color-red-60);
-    --wa-color-danger-50: var(--wa-color-red-50);
-    --wa-color-danger-40: var(--wa-color-red-40);
-    --wa-color-danger-30: var(--wa-color-red-30);
-    --wa-color-danger-20: var(--wa-color-red-20);
-    --wa-color-danger-10: var(--wa-color-red-10);
-    --wa-color-danger-05: var(--wa-color-red-05);
-    --wa-color-danger: var(--wa-color-red);
-    --wa-color-danger-on: var(--wa-color-red-on);
-  }
-
-  .lexml-default-ds .wa-danger-orange {
-    --wa-color-danger-95: var(--wa-color-orange-95);
-    --wa-color-danger-90: var(--wa-color-orange-90);
-    --wa-color-danger-80: var(--wa-color-orange-80);
-    --wa-color-danger-70: var(--wa-color-orange-70);
-    --wa-color-danger-60: var(--wa-color-orange-60);
-    --wa-color-danger-50: var(--wa-color-orange-50);
-    --wa-color-danger-40: var(--wa-color-orange-40);
-    --wa-color-danger-30: var(--wa-color-orange-30);
-    --wa-color-danger-20: var(--wa-color-orange-20);
-    --wa-color-danger-10: var(--wa-color-orange-10);
-    --wa-color-danger-05: var(--wa-color-orange-05);
-    --wa-color-danger: var(--wa-color-orange);
-    --wa-color-danger-on: var(--wa-color-orange-on);
-  }
-
-  .lexml-default-ds .wa-danger-yellow {
-    --wa-color-danger-95: var(--wa-color-yellow-95);
-    --wa-color-danger-90: var(--wa-color-yellow-90);
-    --wa-color-danger-80: var(--wa-color-yellow-80);
-    --wa-color-danger-70: var(--wa-color-yellow-70);
-    --wa-color-danger-60: var(--wa-color-yellow-60);
-    --wa-color-danger-50: var(--wa-color-yellow-50);
-    --wa-color-danger-40: var(--wa-color-yellow-40);
-    --wa-color-danger-30: var(--wa-color-yellow-30);
-    --wa-color-danger-20: var(--wa-color-yellow-20);
-    --wa-color-danger-10: var(--wa-color-yellow-10);
-    --wa-color-danger-05: var(--wa-color-yellow-05);
-    --wa-color-danger: var(--wa-color-yellow);
-    --wa-color-danger-on: var(--wa-color-yellow-on);
-  }
-
-  .lexml-default-ds .wa-danger-green {
-    --wa-color-danger-95: var(--wa-color-green-95);
-    --wa-color-danger-90: var(--wa-color-green-90);
-    --wa-color-danger-80: var(--wa-color-green-80);
-    --wa-color-danger-70: var(--wa-color-green-70);
-    --wa-color-danger-60: var(--wa-color-green-60);
-    --wa-color-danger-50: var(--wa-color-green-50);
-    --wa-color-danger-40: var(--wa-color-green-40);
-    --wa-color-danger-30: var(--wa-color-green-30);
-    --wa-color-danger-20: var(--wa-color-green-20);
-    --wa-color-danger-10: var(--wa-color-green-10);
-    --wa-color-danger-05: var(--wa-color-green-05);
-    --wa-color-danger: var(--wa-color-green);
-    --wa-color-danger-on: var(--wa-color-green-on);
-  }
-
-  .lexml-default-ds .wa-danger-cyan {
-    --wa-color-danger-95: var(--wa-color-cyan-95);
-    --wa-color-danger-90: var(--wa-color-cyan-90);
-    --wa-color-danger-80: var(--wa-color-cyan-80);
-    --wa-color-danger-70: var(--wa-color-cyan-70);
-    --wa-color-danger-60: var(--wa-color-cyan-60);
-    --wa-color-danger-50: var(--wa-color-cyan-50);
-    --wa-color-danger-40: var(--wa-color-cyan-40);
-    --wa-color-danger-30: var(--wa-color-cyan-30);
-    --wa-color-danger-20: var(--wa-color-cyan-20);
-    --wa-color-danger-10: var(--wa-color-cyan-10);
-    --wa-color-danger-05: var(--wa-color-cyan-05);
-    --wa-color-danger: var(--wa-color-cyan);
-    --wa-color-danger-on: var(--wa-color-cyan-on);
-  }
-
-  .lexml-default-ds .wa-danger-blue {
-    --wa-color-danger-95: var(--wa-color-blue-95);
-    --wa-color-danger-90: var(--wa-color-blue-90);
-    --wa-color-danger-80: var(--wa-color-blue-80);
-    --wa-color-danger-70: var(--wa-color-blue-70);
-    --wa-color-danger-60: var(--wa-color-blue-60);
-    --wa-color-danger-50: var(--wa-color-blue-50);
-    --wa-color-danger-40: var(--wa-color-blue-40);
-    --wa-color-danger-30: var(--wa-color-blue-30);
-    --wa-color-danger-20: var(--wa-color-blue-20);
-    --wa-color-danger-10: var(--wa-color-blue-10);
-    --wa-color-danger-05: var(--wa-color-blue-05);
-    --wa-color-danger: var(--wa-color-blue);
-    --wa-color-danger-on: var(--wa-color-blue-on);
-  }
-
-  .lexml-default-ds .wa-danger-indigo {
-    --wa-color-danger-95: var(--wa-color-indigo-95);
-    --wa-color-danger-90: var(--wa-color-indigo-90);
-    --wa-color-danger-80: var(--wa-color-indigo-80);
-    --wa-color-danger-70: var(--wa-color-indigo-70);
-    --wa-color-danger-60: var(--wa-color-indigo-60);
-    --wa-color-danger-50: var(--wa-color-indigo-50);
-    --wa-color-danger-40: var(--wa-color-indigo-40);
-    --wa-color-danger-30: var(--wa-color-indigo-30);
-    --wa-color-danger-20: var(--wa-color-indigo-20);
-    --wa-color-danger-10: var(--wa-color-indigo-10);
-    --wa-color-danger-05: var(--wa-color-indigo-05);
-    --wa-color-danger: var(--wa-color-indigo);
-    --wa-color-danger-on: var(--wa-color-indigo-on);
-  }
-
-  .lexml-default-ds .wa-danger-purple {
-    --wa-color-danger-95: var(--wa-color-purple-95);
-    --wa-color-danger-90: var(--wa-color-purple-90);
-    --wa-color-danger-80: var(--wa-color-purple-80);
-    --wa-color-danger-70: var(--wa-color-purple-70);
-    --wa-color-danger-60: var(--wa-color-purple-60);
-    --wa-color-danger-50: var(--wa-color-purple-50);
-    --wa-color-danger-40: var(--wa-color-purple-40);
-    --wa-color-danger-30: var(--wa-color-purple-30);
-    --wa-color-danger-20: var(--wa-color-purple-20);
-    --wa-color-danger-10: var(--wa-color-purple-10);
-    --wa-color-danger-05: var(--wa-color-purple-05);
-    --wa-color-danger: var(--wa-color-purple);
-    --wa-color-danger-on: var(--wa-color-purple-on);
-  }
-
-  .lexml-default-ds .wa-danger-pink {
-    --wa-color-danger-95: var(--wa-color-pink-95);
-    --wa-color-danger-90: var(--wa-color-pink-90);
-    --wa-color-danger-80: var(--wa-color-pink-80);
-    --wa-color-danger-70: var(--wa-color-pink-70);
-    --wa-color-danger-60: var(--wa-color-pink-60);
-    --wa-color-danger-50: var(--wa-color-pink-50);
-    --wa-color-danger-40: var(--wa-color-pink-40);
-    --wa-color-danger-30: var(--wa-color-pink-30);
-    --wa-color-danger-20: var(--wa-color-pink-20);
-    --wa-color-danger-10: var(--wa-color-pink-10);
-    --wa-color-danger-05: var(--wa-color-pink-05);
-    --wa-color-danger: var(--wa-color-pink);
-    --wa-color-danger-on: var(--wa-color-pink-on);
-  }
-
-  .lexml-default-ds .wa-danger-gray {
-    --wa-color-danger-95: var(--wa-color-gray-95);
-    --wa-color-danger-90: var(--wa-color-gray-90);
-    --wa-color-danger-80: var(--wa-color-gray-80);
-    --wa-color-danger-70: var(--wa-color-gray-70);
-    --wa-color-danger-60: var(--wa-color-gray-60);
-    --wa-color-danger-50: var(--wa-color-gray-50);
-    --wa-color-danger-40: var(--wa-color-gray-40);
-    --wa-color-danger-30: var(--wa-color-gray-30);
-    --wa-color-danger-20: var(--wa-color-gray-20);
-    --wa-color-danger-10: var(--wa-color-gray-10);
-    --wa-color-danger-05: var(--wa-color-gray-05);
-    --wa-color-danger: var(--wa-color-gray);
-    --wa-color-danger-on: var(--wa-color-gray-on);
-  }
-}
-/* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
-:where(.lexml-default-ds),
-.lexml-default-ds :host {
-  /**
-    * Conditional tokens to check if the key color is >= 60
-    * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
-    * The numeric value of the key is isolated as --wa-color-{hue}-key
-    * If key < 60, the result is 0%
-    * If key >= 60, the result is 100%
-    * Intended to be used in the color-mix() functions below
-    */
-
-  --wa-color-red-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-red-key), 1) * 100%));
-  --wa-color-orange-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-orange-key), 1) * 100%));
-  --wa-color-yellow-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-yellow-key), 1) * 100%));
-  --wa-color-green-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-green-key), 1) * 100%));
-  --wa-color-cyan-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-cyan-key), 1) * 100%));
-  --wa-color-blue-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-blue-key), 1) * 100%));
-  --wa-color-indigo-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-indigo-key), 1) * 100%));
-  --wa-color-purple-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-purple-key), 1) * 100%));
-  --wa-color-pink-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-pink-key), 1) * 100%));
-  --wa-color-gray-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-gray-key), 1) * 100%));
-
-  /**
-    * Tokens to set text color with appropriate WCAG 2.1 contrast
-    * If key < 60, the text color is white
-    * If key >= 60, the text color is {hue}-10
-    */
-
-  --wa-color-red-on: color-mix(in oklab, var(--wa-color-red-10) var(--wa-color-red-gte-60), white);
-  --wa-color-orange-on: color-mix(in oklab, var(--wa-color-orange-10) var(--wa-color-orange-gte-60), white);
-  --wa-color-yellow-on: color-mix(in oklab, var(--wa-color-yellow-10) var(--wa-color-yellow-gte-60), white);
-  --wa-color-green-on: color-mix(in oklab, var(--wa-color-green-10) var(--wa-color-green-gte-60), white);
-  --wa-color-cyan-on: color-mix(in oklab, var(--wa-color-cyan-10) var(--wa-color-cyan-gte-60), white);
-  --wa-color-blue-on: color-mix(in oklab, var(--wa-color-blue-10) var(--wa-color-blue-gte-60), white);
-  --wa-color-indigo-on: color-mix(in oklab, var(--wa-color-indigo-10) var(--wa-color-indigo-gte-60), white);
-  --wa-color-purple-on: color-mix(in oklab, var(--wa-color-purple-10) var(--wa-color-purple-gte-60), white);
-  --wa-color-pink-on: color-mix(in oklab, var(--wa-color-pink-10) var(--wa-color-pink-gte-60), white);
-  --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
-}
-@layer wa-color-palette {
-  .lexml-default-ds .wa-palette-shoelace,
-  .lexml-default-ds .wa-palette-shoelace :host {
-    --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
-    --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
-    --wa-color-red-80: #ffb8b5 /* oklch(84.778% 0.083 21.686) */;
-    --wa-color-red-70: #fe8f8d /* oklch(76.859% 0.13466 21.762) */;
-    --wa-color-red-60: #f56667 /* oklch(68.982% 0.17631 22.472) */;
-    --wa-color-red-50: #e02c2b /* oklch(58.861% 0.21461 27.156) */;
-    --wa-color-red-40: #b5051a /* oklch(48.833% 0.19611 25.68) */;
-    --wa-color-red-30: #900015 /* oklch(41.172% 0.16676 24.609) */;
-    --wa-color-red-20: #6c000d /* oklch(33.479% 0.1356 24.617) */;
-    --wa-color-red-10: #450005 /* oklch(24.598% 0.09968 24.835) */;
-    --wa-color-red-05: #2f0002 /* oklch(19.218% 0.07801 25.517) */;
-    --wa-color-red: var(--wa-color-red-50);
-    --wa-color-red-key: 50;
-
-    --wa-color-orange-95: #fff0e4 /* oklch(96.374% 0.0228 61.238) */;
-    --wa-color-orange-90: #ffe0c8 /* oklch(92.611% 0.04689 59.917) */;
-    --wa-color-orange-80: #ffbb89 /* oklch(84.386% 0.10217 57.161) */;
-    --wa-color-orange-70: #ff9342 /* oklch(76.486% 0.15964 54.102) */;
-    --wa-color-orange-60: #f36d00 /* oklch(68.715% 0.18774 47.79) */;
-    --wa-color-orange-50: #c94e00 /* oklch(58.068% 0.17131 43.217) */;
-    --wa-color-orange-40: #9d3800 /* oklch(47.924% 0.14534 41.739) */;
-    --wa-color-orange-30: #7e2900 /* oklch(40.53% 0.1259 40.51) */;
-    --wa-color-orange-20: #5e1c00 /* oklch(32.874% 0.1027 40.228) */;
-    --wa-color-orange-10: #3b0f00 /* oklch(24.125% 0.07446 40.837) */;
-    --wa-color-orange-05: #280700 /* oklch(18.837% 0.05933 39.827) */;
-    --wa-color-orange: var(--wa-color-orange-60);
-    --wa-color-orange-key: 60;
-
-    --wa-color-yellow-95: #fef2bf /* oklch(95.823% 0.06674 96.369) */;
-    --wa-color-yellow-90: #fde588 /* oklch(92.2% 0.11633 95.327) */;
-    --wa-color-yellow-80: #f5c24b /* oklch(83.879% 0.14445 85.083) */;
-    --wa-color-yellow-70: #e9a010 /* oklch(75.825% 0.15689 75.537) */;
-    --wa-color-yellow-60: #d78000 /* oklch(67.839% 0.15287 64.455) */;
-    --wa-color-yellow-50: #b26000 /* oklch(57.324% 0.13672 58.338) */;
-    --wa-color-yellow-40: #8a4700 /* oklch(47.183% 0.11461 56.655) */;
-    --wa-color-yellow-30: #6e3700 /* oklch(40.03% 0.0976 56.323) */;
-    --wa-color-yellow-20: #522700 /* oklch(32.54% 0.07981 55.802) */;
-    --wa-color-yellow-10: #331600 /* oklch(23.846% 0.05834 56.02) */;
-    --wa-color-yellow-05: #210d00 /* oklch(18.619% 0.04431 58.553) */;
-    --wa-color-yellow: var(--wa-color-yellow-70);
-    --wa-color-yellow-key: 70;
-
-    --wa-color-green-95: #d4fce1 /* oklch(95.554% 0.05477 155.71) */;
-    --wa-color-green-90: #a4f8c2 /* oklch(91.11% 0.1107 155.35) */;
-    --wa-color-green-80: #6ae095 /* oklch(81.924% 0.15151 153.52) */;
-    --wa-color-green-70: #44c670 /* oklch(73.506% 0.16742 151) */;
-    --wa-color-green-60: #21ab52 /* oklch(65.151% 0.17062 149.59) */;
-    --wa-color-green-50: #0d873f /* oklch(54.644% 0.14593 150.18) */;
-    --wa-color-green-40: #166635 /* oklch(45.105% 0.10874 151.56) */;
-    --wa-color-green-30: #115029 /* oklch(38.182% 0.09049 151.63) */;
-    --wa-color-green-20: #0a3a1c /* oklch(30.854% 0.07315 151.48) */;
-    --wa-color-green-10: #04230f /* oklch(22.692% 0.05324 151.92) */;
-    --wa-color-green-05: #021608 /* oklch(17.756% 0.04076 152.68) */;
-    --wa-color-green: var(--wa-color-green-60);
-    --wa-color-green-key: 60;
-
-    --wa-color-cyan-95: #d8fafc /* oklch(96.149% 0.03524 200.93) */;
-    --wa-color-cyan-90: #a3f2f7 /* oklch(91.187% 0.07744 200.93) */;
-    --wa-color-cyan-80: #67dbe2 /* oklch(82.721% 0.1051 200.68) */;
-    --wa-color-cyan-70: #29c0ca /* oklch(73.859% 0.11825 201.93) */;
-    --wa-color-cyan-60: #0ca4ae /* oklch(65.523% 0.10997 202.61) */;
-    --wa-color-cyan-50: #0c828c /* oklch(55.424% 0.09237 204.53) */;
-    --wa-color-cyan-40: #0a626b /* oklch(45.428% 0.07504 206.17) */;
-    --wa-color-cyan-30: #084d55 /* oklch(38.542% 0.06312 207.36) */;
-    --wa-color-cyan-20: #06383f /* oklch(31.335% 0.05062 209.3) */;
-    --wa-color-cyan-10: #002127 /* oklch(22.739% 0.03961 211.94) */;
-    --wa-color-cyan-05: #00151b /* oklch(18.055% 0.03231 217.31) */;
-    --wa-color-cyan: var(--wa-color-cyan-70);
-    --wa-color-cyan-key: 70;
-
-    --wa-color-blue-95: #e2f6ff /* oklch(96.112% 0.0243 226.47) */;
-    --wa-color-blue-90: #c0ecff /* oklch(91.822% 0.0523 226) */;
-    --wa-color-blue-80: #7fd4fc /* oklch(83.068% 0.09979 229.91) */;
-    --wa-color-blue-70: #48b9f4 /* oklch(74.644% 0.13162 235.42) */;
-    --wa-color-blue-60: #1f9de2 /* oklch(66.419% 0.14398 240.02) */;
-    --wa-color-blue-50: #007bbc /* oklch(55.956% 0.1346 242.72) */;
-    --wa-color-blue-40: #005d93 /* oklch(46.121% 0.11438 244.28) */;
-    --wa-color-blue-30: #004975 /* oklch(39.093% 0.09705 244.33) */;
-    --wa-color-blue-20: #003558 /* oklch(31.8% 0.08026 245.13) */;
-    --wa-color-blue-10: #001f36 /* oklch(23.093% 0.05763 244.59) */;
-    --wa-color-blue-05: #001325 /* oklch(18.113% 0.04675 246.17) */;
-    --wa-color-blue: var(--wa-color-blue-60);
-    --wa-color-blue-key: 60;
-
-    --wa-color-indigo-95: #eff2ff /* oklch(96.265% 0.01769 275.64) */;
-    --wa-color-indigo-90: #e0e5ff /* oklch(92.602% 0.03569 277.03) */;
-    --wa-color-indigo-80: #bec7ff /* oklch(84.198% 0.07895 277.45) */;
-    --wa-color-indigo-70: #9da9fc /* oklch(75.797% 0.11994 276.85) */;
-    --wa-color-indigo-60: #808bf8 /* oklch(67.752% 0.15983 276.9) */;
-    --wa-color-indigo-50: #6163f0 /* oklch(57.814% 0.20686 277.14) */;
-    --wa-color-indigo-40: #4a41d4 /* oklch(48.413% 0.21583 277.35) */;
-    --wa-color-indigo-30: #3b369d /* oklch(40.562% 0.16149 278.54) */;
-    --wa-color-indigo-20: #2b2872 /* oklch(32.937% 0.12339 278.99) */;
-    --wa-color-indigo-10: #191748 /* oklch(24.174% 0.08853 279.28) */;
-    --wa-color-indigo-05: #0e0d31 /* oklch(18.772% 0.06933 278.6) */;
-    --wa-color-indigo: var(--wa-color-indigo-40);
-    --wa-color-indigo-key: 40;
-
-    --wa-color-purple-95: #f6f0ff /* oklch(96.412% 0.02086 304.04) */;
-    --wa-color-purple-90: #eee0ff /* oklch(92.72% 0.04406 305.89) */;
-    --wa-color-purple-80: #dcbdff /* oklch(84.694% 0.09583 305.85) */;
-    --wa-color-purple-70: #ca99ff /* oklch(76.728% 0.14961 305.27) */;
-    --wa-color-purple-60: #b874ff /* oklch(69.085% 0.2024 304.19) */;
-    --wa-color-purple-50: #9f46ee /* oklch(59.304% 0.23941 304.1) */;
-    --wa-color-purple-40: #7e2ac2 /* oklch(49.181% 0.21892 304.24) */;
-    --wa-color-purple-30: #632198 /* oklch(41.448% 0.18071 304.64) */;
-    --wa-color-purple-20: #4a1574 /* oklch(33.839% 0.15043 304.56) */;
-    --wa-color-purple-10: #2e094b /* oklch(24.855% 0.11212 304.52) */;
-    --wa-color-purple-05: #1e0433 /* oklch(19.319% 0.0877 304.85) */;
-    --wa-color-purple: var(--wa-color-purple-50);
-    --wa-color-purple-key: 50;
-
-    --wa-color-pink-95: #fdeff7 /* oklch(96.539% 0.01831 342.02) */;
-    --wa-color-pink-90: #fcdcee /* oklch(92.607% 0.04228 343.07) */;
-    --wa-color-pink-80: #fab6db /* oklch(84.992% 0.09131 345.4) */;
-    --wa-color-pink-70: #f78cc4 /* oklch(77.072% 0.14455 348.37) */;
-    --wa-color-pink-60: #f160a9 /* oklch(69.418% 0.19234 351.99) */;
-    --wa-color-pink-50: #db2878 /* oklch(59.255% 0.21755 0.28257) */;
-    --wa-color-pink-40: #ab1854 /* oklch(48.723% 0.18199 3.8244) */;
-    --wa-color-pink-30: #851844 /* oklch(41.188% 0.14622 2.4184) */;
-    --wa-color-pink-20: #640e30 /* oklch(33.442% 0.12022 3.3857) */;
-    --wa-color-pink-10: #43001a /* oklch(24.613% 0.09885 5.3211) */;
-    --wa-color-pink-05: #2f000b /* oklch(19.457% 0.07776 12.211) */;
-    --wa-color-pink: var(--wa-color-pink-50);
-    --wa-color-pink-key: 50;
-
-    --wa-color-gray-95: #f2f2f3 /* oklch(96.143% 0.00133 286.37) */;
-    --wa-color-gray-90: #e5e5e8 /* oklch(92.276% 0.00403 286.32) */;
-    --wa-color-gray-80: #c9c9cc /* oklch(83.679% 0.00413 286.31) */;
-    --wa-color-gray-70: #aeafb1 /* oklch(75.381% 0.00306 264.54) */;
-    --wa-color-gray-60: #94959b /* oklch(67.089% 0.00884 278.56) */;
-    --wa-color-gray-50: #72747d /* oklch(56.027% 0.01402 275.93) */;
-    --wa-color-gray-40: #565861 /* oklch(46.18% 0.01474 275.83) */;
-    --wa-color-gray-30: #43454d /* oklch(39.154% 0.01373 274.58) */;
-    --wa-color-gray-20: #313134 /* oklch(31.432% 0.00529 286.09) */;
-    --wa-color-gray-10: #1d1d20 /* oklch(23.201% 0.00571 285.95) */;
-    --wa-color-gray-05: #101113 /* oklch(17.739% 0.00442 264.46) */;
-    --wa-color-gray: var(--wa-color-gray-40);
-    --wa-color-gray-key: 40;
-  }
-}
-/* To use this palette, add class="wa-palette-shoelace" to the <html> element */
 @layer wa-theme {
   .lexml-default-ds .wa-theme-shoelace,
   .lexml-default-ds .wa-theme-shoelace.wa-light,
@@ -1338,7 +338,7 @@ export const waThemeString = `
 
     --wa-form-control-required-content: '*';
     --wa-form-control-required-content-color: inherit;
-    --wa-form-control-required-content-offset: 0.1em;
+    --wa-form-control-required-content-offset: -0.1em;
 
     --wa-form-control-padding-block: 0.75em;
     --wa-form-control-padding-inline: 1em;
@@ -1369,6 +369,7 @@ export const waThemeString = `
     /* #endregion */
   }
 }
+
 @layer wa-theme-overrides {
   .lexml-default-ds .wa-theme-shoelace {
     .lexml-default-ds wa-avatar {
@@ -1462,7 +463,7 @@ export const waThemeString = `
         border-color: var(--wa-color-gray-50);
       }
 
-      .lexml-default-ds &:state(checked)::part(control) {
+      .lexml-default-ds &[checked]::part(control) {
         background-color: var(--wa-form-control-activated-color);
         border-color: var(--wa-form-control-activated-color);
       }
@@ -1471,7 +472,7 @@ export const waThemeString = `
         background-color: var(--wa-color-surface-default);
         border: var(--wa-border-width-s) var(--wa-border-style) var(--wa-color-gray-50);
       }
-      .lexml-default-ds &:state(checked)::part(thumb) {
+      .lexml-default-ds &[checked]::part(thumb) {
         border-color: var(--wa-form-control-activated-color);
       }
     }
@@ -1486,87 +487,10 @@ export const waThemeString = `
 
 // 2. A BASE (Estrutura Base e Utilitários)
 export const waResetString = `
-
 @layer wa-native, wa-utilities, wa-color-palette, wa-color-variant, wa-theme, wa-theme-dimension, wa-theme-overrides;
-/* Cascade layers */
-/* Order of precedence for all cascade layers in Web Awesome */
-/* Native styles */
-/* Required utilities */
-@layer wa-utilities {
-  .lexml-default-ds .wa-size-s {
-    font-size: var(--wa-font-size-s);
-  }
 
-  .lexml-default-ds .wa-size-m {
-    font-size: var(--wa-font-size-m);
-  }
+/* Native Styles */
 
-  .lexml-default-ds .wa-size-l {
-    font-size: var(--wa-font-size-l);
-  }
-}
-@layer wa-utilities {
-  :where(.lexml-default-ds),
-  .lexml-default-ds .wa-neutral {
-    --wa-color-fill-loud: var(--wa-color-neutral-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-neutral-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-neutral-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-neutral-border-loud);
-    --wa-color-border-normal: var(--wa-color-neutral-border-normal);
-    --wa-color-border-quiet: var(--wa-color-neutral-border-quiet);
-    --wa-color-on-loud: var(--wa-color-neutral-on-loud);
-    --wa-color-on-normal: var(--wa-color-neutral-on-normal);
-    --wa-color-on-quiet: var(--wa-color-neutral-on-quiet);
-  }
-
-  .lexml-default-ds .wa-brand {
-    --wa-color-fill-loud: var(--wa-color-brand-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-brand-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-brand-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-brand-border-loud);
-    --wa-color-border-normal: var(--wa-color-brand-border-normal);
-    --wa-color-border-quiet: var(--wa-color-brand-border-quiet);
-    --wa-color-on-loud: var(--wa-color-brand-on-loud);
-    --wa-color-on-normal: var(--wa-color-brand-on-normal);
-    --wa-color-on-quiet: var(--wa-color-brand-on-quiet);
-  }
-
-  .lexml-default-ds .wa-success {
-    --wa-color-fill-loud: var(--wa-color-success-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-success-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-success-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-success-border-loud);
-    --wa-color-border-normal: var(--wa-color-success-border-normal);
-    --wa-color-border-quiet: var(--wa-color-success-border-quiet);
-    --wa-color-on-loud: var(--wa-color-success-on-loud);
-    --wa-color-on-normal: var(--wa-color-success-on-normal);
-    --wa-color-on-quiet: var(--wa-color-success-on-quiet);
-  }
-
-  .lexml-default-ds .wa-warning {
-    --wa-color-fill-loud: var(--wa-color-warning-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-warning-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-warning-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-warning-border-loud);
-    --wa-color-border-normal: var(--wa-color-warning-border-normal);
-    --wa-color-border-quiet: var(--wa-color-warning-border-quiet);
-    --wa-color-on-loud: var(--wa-color-warning-on-loud);
-    --wa-color-on-normal: var(--wa-color-warning-on-normal);
-    --wa-color-on-quiet: var(--wa-color-warning-on-quiet);
-  }
-
-  .lexml-default-ds .wa-danger {
-    --wa-color-fill-loud: var(--wa-color-danger-fill-loud);
-    --wa-color-fill-normal: var(--wa-color-danger-fill-normal);
-    --wa-color-fill-quiet: var(--wa-color-danger-fill-quiet);
-    --wa-color-border-loud: var(--wa-color-danger-border-loud);
-    --wa-color-border-normal: var(--wa-color-danger-border-normal);
-    --wa-color-border-quiet: var(--wa-color-danger-border-quiet);
-    --wa-color-on-loud: var(--wa-color-danger-on-loud);
-    --wa-color-on-normal: var(--wa-color-danger-on-normal);
-    --wa-color-on-quiet: var(--wa-color-danger-on-quiet);
-  }
-}
 @layer wa-native {
   /* #region General ~~~~~~~~~~~~~~~~~~~~~~~~~ */
   .lexml-default-ds {
@@ -1794,7 +718,6 @@ export const waResetString = `
 
     font-family: var(--wa-font-family-code);
     font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-code);
 
     border: solid var(--wa-border-width-s) color-mix(in oklab, currentColor, transparent 50%);
     border-radius: var(--wa-border-radius-s);
@@ -1848,7 +771,6 @@ export const waResetString = `
 
     font-family: var(--wa-font-family-code);
     font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-code);
 
     background-color: var(--wa-color-overlay-inline);
     border-radius: var(--wa-border-radius-s);
@@ -1859,7 +781,6 @@ export const waResetString = `
 
     font-family: var(--wa-font-family-code);
     font-size: var(--wa-font-size-smaller);
-    font-weight: var(--wa-font-weight-code);
     white-space: pre;
 
     background-color: var(--wa-color-overlay-inline);
@@ -1979,8 +900,6 @@ export const waResetString = `
 
       padding: var(--wa-space-m);
 
-      border-radius: calc(var(--wa-panel-border-radius) - var(--wa-panel-border-width));
-
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
@@ -1995,7 +914,7 @@ export const waResetString = `
 
       .lexml-default-ds &:focus-visible {
         outline: var(--wa-focus-ring);
-        outline-offset: calc(var(--wa-panel-border-width) + var(--wa-focus-ring-offset));
+        outline-offset: var(--wa-focus-ring-offset);
       }
     }
 
@@ -2004,9 +923,6 @@ export const waResetString = `
 
       .lexml-default-ds summary {
         margin-inline: calc(-1 * var(--wa-space-m));
-
-        border-end-start-radius: 0;
-        border-end-end-radius: 0;
       }
     }
 
@@ -2031,7 +947,7 @@ export const waResetString = `
     .lexml-default-ds &::after {
       content: '';
       background-color: var(--wa-color-text-quiet);
-      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>')
+      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>')
         center no-repeat;
       width: 1rem;
       height: 1rem;
@@ -2136,219 +1052,124 @@ export const waResetString = `
   .lexml-default-ds button,
   .lexml-default-ds input[type='button'],
   .lexml-default-ds input[type='reset'],
-  .lexml-default-ds input[type='submit'],
-  .lexml-default-ds input[type='file'] {
-    /* We allow modifier classes on <input type="file">,
-     * but these selectors ensure the styles only apply to
-     * the file selector button in the user agent's shadow root */
-    .lexml-default-ds &:not(input[type='file']),
-    .lexml-default-ds &::file-selector-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+  .lexml-default-ds input[type='submit'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-      height: var(--wa-form-control-height);
-      padding: 0 var(--wa-form-control-padding-inline);
+    height: var(--wa-form-control-height);
+    padding: 0 var(--wa-form-control-padding-inline);
 
-      font-family: inherit;
-      font-size: var(--wa-form-control-value-font-size);
-      font-weight: var(--wa-font-weight-action);
-      line-height: calc(var(--wa-form-control-height) - var(--border-width) * 2);
-      text-decoration: none;
-      vertical-align: middle;
-      white-space: nowrap;
+    color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
+    font-family: inherit;
+    font-size: var(--wa-form-control-value-font-size);
+    font-weight: var(--wa-font-weight-action);
+    line-height: calc(var(--wa-form-control-height) - var(--border-width) * 2);
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
 
-      border-style: var(--wa-border-style);
-      border-width: max(1px, var(--wa-form-control-border-width));
-      border-radius: var(--wa-form-control-border-radius);
+    background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
+    border-color: transparent;
+    border-style: var(--wa-border-style);
+    border-width: max(1px, var(--wa-form-control-border-width));
+    border-radius: var(--wa-form-control-border-radius);
 
-      transition-property: background, border, box-shadow, color;
-      transition-duration: var(--wa-transition-fast);
-      transition-timing-function: var(--wa-transition-easing);
+    transition-property: background, border, box-shadow, color;
+    transition-duration: var(--wa-transition-fast);
+    transition-timing-function: var(--wa-transition-easing);
 
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-    }
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
 
-    /* Default styles for standard buttons */
-    .lexml-default-ds :where(&:not(input[type='file'])) {
-      color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
-      background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
+    .lexml-default-ds &.wa-plain {
+      color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+      background-color: transparent;
       border-color: transparent;
 
-      .lexml-default-ds &:not(:disabled) {
-        .lexml-default-ds &:hover {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .lexml-default-ds &:active {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    /* Default styles for file selector buttons */
-    .lexml-default-ds :where(&:is(input[type='file'])) {
-      .lexml-default-ds &::file-selector-button {
-        color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-        background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
-        border-color: transparent;
-      }
-
-      .lexml-default-ds &:not(:disabled) {
-        .lexml-default-ds &::file-selector-button:hover {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .lexml-default-ds &::file-selector-button:active {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    /* Modifier classes */
-    .lexml-default-ds &.wa-plain {
-      .lexml-default-ds &:not(input[type='file']),
-      .lexml-default-ds &::file-selector-button {
+      .lexml-default-ds &:not(:disabled):hover {
         color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-        background-color: transparent;
-        border-color: transparent;
+        background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
       }
 
-      .lexml-default-ds &:not(:disabled) {
-        .lexml-default-ds &:not(input[type='file']):hover,
-        .lexml-default-ds &::file-selector-button:hover {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
-        }
-
-        .lexml-default-ds &:not(input[type='file']):active,
-        .lexml-default-ds &::file-selector-button:active {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
-            var(--wa-color-mix-active)
-          );
-        }
+      .lexml-default-ds &:not(:disabled):active {
+        color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+        background-color: color-mix(
+          in oklab,
+          var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
+          var(--wa-color-mix-active)
+        );
       }
     }
 
     .lexml-default-ds &.wa-outlined {
-      .lexml-default-ds &:not(input[type='file']),
-      .lexml-default-ds &::file-selector-button {
+      color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+      background-color: transparent;
+      border-color: var(--wa-color-border-loud, var(--wa-color-neutral-border-loud));
+
+      .lexml-default-ds &:not(:disabled):hover {
         color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-        background-color: transparent;
-        border-color: var(--wa-color-border-loud, var(--wa-color-neutral-border-loud));
+        background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
       }
 
-      .lexml-default-ds &:not(:disabled) {
-        .lexml-default-ds &:not(input[type='file']):hover,
-        .lexml-default-ds &::file-selector-button:hover {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet));
-        }
-
-        .lexml-default-ds &:not(input[type='file']):active,
-        .lexml-default-ds &::file-selector-button:active {
-          color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
-            var(--wa-color-mix-active)
-          );
-        }
+      .lexml-default-ds &:not(:disabled):active {
+        color: var(--wa-color-on-quiet, var(--wa-color-neutral-on-quiet));
+        background-color: color-mix(
+          in oklab,
+          var(--wa-color-fill-quiet, var(--wa-color-neutral-fill-quiet)),
+          var(--wa-color-mix-active)
+        );
       }
     }
 
     .lexml-default-ds &.wa-filled {
-      .lexml-default-ds &:not(input[type='file']),
-      .lexml-default-ds &::file-selector-button {
+      color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
+      background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
+      border-color: transparent;
+
+      .lexml-default-ds &:not(:disabled):hover {
         color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-        background-color: var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal));
-        border-color: transparent;
+        background-color: color-mix(
+          in oklab,
+          var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
+          var(--wa-color-mix-hover)
+        );
       }
 
-      .lexml-default-ds &:not(:disabled) {
-        .lexml-default-ds &:not(input[type='file']):hover,
-        .lexml-default-ds &::file-selector-button:hover {
-          color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .lexml-default-ds &:not(input[type='file']):active,
-        .lexml-default-ds &::file-selector-button:active {
-          color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
-            var(--wa-color-mix-active)
-          );
-        }
+      .lexml-default-ds &:not(:disabled):active {
+        color: var(--wa-color-on-normal, var(--wa-color-neutral-on-normal));
+        background-color: color-mix(
+          in oklab,
+          var(--wa-color-fill-normal, var(--wa-color-neutral-fill-normal)),
+          var(--wa-color-mix-active)
+        );
       }
 
       .lexml-default-ds &.wa-outlined {
-        .lexml-default-ds &:not(input[type='file']),
-        .lexml-default-ds &::file-selector-button {
-          border-color: var(--wa-color-border-normal, var(--wa-color-neutral-border-normal));
-        }
+        border-color: var(--wa-color-border-normal, var(--wa-color-neutral-border-normal));
       }
     }
 
     .lexml-default-ds &.wa-accent {
-      .lexml-default-ds &:not(input[type='file']),
-      .lexml-default-ds &::file-selector-button {
-        color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
-        background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
-        border-color: transparent;
+      color: var(--wa-color-on-loud, var(--wa-color-neutral-on-loud));
+      background-color: var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud));
+      border-color: transparent;
+
+      .lexml-default-ds &:not(:disabled):hover {
+        background-color: color-mix(
+          in oklab,
+          var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
+          var(--wa-color-mix-hover)
+        );
       }
 
-      .lexml-default-ds &:not(:disabled) {
-        .lexml-default-ds &:not(input[type='file']):hover,
-        .lexml-default-ds &::file-selector-button:hover {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-hover)
-          );
-        }
-
-        .lexml-default-ds &:not(input[type='file']):active,
-        .lexml-default-ds &::file-selector-button:active {
-          background-color: color-mix(
-            in oklab,
-            var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
-            var(--wa-color-mix-active)
-          );
-        }
-      }
-    }
-
-    .lexml-default-ds &.wa-pill {
-      .lexml-default-ds &:not(input[type='file']),
-      .lexml-default-ds &::file-selector-button {
-        border-radius: var(--wa-border-radius-pill);
+      .lexml-default-ds &:not(:disabled):active {
+        background-color: color-mix(
+          in oklab,
+          var(--wa-color-fill-loud, var(--wa-color-neutral-fill-loud)),
+          var(--wa-color-mix-active)
+        );
       }
     }
 
@@ -2376,6 +1197,10 @@ export const waResetString = `
       }
     }
 
+    .lexml-default-ds &.wa-pill {
+      border-radius: var(--wa-border-radius-pill);
+    }
+
     /* Adds space between icons and adjacent elements
      * Prefer sibling selectors over :first-child/:last-child to avoid extra space when an icon is used alone */
     .lexml-default-ds & > wa-icon:has(+ *) {
@@ -2385,25 +1210,6 @@ export const waResetString = `
     .lexml-default-ds & > * + wa-icon {
       margin-inline-start: 0.75em;
     }
-  }
-  /* #endregion */
-
-  /* #region File Inputs ~~~~~~~~~~~~~~~~~~~~~ */
-  .lexml-default-ds input[type='file'] {
-    display: block;
-
-    max-inline-size: 100%;
-
-    color: var(--wa-form-control-value-color);
-    font-family: inherit;
-    font-size: var(--wa-form-control-value-font-size);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-    vertical-align: middle;
-
-    border-radius: var(--wa-border-radius-m);
-
-    cursor: pointer;
   }
   /* #endregion */
 
@@ -2442,6 +1248,7 @@ export const waResetString = `
   .lexml-default-ds input[type='radio'] {
     appearance: none;
 
+    position: relative;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
@@ -2489,18 +1296,21 @@ export const waResetString = `
 
     .lexml-default-ds &:checked::after,
     .lexml-default-ds &:indeterminate::after {
+      position: absolute;
+
+      width: 100%;
+      height: 100%;
+
       content: '';
 
-      width: var(--wa-form-control-toggle-size);
-      height: var(--wa-form-control-toggle-size);
-      scale: var(--checked-icon-scale);
-
       background-color: currentColor;
+
+      scale: var(--checked-icon-scale);
     }
 
     .lexml-default-ds &:checked::after {
-      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="currentColor" d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"/></svg>')
-        center / 1em 1em no-repeat;
+      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>')
+        center no-repeat;
     }
 
     .lexml-default-ds &:indeterminate::after {
@@ -2512,7 +1322,7 @@ export const waResetString = `
   /* Radio */
   .lexml-default-ds input[type='radio'] {
     --checked-icon-color: var(--wa-form-control-activated-color);
-    --checked-icon-scale: 0.7;
+    --checked-icon-scale: 0.75;
 
     color: transparent;
 
@@ -2528,8 +1338,7 @@ export const waResetString = `
       content: '';
 
       aspect-ratio: 1;
-      width: 100%;
-      scale: var(--checked-icon-scale);
+      width: round(calc(100% * var(--checked-icon-scale)), 1px);
 
       background-color: currentColor;
       border-radius: 50%;
@@ -2632,7 +1441,7 @@ export const waResetString = `
 
   /* Select */
   .lexml-default-ds select {
-    --icon-caret: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. --><path fill="rgb(180 180 200)" d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>');
+    --icon-caret: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path fill="rgb(180 180 200)" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>');
 
     appearance: none;
 
@@ -2645,7 +1454,6 @@ export const waResetString = `
     background-repeat: no-repeat;
     background-position: center right var(--wa-form-control-padding-inline);
     background-blend-mode: hue, difference;
-    background-size: 1rem 1rem;
 
     cursor: pointer;
   }
@@ -2914,7 +1722,9 @@ export const waResetString = `
   }
   /* #endregion */
 }
-/* CSS utilities */
+
+/* CSS Utilities */
+
 @layer wa-utilities {
   /*
    * Utility to minimize FOUCE and show custom elements only after they're registered
@@ -2932,11 +1742,10 @@ export const waResetString = `
     }
   }
 }
+
 @layer wa-utilities {
   .lexml-default-ds .wa-visually-hidden:not(:focus-within),
-  .lexml-default-ds .wa-visually-hidden-force,
-  .lexml-default-ds .wa-visually-hidden-hint::part(hint),
-  .lexml-default-ds .wa-visually-hidden-label::part(label) {
+  .lexml-default-ds .wa-visually-hidden-force {
     position: absolute !important;
     width: 1px !important;
     height: 1px !important;
@@ -2948,6 +1757,7 @@ export const waResetString = `
     padding: 0 !important;
   }
 }
+
 @layer wa-utilities {
   /* These scroll lock helpers are put into this CSS file to avoid strict CSPs that affect style tag loading. */
   @supports (scrollbar-gutter: stable) {
@@ -2968,6 +1778,7 @@ export const waResetString = `
     }
   }
 }
+
 @layer wa-utilities {
   .lexml-default-ds .wa-placeholder {
     align-self: stretch;
@@ -2977,6 +1788,7 @@ export const waResetString = `
     padding: var(--wa-space-3xl);
   }
 }
+
 @layer wa-utilities {
   .lexml-default-ds .wa-align-items-start {
     align-items: flex-start;
@@ -2994,6 +1806,7 @@ export const waResetString = `
     align-items: baseline;
   }
 }
+
 @layer wa-utilities {
   .lexml-default-ds .wa-border-radius-s {
     border-radius: var(--wa-border-radius-s);
@@ -3014,6 +1827,7 @@ export const waResetString = `
     border-radius: var(--wa-border-radius-square);
   }
 }
+
 @layer wa-utilities {
   /* Apply Flexbox with 0 specificity to ensure a gap util produces a visible change */
   .lexml-default-ds :where(
@@ -3062,142 +1876,110 @@ export const waResetString = `
     gap: var(--wa-space-3xl);
   }
 }
-@layer wa-utilities {
-  /* #region General ~~~~~ */
-  .lexml-default-ds [class*='wa-body'] {
-    font-family: var(--wa-font-family-body);
-    font-weight: var(--wa-font-weight-body);
-    line-height: var(--wa-line-height-normal);
-  }
 
-  .lexml-default-ds [class*='wa-heading'] {
+@layer wa-utilities {
+  .lexml-default-ds .wa-heading-xs,
+  .lexml-default-ds .wa-heading-s,
+  .lexml-default-ds .wa-heading-m,
+  .lexml-default-ds .wa-heading-l,
+  .lexml-default-ds .wa-heading-xl,
+  .lexml-default-ds .wa-heading-2xl,
+  .lexml-default-ds .wa-heading-3xl {
     font-family: var(--wa-font-family-heading);
     font-weight: var(--wa-font-weight-heading);
     line-height: var(--wa-line-height-condensed);
     text-wrap: balance;
   }
 
-  .lexml-default-ds [class*='wa-caption'] {
+  .lexml-default-ds .wa-heading-xs {
+    font-size: var(--wa-font-size-s);
+  }
+
+  .lexml-default-ds .wa-heading-s {
+    font-size: var(--wa-font-size-m);
+  }
+
+  .lexml-default-ds .wa-heading-m {
+    font-size: var(--wa-font-size-l);
+  }
+
+  .lexml-default-ds .wa-heading-l {
+    font-size: var(--wa-font-size-xl);
+  }
+
+  .lexml-default-ds .wa-heading-xl {
+    font-size: var(--wa-font-size-2xl);
+  }
+
+  .lexml-default-ds .wa-heading-2xl {
+    font-size: var(--wa-font-size-3xl);
+  }
+
+  .lexml-default-ds .wa-heading-3xl {
+    font-size: var(--wa-font-size-4xl);
+  }
+
+  .lexml-default-ds .wa-body-xs,
+  .lexml-default-ds .wa-body-s,
+  .lexml-default-ds .wa-body-m,
+  .lexml-default-ds .wa-body-l,
+  .lexml-default-ds .wa-body-xl {
+    font-family: var(--wa-font-family-body);
+    font-weight: var(--wa-font-weight-body);
+    line-height: var(--wa-line-height-normal);
+  }
+
+  .lexml-default-ds .wa-body-xs {
+    font-size: var(--wa-font-size-xs);
+  }
+
+  .lexml-default-ds .wa-body-s {
+    font-size: var(--wa-font-size-s);
+  }
+
+  .lexml-default-ds .wa-body-m {
+    font-size: var(--wa-font-size-m);
+  }
+
+  .lexml-default-ds .wa-body-l {
+    font-size: var(--wa-font-size-l);
+  }
+
+  .lexml-default-ds .wa-body-xl {
+    font-size: var(--wa-font-size-xl);
+  }
+
+  .lexml-default-ds .wa-caption-xs,
+  .lexml-default-ds .wa-caption-s,
+  .lexml-default-ds .wa-caption-m,
+  .lexml-default-ds .wa-caption-l,
+  .lexml-default-ds .wa-caption-xl {
     color: var(--wa-color-text-quiet);
     font-family: var(--wa-font-family-body);
     font-weight: var(--wa-font-weight-body);
     line-height: var(--wa-line-height-condensed);
   }
 
-  .lexml-default-ds [class*='wa-longform'] {
-    font-family: var(--wa-font-family-longform);
-    font-weight: var(--wa-font-weight-longform);
-    line-height: var(--wa-line-height-normal);
-  }
-
-  .lexml-default-ds .wa-font-size-2xs,
-  .lexml-default-ds .wa-body-2xs,
-  .lexml-default-ds .wa-heading-2xs,
-  .lexml-default-ds .wa-caption-2xs,
-  .lexml-default-ds .wa-longform-2xs {
+  .lexml-default-ds .wa-caption-xs {
     font-size: var(--wa-font-size-2xs);
   }
 
-  .lexml-default-ds .wa-font-size-xs,
-  .lexml-default-ds .wa-body-xs,
-  .lexml-default-ds .wa-heading-xs,
-  .lexml-default-ds .wa-caption-xs,
-  .lexml-default-ds .wa-longform-xs {
+  .lexml-default-ds .wa-caption-s {
     font-size: var(--wa-font-size-xs);
   }
 
-  .lexml-default-ds .wa-font-size-s,
-  .lexml-default-ds .wa-body-s,
-  .lexml-default-ds .wa-heading-s,
-  .lexml-default-ds .wa-caption-s,
-  .lexml-default-ds .wa-longform-s {
+  .lexml-default-ds .wa-caption-m {
     font-size: var(--wa-font-size-s);
   }
 
-  .lexml-default-ds .wa-font-size-m,
-  .lexml-default-ds .wa-body-m,
-  .lexml-default-ds .wa-heading-m,
-  .lexml-default-ds .wa-caption-m,
-  .lexml-default-ds .wa-longform-m {
+  .lexml-default-ds .wa-caption-l {
     font-size: var(--wa-font-size-m);
   }
 
-  .lexml-default-ds .wa-font-size-l,
-  .lexml-default-ds .wa-body-l,
-  .lexml-default-ds .wa-heading-l,
-  .lexml-default-ds .wa-caption-l,
-  .lexml-default-ds .wa-longform-l {
+  .lexml-default-ds .wa-caption-xl {
     font-size: var(--wa-font-size-l);
   }
 
-  .lexml-default-ds .wa-font-size-xl,
-  .lexml-default-ds .wa-body-xl,
-  .lexml-default-ds .wa-heading-xl,
-  .lexml-default-ds .wa-caption-xl,
-  .lexml-default-ds .wa-longform-xl {
-    font-size: var(--wa-font-size-xl);
-  }
-
-  .lexml-default-ds .wa-font-size-2xl,
-  .lexml-default-ds .wa-body-2xl,
-  .lexml-default-ds .wa-heading-2xl,
-  .lexml-default-ds .wa-caption-2xl,
-  .lexml-default-ds .wa-longform-2xl {
-    font-size: var(--wa-font-size-2xl);
-  }
-
-  .lexml-default-ds .wa-font-size-3xl,
-  .lexml-default-ds .wa-body-3xl,
-  .lexml-default-ds .wa-heading-3xl,
-  .lexml-default-ds .wa-caption-3xl,
-  .lexml-default-ds .wa-longform-3xl {
-    font-size: var(--wa-font-size-3xl);
-  }
-
-  .lexml-default-ds .wa-font-size-4xl,
-  .lexml-default-ds .wa-body-4xl,
-  .lexml-default-ds .wa-heading-4xl,
-  .lexml-default-ds .wa-caption-4xl,
-  .lexml-default-ds .wa-longform-4xl {
-    font-size: var(--wa-font-size-4xl);
-  }
-
-  .lexml-default-ds .wa-font-weight-light {
-    font-weight: var(--wa-font-weight-light);
-  }
-
-  .lexml-default-ds .wa-font-weight-normal {
-    font-weight: var(--wa-font-weight-normal);
-  }
-
-  .lexml-default-ds .wa-font-weight-semibold {
-    font-weight: var(--wa-font-weight-semibold);
-  }
-
-  .lexml-default-ds .wa-font-weight-bold {
-    font-weight: var(--wa-font-weight-bold);
-  }
-
-  .lexml-default-ds .wa-color-text-normal {
-    color: var(--wa-color-text-normal);
-  }
-
-  .lexml-default-ds .wa-color-text-quiet {
-    color: var(--wa-color-text-quiet);
-  }
-
-  .lexml-default-ds .wa-color-text-link {
-    color: var(--wa-color-text-link);
-  }
-
-  .lexml-default-ds .wa-text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  /* #endregion */
-
-  /* #region Links ~~~~~~~ */
   .lexml-default-ds .wa-link {
     color: var(--wa-color-text-link);
     text-decoration: var(--wa-link-decoration-default);
@@ -3223,46 +2005,8 @@ export const waResetString = `
       }
     }
   }
-  /* #endregion */
-
-  /* #region Lists ~~~~~~~ */
-  .lexml-default-ds .wa-list-plain:is(ol, ul) {
-    list-style: none;
-    padding-inline-start: 0;
-
-    .lexml-default-ds > li {
-      margin-inline-start: 0;
-    }
-  }
-  /* #endregion */
-
-  /* #region Form Controls */
-  .lexml-default-ds .wa-form-control-label {
-    color: var(--wa-form-control-label-color);
-    font-weight: var(--wa-form-control-label-font-weight);
-    line-height: var(--wa-form-control-label-line-height);
-  }
-
-  .lexml-default-ds .wa-form-control-value {
-    color: var(--wa-form-control-value-color);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-  }
-
-  .lexml-default-ds .wa-form-control-placeholder {
-    color: var(--wa-form-control-placeholder-color);
-    font-weight: var(--wa-form-control-value-font-weight);
-    line-height: var(--wa-form-control-value-line-height);
-  }
-
-  .lexml-default-ds .wa-form-control-hint {
-    color: var(--wa-form-control-hint-color);
-    font-weight: var(--wa-form-control-hint-font-weight);
-    font-size: var(--wa-font-size-smaller);
-    line-height: var(--wa-form-control-hint-line-height);
-  }
-  /* #endregion */
 }
+
 @layer wa-utilities {
   .lexml-default-ds :is(
       [class*='wa-cluster'],
@@ -3422,8 +2166,281 @@ export const waResetString = `
   }
   /* #endregion */
 }
+
+@layer wa-utilities {
+  .lexml-default-ds :host([size='small']),
+  .lexml-default-ds .wa-size-s {
+    font-size: var(--wa-font-size-s);
+  }
+
+  .lexml-default-ds :host([size='medium']),
+  .lexml-default-ds .wa-size-m {
+    font-size: var(--wa-font-size-m);
+  }
+
+  .lexml-default-ds :host([size='large']),
+  .lexml-default-ds .wa-size-l {
+    font-size: var(--wa-font-size-l);
+  }
+}
+
+@layer wa-utilities {
+  :where(.lexml-default-ds),
+  .lexml-default-ds .wa-neutral,
+  .lexml-default-ds :host([variant='neutral']) {
+    --wa-color-fill-loud: var(--wa-color-neutral-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-neutral-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-neutral-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-neutral-border-loud);
+    --wa-color-border-normal: var(--wa-color-neutral-border-normal);
+    --wa-color-border-quiet: var(--wa-color-neutral-border-quiet);
+    --wa-color-on-loud: var(--wa-color-neutral-on-loud);
+    --wa-color-on-normal: var(--wa-color-neutral-on-normal);
+    --wa-color-on-quiet: var(--wa-color-neutral-on-quiet);
+  }
+
+  .lexml-default-ds .wa-brand,
+  .lexml-default-ds :host([variant='brand']) {
+    --wa-color-fill-loud: var(--wa-color-brand-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-brand-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-brand-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-brand-border-loud);
+    --wa-color-border-normal: var(--wa-color-brand-border-normal);
+    --wa-color-border-quiet: var(--wa-color-brand-border-quiet);
+    --wa-color-on-loud: var(--wa-color-brand-on-loud);
+    --wa-color-on-normal: var(--wa-color-brand-on-normal);
+    --wa-color-on-quiet: var(--wa-color-brand-on-quiet);
+  }
+
+  .lexml-default-ds .wa-success,
+  .lexml-default-ds :host([variant='success']) {
+    --wa-color-fill-loud: var(--wa-color-success-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-success-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-success-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-success-border-loud);
+    --wa-color-border-normal: var(--wa-color-success-border-normal);
+    --wa-color-border-quiet: var(--wa-color-success-border-quiet);
+    --wa-color-on-loud: var(--wa-color-success-on-loud);
+    --wa-color-on-normal: var(--wa-color-success-on-normal);
+    --wa-color-on-quiet: var(--wa-color-success-on-quiet);
+  }
+
+  .lexml-default-ds .wa-warning,
+  .lexml-default-ds :host([variant='warning']) {
+    --wa-color-fill-loud: var(--wa-color-warning-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-warning-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-warning-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-warning-border-loud);
+    --wa-color-border-normal: var(--wa-color-warning-border-normal);
+    --wa-color-border-quiet: var(--wa-color-warning-border-quiet);
+    --wa-color-on-loud: var(--wa-color-warning-on-loud);
+    --wa-color-on-normal: var(--wa-color-warning-on-normal);
+    --wa-color-on-quiet: var(--wa-color-warning-on-quiet);
+  }
+
+  .lexml-default-ds .wa-danger,
+  .lexml-default-ds :host([variant='danger']) {
+    --wa-color-fill-loud: var(--wa-color-danger-fill-loud);
+    --wa-color-fill-normal: var(--wa-color-danger-fill-normal);
+    --wa-color-fill-quiet: var(--wa-color-danger-fill-quiet);
+    --wa-color-border-loud: var(--wa-color-danger-border-loud);
+    --wa-color-border-normal: var(--wa-color-danger-border-normal);
+    --wa-color-border-quiet: var(--wa-color-danger-border-quiet);
+    --wa-color-on-loud: var(--wa-color-danger-on-loud);
+    --wa-color-on-normal: var(--wa-color-danger-on-normal);
+    --wa-color-on-quiet: var(--wa-color-danger-on-quiet);
+  }
+}
+
 /* Theme */
-/* Rules shared by all palettes */
+
+/* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
+
+:where(.lexml-default-ds),
+.lexml-default-ds :host {
+  /**
+    * Conditional tokens to check if the key color is >= 60
+    * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
+    * The numeric value of the key is isolated as --wa-color-{hue}-key
+    * If key < 60, the result is 0%
+    * If key >= 60, the result is 100%
+    * Intended to be used in the color-mix() functions below
+    */
+
+  --wa-color-red-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-red-key), 1) * 100%));
+  --wa-color-orange-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-orange-key), 1) * 100%));
+  --wa-color-yellow-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-yellow-key), 1) * 100%));
+  --wa-color-green-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-green-key), 1) * 100%));
+  --wa-color-cyan-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-cyan-key), 1) * 100%));
+  --wa-color-blue-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-blue-key), 1) * 100%));
+  --wa-color-indigo-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-indigo-key), 1) * 100%));
+  --wa-color-purple-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-purple-key), 1) * 100%));
+  --wa-color-pink-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-pink-key), 1) * 100%));
+  --wa-color-gray-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-gray-key), 1) * 100%));
+
+  /**
+    * Tokens to set text color with appropriate WCAG 2.1 contrast
+    * If key < 60, the text color is white
+    * If key >= 60, the text color is {hue}-10
+    */
+
+  --wa-color-red-on: color-mix(in oklab, var(--wa-color-red-10) var(--wa-color-red-gte-60), white);
+  --wa-color-orange-on: color-mix(in oklab, var(--wa-color-orange-10) var(--wa-color-orange-gte-60), white);
+  --wa-color-yellow-on: color-mix(in oklab, var(--wa-color-yellow-10) var(--wa-color-yellow-gte-60), white);
+  --wa-color-green-on: color-mix(in oklab, var(--wa-color-green-10) var(--wa-color-green-gte-60), white);
+  --wa-color-cyan-on: color-mix(in oklab, var(--wa-color-cyan-10) var(--wa-color-cyan-gte-60), white);
+  --wa-color-blue-on: color-mix(in oklab, var(--wa-color-blue-10) var(--wa-color-blue-gte-60), white);
+  --wa-color-indigo-on: color-mix(in oklab, var(--wa-color-indigo-10) var(--wa-color-indigo-gte-60), white);
+  --wa-color-purple-on: color-mix(in oklab, var(--wa-color-purple-10) var(--wa-color-purple-gte-60), white);
+  --wa-color-pink-on: color-mix(in oklab, var(--wa-color-pink-10) var(--wa-color-pink-gte-60), white);
+  --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
+}
+
+@layer wa-color-palette {
+  :where(.lexml-default-ds),
+  .lexml-default-ds .wa-palette-default {
+    --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
+    --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
+    --wa-color-red-80: #ffb8b6 /* oklch(84.803% 0.08289 20.771) */;
+    --wa-color-red-70: #fd8f90 /* oklch(76.801% 0.13322 20.052) */;
+    --wa-color-red-60: #f3676c /* oklch(68.914% 0.17256 20.646) */;
+    --wa-color-red-50: #dc3146 /* oklch(58.857% 0.20512 20.223) */;
+    --wa-color-red-40: #b30532 /* oklch(48.737% 0.19311 18.413) */;
+    --wa-color-red-30: #8a132c /* oklch(41.17% 0.1512 16.771) */;
+    --wa-color-red-20: #631323 /* oklch(33.297% 0.11208 14.847) */;
+    --wa-color-red-10: #3e0913 /* oklch(24.329% 0.08074 15.207) */;
+    --wa-color-red-05: #2a040b /* oklch(19.016% 0.06394 13.71) */;
+    --wa-color-red: var(--wa-color-red-50);
+    --wa-color-red-key: 50;
+
+    --wa-color-orange-95: #fff0e6 /* oklch(96.426% 0.02105 56.133) */;
+    --wa-color-orange-90: #ffdfca /* oklch(92.468% 0.04529 55.325) */;
+    --wa-color-orange-80: #ffbb94 /* oklch(84.588% 0.09454 50.876) */;
+    --wa-color-orange-70: #ff9266 /* oklch(76.744% 0.14429 42.309) */;
+    --wa-color-orange-60: #f46a45 /* oklch(68.848% 0.17805 35.951) */;
+    --wa-color-orange-50: #cd491c /* oklch(58.195% 0.17597 37.577) */;
+    --wa-color-orange-40: #9f3501 /* oklch(47.889% 0.14981 39.957) */;
+    --wa-color-orange-30: #802700 /* oklch(40.637% 0.1298 39.149) */;
+    --wa-color-orange-20: #601b00 /* oklch(33.123% 0.10587 39.117) */;
+    --wa-color-orange-10: #3c0d00 /* oklch(24.043% 0.07768 38.607) */;
+    --wa-color-orange-05: #280600 /* oklch(18.644% 0.0607 38.252) */;
+    --wa-color-orange: var(--wa-color-orange-60);
+    --wa-color-orange-key: 60;
+
+    --wa-color-yellow-95: #fef3cd /* oklch(96.322% 0.05069 93.748) */;
+    --wa-color-yellow-90: #ffe495 /* oklch(92.377% 0.10246 91.296) */;
+    --wa-color-yellow-80: #fac22b /* oklch(84.185% 0.16263 85.991) */;
+    --wa-color-yellow-70: #ef9d00 /* oklch(75.949% 0.16251 72.13) */;
+    --wa-color-yellow-60: #da7e00 /* oklch(67.883% 0.15587 62.246) */;
+    --wa-color-yellow-50: #b45f04 /* oklch(57.449% 0.13836 56.585) */;
+    --wa-color-yellow-40: #8c4602 /* oklch(47.319% 0.11666 54.663) */;
+    --wa-color-yellow-30: #6f3601 /* oklch(40.012% 0.09892 54.555) */;
+    --wa-color-yellow-20: #532600 /* oklch(32.518% 0.08157 53.927) */;
+    --wa-color-yellow-10: #331600 /* oklch(23.846% 0.05834 56.02) */;
+    --wa-color-yellow-05: #220c00 /* oklch(18.585% 0.04625 54.588) */;
+    --wa-color-yellow: var(--wa-color-yellow-80);
+    --wa-color-yellow-key: 80;
+
+    --wa-color-green-95: #e3f9e3 /* oklch(96.006% 0.03715 145.28) */;
+    --wa-color-green-90: #c2f2c1 /* oklch(91.494% 0.08233 144.35) */;
+    --wa-color-green-80: #93da98 /* oklch(82.445% 0.11601 146.11) */;
+    --wa-color-green-70: #5dc36f /* oklch(73.554% 0.15308 147.59) */;
+    --wa-color-green-60: #00ac49 /* oklch(64.982% 0.18414 148.83) */;
+    --wa-color-green-50: #00883c /* oklch(54.765% 0.15165 149.77) */;
+    --wa-color-green-40: #036730 /* oklch(45.004% 0.11963 151.06) */;
+    --wa-color-green-30: #0a5027 /* oklch(37.988% 0.09487 151.62) */;
+    --wa-color-green-20: #0a3a1d /* oklch(30.876% 0.07202 152.23) */;
+    --wa-color-green-10: #052310 /* oklch(22.767% 0.05128 152.45) */;
+    --wa-color-green-05: #031608 /* oklch(17.84% 0.03957 151.36) */;
+    --wa-color-green: var(--wa-color-green-60);
+    --wa-color-green-key: 60;
+
+    --wa-color-cyan-95: #e3f6fb /* oklch(96.063% 0.02111 215.26) */;
+    --wa-color-cyan-90: #c5ecf7 /* oklch(91.881% 0.04314 216.7) */;
+    --wa-color-cyan-80: #7fd6ec /* oklch(82.906% 0.08934 215.86) */;
+    --wa-color-cyan-70: #2fbedc /* oklch(74.18% 0.12169 215.86) */;
+    --wa-color-cyan-60: #00a3c0 /* oklch(65.939% 0.11738 216.42) */;
+    --wa-color-cyan-50: #078098 /* oklch(55.379% 0.09774 217.32) */;
+    --wa-color-cyan-40: #026274 /* oklch(45.735% 0.08074 216.18) */;
+    --wa-color-cyan-30: #014c5b /* oklch(38.419% 0.06817 216.88) */;
+    --wa-color-cyan-20: #003844 /* oklch(31.427% 0.05624 217.32) */;
+    --wa-color-cyan-10: #002129 /* oklch(22.851% 0.04085 217.17) */;
+    --wa-color-cyan-05: #00151b /* oklch(18.055% 0.03231 217.31) */;
+    --wa-color-cyan: var(--wa-color-cyan-70);
+    --wa-color-cyan-key: 70;
+
+    --wa-color-blue-95: #e8f3ff /* oklch(95.944% 0.01996 250.38) */;
+    --wa-color-blue-90: #d1e8ff /* oklch(92.121% 0.03985 248.26) */;
+    --wa-color-blue-80: #9fceff /* oklch(83.572% 0.08502 249.92) */;
+    --wa-color-blue-70: #6eb3ff /* oklch(75.256% 0.1308 252.03) */;
+    --wa-color-blue-60: #3e96ff /* oklch(67.196% 0.17661 254.97) */;
+    --wa-color-blue-50: #0071ec /* oklch(56.972% 0.20461 257.29) */;
+    --wa-color-blue-40: #0053c0 /* oklch(47.175% 0.1846 259.19) */;
+    --wa-color-blue-30: #003f9c /* oklch(39.805% 0.16217 259.98) */;
+    --wa-color-blue-20: #002d77 /* oklch(32.436% 0.1349 260.35) */;
+    --wa-color-blue-10: #001a4e /* oklch(23.965% 0.10161 260.68) */;
+    --wa-color-blue-05: #000f35 /* oklch(18.565% 0.07904 260.75) */;
+    --wa-color-blue: var(--wa-color-blue-50);
+    --wa-color-blue-key: 50;
+
+    --wa-color-indigo-95: #f0f2ff /* oklch(96.341% 0.0175 279.06) */;
+    --wa-color-indigo-90: #dfe5ff /* oklch(92.527% 0.0359 275.35) */;
+    --wa-color-indigo-80: #bcc7ff /* oklch(84.053% 0.07938 275.91) */;
+    --wa-color-indigo-70: #9da9ff /* oklch(75.941% 0.12411 276.95) */;
+    --wa-color-indigo-60: #808aff /* oklch(67.977% 0.17065 277.16) */;
+    --wa-color-indigo-50: #6163f2 /* oklch(57.967% 0.20943 277.04) */;
+    --wa-color-indigo-40: #4945cb /* oklch(48.145% 0.20042 277.08) */;
+    --wa-color-indigo-30: #3933a7 /* oklch(40.844% 0.17864 277.26) */;
+    --wa-color-indigo-20: #292381 /* oklch(33.362% 0.15096 277.21) */;
+    --wa-color-indigo-10: #181255 /* oklch(24.534% 0.11483 277.73) */;
+    --wa-color-indigo-05: #0d0a3a /* oklch(19.092% 0.08825 276.76) */;
+    --wa-color-indigo: var(--wa-color-indigo-50);
+    --wa-color-indigo-key: 50;
+
+    --wa-color-purple-95: #f7f0ff /* oklch(96.49% 0.02119 306.84) */;
+    --wa-color-purple-90: #eedfff /* oklch(92.531% 0.04569 306.6) */;
+    --wa-color-purple-80: #ddbdff /* oklch(84.781% 0.09615 306.52) */;
+    --wa-color-purple-70: #ca99ff /* oklch(76.728% 0.14961 305.27) */;
+    --wa-color-purple-60: #b678f5 /* oklch(68.906% 0.1844 304.96) */;
+    --wa-color-purple-50: #9951db /* oklch(58.603% 0.20465 304.87) */;
+    --wa-color-purple-40: #7936b3 /* oklch(48.641% 0.18949 304.79) */;
+    --wa-color-purple-30: #612692 /* oklch(41.23% 0.16836 304.92) */;
+    --wa-color-purple-20: #491870 /* oklch(33.663% 0.14258 305.12) */;
+    --wa-color-purple-10: #2d0b48 /* oklch(24.637% 0.10612 304.95) */;
+    --wa-color-purple-05: #1e0532 /* oklch(19.393% 0.08461 305.26) */;
+    --wa-color-purple: var(--wa-color-purple-50);
+    --wa-color-purple-key: 50;
+
+    --wa-color-pink-95: #feeff9 /* oklch(96.676% 0.02074 337.69) */;
+    --wa-color-pink-90: #feddf0 /* oklch(93.026% 0.04388 342.45) */;
+    --wa-color-pink-80: #fcb5d8 /* oklch(84.928% 0.09304 348.21) */;
+    --wa-color-pink-70: #f78dbf /* oklch(77.058% 0.14016 351.19) */;
+    --wa-color-pink-60: #e66ba3 /* oklch(69.067% 0.16347 353.69) */;
+    --wa-color-pink-50: #c84382 /* oklch(58.707% 0.17826 354.82) */;
+    --wa-color-pink-40: #9e2a6c /* oklch(48.603% 0.16439 350.08) */;
+    --wa-color-pink-30: #7d1e58 /* oklch(41.017% 0.14211 347.77) */;
+    --wa-color-pink-20: #5e1342 /* oklch(33.442% 0.11808 347.01) */;
+    --wa-color-pink-10: #3c0828 /* oklch(24.601% 0.08768 347.8) */;
+    --wa-color-pink-05: #28041a /* oklch(19.199% 0.06799 346.97) */;
+    --wa-color-pink: var(--wa-color-pink-50);
+    --wa-color-pink-key: 50;
+
+    --wa-color-gray-95: #f1f2f3 /* oklch(96.067% 0.00172 247.84) */;
+    --wa-color-gray-90: #e4e5e9 /* oklch(92.228% 0.0055 274.96) */;
+    --wa-color-gray-80: #c7c9d0 /* oklch(83.641% 0.00994 273.33) */;
+    --wa-color-gray-70: #abaeb9 /* oklch(75.183% 0.01604 273.78) */;
+    --wa-color-gray-60: #9194a2 /* oklch(66.863% 0.02088 276.18) */;
+    --wa-color-gray-50: #717584 /* oklch(56.418% 0.02359 273.77) */;
+    --wa-color-gray-40: #545868 /* oklch(46.281% 0.02644 274.26) */;
+    --wa-color-gray-30: #424554 /* oklch(39.355% 0.02564 276.27) */;
+    --wa-color-gray-20: #2f323f /* oklch(31.97% 0.02354 274.82) */;
+    --wa-color-gray-10: #1b1d26 /* oklch(23.277% 0.01762 275.14) */;
+    --wa-color-gray-05: #101219 /* oklch(18.342% 0.01472 272.42) */;
+    --wa-color-gray: var(--wa-color-gray-40);
+    --wa-color-gray-key: 40;
+  }
+}
+
 @layer wa-color-variant {
   :where(.lexml-default-ds), 
   .lexml-default-ds .wa-brand-blue {
@@ -3586,6 +2603,7 @@ export const waResetString = `
     --wa-color-brand-on: var(--wa-color-gray-on);
   }
 }
+
 @layer wa-color-variant {
   :where(.lexml-default-ds), 
   .lexml-default-ds .wa-neutral-gray {
@@ -3748,6 +2766,7 @@ export const waResetString = `
     --wa-color-neutral-on: var(--wa-color-pink-on);
   }
 }
+
 @layer wa-color-variant {
   :where(.lexml-default-ds), 
   .lexml-default-ds .wa-success-green {
@@ -3910,6 +2929,7 @@ export const waResetString = `
     --wa-color-success-on: var(--wa-color-gray-on);
   }
 }
+
 @layer wa-color-variant {
   :where(.lexml-default-ds), 
   .lexml-default-ds .wa-warning-yellow {
@@ -4072,6 +3092,7 @@ export const waResetString = `
     --wa-color-warning-on: var(--wa-color-gray-on);
   }
 }
+
 @layer wa-color-variant {
   :where(.lexml-default-ds), 
   .lexml-default-ds .wa-danger-red {
@@ -4234,190 +3255,7 @@ export const waResetString = `
     --wa-color-danger-on: var(--wa-color-gray-on);
   }
 }
-/* Generates --wa-color-{hue}-on tokens for pairing with any palette's key colors */
-:where(.lexml-default-ds),
-.lexml-default-ds :host {
-  /**
-    * Conditional tokens to check if the key color is >= 60
-    * Key colors are the most colorful tint in a scale, recorded as --wa-color-{hue} in each palette
-    * The numeric value of the key is isolated as --wa-color-{hue}-key
-    * If key < 60, the result is 0%
-    * If key >= 60, the result is 100%
-    * Intended to be used in the color-mix() functions below
-    */
 
-  --wa-color-red-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-red-key), 1) * 100%));
-  --wa-color-orange-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-orange-key), 1) * 100%));
-  --wa-color-yellow-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-yellow-key), 1) * 100%));
-  --wa-color-green-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-green-key), 1) * 100%));
-  --wa-color-cyan-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-cyan-key), 1) * 100%));
-  --wa-color-blue-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-blue-key), 1) * 100%));
-  --wa-color-indigo-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-indigo-key), 1) * 100%));
-  --wa-color-purple-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-purple-key), 1) * 100%));
-  --wa-color-pink-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-pink-key), 1) * 100%));
-  --wa-color-gray-gte-60: calc(100% - (clamp(0, 60 - var(--wa-color-gray-key), 1) * 100%));
-
-  /**
-    * Tokens to set text color with appropriate WCAG 2.1 contrast
-    * If key < 60, the text color is white
-    * If key >= 60, the text color is {hue}-10
-    */
-
-  --wa-color-red-on: color-mix(in oklab, var(--wa-color-red-10) var(--wa-color-red-gte-60), white);
-  --wa-color-orange-on: color-mix(in oklab, var(--wa-color-orange-10) var(--wa-color-orange-gte-60), white);
-  --wa-color-yellow-on: color-mix(in oklab, var(--wa-color-yellow-10) var(--wa-color-yellow-gte-60), white);
-  --wa-color-green-on: color-mix(in oklab, var(--wa-color-green-10) var(--wa-color-green-gte-60), white);
-  --wa-color-cyan-on: color-mix(in oklab, var(--wa-color-cyan-10) var(--wa-color-cyan-gte-60), white);
-  --wa-color-blue-on: color-mix(in oklab, var(--wa-color-blue-10) var(--wa-color-blue-gte-60), white);
-  --wa-color-indigo-on: color-mix(in oklab, var(--wa-color-indigo-10) var(--wa-color-indigo-gte-60), white);
-  --wa-color-purple-on: color-mix(in oklab, var(--wa-color-purple-10) var(--wa-color-purple-gte-60), white);
-  --wa-color-pink-on: color-mix(in oklab, var(--wa-color-pink-10) var(--wa-color-pink-gte-60), white);
-  --wa-color-gray-on: color-mix(in oklab, var(--wa-color-gray-10) var(--wa-color-gray-gte-60), white);
-}
-@layer wa-color-palette {
-  :where(.lexml-default-ds),
-  .lexml-default-ds .wa-palette-default {
-    --wa-color-red-95: #fff0ef /* oklch(96.667% 0.01632 22.08) */;
-    --wa-color-red-90: #ffdedc /* oklch(92.735% 0.03679 21.966) */;
-    --wa-color-red-80: #ffb8b6 /* oklch(84.803% 0.08289 20.771) */;
-    --wa-color-red-70: #fd8f90 /* oklch(76.801% 0.13322 20.052) */;
-    --wa-color-red-60: #f3676c /* oklch(68.914% 0.17256 20.646) */;
-    --wa-color-red-50: #dc3146 /* oklch(58.857% 0.20512 20.223) */;
-    --wa-color-red-40: #b30532 /* oklch(48.737% 0.19311 18.413) */;
-    --wa-color-red-30: #8a132c /* oklch(41.17% 0.1512 16.771) */;
-    --wa-color-red-20: #631323 /* oklch(33.297% 0.11208 14.847) */;
-    --wa-color-red-10: #3e0913 /* oklch(24.329% 0.08074 15.207) */;
-    --wa-color-red-05: #2a040b /* oklch(19.016% 0.06394 13.71) */;
-    --wa-color-red: var(--wa-color-red-50);
-    --wa-color-red-key: 50;
-
-    --wa-color-orange-95: #fff0e6 /* oklch(96.426% 0.02105 56.133) */;
-    --wa-color-orange-90: #ffdfca /* oklch(92.468% 0.04529 55.325) */;
-    --wa-color-orange-80: #ffbb94 /* oklch(84.588% 0.09454 50.876) */;
-    --wa-color-orange-70: #ff9266 /* oklch(76.744% 0.14429 42.309) */;
-    --wa-color-orange-60: #f46a45 /* oklch(68.848% 0.17805 35.951) */;
-    --wa-color-orange-50: #cd491c /* oklch(58.195% 0.17597 37.577) */;
-    --wa-color-orange-40: #9f3501 /* oklch(47.889% 0.14981 39.957) */;
-    --wa-color-orange-30: #802700 /* oklch(40.637% 0.1298 39.149) */;
-    --wa-color-orange-20: #601b00 /* oklch(33.123% 0.10587 39.117) */;
-    --wa-color-orange-10: #3c0d00 /* oklch(24.043% 0.07768 38.607) */;
-    --wa-color-orange-05: #280600 /* oklch(18.644% 0.0607 38.252) */;
-    --wa-color-orange: var(--wa-color-orange-60);
-    --wa-color-orange-key: 60;
-
-    --wa-color-yellow-95: #fef3cd /* oklch(96.322% 0.05069 93.748) */;
-    --wa-color-yellow-90: #ffe495 /* oklch(92.377% 0.10246 91.296) */;
-    --wa-color-yellow-80: #fac22b /* oklch(84.185% 0.16263 85.991) */;
-    --wa-color-yellow-70: #ef9d00 /* oklch(75.949% 0.16251 72.13) */;
-    --wa-color-yellow-60: #da7e00 /* oklch(67.883% 0.15587 62.246) */;
-    --wa-color-yellow-50: #b45f04 /* oklch(57.449% 0.13836 56.585) */;
-    --wa-color-yellow-40: #8c4602 /* oklch(47.319% 0.11666 54.663) */;
-    --wa-color-yellow-30: #6f3601 /* oklch(40.012% 0.09892 54.555) */;
-    --wa-color-yellow-20: #532600 /* oklch(32.518% 0.08157 53.927) */;
-    --wa-color-yellow-10: #331600 /* oklch(23.846% 0.05834 56.02) */;
-    --wa-color-yellow-05: #220c00 /* oklch(18.585% 0.04625 54.588) */;
-    --wa-color-yellow: var(--wa-color-yellow-80);
-    --wa-color-yellow-key: 80;
-
-    --wa-color-green-95: #e3f9e3 /* oklch(96.006% 0.03715 145.28) */;
-    --wa-color-green-90: #c2f2c1 /* oklch(91.494% 0.08233 144.35) */;
-    --wa-color-green-80: #93da98 /* oklch(82.445% 0.11601 146.11) */;
-    --wa-color-green-70: #5dc36f /* oklch(73.554% 0.15308 147.59) */;
-    --wa-color-green-60: #00ac49 /* oklch(64.982% 0.18414 148.83) */;
-    --wa-color-green-50: #00883c /* oklch(54.765% 0.15165 149.77) */;
-    --wa-color-green-40: #036730 /* oklch(45.004% 0.11963 151.06) */;
-    --wa-color-green-30: #0a5027 /* oklch(37.988% 0.09487 151.62) */;
-    --wa-color-green-20: #0a3a1d /* oklch(30.876% 0.07202 152.23) */;
-    --wa-color-green-10: #052310 /* oklch(22.767% 0.05128 152.45) */;
-    --wa-color-green-05: #031608 /* oklch(17.84% 0.03957 151.36) */;
-    --wa-color-green: var(--wa-color-green-60);
-    --wa-color-green-key: 60;
-
-    --wa-color-cyan-95: #e3f6fb /* oklch(96.063% 0.02111 215.26) */;
-    --wa-color-cyan-90: #c5ecf7 /* oklch(91.881% 0.04314 216.7) */;
-    --wa-color-cyan-80: #7fd6ec /* oklch(82.906% 0.08934 215.86) */;
-    --wa-color-cyan-70: #2fbedc /* oklch(74.18% 0.12169 215.86) */;
-    --wa-color-cyan-60: #00a3c0 /* oklch(65.939% 0.11738 216.42) */;
-    --wa-color-cyan-50: #078098 /* oklch(55.379% 0.09774 217.32) */;
-    --wa-color-cyan-40: #026274 /* oklch(45.735% 0.08074 216.18) */;
-    --wa-color-cyan-30: #014c5b /* oklch(38.419% 0.06817 216.88) */;
-    --wa-color-cyan-20: #003844 /* oklch(31.427% 0.05624 217.32) */;
-    --wa-color-cyan-10: #002129 /* oklch(22.851% 0.04085 217.17) */;
-    --wa-color-cyan-05: #00151b /* oklch(18.055% 0.03231 217.31) */;
-    --wa-color-cyan: var(--wa-color-cyan-70);
-    --wa-color-cyan-key: 70;
-
-    --wa-color-blue-95: #e8f3ff /* oklch(95.944% 0.01996 250.38) */;
-    --wa-color-blue-90: #d1e8ff /* oklch(92.121% 0.03985 248.26) */;
-    --wa-color-blue-80: #9fceff /* oklch(83.572% 0.08502 249.92) */;
-    --wa-color-blue-70: #6eb3ff /* oklch(75.256% 0.1308 252.03) */;
-    --wa-color-blue-60: #3e96ff /* oklch(67.196% 0.17661 254.97) */;
-    --wa-color-blue-50: #0071ec /* oklch(56.972% 0.20461 257.29) */;
-    --wa-color-blue-40: #0053c0 /* oklch(47.175% 0.1846 259.19) */;
-    --wa-color-blue-30: #003f9c /* oklch(39.805% 0.16217 259.98) */;
-    --wa-color-blue-20: #002d77 /* oklch(32.436% 0.1349 260.35) */;
-    --wa-color-blue-10: #001a4e /* oklch(23.965% 0.10161 260.68) */;
-    --wa-color-blue-05: #000f35 /* oklch(18.565% 0.07904 260.75) */;
-    --wa-color-blue: var(--wa-color-blue-50);
-    --wa-color-blue-key: 50;
-
-    --wa-color-indigo-95: #f0f2ff /* oklch(96.341% 0.0175 279.06) */;
-    --wa-color-indigo-90: #dfe5ff /* oklch(92.527% 0.0359 275.35) */;
-    --wa-color-indigo-80: #bcc7ff /* oklch(84.053% 0.07938 275.91) */;
-    --wa-color-indigo-70: #9da9ff /* oklch(75.941% 0.12411 276.95) */;
-    --wa-color-indigo-60: #808aff /* oklch(67.977% 0.17065 277.16) */;
-    --wa-color-indigo-50: #6163f2 /* oklch(57.967% 0.20943 277.04) */;
-    --wa-color-indigo-40: #4945cb /* oklch(48.145% 0.20042 277.08) */;
-    --wa-color-indigo-30: #3933a7 /* oklch(40.844% 0.17864 277.26) */;
-    --wa-color-indigo-20: #292381 /* oklch(33.362% 0.15096 277.21) */;
-    --wa-color-indigo-10: #181255 /* oklch(24.534% 0.11483 277.73) */;
-    --wa-color-indigo-05: #0d0a3a /* oklch(19.092% 0.08825 276.76) */;
-    --wa-color-indigo: var(--wa-color-indigo-50);
-    --wa-color-indigo-key: 50;
-
-    --wa-color-purple-95: #f7f0ff /* oklch(96.49% 0.02119 306.84) */;
-    --wa-color-purple-90: #eedfff /* oklch(92.531% 0.04569 306.6) */;
-    --wa-color-purple-80: #ddbdff /* oklch(84.781% 0.09615 306.52) */;
-    --wa-color-purple-70: #ca99ff /* oklch(76.728% 0.14961 305.27) */;
-    --wa-color-purple-60: #b678f5 /* oklch(68.906% 0.1844 304.96) */;
-    --wa-color-purple-50: #9951db /* oklch(58.603% 0.20465 304.87) */;
-    --wa-color-purple-40: #7936b3 /* oklch(48.641% 0.18949 304.79) */;
-    --wa-color-purple-30: #612692 /* oklch(41.23% 0.16836 304.92) */;
-    --wa-color-purple-20: #491870 /* oklch(33.663% 0.14258 305.12) */;
-    --wa-color-purple-10: #2d0b48 /* oklch(24.637% 0.10612 304.95) */;
-    --wa-color-purple-05: #1e0532 /* oklch(19.393% 0.08461 305.26) */;
-    --wa-color-purple: var(--wa-color-purple-50);
-    --wa-color-purple-key: 50;
-
-    --wa-color-pink-95: #feeff9 /* oklch(96.676% 0.02074 337.69) */;
-    --wa-color-pink-90: #feddf0 /* oklch(93.026% 0.04388 342.45) */;
-    --wa-color-pink-80: #fcb5d8 /* oklch(84.928% 0.09304 348.21) */;
-    --wa-color-pink-70: #f78dbf /* oklch(77.058% 0.14016 351.19) */;
-    --wa-color-pink-60: #e66ba3 /* oklch(69.067% 0.16347 353.69) */;
-    --wa-color-pink-50: #c84382 /* oklch(58.707% 0.17826 354.82) */;
-    --wa-color-pink-40: #9e2a6c /* oklch(48.603% 0.16439 350.08) */;
-    --wa-color-pink-30: #7d1e58 /* oklch(41.017% 0.14211 347.77) */;
-    --wa-color-pink-20: #5e1342 /* oklch(33.442% 0.11808 347.01) */;
-    --wa-color-pink-10: #3c0828 /* oklch(24.601% 0.08768 347.8) */;
-    --wa-color-pink-05: #28041a /* oklch(19.199% 0.06799 346.97) */;
-    --wa-color-pink: var(--wa-color-pink-50);
-    --wa-color-pink-key: 50;
-
-    --wa-color-gray-95: #f1f2f3 /* oklch(96.067% 0.00172 247.84) */;
-    --wa-color-gray-90: #e4e5e9 /* oklch(92.228% 0.0055 274.96) */;
-    --wa-color-gray-80: #c7c9d0 /* oklch(83.641% 0.00994 273.33) */;
-    --wa-color-gray-70: #abaeb9 /* oklch(75.183% 0.01604 273.78) */;
-    --wa-color-gray-60: #9194a2 /* oklch(66.863% 0.02088 276.18) */;
-    --wa-color-gray-50: #717584 /* oklch(56.418% 0.02359 273.77) */;
-    --wa-color-gray-40: #545868 /* oklch(46.281% 0.02644 274.26) */;
-    --wa-color-gray-30: #424554 /* oklch(39.355% 0.02564 276.27) */;
-    --wa-color-gray-20: #2f323f /* oklch(31.97% 0.02354 274.82) */;
-    --wa-color-gray-10: #1b1d26 /* oklch(23.277% 0.01762 275.14) */;
-    --wa-color-gray-05: #101219 /* oklch(18.342% 0.01472 272.42) */;
-    --wa-color-gray: var(--wa-color-gray-40);
-    --wa-color-gray-key: 40;
-  }
-}
 @layer wa-theme {
   :where(.lexml-default-ds),
   .lexml-default-ds .wa-theme-default,
@@ -4744,7 +3582,7 @@ export const waResetString = `
 
     --wa-form-control-required-content: '*';
     --wa-form-control-required-content-color: inherit;
-    --wa-form-control-required-content-offset: 0.1em;
+    --wa-form-control-required-content-offset: -0.1em;
 
     --wa-form-control-padding-block: 0.75em;
     --wa-form-control-padding-inline: 1em;
