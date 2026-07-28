@@ -6,12 +6,10 @@ import { Alerta } from '@lexml/lexml-ui-commons';
 export class LexmlParecerAvisos extends LitElement {
   @property({ type: Array }) alertas: Alerta[] = [];
 
-  @state() totalAlertas = 0;
-
-  private _notifyParentTotal() {
+  private _notifyParentTotal(total: number = this.alertas.length): void {
     this.dispatchEvent(
       new CustomEvent('parecer-total-alertas', {
-        detail: { total: this.alertas.length },
+        detail: { total },
         bubbles: true,
         composed: true,
       }),
@@ -19,13 +17,11 @@ export class LexmlParecerAvisos extends LitElement {
   }
 
   protected firstUpdated(): void {
-    this.totalAlertas = this.alertas.length;
     this._notifyParentTotal();
   }
 
   protected updated(changed: Map<string, unknown>): void {
     if (changed.has('alertas')) {
-      this.totalAlertas = this.alertas.length;
       this._notifyParentTotal();
     }
   }
@@ -66,8 +62,7 @@ export class LexmlParecerAvisos extends LitElement {
           @alertas:alterados=${(
             e: CustomEvent<{ total: number; aumentou: boolean }>,
           ): any => {
-            this.totalAlertas = e.detail.total;
-            this._notifyParentTotal();
+            this._notifyParentTotal(e.detail.total);
           }}
         ></lexml-ui-alertas>
       </div>`;

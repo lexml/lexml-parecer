@@ -293,9 +293,8 @@ export class LexmlEtaParecer extends LitElement {
     this._pendenciasPreenchimento = alertas.map(a => a.mensagem);
   };
 
-  protected firstUpdated(): void {
+  protected async firstUpdated(): Promise<void> {
     this._aplicarTitulosSecoes();
-    this._recalcularAlertas();
     this._definirAbaInicial();
     this._agendarAjusteAltura();
     this._tabGroup?.addEventListener('wa-tab-show', this._onTabShow as any);
@@ -303,6 +302,9 @@ export class LexmlEtaParecer extends LitElement {
     this._resizeObserver = new ResizeObserver(() => this._ajustarAltura());
     this._resizeObserver.observe(this);
     window.addEventListener('resize', this._ajustarAltura);
+
+    await this.updateComplete;
+    this._recalcularAlertas();
   }
 
   private _definirAbaInicial(): void {

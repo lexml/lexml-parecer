@@ -1,4 +1,4 @@
-import { registerIconLibrary } from '@awesome.me/webawesome/dist/webawesome.js';
+import { registerIconLibrary } from '@awesome.me/webawesome/dist/components/icon/library.js';
 
 const ICONS_LEXML_PARECER = '/assets/lexml-parcer/icons/';
 
