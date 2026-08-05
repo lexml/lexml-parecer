@@ -73,6 +73,33 @@ export class LexmlEtaParecer extends LitElement {
   @query('wa-tab-panel[name="voto"] lexml-parecer-voto')
   private _voto?: LexmlParecerVoto;
 
+  @query(
+    'wa-tab-panel[name="ementa"] lexml-parecer-ementa lexml-ui-editor-texto-rico',
+  )
+  private _editorEmenta?: HTMLElement;
+
+  @query(
+    'wa-tab-panel[name="relatorio"] lexml-parecer-relatorio lexml-ui-editor-texto-rico',
+  )
+  private _editorRelatorio?: HTMLElement;
+
+  @query(
+    'wa-tab-panel[name="analise"] lexml-parecer-analise lexml-ui-editor-texto-rico',
+  )
+  private _editorAnalise?: HTMLElement;
+
+  @query(
+    'wa-tab-panel[name="voto"] lexml-parecer-voto lexml-ui-editor-texto-rico',
+  )
+  private _editorVoto?: HTMLElement;
+
+  private _editoresGerenciados = [
+    this._editorEmenta,
+    this._editorRelatorio,
+    this._editorAnalise,
+    this._editorVoto,
+  ];
+
   private _resizeObserver?: ResizeObserver;
 
   private readonly _alturaMinimaEditor = 60;
@@ -501,6 +528,48 @@ export class LexmlEtaParecer extends LitElement {
 
   private _onNrEvt = () => this._scheduleRenumGlobal();
 
+  // Só editores gerenciados participam dessa sincronização; ignora eventos de outros editores da página.
+  private _origemEhEditorGerenciado(ev: Event): boolean {
+    const path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
+
+    return this._editoresGerenciados
+      .filter(Boolean)
+      .some(ed => path.includes(ed!));
+  }
+
+  private _onIgnorarTermoOrtografico = (
+    ev: CustomEvent<{ erro?: { word?: string } }>,
+  ): void => {
+    const termo = ev.detail?.erro?.word;
+    if (!termo || !this._origemEhEditorGerenciado(ev)) return;
+    this._sincronizarIgnorarTermoOrtografico(termo);
+  };
+
+  private _sincronizarIgnorarTermoOrtografico(termo: string): void {
+    this._editoresGerenciados.forEach((ed: any) =>
+      ed?.ignorarTermoOrtografico?.(termo, true),
+    );
+  }
+
+  private _onRemoverTermoIgnorado = (
+    ev: CustomEvent<{ termo?: string }>,
+  ): void => {
+    const termo = ev.detail?.termo;
+    if (!termo || !this._origemEhEditorGerenciado(ev)) return;
+    this._sincronizarRemoverTermoIgnorado(termo, ev.composedPath());
+  };
+
+  private _sincronizarRemoverTermoIgnorado(
+    termo: string,
+    caminhoOrigem: EventTarget[],
+  ): void {
+    this._editoresGerenciados.forEach((ed: any) => {
+      // Pula o editor que originou o evento (já tratado pelo próprio undo)
+      if (ed && caminhoOrigem.includes(ed)) return;
+      ed?.desfazerIgnorarTermoOrtografico?.(termo);
+    });
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('switch-revisao:intent', this._onSwitchIntent as any);
@@ -509,6 +578,14 @@ export class LexmlEtaParecer extends LitElement {
     this.addEventListener('rte:revision-count', this._onRevisionCount as any);
     this.addEventListener('rte:revision-change', this._onRevisionChange as any);
     this.addEventListener('onchange', this._onRteChange as any);
+    this.addEventListener(
+      'verificacao-ortografica:ignorar-todos',
+      this._onIgnorarTermoOrtografico as any,
+    );
+    this.addEventListener(
+      'verificacao-ortografica:remover-termo-ignorado',
+      this._onRemoverTermoIgnorado as any,
+    );
   }
 
   disconnectedCallback(): void {
@@ -532,6 +609,16 @@ export class LexmlEtaParecer extends LitElement {
       this._onRevisionChange as any,
     );
     this.removeEventListener('onchange', this._onRteChange as any);
+
+    this.removeEventListener(
+      'verificacao-ortografica:ignorar-todos',
+      this._onIgnorarTermoOrtografico as any,
+    );
+    this.removeEventListener(
+      'verificacao-ortografica:remover-termo-ignorado',
+      this._onRemoverTermoIgnorado as any,
+    );
+
     super.disconnectedCallback();
   }
 
