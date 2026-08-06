@@ -574,6 +574,23 @@ export class LexmlEtaParecer extends LitElement {
     });
   }
 
+  private _obterTermosIgnorados(): string[] {
+    const termos = this._editoresGerenciados.flatMap(
+      (ed: any) => ed?.getDicionarioTermosIgnorados?.() ?? [],
+    );
+    return Array.from(new Set(termos)).sort((a, b) =>
+      a.localeCompare(b, 'pt-BR'),
+    );
+  }
+
+  private _definirTermosIgnorados(termos: unknown): void {
+    if (!Array.isArray(termos) || termos.length === 0) return;
+
+    this._editoresGerenciados.forEach((ed: any) =>
+      ed?.mesclarDicionarioTermosIgnorados?.(termos),
+    );
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('switch-revisao:intent', this._onSwitchIntent as any);
@@ -691,6 +708,7 @@ export class LexmlEtaParecer extends LitElement {
       ].filter(Boolean),
     );
     await 0;
+    this._definirTermosIgnorados(this.parecer.metadados?.termosIgnorados);
     await this._ensureRevisionModeIfNeeded(this.parecer);
 
     this._recalcularAlertas();
@@ -756,6 +774,10 @@ export class LexmlEtaParecer extends LitElement {
     this.parecer = {
       ...this.parecer,
       dataUltimaModificacao: new Date().toISOString(),
+      metadados: {
+        ...(this.parecer.metadados ?? {}),
+        termosIgnorados: this._obterTermosIgnorados(),
+      },
       ementa: ementaHtml,
       opcoesImpressao: { ...opcoesImpressao },
       data,
