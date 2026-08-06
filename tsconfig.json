@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2021",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noEmitOnError": true,
     "lib": ["es2021", "dom", "DOM.Iterable"],
     "strict": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -15,7 +14,6 @@
     "inlineSources": true,
     "rootDir": "./",
     "incremental": true,
-    "baseUrl": ".",
     "skipLibCheck": true
   },
   "include": ["**/*.ts", "src/**/*", "src/types/**/*.d.ts"],

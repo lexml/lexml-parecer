@@ -1,5 +1,5 @@
-import { Parlamentar } from 'src/models/diversos.model.js';
-import { AnexoParecer } from 'src/models/anexo-parecer.model.js';
+import { AnexoParecer } from '../models/anexo-parecer.model';
+import { Parlamentar } from '../models/diversos.model';
 
 export type UploadAnexoCallback = (file: File) => string | Promise<string>;
 export type DeleteAnexoCallback = (anexo: AnexoParecer) => void | Promise<void>;
