@@ -93,12 +93,16 @@ export class LexmlEtaParecer extends LitElement {
   )
   private _editorVoto?: HTMLElement;
 
-  private _editoresGerenciados = [
-    this._editorEmenta,
-    this._editorRelatorio,
-    this._editorAnalise,
-    this._editorVoto,
-  ];
+  // Getter: os campos de @query só são resolvidos após o primeiro render,
+  // então o array precisa ser reconstruído a cada acesso (não pode ser fixado no construtor).
+  private get _editoresGerenciados(): (HTMLElement | undefined)[] {
+    return [
+      this._editorEmenta,
+      this._editorRelatorio,
+      this._editorAnalise,
+      this._editorVoto,
+    ];
+  }
 
   private _resizeObserver?: ResizeObserver;
 
