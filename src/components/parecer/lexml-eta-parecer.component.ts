@@ -584,10 +584,10 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   private _definirTermosIgnorados(termos: unknown): void {
-    if (!Array.isArray(termos) || termos.length === 0) return;
+    if (!Array.isArray(termos)) return;
 
     this._editoresGerenciados.forEach((ed: any) =>
-      ed?.mesclarDicionarioTermosIgnorados?.(termos),
+      ed?.definirDicionarioTermosIgnorados?.(termos),
     );
   }
 
@@ -708,7 +708,7 @@ export class LexmlEtaParecer extends LitElement {
       ].filter(Boolean),
     );
     await 0;
-    this._definirTermosIgnorados(this.parecer.metadados?.termosIgnorados);
+    this._definirTermosIgnorados(this.parecer.metadados?.termosIgnorados || []);
     await this._ensureRevisionModeIfNeeded(this.parecer);
 
     this._recalcularAlertas();
