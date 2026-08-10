@@ -12,7 +12,11 @@ import {
   TipoDocumento,
   TipoDocumentoLabel,
 } from '../../types/tipo-documento.js';
-import { alertarInfo, Usuario } from '@lexml/lexml-ui-commons';
+import {
+  alertarInfo,
+  ConfiguracaoPainelNotasRodape,
+  Usuario,
+} from '@lexml/lexml-ui-commons';
 import { NotaRodape } from '../../models/diversos.model.js';
 import { RevisaoVoto } from '../../models/revisao.model.js';
 
@@ -31,6 +35,8 @@ export class LexmlParecerVoto extends LitElement {
   @property({ attribute: false }) onObterAnexoBlob?: ObterAnexoBlobCallback;
   @property({ attribute: false }) onVisualizarAnexo?: VisualizarAnexoCallback;
   @property({ type: Number }) alturaEditor = 320;
+  @property({ attribute: false })
+  configuracaoPainelNotasRodape?: ConfiguracaoPainelNotasRodape;
 
   @query('lexml-ui-editor-texto-rico')
   private _ed!: HTMLElement & {
@@ -856,7 +862,7 @@ export class LexmlParecerVoto extends LitElement {
         <div class="wa-span-grid">
           <lexml-ui-editor-texto-rico
             .height=${this.alturaEditor}
-            orientacaoNotaRodaPe="abaixo"
+            .configuracaoPainelNotasRodape=${this.configuracaoPainelNotasRodape}
             @onchange=${this._onTextoChange}
           ></lexml-ui-editor-texto-rico>
         </div>

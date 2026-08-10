@@ -1,9 +1,12 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import {
+  CONFIGURACAO_PAINEL_NOTAS_RODAPE_CHANGE_EVENT,
+  ConfiguracaoPainelNotasRodape,
   Revisao,
   Usuario,
   alertarInfo,
+  criarConfiguracaoPainelNotasRodapePadrao,
   TipoMensagem,
   Alerta,
 } from '@lexml/lexml-ui-commons';
@@ -52,6 +55,10 @@ export class LexmlEtaParecer extends LitElement {
   @state() private _abaAtiva: string = 'relatorio';
 
   @state() private _alturaEditor = 590;
+
+  @state()
+  private _configuracaoPainelNotasRodape =
+    criarConfiguracaoPainelNotasRodapePadrao();
 
   @query('wa-tab-group')
   private _tabGroup?: any;
@@ -102,6 +109,10 @@ export class LexmlEtaParecer extends LitElement {
       this._editorAnalise,
       this._editorVoto,
     ];
+  }
+
+  private get _editoresNotasRodapeGerenciados(): (HTMLElement | undefined)[] {
+    return [this._editorRelatorio, this._editorAnalise, this._editorVoto];
   }
 
   private _resizeObserver?: ResizeObserver;
@@ -541,6 +552,47 @@ export class LexmlEtaParecer extends LitElement {
       .some(ed => path.includes(ed!));
   }
 
+  private _origemEhEditorNotasRodapeGerenciado(ev: Event): boolean {
+    const path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
+
+    return this._editoresNotasRodapeGerenciados
+      .filter(Boolean)
+      .some(ed => path.includes(ed!));
+  }
+
+  private _onConfiguracaoPainelNotasRodapeChange = (
+    ev: CustomEvent<ConfiguracaoPainelNotasRodape>,
+  ): void => {
+    if (!this._origemEhEditorNotasRodapeGerenciado(ev)) return;
+
+    const configuracao = ev.detail;
+    const lado = Number(configuracao?.percentualSplit?.lado);
+    const abaixo = Number(configuracao?.percentualSplit?.abaixo);
+    if (
+      !configuracao ||
+      (configuracao.orientacao !== 'lado' &&
+        configuracao.orientacao !== 'abaixo') ||
+      !Number.isFinite(lado) ||
+      !Number.isFinite(abaixo)
+    ) {
+      return;
+    }
+
+    const configuracaoAtual = this._configuracaoPainelNotasRodape;
+    if (
+      configuracaoAtual.orientacao === configuracao.orientacao &&
+      configuracaoAtual.percentualSplit.lado === lado &&
+      configuracaoAtual.percentualSplit.abaixo === abaixo
+    ) {
+      return;
+    }
+
+    this._configuracaoPainelNotasRodape = {
+      orientacao: configuracao.orientacao,
+      percentualSplit: { lado, abaixo },
+    };
+  };
+
   private _onIgnorarTermoOrtografico = (
     ev: CustomEvent<{ erro?: { word?: string } }>,
   ): void => {
@@ -600,6 +652,10 @@ export class LexmlEtaParecer extends LitElement {
     this.addEventListener('rte:revision-change', this._onRevisionChange as any);
     this.addEventListener('onchange', this._onRteChange as any);
     this.addEventListener(
+      CONFIGURACAO_PAINEL_NOTAS_RODAPE_CHANGE_EVENT,
+      this._onConfiguracaoPainelNotasRodapeChange as EventListener,
+    );
+    this.addEventListener(
       'verificacao-ortografica:ignorar-todos',
       this._onIgnorarTermoOrtografico as any,
     );
@@ -630,6 +686,10 @@ export class LexmlEtaParecer extends LitElement {
       this._onRevisionChange as any,
     );
     this.removeEventListener('onchange', this._onRteChange as any);
+    this.removeEventListener(
+      CONFIGURACAO_PAINEL_NOTAS_RODAPE_CHANGE_EVENT,
+      this._onConfiguracaoPainelNotasRodapeChange as EventListener,
+    );
 
     this.removeEventListener(
       'verificacao-ortografica:ignorar-todos',
@@ -978,6 +1038,8 @@ export class LexmlEtaParecer extends LitElement {
               <div class="tab-panel-content">
                 <lexml-parecer-relatorio
                   .alturaEditor=${alturaEditorPrincipal}
+                  .configuracaoPainelNotasRodape=${this
+                    ._configuracaoPainelNotasRodape}
                 ></lexml-parecer-relatorio>
               </div>
             </wa-tab-panel>
@@ -985,6 +1047,8 @@ export class LexmlEtaParecer extends LitElement {
               <div class="tab-panel-content">
                 <lexml-parecer-analise
                   .alturaEditor=${alturaEditorPrincipal}
+                  .configuracaoPainelNotasRodape=${this
+                    ._configuracaoPainelNotasRodape}
                 ></lexml-parecer-analise>
               </div>
             </wa-tab-panel>
@@ -992,6 +1056,8 @@ export class LexmlEtaParecer extends LitElement {
               <div class="tab-panel-content">
                 <lexml-parecer-voto
                   .alturaEditor=${alturaEditorVoto}
+                  .configuracaoPainelNotasRodape=${this
+                    ._configuracaoPainelNotasRodape}
                   .onUploadAnexo=${this.onUploadAnexo}
                   .onDeleteAnexo=${this.onDeleteAnexo}
                   .onObterAnexoBlob=${this.onObterAnexoBlob}
