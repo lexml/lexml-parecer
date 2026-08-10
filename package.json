@@ -30,7 +30,7 @@
   "devDependencies": {
     "@awesome.me/webawesome": "3.0.0-beta.4",
     "@custom-elements-manifest/analyzer": "^0.10.3",
-    "@lexml/lexml-ui-commons": "file:ui-commons/lexml-lexml-ui-commons-0.0.0-dev.20260806144614.tgz",
+    "@lexml/lexml-ui-commons": "file:ui-commons/lexml-lexml-ui-commons-0.0.0-dev.20260810141627.tgz",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-alias": "^5.1.1",
