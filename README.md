@@ -5,18 +5,54 @@ This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) reco
 ## Installation
 
 ```bash
-npm i lexml-eta-parecer
+npm i @lexml/lexml-parecer
 ```
 
 ## Usage
 
-```html
-<script type="module">
-  import 'lexml-eta-parecer/lexml-eta-parecer.js';
-</script>
+```ts
+import { Usuario } from '@lexml/lexml-parecer';
+import type {
+  LexmlEtaParecer,
+  LexmlEtaParecerParametrosEdicao,
+  LexmlParecerConfig,
+  Parlamentar,
+} from '@lexml/lexml-parecer';
 
+const editor = document.querySelector(
+  'lexml-eta-parecer',
+) as LexmlEtaParecer | null;
+const parlamentar: Parlamentar = {
+  identificacao: '123',
+  nome: 'Nome do parlamentar',
+  sexo: 'M',
+  siglaPartido: 'ABC',
+  siglaUF: 'DF',
+  siglaCasaLegislativa: 'SF',
+  cargo: 'Senador',
+};
+const config: Partial<LexmlParecerConfig> = {
+  parlamentares: [parlamentar],
+};
+const params: LexmlEtaParecerParametrosEdicao = {
+  parecer: { relatorio: 'Texto inicial' },
+};
+
+if (editor) {
+  editor.lexmlParecerConfig = config;
+  editor.setUsuario(new Usuario('Usuário', 'usuario', 'U'));
+  await editor.inicializarEdicao(params);
+}
+```
+
+```html
 <lexml-eta-parecer></lexml-eta-parecer>
 ```
+
+O entry point registra o Web Component e publica somente os valores de runtime
+`LexmlEtaParecer`, `Parecer` e `Usuario`. Configuração, parâmetros de edição,
+parlamentar, anexo e resultado de obtenção de anexo são publicados com
+`export type`, pois servem apenas à checagem do TypeScript.
 
 ## Linting and formatting
 
@@ -45,7 +81,6 @@ To run the tests in interactive watch mode run:
 ```bash
 npm run test:watch
 ```
-
 
 ## Tooling configs
 
@@ -99,4 +134,3 @@ UI_COMMONS_PATH="C:/Users/ruan.oliveira/DEV/git/lexml-ui-commons" ./update-lexml
 ## Integracao com script do host (LexEdit)
 
 O script do host (`lexeditweb-editor/src/main/javascript/update-lexml-parecer.sh`) pode chamar este script automaticamente quando `UPDATE_UI_COMMONS=true`.
-

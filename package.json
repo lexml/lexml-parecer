@@ -8,21 +8,34 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "browser": "dist/index.min.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
   "scripts": {
-    "analyze": "cem analyze --litelement",
+    "analyze": "cem analyze --litelement --globs \"src/**/*.ts\" --exclude \"src/assets/**\" --outdir dist",
     "start": "rimraf dist && npm run generate:styles && tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"web-dev-server\"",
     "build": "rimraf dist && npm run generate:styles && rollup -c",
     "build:watch": "rollup -c --watch",
     "build:tsc": "tsc && npm run analyze -- --exclude dist",
-    "prepublish": "npm run build && npm run analyze -- --exclude dist",
+    "prepublish": "npm run build && npm run analyze && npm run validate:package",
+    "validate:package": "node scripts/validate-package.mjs",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "prepare": "husky",
-    "test": "tsc && wtr --coverage",
-    "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
+    "test": "npm run build && rimraf dist-test && tsc -p tsconfig.test.json && wtr --coverage",
+    "test:watch": "npm run build && rimraf dist-test && tsc -p tsconfig.test.json && concurrently -k -r \"tsc -p tsconfig.test.json --watch --preserveWatchOutput\" \"wtr --watch\"",
     "generate:styles": "node build-styles.cjs"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@awesome.me/webawesome": "3.0.0-beta.4",
     "lit": "3.3.3"
@@ -30,7 +43,7 @@
   "devDependencies": {
     "@awesome.me/webawesome": "3.0.0-beta.4",
     "@custom-elements-manifest/analyzer": "^0.10.3",
-    "@lexml/lexml-ui-commons": "file:ui-commons/lexml-lexml-ui-commons-0.0.0-dev.20260810155730.tgz",
+    "@lexml/lexml-ui-commons": "file:ui-commons/lexml-lexml-ui-commons-0.0.0-dev.20260826142758.tgz",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-alias": "^5.1.1",
@@ -65,12 +78,13 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.48.1",
     "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-dts": "^6.2.3",
     "rollup-plugin-lit-css": "^6.0.0",
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3"
   },
-  "customElements": "custom-elements.json",
+  "customElements": "dist/custom-elements.json",
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "extends": [

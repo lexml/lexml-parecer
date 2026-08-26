@@ -1,5 +1,5 @@
 //import { AnexoParecer } from './anexo-parecer.model.js';
-import { NotaRodape } from './diversos.model.js';
+import type { NotaRodape } from './nota-rodape.model.js';
 
 export class ItemVoto {
   texto?: string;

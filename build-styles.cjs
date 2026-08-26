@@ -75,8 +75,7 @@ async function build() {
     ]);
 
     // Cria o conteúdo do arquivo TypeScript
-    const tsContent = `
-/* eslint-disable no-useless-escape */
+    const tsContent = `/* eslint-disable no-useless-escape */
 /**
  * ARQUIVO GERADO AUTOMATICAMENTE via build-styles.cjs
  * NÃO EDITE MANUALMENTE.

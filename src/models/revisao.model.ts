@@ -1,4 +1,5 @@
-import { RevisaoTextoLivre, Usuario } from '@lexml/lexml-ui-commons';
+import { RevisaoTextoLivre } from '@lexml/lexml-ui-commons';
+import type { Usuario } from '@lexml/lexml-ui-commons';
 
 export class RevisaoRelatorio extends RevisaoTextoLivre {
   type = 'RevisaoRelatorio';

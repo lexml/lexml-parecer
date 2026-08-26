@@ -5,9 +5,22 @@ import typescript from '@rollup/plugin-typescript';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
+import dts from 'rollup-plugin-dts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const uiCommonsTypes = path.resolve(
+  __dirname,
+  'node_modules/@lexml/lexml-ui-commons/dist/index.d.ts',
+);
+
+const resolveUiCommonsTypes = {
+  name: 'resolve-ui-commons-types',
+  resolveId(source) {
+    if (source === '@lexml/lexml-ui-commons') return uiCommonsTypes;
+    return null;
+  },
+};
 
 const isolateBundledQuill = {
   name: 'isolate-bundled-quill',
@@ -26,7 +39,7 @@ const basePlugins = [
   nodeResolve({ browser: true, preferBuiltins: false, exportConditions: ['browser','module','import','default'] }),
   isolateBundledQuill,
   commonjs(),
-  typescript({ tsconfig: 'tsconfig.json', sourceMap: true }),
+  typescript({ tsconfig: 'tsconfig.rollup.json', sourceMap: true }),
 ];
 
 const isExternal = id =>
@@ -72,4 +85,17 @@ const configTsMin = {
   external: isExternal
 };
 
-export default defineConfig([configTs, configTsMin]);
+const configTypes = {
+  input: 'src/index.ts',
+  output: {
+    file: 'dist/index.d.ts',
+    format: 'es',
+  },
+  plugins: [
+    resolveUiCommonsTypes,
+    dts({ tsconfig: 'tsconfig.types.json' }),
+  ],
+  external: id => id === 'lit' || id.startsWith('lit/'),
+};
+
+export default defineConfig([configTs, configTsMin, configTypes]);

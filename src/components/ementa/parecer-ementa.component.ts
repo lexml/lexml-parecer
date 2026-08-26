@@ -1,7 +1,7 @@
 import { Usuario } from '@lexml/lexml-ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { NotaRodape } from '../../models/diversos.model.js';
+import type { NotaRodape } from '../../models/nota-rodape.model.js';
 import { RevisaoEmenta } from '../../models/revisao.model.js';
 
 @customElement('lexml-parecer-ementa')
@@ -96,5 +96,11 @@ export class LexmlParecerEmenta extends LitElement {
       .toolbar=${'italic'}
       inline="true"
     ></lexml-ui-editor-texto-rico>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-parecer-ementa': LexmlParecerEmenta;
   }
 }

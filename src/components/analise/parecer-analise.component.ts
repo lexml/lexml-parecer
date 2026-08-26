@@ -1,10 +1,8 @@
-import {
-  ConfiguracaoPainelNotasRodape,
-  Usuario,
-} from '@lexml/lexml-ui-commons';
+import { Usuario } from '@lexml/lexml-ui-commons';
+import type { ConfiguracaoPainelNotasRodape } from '@lexml/lexml-ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { NotaRodape } from '../../models/diversos.model.js';
+import type { NotaRodape } from '../../models/nota-rodape.model.js';
 import { RevisaoAnalise } from '../../models/revisao.model.js';
 
 @customElement('lexml-parecer-analise')
@@ -100,5 +98,11 @@ export class LexmlParecerAnalise extends LitElement {
       .height=${this.alturaEditor}
       .configuracaoPainelNotasRodape=${this.configuracaoPainelNotasRodape}
     ></lexml-ui-editor-texto-rico>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-parecer-analise': LexmlParecerAnalise;
   }
 }

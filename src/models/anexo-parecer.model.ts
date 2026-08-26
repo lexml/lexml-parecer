@@ -5,10 +5,10 @@ export enum MimeType {
   DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 }
 
-export class AnexoParecer {
-  idArquivo = '';
-  nomeArquivo = '';
-  nomeDocumento = '';
+export interface AnexoParecer {
+  idArquivo: string;
+  nomeArquivo: string;
+  nomeDocumento: string;
   tipo?: TipoDocumento;
-  mimeType: MimeType = MimeType.PDF;
+  mimeType: MimeType;
 }

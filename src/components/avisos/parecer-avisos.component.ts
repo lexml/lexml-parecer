@@ -1,6 +1,6 @@
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, state, property } from 'lit/decorators.js';
-import { Alerta } from '@lexml/lexml-ui-commons';
+import { customElement, property } from 'lit/decorators.js';
+import type { Alerta } from '@lexml/lexml-ui-commons';
 
 @customElement('lexml-parecer-avisos')
 export class LexmlParecerAvisos extends LitElement {
@@ -66,5 +66,11 @@ export class LexmlParecerAvisos extends LitElement {
           }}
         ></lexml-ui-alertas>
       </div>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-parecer-avisos': LexmlParecerAvisos;
   }
 }

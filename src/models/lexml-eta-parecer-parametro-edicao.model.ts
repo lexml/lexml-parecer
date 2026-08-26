@@ -1,5 +1,5 @@
-import { Parecer } from './diversos.model.js';
+import type { Parecer } from './parecer.model.js';
 
-export class LexmlEtaParecerParametrosEdicao {
-  parecer?: Parecer;
+export interface LexmlEtaParecerParametrosEdicao {
+  parecer?: Partial<Parecer>;
 }

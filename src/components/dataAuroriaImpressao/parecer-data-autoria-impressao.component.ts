@@ -1,19 +1,25 @@
-import { Data, OpcoesImpressaoComponent } from '@lexml/lexml-ui-commons';
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
-import {
-  AutoriaParecer,
-  OpcoesImpressao,
-  Parlamentar,
-} from '../../models/diversos.model.js';
-import { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.component.js';
+import type { AutoriaParecer } from '../../models/autoria-parecer.model.js';
+import { OpcoesImpressao } from '../../models/opcoes-impressao.model.js';
+import type { Parlamentar } from '../../models/parlamentar.model.js';
+import '../autoria/parecer-autoria.component.js';
+import type { LexmlParecerAutoriaComponent } from '../autoria/parecer-autoria.component.js';
+
+type DataElement = HTMLElement & {
+  getData(): string | null;
+};
+
+type OpcoesImpressaoElement = HTMLElement & {
+  getOpcoesImpressao(): OpcoesImpressao;
+};
 
 @customElement('lexml-parecer-data-autoria-impressao')
 export class LexmlParecerDataAutoriaImpressao extends LitElement {
-  @query('lexml-ui-data') private _data!: Data;
+  @query('lexml-ui-data') private _data!: DataElement;
 
   @query('lexml-ui-opcoes-impressao')
-  private _opcoesImpressao!: OpcoesImpressaoComponent;
+  private _opcoesImpressao!: OpcoesImpressaoElement;
 
   @query('lexml-parecer-autoria')
   private _parecerAutoria!: LexmlParecerAutoriaComponent;
@@ -109,5 +115,11 @@ export class LexmlParecerDataAutoriaImpressao extends LitElement {
         ></lexml-ui-opcoes-impressao>
       </div>
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-parecer-data-autoria-impressao': LexmlParecerDataAutoriaImpressao;
   }
 }

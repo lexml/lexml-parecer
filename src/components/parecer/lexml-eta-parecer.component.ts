@@ -2,25 +2,30 @@ import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import {
   CONFIGURACAO_PAINEL_NOTAS_RODAPE_CHANGE_EVENT,
-  ConfiguracaoPainelNotasRodape,
-  Revisao,
-  Usuario,
   alertarInfo,
   criarConfiguracaoPainelNotasRodapePadrao,
   TipoMensagem,
-  Alerta,
 } from '@lexml/lexml-ui-commons';
-import {
-  AutoriaParecer,
-  NotaRodape,
-  OpcoesImpressao,
-  Parecer,
-  Parlamentar,
-} from '../../models/diversos.model.js';
-import { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-parametro-edicao.model.js';
-import { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
-import { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
-import {
+import type {
+  Alerta,
+  ConfiguracaoPainelNotasRodape,
+  Usuario,
+} from '@lexml/lexml-ui-commons';
+import type { AutoriaParecer } from '../../models/autoria-parecer.model.js';
+import type { NotaRodape } from '../../models/nota-rodape.model.js';
+import type { OpcoesImpressao } from '../../models/opcoes-impressao.model.js';
+import { Parecer } from '../../models/parecer.model.js';
+import type { Parlamentar } from '../../models/parlamentar.model.js';
+import type { LexmlEtaParecerParametrosEdicao } from '../../models/lexml-eta-parecer-parametro-edicao.model.js';
+import '../analise/parecer-analise.component.js';
+import '../avisos/parecer-avisos.component.js';
+import '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
+import '../ementa/parecer-ementa.component.js';
+import '../relatorio/parecer-relatorio.component.js';
+import '../voto/parecer-voto.component.js';
+import type { LexmlParecerDataAutoriaImpressao } from '../dataAuroriaImpressao/parecer-data-autoria-impressao.component.js';
+import type { LexmlParecerVoto } from '../voto/parecer-voto.component.js';
+import type {
   DeleteAnexoCallback,
   LexmlParecerConfig,
   ObterAnexoBlobCallback,
@@ -720,13 +725,42 @@ export class LexmlEtaParecer extends LitElement {
     }
   };
 
-  private async setParecer(parecer: Parecer): Promise<void> {
-    if (!parecer) return;
-    this.parecer = {
+  private _normalizarParecer(parecer: Partial<Parecer>): Parecer {
+    const padrao = new Parecer();
+    const destinoRecebido = parecer.destino;
+
+    return {
+      ...padrao,
       ...parecer,
-      dataUltimaModificacao:
-        parecer.dataUltimaModificacao ?? new Date().toISOString(),
+      metadados: { ...padrao.metadados, ...(parecer.metadados ?? {}) },
+      pendenciasPreenchimento: [
+        ...(parecer.pendenciasPreenchimento ?? padrao.pendenciasPreenchimento),
+      ],
+      materia: { ...padrao.materia, ...(parecer.materia ?? {}) },
+      anexos: [...(parecer.anexos ?? padrao.anexos)],
+      destino: {
+        ...padrao.destino,
+        ...(destinoRecebido ?? {}),
+        comissao:
+          destinoRecebido?.comissao === null
+            ? null
+            : destinoRecebido?.comissao
+              ? { ...destinoRecebido.comissao }
+              : padrao.destino.comissao,
+      },
+      autoria: { ...padrao.autoria, ...(parecer.autoria ?? {}) },
+      opcoesImpressao: {
+        ...padrao.opcoesImpressao,
+        ...(parecer.opcoesImpressao ?? {}),
+      },
+      revisoes: [...(parecer.revisoes ?? padrao.revisoes)],
+      notasRodape: [...(parecer.notasRodape ?? padrao.notasRodape)],
     };
+  }
+
+  private async setParecer(parecer: Partial<Parecer>): Promise<void> {
+    if (!parecer) return;
+    this.parecer = this._normalizarParecer(parecer);
 
     // ---------- Data, Autoria e Impressão ----------
     const dai = this._dataAutoriaImpressao as any;
@@ -824,7 +858,7 @@ export class LexmlEtaParecer extends LitElement {
     const revisoesAna = (this._analise as any)?.getRevisoes?.() ?? [];
     const revisoesVoto = (this._voto as any)?.getRevisoes?.() ?? [];
 
-    const revisoes: Revisao[] = [
+    const revisoes: Parecer['revisoes'] = [
       ...revisoesEme,
       ...revisoesRel,
       ...revisoesAna,
@@ -1090,5 +1124,11 @@ export class LexmlEtaParecer extends LitElement {
         </div>
       </div>
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-eta-parecer': LexmlEtaParecer;
   }
 }

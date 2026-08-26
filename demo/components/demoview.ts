@@ -1,25 +1,24 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import '../../src/index.js';
-import {
-  AutoriaParecer,
-  OpcoesImpressao,
-  Parecer,
-  ProposicaoReferenciada,
-} from '../../src/models/diversos.model.js';
+import { AutoriaParecer } from '../../src/models/autoria-parecer.model.js';
+import { OpcoesImpressao } from '../../src/models/opcoes-impressao.model.js';
+import { Parecer } from '../../src/models/parecer.model.js';
+import { ProposicaoReferenciada } from '../../src/models/proposicao-referenciada.model.js';
 import { LexmlEtaParecer } from '../../src/components/parecer/lexml-eta-parecer.component.js';
-import { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
-import { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
-import { Comissao, Destino, Revisao, Usuario } from '@lexml/lexml-ui-commons';
+import type { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.js';
+import type { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
+import { Destino } from '@lexml/lexml-ui-commons';
+import type { Usuario } from '@lexml/lexml-ui-commons';
 import { TipoDocumento } from '../../src/types/tipo-documento.js';
 import {
   RevisaoRelatorio,
   RevisaoVoto,
 } from '../../src/models/revisao.model.js';
-import {
-  AnexoParecer,
-  MimeType,
-} from '../../src/models/anexo-parecer.model.js';
+import { MimeType } from '../../src/models/anexo-parecer.model.js';
+import type { AnexoParecer } from '../../src/models/anexo-parecer.model.js';
+
+type Comissao = NonNullable<Destino['comissao']>;
 
 @customElement('demo-view')
 export class DemoView extends LitElement {
@@ -274,7 +273,7 @@ export class DemoView extends LitElement {
       console.warn('lexml-eta-parecer não encontrado.');
       return;
     }
-    const params = new LexmlEtaParecerParametrosEdicao();
+    const params: LexmlEtaParecerParametrosEdicao = {};
     const parecer = new Parecer();
 
     // Metadados básicos
@@ -301,7 +300,7 @@ export class DemoView extends LitElement {
       '2025-11-13T19:43:31.400Z',
       'Voto alterado',
     ) as RevisaoVoto;
-    parecer.revisoes = [revisaoRelatorio, revisaoVoto] as Revisao[];
+    parecer.revisoes = [revisaoRelatorio, revisaoVoto];
     const materia = new ProposicaoReferenciada();
     materia.urn = 'urn:lex:br:senado:projeto.lei;123;2025';
     materia.identificacaoTexto = 'PL 123/2025 (Senado Federal)';

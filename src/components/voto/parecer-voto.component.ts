@@ -1,8 +1,9 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { AnexoParecer, MimeType } from '../../models/anexo-parecer.model.js';
-import {
+import { MimeType } from '../../models/anexo-parecer.model.js';
+import type { AnexoParecer } from '../../models/anexo-parecer.model.js';
+import type {
   DeleteAnexoCallback,
   ObterAnexoBlobCallback,
   UploadAnexoCallback,
@@ -12,12 +13,9 @@ import {
   TipoDocumento,
   TipoDocumentoLabel,
 } from '../../types/tipo-documento.js';
-import {
-  alertarInfo,
-  ConfiguracaoPainelNotasRodape,
-  Usuario,
-} from '@lexml/lexml-ui-commons';
-import { NotaRodape } from '../../models/diversos.model.js';
+import { alertarInfo, Usuario } from '@lexml/lexml-ui-commons';
+import type { ConfiguracaoPainelNotasRodape } from '@lexml/lexml-ui-commons';
+import type { NotaRodape } from '../../models/nota-rodape.model.js';
 import { RevisaoVoto } from '../../models/revisao.model.js';
 
 type AnexoParecerRuntime = AnexoParecer & {
@@ -1131,5 +1129,11 @@ export class LexmlParecerVoto extends LitElement {
         </div>
       </wa-card>
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lexml-parecer-voto': LexmlParecerVoto;
   }
 }
