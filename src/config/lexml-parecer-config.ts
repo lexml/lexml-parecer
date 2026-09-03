@@ -1,5 +1,6 @@
 import type { AnexoParecer } from '../models/anexo-parecer.model.js';
 import type { Parlamentar } from '../models/parlamentar.model.js';
+import type { TipoAnexoParecer } from '../types/tipo-anexo-parecer.js';
 
 export type UploadAnexoCallback = (file: File) => string | Promise<string>;
 export type DeleteAnexoCallback = (anexo: AnexoParecer) => void | Promise<void>;
@@ -19,6 +20,7 @@ export type VisualizarAnexoCallback = (
 
 export interface LexmlParecerConfig {
   parlamentares: Parlamentar[];
+  tiposAnexos?: TipoAnexoParecer[];
   onUploadAnexo?: UploadAnexoCallback;
   onDeleteAnexo?: DeleteAnexoCallback;
   onObterAnexoBlob?: ObterAnexoBlobCallback;

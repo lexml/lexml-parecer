@@ -10,7 +10,6 @@ import type { LexmlParecerConfig } from '../../src/config/lexml-parecer-config.j
 import type { LexmlEtaParecerParametrosEdicao } from '../../src/models/lexml-eta-parecer-parametro-edicao.model.js';
 import { Destino } from '@lexml/lexml-ui-commons';
 import type { Usuario } from '@lexml/lexml-ui-commons';
-import { TipoDocumento } from '../../src/types/tipo-documento.js';
 import {
   RevisaoRelatorio,
   RevisaoVoto,
@@ -33,6 +32,12 @@ export class DemoView extends LitElement {
   constructor() {
     super();
     this.parecerConfig = {
+      tiposAnexos: [
+        { codigo: 'emenda', nome: 'Emenda' },
+        { codigo: 'substitutivo', nome: 'Substitutivo' },
+        { codigo: 'projeto.lei', nome: 'Projeto de Lei' },
+        { codigo: 'requerimento', nome: 'Requerimento' },
+      ],
       parlamentares: [
         {
           identificacao: 'SF001',
@@ -347,13 +352,13 @@ export class DemoView extends LitElement {
       {
         idArquivo: 'ARQ_SUB_001',
         nomeArquivo: 'Substitutivo - PL 123/2025.pdf',
-        tipo: TipoDocumento.SUBSTITUTIVO,
+        tipo: 'substitutivo',
         mimeType: MimeType.PDF,
       } as AnexoParecer,
       {
         idArquivo: 'ARQ_EME_001',
         nomeArquivo: 'Emenda nº 1 - PL 123/2025.pdf',
-        tipo: TipoDocumento.EMENDA,
+        tipo: 'emenda',
         mimeType: MimeType.PDF,
       } as AnexoParecer,
     ];

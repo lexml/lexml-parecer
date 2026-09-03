@@ -33,6 +33,12 @@ const parlamentar: Parlamentar = {
 };
 const config: Partial<LexmlParecerConfig> = {
   parlamentares: [parlamentar],
+  tiposAnexos: [
+    { codigo: 'emenda', nome: 'Emenda' },
+    { codigo: 'substitutivo', nome: 'Substitutivo' },
+    { codigo: 'projeto.lei', nome: 'Projeto de Lei' },
+    { codigo: 'requerimento', nome: 'Requerimento' },
+  ],
 };
 const params: LexmlEtaParecerParametrosEdicao = {
   parecer: { relatorio: 'Texto inicial' },
@@ -44,6 +50,10 @@ if (editor) {
   await editor.inicializarEdicao(params);
 }
 ```
+
+`tiposAnexos` é opcional. O componente sempre acrescenta ao final da lista a
+opção `{ codigo: 'outro', nome: 'Outro' }`; quando a propriedade não é
+informada, essa é a única opção disponível.
 
 ```html
 <lexml-eta-parecer></lexml-eta-parecer>

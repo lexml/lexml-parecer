@@ -24,3 +24,4 @@ export type { LexmlEtaParecerParametrosEdicao } from './models/lexml-eta-parecer
 
 export type { Parlamentar } from './models/parlamentar.model.js';
 export type { AnexoParecer } from './models/anexo-parecer.model.js';
+export type { TipoAnexoParecer } from './types/tipo-anexo-parecer.js';

@@ -32,6 +32,11 @@ import type {
   UploadAnexoCallback,
   VisualizarAnexoCallback,
 } from '../../config/lexml-parecer-config.js';
+import {
+  TIPO_ANEXO_OUTRO,
+  normalizarTiposAnexos,
+} from '../../types/tipo-anexo-parecer.js';
+import type { TipoAnexoParecer } from '../../types/tipo-anexo-parecer.js';
 import { waResetString, waThemeString } from '../../assets/css/wa-bundled.js';
 
 @customElement('lexml-eta-parecer')
@@ -41,6 +46,8 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   @state() private _parlamentares: Parlamentar[] = [];
+
+  @state() private _tiposAnexos: TipoAnexoParecer[] = normalizarTiposAnexos();
 
   @state() private onUploadAnexo?: UploadAnexoCallback;
   @state() private onDeleteAnexo?: DeleteAnexoCallback;
@@ -728,6 +735,7 @@ export class LexmlEtaParecer extends LitElement {
   private _normalizarParecer(parecer: Partial<Parecer>): Parecer {
     const padrao = new Parecer();
     const destinoRecebido = parecer.destino;
+    const anexos = parecer.anexos ?? padrao.anexos;
 
     return {
       ...padrao,
@@ -737,7 +745,7 @@ export class LexmlEtaParecer extends LitElement {
         ...(parecer.pendenciasPreenchimento ?? padrao.pendenciasPreenchimento),
       ],
       materia: { ...padrao.materia, ...(parecer.materia ?? {}) },
-      anexos: [...(parecer.anexos ?? padrao.anexos)],
+      anexos: this._normalizarAnexos(anexos),
       destino: {
         ...padrao.destino,
         ...(destinoRecebido ?? {}),
@@ -756,6 +764,31 @@ export class LexmlEtaParecer extends LitElement {
       revisoes: [...(parecer.revisoes ?? padrao.revisoes)],
       notasRodape: [...(parecer.notasRodape ?? padrao.notasRodape)],
     };
+  }
+
+  private _normalizarAnexos(anexos: Parecer['anexos']): Parecer['anexos'] {
+    const codigosConfigurados = new Set(
+      this._tiposAnexos.map(tipo => tipo.codigo),
+    );
+
+    return anexos.map(anexo => {
+      const tipoRecebido =
+        typeof anexo.tipo === 'string' ? anexo.tipo.trim() : '';
+
+      if (tipoRecebido && codigosConfigurados.has(tipoRecebido)) {
+        return { ...anexo, tipo: tipoRecebido };
+      }
+
+      if (tipoRecebido) {
+        const nomeAnexo =
+          anexo.nomeDocumento?.trim() || anexo.nomeArquivo?.trim() || '';
+        alertarInfo(
+          `Não foi identificado o tipo "${tipoRecebido}" do anexo "${nomeAnexo}". O tipo foi alterado para "Outros".`,
+        );
+      }
+
+      return { ...anexo, tipo: TIPO_ANEXO_OUTRO.codigo };
+    });
   }
 
   private async setParecer(parecer: Partial<Parecer>): Promise<void> {
@@ -893,12 +926,14 @@ export class LexmlEtaParecer extends LitElement {
   }
 
   willUpdate(changed: Map<string, unknown>): void {
-    if (changed.has('lexmlParecerConfig') && this.lexmlParecerConfig) {
-      this._parlamentares = this.lexmlParecerConfig.parlamentares ?? [];
-      this.onUploadAnexo = this.lexmlParecerConfig.onUploadAnexo;
-      this.onDeleteAnexo = this.lexmlParecerConfig.onDeleteAnexo;
-      this.onObterAnexoBlob = this.lexmlParecerConfig.onObterAnexoBlob;
-      this.onVisualizarAnexo = this.lexmlParecerConfig.onVisualizarAnexo;
+    if (changed.has('lexmlParecerConfig')) {
+      const config = this.lexmlParecerConfig;
+      this._parlamentares = config?.parlamentares ?? [];
+      this._tiposAnexos = normalizarTiposAnexos(config?.tiposAnexos);
+      this.onUploadAnexo = config?.onUploadAnexo;
+      this.onDeleteAnexo = config?.onDeleteAnexo;
+      this.onObterAnexoBlob = config?.onObterAnexoBlob;
+      this.onVisualizarAnexo = config?.onVisualizarAnexo;
     }
   }
 
@@ -1092,6 +1127,7 @@ export class LexmlEtaParecer extends LitElement {
                   .alturaEditor=${alturaEditorVoto}
                   .configuracaoPainelNotasRodape=${this
                     ._configuracaoPainelNotasRodape}
+                  .tiposAnexos=${this._tiposAnexos}
                   .onUploadAnexo=${this.onUploadAnexo}
                   .onDeleteAnexo=${this.onDeleteAnexo}
                   .onObterAnexoBlob=${this.onObterAnexoBlob}

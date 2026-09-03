@@ -15,6 +15,7 @@ const publicTypes = [
   'LexmlParecerConfig',
   'ObterAnexoBlobResult',
   'Parlamentar',
+  'TipoAnexoParecer',
 ];
 
 const parseExportSpecifiers = value =>

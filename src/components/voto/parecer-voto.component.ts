@@ -9,10 +9,8 @@ import type {
   UploadAnexoCallback,
   VisualizarAnexoCallback,
 } from '../../config/lexml-parecer-config.js';
-import {
-  TipoDocumento,
-  TipoDocumentoLabel,
-} from '../../types/tipo-documento.js';
+import { normalizarTiposAnexos } from '../../types/tipo-anexo-parecer.js';
+import type { TipoAnexoParecer } from '../../types/tipo-anexo-parecer.js';
 import { alertarInfo, Usuario } from '@lexml/lexml-ui-commons';
 import type { ConfiguracaoPainelNotasRodape } from '@lexml/lexml-ui-commons';
 import type { NotaRodape } from '../../models/nota-rodape.model.js';
@@ -32,6 +30,8 @@ export class LexmlParecerVoto extends LitElement {
   @property({ attribute: false }) onDeleteAnexo?: DeleteAnexoCallback;
   @property({ attribute: false }) onObterAnexoBlob?: ObterAnexoBlobCallback;
   @property({ attribute: false }) onVisualizarAnexo?: VisualizarAnexoCallback;
+  @property({ attribute: false }) tiposAnexos: TipoAnexoParecer[] =
+    normalizarTiposAnexos();
   @property({ type: Number }) alturaEditor = 320;
   @property({ attribute: false })
   configuracaoPainelNotasRodape?: ConfiguracaoPainelNotasRodape;
@@ -74,7 +74,7 @@ export class LexmlParecerVoto extends LitElement {
   @state() private dialogMode: DialogMode = 'new';
   @state() private dialogIdx: number = -1;
 
-  @state() private dialogTipo: TipoDocumento | '' = '';
+  @state() private dialogTipo = '';
   @state() private dialogNomeDocumento: string = '';
   @state() private dialogFile: File | null = null;
 
@@ -378,7 +378,7 @@ export class LexmlParecerVoto extends LitElement {
   private updateDocField(
     idx: number,
     field: keyof AnexoParecer,
-    value: string | TipoDocumento | MimeType,
+    value: string | MimeType,
   ) {
     const arr = [...this.anexos];
     const atual = arr[idx];
@@ -590,10 +590,9 @@ export class LexmlParecerVoto extends LitElement {
 
   private onDialogTipoChange = (e: any) => {
     const value = String(e.detail?.value ?? e.target?.value ?? '').trim();
-    this.dialogTipo =
-      value && Object.values(TipoDocumento).includes(value as any)
-        ? (value as TipoDocumento)
-        : '';
+    this.dialogTipo = this.tiposAnexos.some(tipo => tipo.codigo === value)
+      ? value
+      : '';
   };
 
   private onDialogNomeInput = (e: Event) => {
@@ -637,7 +636,7 @@ export class LexmlParecerVoto extends LitElement {
     if (!this.canConfirmDialog()) return;
 
     const file = this.dialogFile!;
-    const tipo = this.dialogTipo as TipoDocumento;
+    const tipo = this.dialogTipo;
     const mime = this.guessMime(file.name);
 
     const excludeUid =
@@ -898,27 +897,16 @@ export class LexmlParecerVoto extends LitElement {
             @change=${this.onDialogTipoChange}
           >
             <wa-option value="">Selecione…</wa-option>
-
-            <wa-option
-              value=${TipoDocumento.SUBSTITUTIVO}
-              ?selected=${this.dialogTipo === TipoDocumento.SUBSTITUTIVO}
-            >
-              ${TipoDocumentoLabel[TipoDocumento.SUBSTITUTIVO]}
-            </wa-option>
-
-            <wa-option
-              value=${TipoDocumento.EMENDA}
-              ?selected=${this.dialogTipo === TipoDocumento.EMENDA}
-            >
-              ${TipoDocumentoLabel[TipoDocumento.EMENDA]}
-            </wa-option>
-
-            <wa-option
-              value=${TipoDocumento.OUTRO}
-              ?selected=${this.dialogTipo === TipoDocumento.OUTRO}
-            >
-              ${TipoDocumentoLabel[TipoDocumento.OUTRO]}
-            </wa-option>
+            ${this.tiposAnexos.map(
+              tipo => html`
+                <wa-option
+                  value=${tipo.codigo}
+                  ?selected=${this.dialogTipo === tipo.codigo}
+                >
+                  ${tipo.nome}
+                </wa-option>
+              `,
+            )}
           </wa-select>
           <div>
             <div><label>Arquivo</label></div>
@@ -1082,27 +1070,16 @@ export class LexmlParecerVoto extends LitElement {
               disabled
             >
               <wa-option value="">Selecione…</wa-option>
-
-              <wa-option
-                value=${TipoDocumento.SUBSTITUTIVO}
-                ?selected=${item.tipo === TipoDocumento.SUBSTITUTIVO}
-              >
-                ${TipoDocumentoLabel[TipoDocumento.SUBSTITUTIVO]}
-              </wa-option>
-
-              <wa-option
-                value=${TipoDocumento.EMENDA}
-                ?selected=${item.tipo === TipoDocumento.EMENDA}
-              >
-                ${TipoDocumentoLabel[TipoDocumento.EMENDA]}
-              </wa-option>
-
-              <wa-option
-                value=${TipoDocumento.OUTRO}
-                ?selected=${item.tipo === TipoDocumento.OUTRO}
-              >
-                ${TipoDocumentoLabel[TipoDocumento.OUTRO]}
-              </wa-option>
+              ${this.tiposAnexos.map(
+                tipo => html`
+                  <wa-option
+                    value=${tipo.codigo}
+                    ?selected=${item.tipo === tipo.codigo}
+                  >
+                    ${tipo.nome}
+                  </wa-option>
+                `,
+              )}
             </wa-select>
           </div>
 
